@@ -83,6 +83,7 @@ function LoginForm() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  onAnimationStart={(e) => { if ((e.animationName || "").includes("autofill")) setUsername((e.target as HTMLInputElement).value); }}
                   placeholder="admin"
                   autoComplete="username"
                   autoFocus
@@ -103,6 +104,7 @@ function LoginForm() {
                   type={show ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onAnimationStart={(e) => { if ((e.animationName || "").includes("autofill")) setPassword((e.target as HTMLInputElement).value); }}
                   placeholder="Enter admin password"
                   autoComplete="current-password"
                   required
