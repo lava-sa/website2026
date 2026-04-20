@@ -8,11 +8,6 @@ async function isAuthed(): Promise<boolean> {
   return store.get("admin_session")?.value === "authenticated";
 }
 
-async function isAuthed(): Promise<boolean> {
-  const store = await cookies();
-  return store.get("admin_session")?.value === "authenticated";
-}
-
 const ALLOWED_STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "cancelled", "refunded"];
 
 export async function PATCH(request: NextRequest) {
