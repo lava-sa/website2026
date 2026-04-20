@@ -1,14 +1,7 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase";
 import { verifyITNSignature, validateITNWithPayFast } from "@/lib/payfast";
-
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
-}
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
@@ -28,7 +21,7 @@ export async function POST(req: NextRequest) {
   }
 
   // ── 2. Verify signature ────────────────────────────────────────────────────
-  const passphrase = process.env.PAYFAST_PASSPHRASE!;
+  const passphrase = process.env.PAYFAST_PASSPHRASE || "";
   const sigValid = verifyITNSignature(entries, passphrase, receivedSignature);
   if (!sigValid) {
     console.error(`ITN signature mismatch for order ${orderNumber}`);
@@ -48,7 +41,7 @@ export async function POST(req: NextRequest) {
   }
 
   // ── 4. Look up order ───────────────────────────────────────────────────────
-  const supabase = getSupabase();
+  const supabase = createServiceClient();
 
   const { data: order, error: findErr } = await supabase
     .from("orders")

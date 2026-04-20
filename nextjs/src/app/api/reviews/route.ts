@@ -1,5 +1,6 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -13,11 +14,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Review too short" }, { status: 400 });
   }
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const supabase = createServiceClient();
 
   const { error } = await supabase.from("reviews").insert({
     name:     name.trim(),

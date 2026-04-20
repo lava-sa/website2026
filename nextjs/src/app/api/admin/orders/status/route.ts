@@ -1,13 +1,11 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import { createServiceClient } from "@/lib/supabase";
 
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+async function isAuthed(): Promise<boolean> {
+  const store = await cookies();
+  return store.get("admin_session")?.value === "authenticated";
 }
 
 async function isAuthed(): Promise<boolean> {
@@ -25,7 +23,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  const { error } = await getSupabase()
+  const { error } = await createServiceClient()
     .from("orders")
     .update({ status, updated_at: new Date().toISOString() })
     .eq("id", id);

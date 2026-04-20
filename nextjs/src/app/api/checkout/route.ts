@@ -1,16 +1,8 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase";
 import { generateSignature, getPayFastUrl } from "@/lib/payfast";
 import type { CartItem } from "@/lib/cart-context";
-
-// Service-role Supabase client — server only
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
-}
 
 const FREE_SHIPPING_THRESHOLD = 2000;
 const SHIPPING_FEE = 150;
@@ -64,7 +56,7 @@ export async function POST(req: NextRequest) {
   const total    = subtotal + shipping;
 
   // ── 3. Save order to Supabase ──────────────────────────────────────────────
-  const supabase    = getSupabase();
+  const supabase    = createServiceClient();
   const orderNumber = generateOrderNumber();
 
   const { data: order, error: orderErr } = await supabase
@@ -118,9 +110,9 @@ export async function POST(req: NextRequest) {
 
   // ── 6. Build PayFast params (ORDER MATTERS for signature) ──────────────────
   const siteUrl   = process.env.NEXT_PUBLIC_SITE_URL ?? "https://lava-sa.online";
-  const merchantId  = process.env.NEXT_PUBLIC_PAYFAST_MERCHANT_ID!;
-  const merchantKey = process.env.NEXT_PUBLIC_PAYFAST_MERCHANT_KEY!;
-  const passphrase  = process.env.PAYFAST_PASSPHRASE!;
+  const merchantId  = process.env.NEXT_PUBLIC_PAYFAST_MERCHANT_ID || "";
+  const merchantKey = process.env.NEXT_PUBLIC_PAYFAST_MERCHANT_KEY || "";
+  const passphrase  = process.env.PAYFAST_PASSPHRASE || "";
 
   // Cart summary for item_description (max 255 chars)
   const itemSummary = truncate(
