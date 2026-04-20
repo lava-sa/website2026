@@ -1,0 +1,23 @@
+# Ignore everything by default
+*
+
+# Un-ignore this file
+!.gitignore
+
+# Un-ignore the Next.js app
+!nextjs/
+!nextjs/**
+
+# Un-ignore .claude settings
+!.claude/
+!.claude/**
+
+# Re-ignore inside nextjs
+nextjs/.next/
+nextjs/node_modules/
+nextjs/.env
+nextjs/.env.local
+nextjs/.env*.local
+
+# Re-ignore inside .claude
+.claude/settings.local.json

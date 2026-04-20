@@ -1,0 +1,155 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight, AlertTriangle } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Vacuum Sealing Biltong & Charcuterie in South Africa | Lava South Africa",
+  description:
+    "Biltong makers, droëwors producers and charcuterie enthusiasts — vacuum sealing extends shelf life, enables distribution and protects your product. The correct technique for dry and wet biltong.",
+};
+
+function Placeholder({ label, aspect = "aspect-[16/7]" }: { label: string; aspect?: string }) {
+  return (
+    <div className={`${aspect} bg-primary/10 flex items-end relative overflow-hidden`}>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
+      <div className="relative p-3 w-full bg-black/20">
+        <p className="text-[9px] font-bold uppercase tracking-widest text-white/60">Image needed</p>
+        <p className="text-xs font-semibold text-white/80">{label}.jpg</p>
+      </div>
+    </div>
+  );
+}
+
+export default function BiltongPage() {
+  return (
+    <main className="py-16">
+      <div className="section-container max-w-3xl">
+
+        <div className="mb-10">
+          <p className="overline mb-3">Applications</p>
+          <h1 className="text-4xl font-black text-primary leading-tight mb-3">
+            Biltong &amp; Charcuterie
+          </h1>
+          <p className="text-lg text-copy-muted leading-relaxed">
+            South Africa&apos;s own preservation tradition — and vacuum sealing is its natural
+            partner. Whether you&apos;re making biltong for your family or building a product
+            for distribution, LAVA changes what&apos;s possible.
+          </p>
+        </div>
+
+        <Placeholder label="app-biltong-hanging-drying" />
+
+        <div className="prose-lava mt-12">
+
+          <h2 className="text-2xl font-bold text-primary mb-4">Biltong + Vacuum Sealing: The Rules</h2>
+          <p>
+            Biltong seems counterintuitive to vacuum seal — it&apos;s already a preserved product.
+            But vacuum sealing dramatically extends its shelf life and enables distribution.
+            The key is understanding which type of biltong handles sealing differently.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+            <div className="border-2 border-secondary p-5">
+              <p className="font-black text-primary mb-1">Dry Biltong</p>
+              <p className="text-xs text-secondary font-bold uppercase tracking-wider mb-3">Very dry, no moisture</p>
+              <ul className="text-sm text-copy space-y-1.5 pl-3">
+                <li>✅ Can be vacuum sealed at room temperature</li>
+                <li>✅ Shelf life: 4–6 months at room temperature</li>
+                <li>✅ Frozen: 2 years</li>
+                <li>✅ Safe to post / distribute without refrigeration</li>
+                <li>✅ Use standard embossed bags</li>
+              </ul>
+            </div>
+            <div className="border border-border p-5">
+              <p className="font-black text-primary mb-1">Wet / Soft Biltong</p>
+              <p className="text-xs text-copy-muted font-bold uppercase tracking-wider mb-3">Moist, higher moisture content</p>
+              <ul className="text-sm text-copy space-y-1.5 pl-3">
+                <li>⚠️ Must be refrigerated even after vacuum sealing</li>
+                <li>⚠️ Shelf life: 3–4 weeks refrigerated (vs 5–7 days loose)</li>
+                <li>✅ Frozen: 12–18 months</li>
+                <li>⚠️ Inspect carefully for mould before sealing</li>
+                <li>✅ Use Liquid Stop function</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="bg-amber-50 border border-amber-200 p-4 flex gap-3 mb-8">
+            <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+            <p className="text-sm text-amber-800 leading-relaxed">
+              <strong>Never vacuum seal biltong with visible surface mould</strong>, even if you
+              plan to cut it off. Mould produces toxins that penetrate the product before the
+              surface growth is visible. When in doubt, discard.
+            </p>
+          </div>
+
+          <Placeholder label="app-biltong-finished-product-varieties" aspect="aspect-[16/6]" />
+
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">For Biltong Producers</h2>
+          <p>
+            If you&apos;re making biltong to sell — at markets, online or direct — vacuum sealing
+            transforms the business model:
+          </p>
+          <ul>
+            <li><strong>Professional presentation</strong> — vacuum sealed product looks premium, commands higher prices</li>
+            <li><strong>Extended distribution window</strong> — dry biltong sealed at source can be posted nationwide without refrigeration</li>
+            <li><strong>Longer display life</strong> — markets and deli counters can hold product for weeks rather than days</li>
+            <li><strong>Consistent weight labelling</strong> — sealed bags don&apos;t lose moisture weight on the shelf, so the labelled weight is what the customer gets</li>
+            <li><strong>Hygiene compliance</strong> — vacuum sealed product is tamper-evident and meets food safety requirements for retail</li>
+          </ul>
+
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Droëwors &amp; Charcuterie</h2>
+          <p>
+            Droëwors is even more suitable for vacuum sealing than biltong — it&apos;s fully
+            dried with very low moisture. Sealed droëwors keeps 6–9 months at room temperature
+            and 2+ years frozen, with no flavour loss.
+          </p>
+          <p>
+            European-style charcuterie (coppa, bresaola, lonza) works identically — the dry
+            curing process is already a preservation step. Vacuum sealing after curing locks
+            in the result and extends shelf life significantly.
+          </p>
+
+          <Placeholder label="app-biltong-vacuum-sealed-packaged" aspect="aspect-[16/6]" />
+
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Recommended Machine</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {[
+              {
+                model: "V.300® Premium X",
+                tag: "Home maker / small producer",
+                desc: "Perfect for sealing biltong in quantities up to a few kilograms. Handles dry and wet biltong. 42 cm sealing width handles standard biltong sticks easily.",
+                href: "/products/vacuum-machines",
+              },
+              {
+                model: "V.333® Chrome",
+                tag: "Market supplier / small commercial",
+                desc: "Commercial pump for continuous sealing sessions. Ideal for weekend market production runs — process 20–30+ kg per session without overheating.",
+                href: "/products/vacuum-machines",
+              },
+            ].map(({ model, tag, desc, href }) => (
+              <div key={model} className="border border-border p-5">
+                <p className="text-[9px] font-bold uppercase tracking-wider text-secondary mb-1">{tag}</p>
+                <p className="font-bold text-primary text-base mb-2">{model}</p>
+                <p className="text-xs text-copy-muted leading-relaxed mb-4">{desc}</p>
+                <Link href={href} className="block text-center bg-primary text-white text-xs font-bold py-2.5 hover:bg-primary/90 transition-colors">
+                  View Machine →
+                </Link>
+              </div>
+            ))}
+          </div>
+
+        </div>
+
+        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link href="/products/vacuum-machines" className="bg-primary text-white text-sm font-bold px-6 py-4 text-center hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+            Shop Vacuum Machines <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link href="/products/bags-rolls" className="border border-border text-primary text-sm font-semibold px-6 py-4 text-center hover:border-primary hover:bg-primary/5 transition-colors">
+            Shop Bags & Rolls
+          </Link>
+        </div>
+
+      </div>
+    </main>
+  );
+}

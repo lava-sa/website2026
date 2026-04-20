@@ -1,0 +1,113 @@
+﻿[
+    {
+        "id":  "de039335-527e-4600-a037-89943e07d6ad",
+        "sku":  null,
+        "name":  "Professional Pro-Star Meat Mincer - 90kg/h - 850W",
+        "slug":  "pro-star-meat-mincer-90kg-h-850w",
+        "short_description":  "Powerful meat mincer combining a high-performance 850W motor with durable components. Handles substantial processing volumes with ease-up to 90kg per hour.",
+        "description":  "\u003cp\u003eThe \u003cstrong\u003ePro-Star Meat Mincer\u003c/strong\u003e forms the foundation of efficient meat processing workflows. Whether you\u0027re preparing ground meat for recipes or handling bulk processing after a hunt, this machine delivers professional results.\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eHigh Performance:\u003c/strong\u003e 850W motor for reliable power.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eCapacity:\u003c/strong\u003e Processes up to 90kg per hour.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eDurable:\u003c/strong\u003e Commercial-grade construction for longevity.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eVersatile:\u003c/strong\u003e Ideal for home and small commercial settings.\u003c/li\u003e\u003c/ul\u003e",
+        "regular_price":  4650.00,
+        "sale_price":  null,
+        "stock_status":  "in_stock",
+        "stock_quantity":  6,
+        "weight_kg":  null,
+        "length_cm":  null,
+        "width_cm":  null,
+        "height_cm":  null,
+        "category_id":  "47d9574c-88eb-4611-9a24-72921e842348",
+        "is_published":  true,
+        "is_featured":  false,
+        "sort_order":  100,
+        "seo_title":  null,
+        "seo_description":  null,
+        "tags":  [
+                     "machinery",
+                     "mincer",
+                     "butchery"
+                 ],
+        "specs":  {
+
+                  },
+        "industries":  [
+
+                       ],
+        "primary_image_url":  "/images/products/machinery/pro-star-meat-mincer-850w.png",
+        "created_at":  "2026-04-17T10:35:43.640067+00:00",
+        "updated_at":  "2026-04-17T10:35:43.640067+00:00"
+    },
+    {
+        "id":  "573fe26b-2d7f-4e97-9fe2-84ed11e13d67",
+        "sku":  null,
+        "name":  "Professional Sausage Filler - 3L Capacity - Stainless Steel",
+        "slug":  "professional-sausage-filler-3l-stainless-steel",
+        "short_description":  "Premium vertical sausage filler featuring robust stainless steel construction and efficient mechanical systems. Simple and consistent for professional-quality sausages.",
+        "description":  "\u003cp\u003eCreate professional-quality sausages with ease. This 3L vertical unit provides stable, precision filling for perfect results every time.\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eStainless Steel:\u003c/strong\u003e Robust, hygienic construction.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eCapacity:\u003c/strong\u003e 3 Litre volume.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eMechanical Efficiency:\u003c/strong\u003e Smooth operation for consistent filling.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eCompact:\u003c/strong\u003e Ideal for home enthusiasts.\u003c/li\u003e\u003c/ul\u003e",
+        "regular_price":  5049.00,
+        "sale_price":  null,
+        "stock_status":  "in_stock",
+        "stock_quantity":  1,
+        "weight_kg":  null,
+        "length_cm":  null,
+        "width_cm":  null,
+        "height_cm":  null,
+        "category_id":  "47d9574c-88eb-4611-9a24-72921e842348",
+        "is_published":  true,
+        "is_featured":  false,
+        "sort_order":  110,
+        "seo_title":  null,
+        "seo_description":  null,
+        "tags":  [
+                     "machinery",
+                     "sausage-filler",
+                     "butchery",
+                     "3l"
+                 ],
+        "specs":  {
+
+                  },
+        "industries":  [
+
+                       ],
+        "primary_image_url":  "/images/products/machinery/professional-sausage-filler-3l.png",
+        "created_at":  "2026-04-17T10:35:43.640067+00:00",
+        "updated_at":  "2026-04-17T10:35:43.640067+00:00"
+    },
+    {
+        "id":  "62e6a658-4af7-4e14-9299-60ac3803204e",
+        "sku":  null,
+        "name":  "Commercial Sausage Filler - 6.8L Capacity - Stainless Steel",
+        "slug":  "commercial-sausage-filler-6-8l-stainless-steel",
+        "short_description":  "Heavy-duty 6.8L sausage filler designed for small-scale producers. High-capacity processing capabilities for efficient batch preparation.",
+        "description":  "\u003cp\u003eAchieve commercial-quality results with our largest vertical sausage filler. Designed for efficiency and precision in professional environments.\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eHigh Capacity:\u003c/strong\u003e Large 6.8 Litre volume for bulk batches.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eProfessional Grade:\u003c/strong\u003e Built for durability and longevity.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003ePrecision Engineering:\u003c/strong\u003e Consistent results for professional production.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eEasy Cleaning:\u003c/strong\u003e Accessible components for simple maintenance.\u003c/li\u003e\u003c/ul\u003e",
+        "regular_price":  7069.00,
+        "sale_price":  null,
+        "stock_status":  "in_stock",
+        "stock_quantity":  1,
+        "weight_kg":  null,
+        "length_cm":  null,
+        "width_cm":  null,
+        "height_cm":  null,
+        "category_id":  "47d9574c-88eb-4611-9a24-72921e842348",
+        "is_published":  true,
+        "is_featured":  false,
+        "sort_order":  120,
+        "seo_title":  null,
+        "seo_description":  null,
+        "tags":  [
+                     "machinery",
+                     "sausage-filler",
+                     "butchery",
+                     "commercial",
+                     "6-8l"
+                 ],
+        "specs":  {
+
+                  },
+        "industries":  [
+
+                       ],
+        "primary_image_url":  "/images/products/machinery/commercial-sausage-filler-6-8l.png",
+        "created_at":  "2026-04-17T10:35:43.640067+00:00",
+        "updated_at":  "2026-04-17T10:35:43.640067+00:00"
+    }
+]

@@ -1,0 +1,374 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ═══════════════════════════════════════════════════════════════════
+   LAVA-SA COLOR ENGINE — Kevin Geary Method
+   ───────────────────────────────────────────────────────────────────
+   To retheme the ENTIRE site, change ONLY the master variables below.
+   Never hard-code a hex colour anywhere in the project.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+
+  /* ── 1. MASTER BRAND VARIABLES ← only edit here to retheme ─────── */
+  --brand-h: 192;      /* Lava Petrol Teal  |  change this = retheme  */
+  --brand-s: 84%;      /* Saturation                                   */
+
+  /* Gold — intentionally separate from primary */
+  --gold-h:  44;
+  --gold-s:  37%;
+  --gold-l:  54%;
+
+  /* ── 2. SHADE SCALE  (lightness, light → dark) ──────────────────── */
+  --l-50:   97%;   /* near-white wash      — section tinted bg        */
+  --l-100:  91%;   /* very light           — subtle borders           */
+  --l-200:  80%;   /* light                — on-dark muted text       */
+  --l-300:  65%;   /* medium-light         — on-dark faint            */
+  --l-400:  45%;   /* medium               — mid accent               */
+  --l-500:  30%;   /* medium-dark          — lighter CTAs / mid-tone  */
+  --l-600:  22%;   /* dark                 — sub-nav, hover states    */
+  --l-700:  15%;   /* ★ PRIMARY COLOUR  ←  main brand dark petrol     */
+  --l-800:  10%;   /* very dark            — pressed states           */
+  --l-900:   6%;   /* near-black           — deepest shade            */
+
+  /* ── 3. COMPUTED PETROL SCALE ───────────────────────────────────── */
+  --color-petrol-50:  hsl(var(--brand-h), var(--brand-s), var(--l-50));
+  --color-petrol-100: hsl(var(--brand-h), var(--brand-s), var(--l-100));
+  --color-petrol-200: hsl(var(--brand-h), var(--brand-s), var(--l-200));
+  --color-petrol-300: hsl(var(--brand-h), var(--brand-s), var(--l-300));
+  --color-petrol-400: hsl(var(--brand-h), var(--brand-s), var(--l-400));
+  --color-petrol-500: hsl(var(--brand-h), var(--brand-s), var(--l-500));
+  --color-petrol-600: hsl(var(--brand-h), var(--brand-s), var(--l-600));
+  --color-petrol-700: hsl(var(--brand-h), var(--brand-s), var(--l-700));   /* = primary */
+  --color-petrol-800: hsl(var(--brand-h), var(--brand-s), var(--l-800));
+  --color-petrol-900: hsl(var(--brand-h), var(--brand-s), var(--l-900));
+
+  /* ── 4. GOLD SCALE ──────────────────────────────────────────────── */
+  --color-gold-light: hsl(var(--gold-h), var(--gold-s), calc(var(--gold-l) + 15%));
+  --color-gold:       hsl(var(--gold-h), var(--gold-s), var(--gold-l));
+  --color-gold-dark:  hsl(var(--gold-h), var(--gold-s), calc(var(--gold-l) - 10%));
+
+  /* ── 5. SEMANTIC ALIASES ← use ONLY these in components ─────────── */
+  --color-primary:         var(--color-petrol-700);   /* main brand dark petrol  */
+  --color-primary-dark:    var(--color-petrol-800);   /* hover / pressed states  */
+  --color-primary-mid:     var(--color-petrol-500);   /* mid-tone accent         */
+  --color-primary-light:   var(--color-petrol-300);   /* light accent            */
+  --color-primary-wash:    var(--color-petrol-50);    /* ultra-light section bg  */
+  --color-secondary:       var(--color-gold);
+  --color-secondary-dark:  var(--color-gold-dark);
+  --color-dark:            hsl(var(--brand-h), 10%, 8%);
+
+  /* Backgrounds */
+  --color-background:      #FFFFFF;
+  --color-surface:         hsl(var(--brand-h), 8%, 97%);    /* neutral light bg  */
+  --color-surface-raised:  hsl(var(--brand-h), 8%, 93%);    /* elevated card     */
+  --color-border:          hsl(var(--brand-h), 12%, 88%);   /* borders & dividers */
+
+  /* Body text */
+  --color-copy:            #646464;   /* primary body text  */
+  --color-copy-muted:      #888888;   /* secondary / muted  */
+
+  /* On-dark helpers (text/borders inside dark petrol sections) */
+  --color-on-dark:          #FFFFFF;
+  --color-on-dark-muted:    var(--color-petrol-200);   /* muted text on dark  */
+  --color-on-dark-faint:    var(--color-petrol-300);   /* faint text on dark  */
+  --color-on-dark-border:   var(--color-petrol-500);   /* border on dark bg   */
+  --color-on-dark-subtle:   hsl(var(--brand-h), var(--brand-s), 18%);  /* sub-nav bg  */
+  --color-on-dark-hover:    hsl(var(--brand-h), var(--brand-s), 22%);  /* hover on dark */
+
+  /* ── 6. TYPOGRAPHY ──────────────────────────────────────────────── */
+  --font-heading: var(--font-montserrat);
+  --font-body:    var(--font-outfit);
+
+  /* ── 7. RADIUS (sharp / architectural) ─────────────────────────── */
+  --radius: 0rem;
+
+  /* ── 8. shadcn/ui COMPATIBILITY — do not edit ───────────────────── */
+  --background:                 oklch(1 0 0);
+  --foreground:                 oklch(0.12 0.025 192);
+  --card:                       oklch(1 0 0);
+  --card-foreground:            oklch(0.12 0.025 192);
+  --popover:                    oklch(1 0 0);
+  --popover-foreground:         oklch(0.12 0.025 192);
+  --primary:                    oklch(0.27 0.065 192);
+  --primary-foreground:         oklch(1 0 0);
+  --secondary:                  oklch(0.96 0.01 80);
+  --secondary-foreground:       oklch(0.25 0.03 80);
+  --muted:                      oklch(0.96 0.005 80);
+  --muted-foreground:           oklch(0.5 0.025 192);
+  --accent:                     oklch(0.93 0.02 192);
+  --accent-foreground:          oklch(0.27 0.065 192);
+  --destructive:                oklch(0.53 0.2 25);
+  --border:                     oklch(0.9 0.01 210);
+  --input:                      oklch(0.9 0.01 210);
+  --ring:                       oklch(0.27 0.065 192);
+  --sidebar:                    oklch(0.97 0.003 192);
+  --sidebar-foreground:         oklch(0.12 0.025 192);
+  --sidebar-primary:            oklch(0.27 0.065 192);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent:             oklch(0.93 0.02 192);
+  --sidebar-accent-foreground:  oklch(0.27 0.065 192);
+  --sidebar-border:             oklch(0.9 0.01 210);
+  --sidebar-ring:               oklch(0.27 0.065 192);
+}
+
+/* ─── Tailwind v4 Theme Registration ─────────────────────────────────────── */
+/* All classes below (bg-primary, text-secondary, etc.) are auto-generated.  */
+@theme inline {
+
+  /* Petrol scale */
+  --color-petrol-50:          var(--color-petrol-50);
+  --color-petrol-100:         var(--color-petrol-100);
+  --color-petrol-200:         var(--color-petrol-200);
+  --color-petrol-300:         var(--color-petrol-300);
+  --color-petrol-400:         var(--color-petrol-400);
+  --color-petrol-500:         var(--color-petrol-500);
+  --color-petrol-600:         var(--color-petrol-600);
+  --color-petrol-700:         var(--color-petrol-700);
+  --color-petrol-800:         var(--color-petrol-800);
+  --color-petrol-900:         var(--color-petrol-900);
+
+  /* Gold scale */
+  --color-gold-light:         var(--color-gold-light);
+  --color-gold:               var(--color-gold);
+  --color-gold-dark:          var(--color-gold-dark);
+
+  /* Semantic — USE THESE in every component */
+  --color-primary:            var(--color-primary);
+  --color-primary-dark:       var(--color-primary-dark);
+  --color-primary-mid:        var(--color-primary-mid);
+  --color-primary-light:      var(--color-primary-light);
+  --color-primary-wash:       var(--color-primary-wash);
+  --color-secondary:          var(--color-secondary);
+  --color-secondary-dark:     var(--color-secondary-dark);
+  --color-dark:               var(--color-dark);
+  --color-background:         var(--color-background);
+  --color-surface:            var(--color-surface);
+  --color-surface-raised:     var(--color-surface-raised);
+  --color-border:             var(--color-border);
+  --color-copy:               var(--color-copy);
+  --color-copy-muted:         var(--color-copy-muted);
+  --color-on-dark:            var(--color-on-dark);
+  --color-on-dark-muted:      var(--color-on-dark-muted);
+  --color-on-dark-faint:      var(--color-on-dark-faint);
+  --color-on-dark-border:     var(--color-on-dark-border);
+  --color-on-dark-subtle:     var(--color-on-dark-subtle);
+  --color-on-dark-hover:      var(--color-on-dark-hover);
+
+  /* Fonts */
+  --font-heading:             var(--font-heading);
+  --font-body:                var(--font-body);
+
+  /* Radius */
+  --radius-sm:  calc(var(--radius));
+  --radius-md:  calc(var(--radius));
+  --radius-lg:  calc(var(--radius));
+  --radius-xl:  calc(var(--radius));
+
+  /* shadcn tokens */
+  --color-foreground:                   var(--foreground);
+  --color-card:                         var(--card);
+  --color-card-foreground:              var(--card-foreground);
+  --color-popover:                      var(--popover);
+  --color-popover-foreground:           var(--popover-foreground);
+  --color-muted:                        var(--muted);
+  --color-muted-foreground:             var(--muted-foreground);
+  --color-accent:                       var(--accent);
+  --color-accent-foreground:            var(--accent-foreground);
+  --color-destructive:                  var(--destructive);
+  --color-input:                        var(--input);
+  --color-ring:                         var(--ring);
+  --color-sidebar:                      var(--sidebar);
+  --color-sidebar-foreground:           var(--sidebar-foreground);
+  --color-sidebar-primary:              var(--sidebar-primary);
+  --color-sidebar-primary-foreground:   var(--sidebar-primary-foreground);
+  --color-sidebar-accent:               var(--sidebar-accent);
+  --color-sidebar-accent-foreground:    var(--sidebar-accent-foreground);
+  --color-sidebar-border:               var(--sidebar-border);
+  --color-sidebar-ring:                 var(--sidebar-ring);
+}
+
+/* ─── Prose (product descriptions, application pages) ────────────────────── */
+@layer components {
+  .prose h3 {
+    @apply mt-12 mb-5 text-2xl font-bold tracking-tight flex items-center;
+    color: var(--color-primary);
+  }
+  .prose table {
+    @apply w-full mb-10 overflow-hidden text-base bg-white shadow-sm;
+    border: 1px solid var(--color-border);
+  }
+  .prose thead {
+    background: var(--color-surface);
+    border-bottom: 2px solid var(--color-petrol-100);
+  }
+  .prose :where(th):not(:where([class~='not-prose'] *)) {
+    padding: 1.25rem 2.5rem !important;
+    text-align: left;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+  .prose :where(td):not(:where([class~='not-prose'] *)) {
+    padding: 1.5rem 2.5rem !important;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+    line-height: 1.625;
+  }
+  .prose th:first-child,
+  .prose td:first-child {
+    @apply w-1/3 font-semibold;
+  }
+  .prose td p {
+    @apply m-0;
+  }
+  .prose ul {
+    @apply pl-5 mb-8;
+  }
+  .prose ul li::marker {
+    color: var(--color-primary);
+  }
+  .prose li {
+    @apply mb-2;
+  }
+  .prose strong {
+    @apply font-semibold;
+    color: var(--color-primary);
+  }
+}
+
+/* ─── Base Styles ─────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-copy);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), system-ui, sans-serif;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ─── Card Utility ────────────────────────────────────────────────────────── */
+.uk-card-default {
+  background: #fff;
+  color: var(--color-copy);
+  box-shadow: 0 6px 50px rgba(7, 62, 71, 0.07);
+}
+
+.uk-card-body {
+  padding: 30px 30px;
+}
+
+.uk-card {
+  position: relative;
+  box-sizing: border-box;
+  transition: .15s ease-in-out;
+  transition-property: color, background-color, border-color, box-shadow;
+}
+
+/* ─── Component Utilities ─────────────────────────────────────────────────── */
+
+/* Overline label above headings */
+.overline {
+  @apply text-xs font-semibold uppercase tracking-[0.2em];
+  color: var(--color-secondary);
+}
+
+/* Section container */
+.section-container {
+  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+/* Primary CTA button — petrol, sharp */
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2
+         px-8 py-4 text-sm font-semibold text-white
+         transition-all hover:-translate-y-0.5;
+  background-color: var(--color-primary);
+}
+.btn-primary:hover        { background-color: var(--color-primary-dark); }
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Ghost / outline button */
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2
+         px-8 py-4 text-sm font-semibold
+         transition-all hover:-translate-y-0.5;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+.btn-ghost:hover         { background-color: var(--color-primary-wash); }
+.btn-ghost:focus-visible  {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Gold button */
+.btn-gold {
+  @apply inline-flex items-center justify-center gap-2
+         px-8 py-4
+         text-sm font-semibold text-white
+         transition-all
+         hover:-translate-y-0.5;
+  background-color: var(--color-secondary);
+}
+.btn-gold:hover { background-color: var(--color-secondary-dark); }
+
+/* Card hover overlay — slides up from bottom */
+.card-hover-overlay {
+  @apply absolute inset-x-0 bottom-0
+         flex translate-y-full items-center justify-center
+         px-4 py-3
+         text-xs font-semibold text-white
+         transition-transform duration-300 ease-out;
+  background-color: var(--color-primary);
+}
+
+.card-hover-group:hover .card-hover-overlay {
+  @apply translate-y-0;
+}
+
+/* ── Legal / prose pages ─────────────────────────────────────────────────── */
+.prose-lava ul {
+  @apply pl-5 space-y-2 my-3;
+  list-style-type: disc;
+}
+.prose-lava ul li {
+  @apply text-[15px] leading-relaxed text-copy;
+}
+.prose-lava ol {
+  @apply pl-5 space-y-2 my-3;
+  list-style-type: decimal;
+}
+.prose-lava p {
+  @apply text-[15px] leading-relaxed text-copy;
+}
+.prose-lava h3 {
+  @apply text-base font-bold text-primary;
+}
+.prose-lava strong {
+  @apply font-semibold;
+}

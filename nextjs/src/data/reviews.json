@@ -1,0 +1,738 @@
+{
+  "v100-premium-x": {
+    "average_rating": 5.0,
+    "total_reviews": 5,
+    "reviews": [
+      {
+        "name": "Bernd",
+        "location": "Wuppertal",
+        "date": "12.12.2025",
+        "rating": 5,
+        "text": "Good. Recommended. You can tell the difference from cheaper products. The device works and does what it's supposed to - vacuum. Powerful pump. Overall feels very well made."
+      },
+      {
+        "name": "Matthias",
+        "location": "Verified Buyer",
+        "date": "11.12.2025",
+        "rating": 5,
+        "text": "Very good vacuum. Top quality."
+      },
+      {
+        "name": "Andreas",
+        "location": "Augsburg",
+        "date": "10.12.2025",
+        "rating": 5,
+        "text": "Overall very high-quality and robust impression. Vacuum performance TOP!"
+      },
+      {
+        "name": "Josef",
+        "location": "Verified Buyer",
+        "date": "10.12.2025",
+        "rating": 5,
+        "text": "Top device!!"
+      },
+      {
+        "name": "Tim",
+        "location": "Verified Buyer",
+        "date": "09.12.2025",
+        "rating": 5,
+        "text": "Super for the hunt. Creates a proper vacuum."
+      }
+    ]
+  },
+  "v300-premium-x": {
+    "average_rating": 5.0,
+    "total_reviews": 5,
+    "reviews": [
+      {
+        "name": "Markus",
+        "location": "Verified Buyer",
+        "date": "29.06.2025",
+        "rating": 5,
+        "text": "The V300 Premium X is an absolute pro device. Very easy to use, very good workmanship. The price-performance ratio is also fine. Would definitely recommend it and buy it again. Quality and workmanship very good. Price-performance top."
+      },
+      {
+        "name": "Marcel",
+        "location": "Verified Buyer",
+        "date": "27.06.2025",
+        "rating": 5,
+        "text": "Pro tool. Top workmanship!"
+      },
+      {
+        "name": "Edmund",
+        "location": "Verified Buyer",
+        "date": "08.06.2025",
+        "rating": 5,
+        "text": "Clear purchase recommendation. Excellent and beautiful. Works perfectly. Others can do cheap. I regret nothing."
+      },
+      {
+        "name": "Patrik",
+        "location": "Verified Buyer",
+        "date": "27.05.2025",
+        "rating": 5,
+        "text": "Top!!! Recommendations 5 *****. I've had the device for many years and it has shown no signs of failure so far, works excellently, top workmanship. It's not exactly a bargain... but worth every cent. I can really recommend it!!!"
+      },
+      {
+        "name": "Detlef",
+        "location": "Verified Buyer",
+        "date": "16.05.2025",
+        "rating": 5,
+        "text": "Very good. Fast delivery and good handling. Very good."
+      }
+    ]
+  },
+  "v300-black": {
+    "average_rating": 4.98,
+    "total_reviews": 93,
+    "reviews": [
+      {
+        "name": "Andreja K.",
+        "location": "Verified Buyer",
+        "date": "16.12.2025",
+        "rating": 5,
+        "title": "Quality as expected",
+        "text": "Quality of the product is as expected for the price offered."
+      },
+      {
+        "name": "Daniel G.",
+        "location": "Verified Buyer",
+        "date": "09.12.2025",
+        "rating": 5,
+        "title": "Quality pays off!",
+        "text": "I can only agree with the previous reviewers: Top workmanship and extremely easy handling. This applies to both the V.300 Black device and the vacuum bags and rolls."
+      },
+      {
+        "name": "Martha T.",
+        "location": "Verified Buyer",
+        "date": "02.12.2025",
+        "rating": 5,
+        "title": "The vacuum sealer belongs in every household",
+        "text": "The quality and workmanship are professional-grade. The device is worth its price."
+      },
+      {
+        "name": "Christian M.",
+        "location": "Verified Buyer",
+        "date": "02.12.2025",
+        "rating": 5,
+        "title": "Top device 1A",
+        "text": "Bin sehr zufrieden 👍🏻"
+      },
+      {
+        "name": "Rüdiger H.",
+        "location": "Verified Buyer",
+        "date": "13.11.2025",
+        "rating": 5,
+        "title": "Super",
+        "text": "Top quality. Intuitive operation."
+      },
+      {
+        "name": "Steffen K.",
+        "location": "Verified Buyer",
+        "date": "08.11.2025",
+        "rating": 5,
+        "title": "Amazing device!",
+        "text": "The V.300 Black is my third vacuum sealer - the first two were from discounters. No comparison. The Lava device feels built for eternity. Press down once and the magnetic closure holds, everything else happens automatically."
+      },
+      {
+        "name": "Bastian M.",
+        "location": "Verified Buyer",
+        "date": "04.10.2025",
+        "rating": 5,
+        "title": "Professional work",
+        "text": "A device that holds what it promises. Very easy to use and great result."
+      },
+      {
+        "name": "Simone M.",
+        "location": "Verified Buyer",
+        "date": "17.07.2025",
+        "rating": 5,
+        "title": "Very good product",
+        "text": "Very good device, the quality justifies the price..."
+      },
+      {
+        "name": "Stephanie G.",
+        "location": "Verified Buyer",
+        "date": "27.06.2025",
+        "rating": 5,
+        "title": "Pleasant handling and good instructions",
+        "text": "Highly satisfied. The instructions are great: understandable and easy to implement. The preparation tips helped us. Moist or dry food could be perfectly vacuum-sealed with the right preparation."
+      },
+      {
+        "name": "Peter K.",
+        "location": "Verified Buyer",
+        "date": "09.06.2025",
+        "rating": 5,
+        "title": "High quality in great design packaging",
+        "text": "Great design meets best functionality"
+      },
+      {
+        "name": "Markus J.",
+        "location": "Australia",
+        "date": "02.10.2024",
+        "rating": 5,
+        "text": "Surely this is the best quality vacuum sealer I've ever used. It's fast, easy to use and seems to be very reliable. I am absolutely satisfied!"
+      },
+      {
+        "name": "Dreispross",
+        "location": "Germany",
+        "date": "29.06.2023",
+        "rating": 5,
+        "text": "The V.300 Black is really easy to use. It is relatively heavy, but can be stored in a utility room or a spacious kitchen. You can use it to neatly vacuum seal very large cuts of meat as well as very small cuts. Besides game, you can also use it to vacuum seal normal meat, cheese, bread, mushrooms and even screws."
+      },
+      {
+        "name": "Anonymous",
+        "location": "Germany",
+        "date": "28.06.2023",
+        "rating": 5,
+        "text": "Vacuum sealing and hunting belong together. The V.300 Black vacuum sealer processed fallow deer, wild boar, wild duck breasts, game sausages, venison from deer, sow and stag perfectly."
+      }
+    ]
+  },
+  "v300-white": {
+    "average_rating": 5.0,
+    "total_reviews": 5,
+    "reviews": [
+      {
+        "name": "Niclas",
+        "location": "Germany",
+        "date": "24.07.2025",
+        "rating": 5,
+        "text": "The vacuum sealer works excellently, never lets me down, and functions just as described. It's simply an outstanding product."
+      },
+      {
+        "name": "Tony M.",
+        "location": "Australia",
+        "date": "29.10.2024",
+        "rating": 5,
+        "text": "Initial impression is that this is a brilliant vacuum sealing machine. Very easy to use and to maintain."
+      },
+      {
+        "name": "Boris",
+        "location": "Australia",
+        "date": "29.10.2024",
+        "rating": 5,
+        "text": "Just came back from my 1.5 weeks fishing trip. Vacuumed heaps of fish and the V.300 White worked excellent."
+      },
+      {
+        "name": "David",
+        "location": "Australia",
+        "date": "29.10.2024",
+        "rating": 5,
+        "text": "After I received my V.300 White, I started to vacuum seal every day. It's so simple and intuitive. I am in love with and I can strongly recommend."
+      },
+      {
+        "name": "Anonymous",
+        "location": "Australia",
+        "date": "29.10.2024",
+        "rating": 5,
+        "text": "The vacuum sealer has a great finish, I love the colour. It fits perfectly with my kitchen esthetic."
+      }
+    ]
+  },
+  "v400-premium": {
+    "average_rating": 5.0,
+    "total_reviews": 4,
+    "reviews": [
+      {
+        "name": "Helmut H.",
+        "location": "Verified Buyer",
+        "date": "11.06.2025",
+        "rating": 5,
+        "text": "Know of no better. Have had the same one for over 10 years and now bought one for the club to vacuum seal smoked fish. Completely satisfied."
+      },
+      {
+        "name": "Daniela F.",
+        "location": "Verified Buyer",
+        "date": "01.04.2025",
+        "rating": 5,
+        "text": "Do not regret buying it. Device works cleanly and reliably. Very fast and you can process two small bags at once perfectly."
+      },
+      {
+        "name": "Josef W.",
+        "location": "Verified Buyer",
+        "date": "17.12.2024",
+        "rating": 5,
+        "text": "An expensive but super good, high-quality device that's perfect even for commercial use!!! This machine works great and is worth the high price if you value lasting quality!"
+      },
+      {
+        "name": "Holger G.",
+        "location": "Verified Buyer",
+        "date": "04.12.2024",
+        "rating": 5,
+        "text": "Would buy it again anytime. Great product, excellent workmanship."
+      }
+    ]
+  },
+  "v500-premium": {
+    "average_rating": 5.0,
+    "total_reviews": 4,
+    "reviews": [
+      {
+        "name": "Falk D.",
+        "location": "Verified Buyer",
+        "date": "11.11.2024",
+        "rating": 5,
+        "text": "Everything perfect! I can only recommend this device. The quality and workmanship are high-end."
+      },
+      {
+        "name": "Alexander T.",
+        "location": "Verified Buyer",
+        "date": "02.11.2023",
+        "rating": 5,
+        "text": "I love my new vacuum sealer. Great product with excellent quality. Well done!"
+      },
+      {
+        "name": "Michaela R.",
+        "location": "Verified Buyer",
+        "date": "02.11.2023",
+        "rating": 5,
+        "text": "Perfect for me. Since I vacuum a lot, this purchase was worth it — I can even pack two bags side by side simultaneously."
+      },
+      {
+        "name": "Laura Z.",
+        "location": "Verified Buyer",
+        "date": "06.07.2023",
+        "rating": 5,
+        "text": "Completely satisfied. Fast delivery, great product, happy to buy again!"
+      }
+    ]
+  },
+  "v500-premium-xxl": {
+    "average_rating": 5.0,
+    "total_reviews": 6,
+    "reviews": [
+      {
+        "name": "Falk D.",
+        "location": "Verified Buyer",
+        "date": "11.11.2024",
+        "rating": 5,
+        "text": "Everything perfect! I can only recommend this device. The quality and workmanship are high-end."
+      },
+      {
+        "name": "James M.",
+        "location": "Verified Buyer",
+        "date": "02.11.2023",
+        "rating": 5,
+        "title": "Good one",
+        "text": "Finally, a solution on how to vacuum multiple bags simultaneously. Powerful pump and clean weld seams. What more could one ask for?"
+      },
+      {
+        "name": "Marcel R.",
+        "location": "Verified Buyer",
+        "date": "02.11.2023",
+        "rating": 5,
+        "title": "All great",
+        "text": "The device is constantly in use in our fishing club and, thanks to its width, it is also able to vacuum several fish at the same time next to each other. We are very satisfied and are happy to recommend this vacuum machine."
+      },
+      {
+        "name": "Alexander T.",
+        "location": "Verified Buyer",
+        "date": "02.11.2023",
+        "rating": 5,
+        "text": "I love my new vacuum sealer. Great product with excellent quality. Well done!"
+      },
+      {
+        "name": "Michaela R.",
+        "location": "Verified Buyer",
+        "date": "02.11.2023",
+        "rating": 5,
+        "text": "Perfect for me. Since I vacuum a lot, this purchase was worth it — I can even pack two bags side by side simultaneously."
+      },
+      {
+        "name": "Alisa K.",
+        "location": "Verified Buyer",
+        "date": "06.07.2023",
+        "rating": 5,
+        "title": "Mega!!!",
+        "text": "Every day, almost hundreds of bags are sealed with this device in our hotel, and at the same time. Handling is child's play thanks to the clear control terminal. The bags are absolutely tight and the vacuum also holds reliably. You don't want to imagine how much food we would have to throw in the trash without a vacuum sealer."
+      }
+    ]
+  },
+  "embossed-vacuum-bags-13x22-50": {
+    "average_rating": 5.0,
+    "total_reviews": 10,
+    "reviews": [
+      {
+        "name": "Viliam M.",
+        "location": "Verified Buyer",
+        "date": "07.12.2025",
+        "rating": 5,
+        "text": "Those bags are superior to any other on the market. Always been the best choice."
+      },
+      {
+        "name": "Pedro G.",
+        "location": "Verified Buyer",
+        "date": "02.12.2025",
+        "rating": 5,
+        "text": "Fast shipping and good quality. The price of the items was fair, but shipping makes it too expensive. One needs to make a big order to compensate for the shipping. Quality up to standard."
+      },
+      {
+        "name": "Le Thomas J.",
+        "location": "Verified Buyer",
+        "date": "17.11.2025",
+        "rating": 5,
+        "text": "Your basic products are of excellent quality, as are the consumables. Undisputedly a must in the vacuum machine sector. Excellent value for money, bags of very good quality, no bad sealing. Top quality."
+      },
+      {
+        "name": "Michael E.",
+        "location": "Verified Buyer",
+        "date": "11.08.2025",
+        "rating": 5,
+        "text": "Good strong bags. Have used them for many years along with my vacuum machine. Easy to use with anything you need to freeze or keep sealed for a long time. Excellent for keeping out freezer burn."
+      },
+      {
+        "name": "Dileep S.",
+        "location": "Verified Buyer",
+        "date": "10.08.2025",
+        "rating": 5,
+        "text": "Excellent vacuum packaging. My go-to for all my vacuum packaging. Been using these products for more than 10 years now, and that says it all."
+      },
+      {
+        "name": "Mathias J.",
+        "location": "Verified Buyer",
+        "date": "23.06.2025",
+        "rating": 5,
+        "text": "Excellent shop. Good product and quality very good. Prices maybe a bit too high by 20-25%."
+      },
+      {
+        "name": "Viliam M.",
+        "location": "Verified Buyer",
+        "date": "04.05.2025",
+        "rating": 5,
+        "text": "The best vacuum bags you can buy. Also reasonably priced compared to others."
+      },
+      {
+        "name": "Antonio Fernando Lopes N.",
+        "location": "Verified Buyer",
+        "date": "17.03.2025",
+        "rating": 5,
+        "text": "I will buy it again. Very good service, quick delivery, and a high-quality product. Recommended!"
+      },
+      {
+        "name": "Mārtiņš T.",
+        "location": "Verified Buyer",
+        "date": "21.02.2025",
+        "rating": 5,
+        "text": "Good offer. Good price/performance."
+      },
+      {
+        "name": "Kai R.",
+        "location": "Verified Buyer",
+        "date": "16.01.2025",
+        "rating": 5,
+        "text": "Absolutely great product!"
+      }
+    ]
+  },
+  "embossed-vacuum-bags-20x30-50": {
+    "average_rating": 5.0,
+    "total_reviews": 10,
+    "reviews": [
+      {
+        "name": "Viliam M.",
+        "location": "Verified Buyer",
+        "date": "07.12.2025",
+        "rating": 5,
+        "text": "Those bags are superior to any other on the market. Always been the best choice."
+      },
+      {
+        "name": "Pedro G.",
+        "location": "Verified Buyer",
+        "date": "02.12.2025",
+        "rating": 5,
+        "text": "Fast shipping and good quality. The price of the items was fair but shipping makes it too expensive. One needs to make a big order to compensate for the shipping. Quality up to the standards."
+      },
+      {
+        "name": "Le Thomas J.",
+        "location": "Verified Buyer",
+        "date": "17.11.2025",
+        "rating": 5,
+        "text": "Your basic products are of excellent quality, as are the consumables. Undisputedly a must in the vacuum machine sector. Excellent value for money, bags of very good quality, no bad sealing. Top quality."
+      },
+      {
+        "name": "Michael E.",
+        "location": "Verified Buyer",
+        "date": "11.08.2025",
+        "rating": 5,
+        "text": "Good strong bags. Have used them for many years along with my vacuum machine. Easy to use with anything you need to freeze or keep sealed for a long time. Excellent for keeping out freezer burn."
+      },
+      {
+        "name": "Dileep S.",
+        "location": "Verified Buyer",
+        "date": "10.08.2025",
+        "rating": 5,
+        "text": "Excellent vacuum packaging. My go-to for all my vacuum packaging. Been using these products for more than 10 years now, and that says it all."
+      },
+      {
+        "name": "Mathias J.",
+        "location": "Verified Buyer",
+        "date": "23.06.2025",
+        "rating": 5,
+        "text": "Excellent shop. Good product and quality very good. Prices maybe a bit too high by 20-25%."
+      },
+      {
+        "name": "Viliam M.",
+        "location": "Verified Buyer",
+        "date": "04.05.2025",
+        "rating": 5,
+        "text": "The best vacuum bags you can buy. Also reasonably priced compared to others."
+      },
+      {
+        "name": "Antonio Fernando Lopes N.",
+        "location": "Verified Buyer",
+        "date": "17.03.2025",
+        "rating": 5,
+        "text": "I will buy it again. Very good service, quick delivery, and a high-quality product. Recommended!"
+      },
+      {
+        "name": "Mārtiņš T.",
+        "location": "Verified Buyer",
+        "date": "21.02.2025",
+        "rating": 5,
+        "text": "Good offer. Good price/performance."
+      },
+      {
+        "name": "Kai R.",
+        "location": "Verified Buyer",
+        "date": "16.01.2025",
+        "rating": 5,
+        "text": "Absolutely great product!"
+      }
+    ]
+  },
+  "embossed-vacuum-bags-13x20-50": {
+    "average_rating": 5.0,
+    "total_reviews": 10,
+    "reviews": [
+      { "name": "Viliam M.", "location": "Verified Buyer", "date": "07.12.2025", "rating": 5, "text": "Those bags are superior to any other on the market. Always been the best choice." },
+      { "name": "Pedro G.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Fast shipping and good quality. The price of the items was fair, but shipping makes it too expensive. One needs to make a big order to compensate for the shipping. Quality up to standard." },
+      { "name": "Le Thomas J.", "location": "Verified Buyer", "date": "17.11.2025", "rating": 5, "text": "Your basic products are of excellent quality, as are the consumables. Undisputedly a must in the vacuum machine sector. Excellent value for money, bags of very good quality, no bad sealing. Top quality." },
+      { "name": "Michael E.", "location": "Verified Buyer", "date": "11.08.2025", "rating": 5, "text": "Good strong bags. Have used them for many years along with my vacuum machine. Easy to use with anything you need to freeze or keep sealed for a long time. Excellent for keeping out freezer burn." },
+      { "name": "Dileep S.", "location": "Verified Buyer", "date": "10.08.2025", "rating": 5, "text": "Excellent vacuum packaging. My go-to for all my vacuum packaging. Been using these products for more than 10 years now, and that says it all." },
+      { "name": "Mathias J.", "location": "Verified Buyer", "date": "23.06.2025", "rating": 5, "text": "Excellent shop. Good product and quality very good. Prices maybe a bit too high by 20-25%." },
+      { "name": "Viliam M.", "location": "Verified Buyer", "date": "04.05.2025", "rating": 5, "text": "The best vacuum bags you can buy. Also reasonably priced compared to others." },
+      { "name": "Antonio Fernando Lopes N.", "location": "Verified Buyer", "date": "17.03.2025", "rating": 5, "text": "I will buy it again. Very good service, quick delivery, and a high-quality product. Recommended!" },
+      { "name": "Mārtiņš T.", "location": "Verified Buyer", "date": "21.02.2025", "rating": 5, "text": "Good offer. Good price/performance." },
+      { "name": "Kai R.", "location": "Verified Buyer", "date": "16.01.2025", "rating": 5, "text": "Absolutely great product!" }
+    ]
+  },
+  "embossed-vacuum-bags-20x35-50": {
+    "average_rating": 5.0,
+    "total_reviews": 10,
+    "reviews": [
+      { "name": "Viliam M.", "location": "Verified Buyer", "date": "07.12.2025", "rating": 5, "text": "Those bags are superior to any other on the market. Always been the best choice." },
+      { "name": "Pedro G.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Fast shipping and good quality. The price of the items was fair, but shipping makes it too expensive. One needs to make a big order to compensate for the shipping. Quality up to standard." },
+      { "name": "Le Thomas J.", "location": "Verified Buyer", "date": "17.11.2025", "rating": 5, "text": "Your basic products are of excellent quality, as are the consumables. Undisputedly a must in the vacuum machine sector. Excellent value for money, bags of very good quality, no bad sealing. Top quality." },
+      { "name": "Michael E.", "location": "Verified Buyer", "date": "11.08.2025", "rating": 5, "text": "Good strong bags. Have used them for many years along with my vacuum machine. Easy to use with anything you need to freeze or keep sealed for a long time. Excellent for keeping out freezer burn." },
+      { "name": "Dileep S.", "location": "Verified Buyer", "date": "10.08.2025", "rating": 5, "text": "Excellent vacuum packaging. My go-to for all my vacuum packaging. Been using these products for more than 10 years now, and that says it all." },
+      { "name": "Mathias J.", "location": "Verified Buyer", "date": "23.06.2025", "rating": 5, "text": "Excellent shop. Good product and quality very good. Prices maybe a bit too high by 20-25%." },
+      { "name": "Viliam M.", "location": "Verified Buyer", "date": "04.05.2025", "rating": 5, "text": "The best vacuum bags you can buy. Also reasonably priced compared to others." },
+      { "name": "Antonio Fernando Lopes N.", "location": "Verified Buyer", "date": "17.03.2025", "rating": 5, "text": "I will buy it again. Very good service, quick delivery, and a high-quality product. Recommended!" },
+      { "name": "Mārtiņš T.", "location": "Verified Buyer", "date": "21.02.2025", "rating": 5, "text": "Good offer. Good price/performance." },
+      { "name": "Kai R.", "location": "Verified Buyer", "date": "16.01.2025", "rating": 5, "text": "Absolutely great product!" }
+    ]
+  },
+  "embossed-vacuum-bags-20x40-50": {
+    "average_rating": 5.0,
+    "total_reviews": 10,
+    "reviews": [
+      { "name": "Viliam M.", "location": "Verified Buyer", "date": "07.12.2025", "rating": 5, "text": "Those bags are superior to any other on the market. Always been the best choice." },
+      { "name": "Pedro G.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Fast shipping and good quality. The price of the items was fair, but shipping makes it too expensive. One needs to make a big order to compensate for the shipping. Quality up to standard." },
+      { "name": "Le Thomas J.", "location": "Verified Buyer", "date": "17.11.2025", "rating": 5, "text": "Your basic products are of excellent quality, as are the consumables. Undisputedly a must in the vacuum machine sector. Excellent value for money, bags of very good quality, no bad sealing. Top quality." },
+      { "name": "Michael E.", "location": "Verified Buyer", "date": "11.08.2025", "rating": 5, "text": "Good strong bags. Have used them for many years along with my vacuum machine. Easy to use with anything you need to freeze or keep sealed for a long time. Excellent for keeping out freezer burn." },
+      { "name": "Dileep S.", "location": "Verified Buyer", "date": "10.08.2025", "rating": 5, "text": "Excellent vacuum packaging. My go-to for all my vacuum packaging. Been using these products for more than 10 years now, and that says it all." },
+      { "name": "Mathias J.", "location": "Verified Buyer", "date": "23.06.2025", "rating": 5, "text": "Excellent shop. Good product and quality very good. Prices maybe a bit too high by 20-25%." },
+      { "name": "Viliam M.", "location": "Verified Buyer", "date": "04.05.2025", "rating": 5, "text": "The best vacuum bags you can buy. Also reasonably priced compared to others." },
+      { "name": "Antonio Fernando Lopes N.", "location": "Verified Buyer", "date": "17.03.2025", "rating": 5, "text": "I will buy it again. Very good service, quick delivery, and a high-quality product. Recommended!" },
+      { "name": "Mārtiņš T.", "location": "Verified Buyer", "date": "21.02.2025", "rating": 5, "text": "Good offer. Good price/performance." },
+      { "name": "Kai R.", "location": "Verified Buyer", "date": "16.01.2025", "rating": 5, "text": "Absolutely great product!" }
+    ]
+  },
+  "embossed-vacuum-bags-25x60-25": {
+    "average_rating": 5.0,
+    "total_reviews": 10,
+    "reviews": [
+      { "name": "Viliam M.", "location": "Verified Buyer", "date": "07.12.2025", "rating": 5, "text": "Those bags are superior to any other on the market. Always been the best choice." },
+      { "name": "Pedro G.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Fast shipping and good quality. The price of the items was fair, but shipping makes it too expensive. One needs to make a big order to compensate for the shipping. Quality up to standard." },
+      { "name": "Le Thomas J.", "location": "Verified Buyer", "date": "17.11.2025", "rating": 5, "text": "Your basic products are of excellent quality, as are the consumables. Undisputedly a must in the vacuum machine sector. Excellent value for money, bags of very good quality, no bad sealing. Top quality." },
+      { "name": "Michael E.", "location": "Verified Buyer", "date": "11.08.2025", "rating": 5, "text": "Good strong bags. Have used them for many years along with my vacuum machine. Easy to use with anything you need to freeze or keep sealed for a long time. Excellent for keeping out freezer burn." },
+      { "name": "Dileep S.", "location": "Verified Buyer", "date": "10.08.2025", "rating": 5, "text": "Excellent vacuum packaging. My go-to for all my vacuum packaging. Been using these products for more than 10 years now, and that says it all." },
+      { "name": "Mathias J.", "location": "Verified Buyer", "date": "23.06.2025", "rating": 5, "text": "Excellent shop. Good product and quality very good. Prices maybe a bit too high by 20-25%." },
+      { "name": "Viliam M.", "location": "Verified Buyer", "date": "04.05.2025", "rating": 5, "text": "The best vacuum bags you can buy. Also reasonably priced compared to others." },
+      { "name": "Antonio Fernando Lopes N.", "location": "Verified Buyer", "date": "17.03.2025", "rating": 5, "text": "I will buy it again. Very good service, quick delivery, and a high-quality product. Recommended!" },
+      { "name": "Mārtiņš T.", "location": "Verified Buyer", "date": "21.02.2025", "rating": 5, "text": "Good offer. Good price/performance." },
+      { "name": "Kai R.", "location": "Verified Buyer", "date": "16.01.2025", "rating": 5, "text": "Absolutely great product!" }
+    ]
+  },
+  "embossed-vacuum-rolls-15cm-6m-4pack": {
+    "average_rating": 5.0,
+    "total_reviews": 6,
+    "reviews": [
+      { "name": "Daniel H.", "location": "Verified Buyer", "date": "29.10.2025", "rating": 5, "text": "Perfect! You can adjust the size of the container. You can also make a double weld seam (La.Va 100)." },
+      { "name": "Christoph K.", "location": "Verified Buyer", "date": "10.07.2025", "rating": 5, "text": "Don't know a better bag! Durable quality, easy to seal." },
+      { "name": "Mats A.", "location": "Verified Buyer", "date": "22.10.2024", "rating": 5, "text": "High quality at a good price. Quality is superb. Never any problems with leakage or holes from bones. Very good price-quality ratio." },
+      { "name": "Pasi K.", "location": "Verified Buyer", "date": "08.10.2024", "rating": 5, "text": "Great workmanship. The quality is fine and the rolls work great." },
+      { "name": "Hannu M.", "location": "Verified Buyer", "date": "21.08.2024", "rating": 5, "text": "Great product." },
+      { "name": "William D.", "location": "Verified Buyer", "date": "23.02.2024", "rating": 5, "text": "Quality keeps me with LAVA. Excellent quality giving assurances of a safe vacuumed product." }
+    ]
+  },
+  "embossed-vacuum-rolls-20cm-6m-2pack": {
+    "average_rating": 5.0,
+    "total_reviews": 17,
+    "reviews": [
+      { "name": "Daniel H.", "location": "Verified Buyer", "date": "29.10.2025", "rating": 5, "text": "Perfect! You can adjust the size of the container. You can also make a double weld seam (La.Va 100)." },
+      { "name": "Christoph K.", "location": "Verified Buyer", "date": "10.07.2025", "rating": 5, "text": "Don't know a better bag! Durable quality, easy to seal." },
+      { "name": "Martina W.", "location": "Verified Buyer", "date": "07.12.2025", "rating": 5, "text": "I always order rolls and bags. For different sizes of items to be vacuum packed, rolls are better than bags!" },
+      { "name": "Ralph T.", "location": "Verified Buyer", "date": "06.12.2025", "rating": 5, "text": "Always happy to buy again 👍 Good material, gladly again." },
+      { "name": "Udo W.", "location": "Verified Buyer", "date": "06.12.2025", "rating": 5, "text": "My supplier number one. Extremely good quality and the price is worth it. Fast delivery and service, as always, excellent." },
+      { "name": "Reiner H.", "location": "Verified Buyer", "date": "04.12.2025", "rating": 5, "text": "Gladly again, everything superb. Everything great, very good product, gladly again." },
+      { "name": "Albert S.", "location": "Verified Buyer", "date": "03.12.2025", "rating": 5, "text": "Good value for money. The offer is not bad, but as an angler I do miss equipment for fish processing." },
+      { "name": "Gaby L.", "location": "Verified Buyer", "date": "03.12.2025", "rating": 5, "text": "Super quality and the workmanship is excellent." },
+      { "name": "Martha T.", "location": "Verified Buyer", "date": "03.12.2025", "rating": 5, "text": "The quality and workmanship leave nothing to be desired. The vacuum rolls are very practical because you can cut the size you need." },
+      { "name": "Harald F.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Good offers, good price and prompt delivery. I have been convinced by la.va products for a long time. I am happy to buy there again as soon as my stock runs out. Quality has its price." },
+      { "name": "Klaus B.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Excellent vacuum roll films, suitable for the la.va vacuum sealers. Good quality!" },
+      { "name": "Klaus S.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Will repeat the order when used up. Satisfied." },
+      { "name": "Mats A.", "location": "Verified Buyer", "date": "22.10.2024", "rating": 5, "text": "Don't know a better bag! Durable quality, easy to seal." },
+      { "name": "Anonymous", "location": "Verified Buyer", "date": "22.10.2024", "rating": 5, "text": "High quality at a good price. Quality is superb. Never any problems with leakage or holes from bones. Very good price-quality ratio." },
+      { "name": "Pasi K.", "location": "Verified Buyer", "date": "08.10.2024", "rating": 5, "text": "Great workmanship. The quality is fine and the rolls work great." },
+      { "name": "Hannu M.", "location": "Verified Buyer", "date": "21.08.2024", "rating": 5, "text": "Great product." },
+      { "name": "William D.", "location": "Verified Buyer", "date": "23.02.2024", "rating": 5, "text": "Quality keeps me with LAVA. Excellent quality giving assurances of a safe vacuumed product." }
+    ]
+  },
+  "embossed-vacuum-rolls-25cm-6m-2pack": {
+    "average_rating": 5.0,
+    "total_reviews": 20,
+    "reviews": [
+      { "name": "Erwin B.", "location": "Verified Buyer", "date": "17.12.2025", "rating": 5, "text": "Very good product, gladly again." },
+      { "name": "Thomas F.", "location": "Verified Buyer", "date": "14.12.2025", "rating": 5, "text": "I am very satisfied. Sturdy material. Seals well." },
+      { "name": "Wolfgang G.", "location": "Verified Buyer", "date": "14.12.2025", "rating": 5, "text": "The best rolls for freezing fish. Proven quality. I have been using them for years." },
+      { "name": "Christoph B.", "location": "Verified Buyer", "date": "13.12.2025", "rating": 5, "text": "Top product. Thick film, feels very high quality." },
+      { "name": "Josef M.", "location": "Verified Buyer", "date": "13.12.2025", "rating": 5, "text": "Excellent." },
+      { "name": "Franz H.", "location": "Verified Buyer", "date": "11.12.2025", "rating": 5, "text": "Very good device. The price-performance ratio is right." },
+      { "name": "Annekathrin H.", "location": "Verified Buyer", "date": "10.12.2025", "rating": 5, "text": "Super quality and fast shipping. Very good quality and fast shipping; customer service is friendly and solution-oriented. A little expensive, but that is certainly due to the quality and service. I am always happy to order again." },
+      { "name": "Daniel G.", "location": "Verified Buyer", "date": "09.12.2025", "rating": 5, "text": "Quality pays off! I can only agree with the previous reviewers: top workmanship and the easiest handling. This applies to the V.300 Black device as well as the vacuum bags and rolls." },
+      { "name": "Benjamin J.", "location": "Verified Buyer", "date": "09.12.2025", "rating": 5, "text": "Super performance. The goods are top as always." },
+      { "name": "Andreas B.", "location": "Verified Buyer", "date": "08.12.2025", "rating": 5, "text": "I can only recommend it to those looking for and needing quality. Everything top as always, and everyone can choose the product that suits them best." },
+      { "name": "Martina W.", "location": "Verified Buyer", "date": "07.12.2025", "rating": 5, "text": "Always order rolls and bags. For different sizes of items to be vacuum sealed, rolls are better than bags!" },
+      { "name": "Ralph T.", "location": "Verified Buyer", "date": "06.12.2025", "rating": 5, "text": "Always happy to buy again 👍 Good material, gladly again." },
+      { "name": "Udo W.", "location": "Verified Buyer", "date": "06.12.2025", "rating": 5, "text": "My supplier number one. Extremely good quality and the price is worth it. Fast delivery and service, as always, excellent." },
+      { "name": "Reiner H.", "location": "Verified Buyer", "date": "04.12.2025", "rating": 5, "text": "Gladly again, everything superb. Everything great, very good product, gladly again." },
+      { "name": "Albert S.", "location": "Verified Buyer", "date": "03.12.2025", "rating": 5, "text": "Good value for money. The offer is not bad, but as an angler I do miss equipment for fish processing." },
+      { "name": "Gaby L.", "location": "Verified Buyer", "date": "03.12.2025", "rating": 5, "text": "Super quality and the workmanship is excellent." },
+      { "name": "Martha T.", "location": "Verified Buyer", "date": "03.12.2025", "rating": 5, "text": "The quality and workmanship leave nothing to be desired. The vacuum rolls are very practical because you can cut the size you need." },
+      { "name": "Harald F.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Good offers, good price and prompt delivery. I have been convinced by la.va products for a long time. I am happy to buy there again as soon as my stock runs out. Quality has its price." },
+      { "name": "Klaus B.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Excellent vacuum film rolls, suitable for the la.va vacuum sealers. Good quality!" },
+      { "name": "Klaus S.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Will repeat the order when used up. Satisfied." }
+    ]
+  },
+  "embossed-vacuum-rolls-30cm-6m-2pack": {
+    "average_rating": 5.0,
+    "total_reviews": 20,
+    "reviews": [
+      { "name": "Claudia B.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "For our use there is nothing better. We are always extremely satisfied with the quality and workmanship. Since we started using Lava machines and materials, we have been absolutely satisfied." },
+      { "name": "Herbert T.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Top quality, but expensive." },
+      { "name": "Klaus S.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Top goods any time again / price is fine too. Top quality as always; I have been buying these bags and rolls for years." },
+      { "name": "Martin T.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "I would buy it again. Bags are great." },
+      { "name": "Ulrike B.", "location": "Verified Buyer", "date": "17.11.2025", "rating": 5, "text": "Perfect. Perfect films for food, to freeze them safely. I have already tried others and immediately went back to the originals. I always order again when I notice that my stock is running low." },
+      { "name": "Karl W.", "location": "Verified Buyer", "date": "17.11.2025", "rating": 5, "text": "Very good, can be recommended. Very good quality, works very well." },
+      { "name": "Anna K.", "location": "Verified Buyer", "date": "13.11.2025", "rating": 5, "text": "Good. Very good." },
+      { "name": "Stefan S.", "location": "Verified Buyer", "date": "11.11.2025", "rating": 5, "text": "These products can only be recommended. You are never disappointed here. For years, they have been number one for me in terms of quality, service, and products." },
+      { "name": "Franz H.", "location": "Verified Buyer", "date": "10.11.2025", "rating": 5, "text": "The best vacuum bags for sealing and storing game meat. Great quality! Price okay." },
+      { "name": "Günter S.", "location": "Verified Buyer", "date": "09.11.2025", "rating": 5, "text": "Simply top. Best goods." },
+      { "name": "Franz H.", "location": "Verified Buyer", "date": "09.11.2025", "rating": 5, "text": "I can only recommend it. It is a very good product." },
+      { "name": "Franz H.", "location": "Verified Buyer", "date": "08.11.2025", "rating": 5, "text": "Everything fits. I am very satisfied." },
+      { "name": "Sven R.", "location": "Verified Buyer", "date": "05.11.2025", "rating": 5, "text": "Always happy again. Very high-quality quality." },
+      { "name": "Daniel H.", "location": "Verified Buyer", "date": "29.10.2025", "rating": 5, "text": "Perfect!! You can adjust the size of the container. You can possibly make a double weld seam (La.Va 100)." },
+      { "name": "Reinhold L.", "location": "Verified Buyer", "date": "28.10.2025", "rating": 5, "text": "Not cheap but strong and stable. Strong and stable." },
+      { "name": "Vera U.", "location": "Verified Buyer", "date": "11.10.2025", "rating": 5, "text": "Good value for money. We have been customers of Lava for a long time and are always satisfied. The product keeps what it promises, namely absolute tightness." },
+      { "name": "Hermann P.", "location": "Verified Buyer", "date": "06.10.2025", "rating": 5, "text": "The goods were delivered quickly, were well packaged and are very good. I will order again. The quality is superb, the price is reasonable." },
+      { "name": "Mirko M.", "location": "Verified Buyer", "date": "01.10.2025", "rating": 5, "text": "Always happy again. Excellent." },
+      { "name": "Katja S.", "location": "Verified Buyer", "date": "17.09.2025", "rating": 5, "text": "Simply superb. I am always satisfied with the quality." },
+      { "name": "Oliver M.", "location": "Verified Buyer", "date": "10.09.2025", "rating": 5, "text": "Very good product, which I would buy again at any time. The quality is really very good. The price is absolutely reasonable for this product." }
+    ]
+  },
+  "vacuum-sealer-attachment-for-glass-jars-8-9-cm-diameter": {
+    "average_rating": 5.0,
+    "total_reviews": 10,
+    "reviews": [
+      { "name": "Kathrin H.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "100% recommended. You can vacuum seal jars very well." },
+      { "name": "Richard W.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Good. Easy to use." },
+      { "name": "Karl W.", "location": "Verified Buyer", "date": "17.11.2025", "rating": 5, "text": "Probably just as good as everything else. I haven't had the chance to test it yet; I still need to watch a video on how it works." },
+      { "name": "Thomas V.", "location": "Verified Buyer", "date": "15.10.2025", "rating": 5, "text": "Absolutely essential. Perfect for me, I vacuum seal matching twist-off jars with it. Who doesn't know it: opened pickle jars and the like sit in the fridge and are not eaten up immediately. With this vacuum bell, I extend the shelf life of these, or similar foods, many times over." },
+      { "name": "Marion G.", "location": "Verified Buyer", "date": "03.10.2025", "rating": 5, "text": "The goods are always excellent and the quality is perfect. Great device." },
+      { "name": "Hans-Jörg D.", "location": "Verified Buyer", "date": "16.09.2025", "rating": 5, "text": "Super. Good quality and easy handling. Highly recommended 👍" },
+      { "name": "Susanne R.", "location": "Verified Buyer", "date": "14.08.2025", "rating": 5, "text": "Good. Works well." },
+      { "name": "Olaf D.", "location": "Verified Buyer", "date": "29.07.2025", "rating": 5, "text": "Simply perfect. I have been using this bell for a long time. I don't need plastic bags; I simply use twist-off jars, which are cheaply available online, or many filled jars from the supermarket also fit." },
+      { "name": "Alfred M.", "location": "Verified Buyer", "date": "27.05.2025", "rating": 5, "text": "Vacuuming is also possible with other containers, provided they have a suitable opening. Works perfectly; the lids sit very firmly." },
+      { "name": "Matthias U.", "location": "Verified Buyer", "date": "15.05.2025", "rating": 5, "text": "Works very well. Easy to use." }
+    ]
+  },
+  "acrylic-container-lid-160-203mm": {
+    "average_rating": 5.0,
+    "total_reviews": 20,
+    "reviews": [
+      { "name": "Manfred M.", "location": "Verified Buyer", "date": "16.12.2025", "rating": 5, "text": "These lids have been around for quite some time and I like using them for bowls and small dishes. Everything is perfect." },
+      { "name": "Klaus H.", "location": "Verified Buyer", "date": "10.12.2025", "rating": 5, "text": "Fits well. Fits many containers and seals tightly, very good!" },
+      { "name": "Richard W.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Good. As before." },
+      { "name": "Andreas L.", "location": "Verified Buyer", "date": "09.11.2025", "rating": 5, "text": "I am satisfied with it. Top in terms of handling and function." },
+      { "name": "Andre B.", "location": "Verified Buyer", "date": "20.10.2025", "rating": 5, "text": "I would buy it again anytime. Works very well on an 800 g tin can." },
+      { "name": "Christine K.", "location": "Verified Buyer", "date": "15.09.2025", "rating": 5, "text": "Good. Not bad, but you have to choose the right size." },
+      { "name": "Reyya K.", "location": "Verified Buyer", "date": "14.09.2025", "rating": 5, "text": "I am completely satisfied, always happy again. Everything is excellent! Always happy again!" },
+      { "name": "Werner M.", "location": "Verified Buyer", "date": "25.08.2025", "rating": 5, "text": "I would also buy the universal lid again. The universal lid works perfectly." },
+      { "name": "Susanne R.", "location": "Verified Buyer", "date": "14.08.2025", "rating": 5, "text": "Good. Works with almost all containers." },
+      { "name": "Steven D.", "location": "Verified Buyer", "date": "30.07.2025", "rating": 5, "text": "Not used yet, very robust impression. Not used yet, but they are obviously very robust." },
+      { "name": "Karlheinz W.", "location": "Verified Buyer", "date": "29.07.2025", "rating": 5, "text": "Simply brilliant." },
+      { "name": "Alfred M.", "location": "Verified Buyer", "date": "27.05.2025", "rating": 5, "text": "Very good workmanship. Can also be used very well for other containers with a smooth rim." },
+      { "name": "Alfred M.", "location": "Verified Buyer", "date": "27.05.2025", "rating": 5, "text": "Great piece. Can also be used well on other containers." },
+      { "name": "Christian B.", "location": "Verified Buyer", "date": "16.05.2025", "rating": 5, "text": "I will keep ordering this item again. A very practical piece." },
+      { "name": "Jörg S.", "location": "Verified Buyer", "date": "19.03.2025", "rating": 5, "text": "Stable lids... work. Very stable. Fit several sizes of bowls for me. Great." },
+      { "name": "Richard G.", "location": "Verified Buyer", "date": "25.02.2025", "rating": 5, "text": "Top product. Good and sturdy workmanship." },
+      { "name": "Jörg D.", "location": "Verified Buyer", "date": "21.01.2025", "rating": 5, "text": "Very good!!! Very good!!!" },
+      { "name": "Ian M.", "location": "Verified Buyer", "date": "27.12.2024", "rating": 5, "text": "Ideal for a busy kitchen. Really useful." },
+      { "name": "Martin S.", "location": "Verified Buyer", "date": "18.12.2024", "rating": 5, "text": "Works very well. Very good." },
+      { "name": "Marco M.", "location": "Verified Buyer", "date": "15.11.2024", "rating": 5, "text": "Perfect and close excellently. Very good lids and perfect for our needs at Pulverei-Geschmackshandwerker.de." }
+    ]
+  },
+  "acrylic-container-lid-204-237mm": {
+    "average_rating": 5.0,
+    "total_reviews": 20,
+    "reviews": [
+      { "name": "Manfred M.", "location": "Verified Buyer", "date": "16.12.2025", "rating": 5, "text": "These lids have been around for quite some time and I like using them for bowls and small dishes. Everything is perfect." },
+      { "name": "Klaus H.", "location": "Verified Buyer", "date": "10.12.2025", "rating": 5, "text": "Fits well. Fits many containers and seals tightly, very good!" },
+      { "name": "Richard W.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Good. As before." },
+      { "name": "Andreas L.", "location": "Verified Buyer", "date": "09.11.2025", "rating": 5, "text": "I am satisfied with it. Top in terms of handling and function." },
+      { "name": "Andre B.", "location": "Verified Buyer", "date": "20.10.2025", "rating": 5, "text": "I would buy it again anytime. Works very well on an 800 g tin can." },
+      { "name": "Christine K.", "location": "Verified Buyer", "date": "15.09.2025", "rating": 5, "text": "Good. Not bad, but you have to choose the right size." },
+      { "name": "Reyya K.", "location": "Verified Buyer", "date": "14.09.2025", "rating": 5, "text": "I am completely satisfied, always happy again. Everything is excellent! Always happy again!" },
+      { "name": "Werner M.", "location": "Verified Buyer", "date": "25.08.2025", "rating": 5, "text": "I would also buy the universal lid again. The universal lid works perfectly." },
+      { "name": "Susanne R.", "location": "Verified Buyer", "date": "14.08.2025", "rating": 5, "text": "Good. Works with almost all containers." },
+      { "name": "Steven D.", "location": "Verified Buyer", "date": "30.07.2025", "rating": 5, "text": "Not used yet, very robust impression. Not used yet, but they are obviously very robust." },
+      { "name": "Karlheinz W.", "location": "Verified Buyer", "date": "29.07.2025", "rating": 5, "text": "Simply brilliant." },
+      { "name": "Alfred M.", "location": "Verified Buyer", "date": "27.05.2025", "rating": 5, "text": "Very good workmanship. Can also be used very well for other containers with a smooth rim." },
+      { "name": "Alfred M.", "location": "Verified Buyer", "date": "27.05.2025", "rating": 5, "text": "Great piece. Can also be used well on other containers." },
+      { "name": "Christian B.", "location": "Verified Buyer", "date": "16.05.2025", "rating": 5, "text": "I will keep ordering this item again. A very practical piece." },
+      { "name": "Jörg S.", "location": "Verified Buyer", "date": "19.03.2025", "rating": 5, "text": "Stable lids... work. Very stable. Fit several sizes of bowls for me. Great." },
+      { "name": "Richard G.", "location": "Verified Buyer", "date": "25.02.2025", "rating": 5, "text": "Top product. Good and sturdy workmanship." },
+      { "name": "Jörg D.", "location": "Verified Buyer", "date": "21.01.2025", "rating": 5, "text": "Very good!!! Very good!!!" },
+      { "name": "Ian M.", "location": "Verified Buyer", "date": "27.12.2024", "rating": 5, "text": "Ideal for a busy kitchen. Really useful." },
+      { "name": "Martin S.", "location": "Verified Buyer", "date": "18.12.2024", "rating": 5, "text": "Works very well. Very good." },
+      { "name": "Marco M.", "location": "Verified Buyer", "date": "15.11.2024", "rating": 5, "text": "Perfect and close excellently. Very good lids and perfect for our needs at Pulverei-Geschmackshandwerker.de." }
+    ]
+  },
+  "embossed-vacuum-bags-30x60-25": {
+    "average_rating": 5.0,
+    "total_reviews": 10,
+    "reviews": [
+      { "name": "Viliam M.", "location": "Verified Buyer", "date": "07.12.2025", "rating": 5, "text": "Those bags are superior to any other on the market. Always been the best choice." },
+      { "name": "Pedro G.", "location": "Verified Buyer", "date": "02.12.2025", "rating": 5, "text": "Fast shipping and good quality. The price of the items was fair, but shipping makes it too expensive. One needs to make a big order to compensate for the shipping. Quality up to standard." },
+      { "name": "Le Thomas J.", "location": "Verified Buyer", "date": "17.11.2025", "rating": 5, "text": "Your basic products are of excellent quality, as are the consumables. Undisputedly a must in the vacuum machine sector. Excellent value for money, bags of very good quality, no bad sealing. Top quality." },
+      { "name": "Michael E.", "location": "Verified Buyer", "date": "11.08.2025", "rating": 5, "text": "Good strong bags. Have used them for many years along with my vacuum machine. Easy to use with anything you need to freeze or keep sealed for a long time. Excellent for keeping out freezer burn." },
+      { "name": "Dileep S.", "location": "Verified Buyer", "date": "10.08.2025", "rating": 5, "text": "Excellent vacuum packaging. My go-to for all my vacuum packaging. Been using these products for more than 10 years now, and that says it all." },
+      { "name": "Mathias J.", "location": "Verified Buyer", "date": "23.06.2025", "rating": 5, "text": "Excellent shop. Good product and quality very good. Prices maybe a bit too high by 20-25%." },
+      { "name": "Viliam M.", "location": "Verified Buyer", "date": "04.05.2025", "rating": 5, "text": "The best vacuum bags you can buy. Also reasonably priced compared to others." },
+      { "name": "Antonio Fernando Lopes N.", "location": "Verified Buyer", "date": "17.03.2025", "rating": 5, "text": "I will buy it again. Very good service, quick delivery, and a high-quality product. Recommended!" },
+      { "name": "Mārtiņš T.", "location": "Verified Buyer", "date": "21.02.2025", "rating": 5, "text": "Good offer. Good price/performance." },
+      { "name": "Kai R.", "location": "Verified Buyer", "date": "16.01.2025", "rating": 5, "text": "Absolutely great product!" }
+    ]
+  }
+}

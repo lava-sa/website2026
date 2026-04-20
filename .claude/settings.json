@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(nextjs/node_modules/**)",
+      "Read(nextjs/.next/**)",
+      "Read(nextjs/dist/**)",
+      "Read(nextjs/coverage/**)",
+      "Read(nextjs/*.lock)",
+      "Read(**/*.lock)",
+      "Read(nextjs/.turbo/**)"
+    ]
+  }
+}

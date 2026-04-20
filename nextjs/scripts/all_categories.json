@@ -1,0 +1,62 @@
+﻿[
+    {
+        "id":  "dda59deb-44fb-415a-b5ca-4ba124fddcac",
+        "name":  "Vacuum Machines",
+        "slug":  "vacuum-machines",
+        "description":  "German-engineered vacuum sealers for home, catering and commercial use.",
+        "parent_id":  null,
+        "image_url":  null,
+        "sort_order":  1,
+        "created_at":  "2026-04-13T15:22:19.636314+00:00"
+    },
+    {
+        "id":  "e6d696d1-e1a2-4fee-9383-2eb0e8c6ad56",
+        "name":  "Vacuum Bags",
+        "slug":  "vacuum-bags",
+        "description":  "German-quality embossed vacuum bags compatible with all LAVA machines.",
+        "parent_id":  null,
+        "image_url":  null,
+        "sort_order":  2,
+        "created_at":  "2026-04-13T20:44:36.430908+00:00"
+    },
+    {
+        "id":  "aca75fd2-b9ba-4537-829f-d03970dad19f",
+        "name":  "Vacuum Rolls",
+        "slug":  "vacuum-rolls",
+        "description":  "Cut-to-length embossed vacuum rolls for custom bag sizes.",
+        "parent_id":  null,
+        "image_url":  null,
+        "sort_order":  3,
+        "created_at":  "2026-04-13T20:44:36.862+00:00"
+    },
+    {
+        "id":  "1e9be2b4-1c20-4882-92e7-a9f1944974eb",
+        "name":  "Containers \u0026 Lids",
+        "slug":  "containers-lids",
+        "description":  "LAVA acrylic and stainless steel vacuum containers and lids. Compatible with all LAVA vacuum sealing machines.",
+        "parent_id":  null,
+        "image_url":  null,
+        "sort_order":  4,
+        "created_at":  "2026-04-13T20:56:21.378218+00:00"
+    },
+    {
+        "id":  "47d9574c-88eb-4611-9a24-72921e842348",
+        "name":  "Butchery Accessories",
+        "slug":  "butchery-accessories",
+        "description":  "Professional butchery tools, knives, hanging systems, scales and protective clothing.",
+        "parent_id":  null,
+        "image_url":  null,
+        "sort_order":  5,
+        "created_at":  "2026-04-13T21:57:42.036923+00:00"
+    },
+    {
+        "id":  "581b0363-c4e8-4362-aa2d-866e7bb596ba",
+        "name":  "Spare Parts",
+        "slug":  "spare-parts",
+        "description":  "Genuine LAVA replacement parts — sealing strips, liquid trap lids and vacuum seals.",
+        "parent_id":  null,
+        "image_url":  null,
+        "sort_order":  7,
+        "created_at":  "2026-04-14T10:46:54.458916+00:00"
+    }
+]

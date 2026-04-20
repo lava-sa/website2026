@@ -1,0 +1,746 @@
+﻿[
+    {
+        "slug":  "v100-premium-x",
+        "name":  "LAVA V.100 Premium X",
+        "tags":  [
+                     "entry-level",
+                     "home",
+                     "compact",
+                     "manual",
+                     "V100"
+                 ]
+    },
+    {
+        "slug":  "v300-premium-x",
+        "name":  "LAVA V.300 Premium X",
+        "tags":  [
+                     "most-popular",
+                     "automatic",
+                     "home",
+                     "hunting",
+                     "V300"
+                 ]
+    },
+    {
+        "slug":  "v300-black",
+        "name":  "LAVA V.300 Premium Black — Limited Edition",
+        "tags":  [
+                     "limited-edition",
+                     "black",
+                     "automatic",
+                     "V300"
+                 ]
+    },
+    {
+        "slug":  "v300-white",
+        "name":  "LAVA V.300 Premium White — Limited Edition",
+        "tags":  [
+                     "limited-edition",
+                     "white",
+                     "high-vacuum",
+                     "V300"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-bags-13x20-50",
+        "name":  "Embossed Vacuum Bags 13 × 20 cm — 50 Bags",
+        "tags":  [
+                     "bags",
+                     "13x20",
+                     "50-pack"
+                 ]
+    },
+    {
+        "slug":  "v333-chrome",
+        "name":  "LAVA V.333 Chrome",
+        "tags":  [
+                     "industrial",
+                     "commercial",
+                     "triple-seal",
+                     "V333",
+                     "special-order"
+                 ]
+    },
+    {
+        "slug":  "v400-premium",
+        "name":  "LAVA V.400 Premium",
+        "tags":  [
+                     "commercial",
+                     "stainless-steel",
+                     "triple-seal",
+                     "V400",
+                     "special-order"
+                 ]
+    },
+    {
+        "slug":  "v500-premium",
+        "name":  "LAVA V.500 Premium (72cm)",
+        "tags":  [
+                     "industrial",
+                     "commercial",
+                     "triple-seal",
+                     "V500",
+                     "special-order",
+                     "high-volume"
+                 ]
+    },
+    {
+        "slug":  "v500-premium-xxl",
+        "name":  "LAVA V.500 Premium XXL (121cm)",
+        "tags":  [
+                     "industrial",
+                     "extra-large",
+                     "V500-XXL",
+                     "special-order",
+                     "carcases"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-bags-10x15-50",
+        "name":  "Embossed Vacuum Bags 10 × 15 cm — 50 Bags",
+        "tags":  [
+                     "bags",
+                     "10x15",
+                     "small",
+                     "50-pack"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-bags-13x22-50",
+        "name":  "Embossed Vacuum Bags 13 × 22.5 cm — 50 Bags",
+        "tags":  [
+                     "bags",
+                     "13x22",
+                     "50-pack"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-bags-20x30-50",
+        "name":  "Embossed Vacuum Bags 20 × 30 cm — 50 Bags",
+        "tags":  [
+                     "bags",
+                     "20x30",
+                     "50-pack",
+                     "most-popular"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-bags-20x35-50",
+        "name":  "Embossed Vacuum Bags 20 × 35 cm — 50 Bags",
+        "tags":  [
+                     "bags",
+                     "20x35",
+                     "50-pack"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-bags-20x40-50",
+        "name":  "Embossed Vacuum Bags 20 × 40 cm — 50 Bags",
+        "tags":  [
+                     "bags",
+                     "20x40",
+                     "50-pack"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-bags-25x60-25",
+        "name":  "Embossed Vacuum Bags 25 × 60 cm — 25 Bags",
+        "tags":  [
+                     "bags",
+                     "25x60",
+                     "25-pack",
+                     "large",
+                     "game"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-bags-30x60-25",
+        "name":  "Embossed Vacuum Bags 30 × 60 cm — 25 Bags",
+        "tags":  [
+                     "bags",
+                     "30x60",
+                     "25-pack",
+                     "large"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-rolls-15cm-6m-4pack",
+        "name":  "Embossed Vacuum Sealer Rolls 15 cm × 6 m — 4 Rolls",
+        "tags":  [
+                     "rolls",
+                     "15cm",
+                     "6m",
+                     "4-pack"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-rolls-20cm-6m-2pack",
+        "name":  "Embossed Vacuum Sealer Rolls 20 cm × 6 m — 2 Rolls",
+        "tags":  [
+                     "rolls",
+                     "20cm",
+                     "6m",
+                     "2-pack",
+                     "most-popular"
+                 ]
+    },
+    {
+        "slug":  "swivel-hooks-300x12mm-200kg",
+        "name":  "Professional Swivel Hooks — 300×12mm 200kg",
+        "tags":  [
+                     "hanging",
+                     "swivel-hooks",
+                     "300x12mm"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-rolls-25cm-6m-2pack",
+        "name":  "Embossed Vacuum Sealer Rolls 25 cm × 6 m — 2 Rolls",
+        "tags":  [
+                     "rolls",
+                     "25cm",
+                     "6m",
+                     "2-pack"
+                 ]
+    },
+    {
+        "slug":  "embossed-vacuum-rolls-30cm-6m-2pack",
+        "name":  "Embossed Vacuum Sealer Rolls 30 cm × 6 m — 2 Rolls",
+        "tags":  [
+                     "rolls",
+                     "30cm",
+                     "6m",
+                     "2-pack",
+                     "large"
+                 ]
+    },
+    {
+        "slug":  "acrylic-container-650ml-square",
+        "name":  "LAVA 650ml Square Acrylic Vacuum Container",
+        "tags":  [
+                     "container",
+                     "acrylic",
+                     "650ml",
+                     "square"
+                 ]
+    },
+    {
+        "slug":  "acrylic-container-1000ml-round",
+        "name":  "LAVA 1000ml Round Acrylic Vacuum Container",
+        "tags":  [
+                     "container",
+                     "acrylic",
+                     "1000ml",
+                     "round"
+                 ]
+    },
+    {
+        "slug":  "acrylic-container-1200ml-square",
+        "name":  "LAVA 1200ml Square Acrylic Vacuum Container",
+        "tags":  [
+                     "container",
+                     "acrylic",
+                     "1200ml",
+                     "square"
+                 ]
+    },
+    {
+        "slug":  "acrylic-container-1650ml-rectangular",
+        "name":  "LAVA 1650ml Rectangular Acrylic Vacuum Container",
+        "tags":  [
+                     "container",
+                     "acrylic",
+                     "1650ml",
+                     "rectangular"
+                 ]
+    },
+    {
+        "slug":  "acrylic-container-2000ml-square",
+        "name":  "LAVA 2000ml Square Acrylic Vacuum Container",
+        "tags":  [
+                     "container",
+                     "acrylic",
+                     "2000ml",
+                     "square"
+                 ]
+    },
+    {
+        "slug":  "acrylic-container-set-4-piece",
+        "name":  "LAVA 4-Piece Acrylic Vacuum Container Set",
+        "tags":  [
+                     "container",
+                     "acrylic",
+                     "set",
+                     "4-piece",
+                     "bundle"
+                 ]
+    },
+    {
+        "slug":  "cutting-knife-21cm",
+        "name":  "Professional Butcher Cutting Knife — 21cm Heavy-Duty",
+        "tags":  [
+                     "knife",
+                     "cutting",
+                     "21cm",
+                     "heavy-duty"
+                 ]
+    },
+    {
+        "slug":  "es-line-stainless-container-1300ml",
+        "name":  "LAVA 1300ml ES-Line Stainless Steel Vacuum Container",
+        "tags":  [
+                     "container",
+                     "stainless-steel",
+                     "es-line",
+                     "1300ml"
+                 ]
+    },
+    {
+        "slug":  "es-line-stainless-container-2500ml",
+        "name":  "LAVA 2500ml ES-Line Stainless Steel Vacuum Container",
+        "tags":  [
+                     "container",
+                     "stainless-steel",
+                     "es-line",
+                     "2500ml"
+                 ]
+    },
+    {
+        "slug":  "es-line-stainless-container-4000ml",
+        "name":  "LAVA 4000ml ES-Line Stainless Steel Vacuum Container",
+        "tags":  [
+                     "container",
+                     "stainless-steel",
+                     "es-line",
+                     "4000ml",
+                     "large"
+                 ]
+    },
+    {
+        "slug":  "es-line-stainless-container-set-3-piece",
+        "name":  "LAVA ES-Line 3-Piece Stainless Steel Container Set",
+        "tags":  [
+                     "container",
+                     "stainless-steel",
+                     "es-line",
+                     "set",
+                     "3-piece",
+                     "premium"
+                 ]
+    },
+    {
+        "slug":  "acrylic-container-lid-160-203mm",
+        "name":  "LAVA Acrylic Container Lid 160–203mm",
+        "tags":  [
+                     "lid",
+                     "acrylic",
+                     "replacement",
+                     "160-203mm"
+                 ]
+    },
+    {
+        "slug":  "acrylic-container-lid-204-237mm",
+        "name":  "LAVA Acrylic Container Lid 204–237mm",
+        "tags":  [
+                     "lid",
+                     "acrylic",
+                     "replacement",
+                     "204-237mm"
+                 ]
+    },
+    {
+        "slug":  "acrylic-container-lid-238-280mm",
+        "name":  "LAVA Acrylic Container Lid 238–280mm",
+        "tags":  [
+                     "lid",
+                     "acrylic",
+                     "replacement",
+                     "238-280mm"
+                 ]
+    },
+    {
+        "slug":  "boning-knife-13cm",
+        "name":  "Professional Boning Knife — 13cm Premium Blade",
+        "tags":  [
+                     "knife",
+                     "boning",
+                     "13cm"
+                 ]
+    },
+    {
+        "slug":  "cutting-knife-18cm",
+        "name":  "Professional Cutting Knife — 18cm Premium Blade",
+        "tags":  [
+                     "knife",
+                     "cutting",
+                     "18cm"
+                 ]
+    },
+    {
+        "slug":  "giesser-gutting-knife-16cm",
+        "name":  "Professional Giesser Gutting Knife — 16cm Chrome-Molybdenum",
+        "tags":  [
+                     "knife",
+                     "gutting",
+                     "giesser",
+                     "hunting"
+                 ]
+    },
+    {
+        "slug":  "skinner-knife-16cm-yellow",
+        "name":  "Professional Skinner Knife — 16cm Yellow Handle",
+        "tags":  [
+                     "knife",
+                     "skinning",
+                     "hunting",
+                     "yellow-handle"
+                 ]
+    },
+    {
+        "slug":  "sharpening-steel-10cm",
+        "name":  "Professional Knife Sharpening Steel — 10cm Round",
+        "tags":  [
+                     "knife",
+                     "sharpener",
+                     "10cm"
+                 ]
+    },
+    {
+        "slug":  "sharpening-steel-30cm",
+        "name":  "Professional Knife Sharpening Steel — 30cm Round",
+        "tags":  [
+                     "knife",
+                     "sharpener",
+                     "30cm"
+                 ]
+    },
+    {
+        "slug":  "magnetic-knife-holder-30cm",
+        "name":  "Professional Magnetic Knife Holder — 30cm",
+        "tags":  [
+                     "knife",
+                     "magnetic-holder",
+                     "storage"
+                 ]
+    },
+    {
+        "slug":  "magnetic-knife-board-60cm",
+        "name":  "Professional Magnetic Knife Board — 60cm",
+        "tags":  [
+                     "knife",
+                     "magnetic-board",
+                     "storage"
+                 ]
+    },
+    {
+        "slug":  "s-hooks-160x6mm-60kg",
+        "name":  "Premium S-Hooks 160×6mm — 60kg Capacity",
+        "tags":  [
+                     "hanging",
+                     "s-hooks",
+                     "160x6mm"
+                 ]
+    },
+    {
+        "slug":  "s-hooks-160x8mm-100kg",
+        "name":  "Heavy-Duty S-Hooks 160×8mm — 100kg Capacity",
+        "tags":  [
+                     "hanging",
+                     "s-hooks",
+                     "160x8mm"
+                 ]
+    },
+    {
+        "slug":  "s-hooks-200x9mm-125kg",
+        "name":  "Professional S-Hooks 200×9mm — 125kg Capacity",
+        "tags":  [
+                     "hanging",
+                     "s-hooks",
+                     "200x9mm"
+                 ]
+    },
+    {
+        "slug":  "s-hooks-300x12mm-200kg",
+        "name":  "Heavy-Duty S-Hooks 300×12mm — 200kg Capacity",
+        "tags":  [
+                     "hanging",
+                     "s-hooks",
+                     "300x12mm"
+                 ]
+    },
+    {
+        "slug":  "swivel-hooks-260x10mm-150kg",
+        "name":  "Professional Swivel Hooks — 260×10mm 150kg",
+        "tags":  [
+                     "hanging",
+                     "swivel-hooks",
+                     "260x10mm"
+                 ]
+    },
+    {
+        "slug":  "xl-swivel-hooks-500x12mm-250kg",
+        "name":  "Professional XL Swivel Hooks — 500×12mm 250kg",
+        "tags":  [
+                     "hanging",
+                     "swivel-hooks",
+                     "xl",
+                     "500x12mm"
+                 ]
+    },
+    {
+        "slug":  "gambrel-small-560mm",
+        "name":  "Professional Stainless Steel Gambrel — Small 560mm",
+        "tags":  [
+                     "hanging",
+                     "gambrel",
+                     "560mm"
+                 ]
+    },
+    {
+        "slug":  "gambrel-adjustable-810mm",
+        "name":  "Professional Adjustable Meat Gambrel — Large 810mm",
+        "tags":  [
+                     "hanging",
+                     "gambrel",
+                     "adjustable",
+                     "810mm"
+                 ]
+    },
+    {
+        "slug":  "platform-scale-15kg",
+        "name":  "Professional Digital Platform Scale — 15kg",
+        "tags":  [
+                     "scale",
+                     "platform",
+                     "15kg",
+                     "digital"
+                 ]
+    },
+    {
+        "slug":  "platform-scale-60kg",
+        "name":  "Professional Digital Platform Scale — 60kg",
+        "tags":  [
+                     "scale",
+                     "platform",
+                     "60kg",
+                     "digital"
+                 ]
+    },
+    {
+        "slug":  "hanging-scale-100kg",
+        "name":  "Professional Hanging Scale — 100kg",
+        "tags":  [
+                     "scale",
+                     "hanging",
+                     "100kg"
+                 ]
+    },
+    {
+        "slug":  "hanging-scale-200kg",
+        "name":  "Professional Hanging Scale — 200kg",
+        "tags":  [
+                     "scale",
+                     "hanging",
+                     "200kg"
+                 ]
+    },
+    {
+        "slug":  "digital-hanging-scale-300kg",
+        "name":  "Professional Digital Hanging Scale — 300kg",
+        "tags":  [
+                     "scale",
+                     "hanging",
+                     "300kg",
+                     "digital"
+                 ]
+    },
+    {
+        "slug":  "butchers-apron-pvc-120x80cm",
+        "name":  "Professional Butcher\u0027s Apron — Premium PVC 120×80cm",
+        "tags":  [
+                     "protective",
+                     "apron",
+                     "pvc"
+                 ]
+    },
+    {
+        "slug":  "cut-resistant-gloves-small",
+        "name":  "Professional Cut-Resistant Gloves — Small (Level 5)",
+        "tags":  [
+                     "protective",
+                     "gloves",
+                     "cut-resistant",
+                     "small"
+                 ]
+    },
+    {
+        "slug":  "cut-resistant-gloves-medium",
+        "name":  "Professional Cut-Resistant Gloves — Medium (Level 5)",
+        "tags":  [
+                     "protective",
+                     "gloves",
+                     "cut-resistant",
+                     "medium"
+                 ]
+    },
+    {
+        "slug":  "cut-resistant-gloves-large",
+        "name":  "Professional Cut-Resistant Gloves — Large (Level 5)",
+        "tags":  [
+                     "protective",
+                     "gloves",
+                     "cut-resistant",
+                     "large"
+                 ]
+    },
+    {
+        "slug":  "bone-crusher-rib-cutter",
+        "name":  "Professional Bone Crusher \u0026 Rib Cutter",
+        "tags":  [
+                     "tools",
+                     "bone-crusher",
+                     "rib-cutter"
+                 ]
+    },
+    {
+        "slug":  "cutting-board-scraper-stainless",
+        "name":  "Professional Cutting Board Scraper — Stainless Steel",
+        "tags":  [
+                     "cutting-board",
+                     "scraper",
+                     "stainless"
+                 ]
+    },
+    {
+        "slug":  "sealing-strip-v100-v300-premium",
+        "name":  "Replacement Sealing Strip — V.100 / V.300 Premium",
+        "tags":  [
+                     "spare-part",
+                     "sealing-strip",
+                     "v100",
+                     "v300"
+                 ]
+    },
+    {
+        "slug":  "sealing-strip-v400",
+        "name":  "Replacement Sealing Strip — V.400",
+        "tags":  [
+                     "spare-part",
+                     "sealing-strip",
+                     "v400"
+                 ]
+    },
+    {
+        "slug":  "sealing-strip-v400-premium",
+        "name":  "Replacement Sealing Strip — V.400 Premium",
+        "tags":  [
+                     "spare-part",
+                     "sealing-strip",
+                     "v400",
+                     "v400-premium"
+                 ]
+    },
+    {
+        "slug":  "sealing-strip-v500",
+        "name":  "Replacement Sealing Strip — V.500",
+        "tags":  [
+                     "spare-part",
+                     "sealing-strip",
+                     "v500"
+                 ]
+    },
+    {
+        "slug":  "sealing-strip-v500-premium",
+        "name":  "Replacement Sealing Strip — V.500 Premium",
+        "tags":  [
+                     "spare-part",
+                     "sealing-strip",
+                     "v500",
+                     "v500-premium"
+                 ]
+    },
+    {
+        "slug":  "liquid-trap-lid-v100-classic-premium",
+        "name":  "Replacement Liquid Trap Lid — V.100 Classic \u0026 Premium",
+        "tags":  [
+                     "spare-part",
+                     "liquid-trap",
+                     "v100",
+                     "v300",
+                     "v333"
+                 ]
+    },
+    {
+        "slug":  "liquid-trap-lid-v400-v500-classic",
+        "name":  "Replacement Liquid Trap Lid — V.400 \u0026 V.500 Classic",
+        "tags":  [
+                     "spare-part",
+                     "liquid-trap",
+                     "v400",
+                     "v500"
+                 ]
+    },
+    {
+        "slug":  "liquid-trap-lid-v400-v500-premium",
+        "name":  "Replacement Liquid Trap Lid — V.400 \u0026 V.500 Premium",
+        "tags":  [
+                     "spare-part",
+                     "liquid-trap",
+                     "v400",
+                     "v500",
+                     "premium"
+                 ]
+    },
+    {
+        "slug":  "vacuum-seals-v100-v300",
+        "name":  "Replacement Vacuum Seals — V.100 / V.300 Range",
+        "tags":  [
+                     "spare-part",
+                     "vacuum-seals",
+                     "foam-seal",
+                     "v100",
+                     "v300"
+                 ]
+    },
+    {
+        "slug":  "vacuum-seals-v333",
+        "name":  "Replacement Vacuum Seals — V.333",
+        "tags":  [
+                     "spare-part",
+                     "vacuum-seals",
+                     "foam-seal",
+                     "v333"
+                 ]
+    },
+    {
+        "slug":  "vacuum-seals-v400-classic",
+        "name":  "Replacement Vacuum Seals — V.400 Classic",
+        "tags":  [
+                     "spare-part",
+                     "vacuum-seals",
+                     "foam-seal",
+                     "v400"
+                 ]
+    },
+    {
+        "slug":  "vacuum-seals-v400-premium",
+        "name":  "Replacement Vacuum Seals — V.400 Premium",
+        "tags":  [
+                     "spare-part",
+                     "vacuum-seals",
+                     "foam-seal",
+                     "v400",
+                     "v400-premium"
+                 ]
+    },
+    {
+        "slug":  "vacuum-seals-v500",
+        "name":  "Replacement Vacuum Seals — V.500",
+        "tags":  [
+                     "spare-part",
+                     "vacuum-seals",
+                     "foam-seal",
+                     "v500"
+                 ]
+    }
+]

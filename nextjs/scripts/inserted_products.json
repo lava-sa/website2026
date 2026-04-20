@@ -1,0 +1,76 @@
+﻿[
+    {
+        "id":  "2b85fa13-8cf8-4a93-b71a-dc1be139c309",
+        "sku":  null,
+        "name":  "Glass Vacuum Container 1520ml with handpump",
+        "slug":  "glass-vacuum-container-1520ml-with-handpump",
+        "short_description":  "Imagine your fresh leftovers or marinated garden vegetables vacuum-sealed in crystal-clear glass for ultimate freshness. Our G-Line container transitions seamlessly from freezer to oven, with a manual handpump included for quick sealing anywhere in your kitchen.",
+        "description":  "\u003cp\u003eThe \u003cstrong\u003eLAVA G-Line Glass Vacuum Container\u003c/strong\u003e offers the ultimate in versatile food storage. Made from high-quality borosilicate glass, it is heat-resistant, freezer safe, and dishwasher safe.\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eSustainable:\u003c/strong\u003e Reduce plastic waste by using reusable glass.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eHeat Resistant:\u003c/strong\u003e Oven and microwave safe (without lid).\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eComplete Set:\u003c/strong\u003e Includes a manual handpump for convenience.\u003c/li\u003e\u003c/ul\u003e",
+        "regular_price":  1225.00,
+        "sale_price":  null,
+        "stock_status":  "in_stock",
+        "stock_quantity":  4,
+        "weight_kg":  null,
+        "length_cm":  null,
+        "width_cm":  null,
+        "height_cm":  null,
+        "category_id":  "1e9be2b4-1c20-4882-92e7-a9f1944974eb",
+        "is_published":  true,
+        "is_featured":  false,
+        "sort_order":  50,
+        "seo_title":  null,
+        "seo_description":  null,
+        "tags":  [
+                     "glass",
+                     "container",
+                     "g-line",
+                     "handpump"
+                 ],
+        "specs":  {
+
+                  },
+        "industries":  [
+
+                       ],
+        "primary_image_url":  "/images/products/containers/glass-vacuum-container-1520ml.png",
+        "created_at":  "2026-04-17T09:51:57.048253+00:00",
+        "updated_at":  "2026-04-17T09:51:57.048253+00:00"
+    },
+    {
+        "id":  "f48b55af-5452-4060-9dc4-89b3c294d583",
+        "sku":  null,
+        "name":  "Vacuum Sealer attachment for Glass Jars 8-9cm diameter",
+        "slug":  "vacuum-sealer-attachment-for-glass-jars-8-9-cm-diameter",
+        "short_description":  "Experience the satisfaction of preserving your home-made jams and pickles directly in their original jars. Reduce plastic waste and keep your pantry organized with our specialized attachment that turns standard glass jars into airtight vacuum storage vaults.",
+        "description":  "\u003cp\u003eThe \u003cstrong\u003eLAVA Glass Jar Sealer\u003c/strong\u003e is a revolutionary attachment that allows you to vacuum seal standard commercial jars (8-9cm diameter). Perfect for preserves, dry goods, and bulk pantry storage.\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eZero Waste:\u003c/strong\u003e Reuse your glass jars indefinitely.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eProfessional Preservation:\u003c/strong\u003e Extracts air to prevent oxidation and spoilage.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eUniversal fit:\u003c/strong\u003e Works with all LAVA vacuum machines.\u003c/li\u003e\u003c/ul\u003e",
+        "regular_price":  630.00,
+        "sale_price":  null,
+        "stock_status":  "in_stock",
+        "stock_quantity":  4,
+        "weight_kg":  null,
+        "length_cm":  null,
+        "width_cm":  null,
+        "height_cm":  null,
+        "category_id":  "1e9be2b4-1c20-4882-92e7-a9f1944974eb",
+        "is_published":  true,
+        "is_featured":  false,
+        "sort_order":  55,
+        "seo_title":  null,
+        "seo_description":  null,
+        "tags":  [
+                     "jar-sealer",
+                     "attachment",
+                     "glass",
+                     "sustainable"
+                 ],
+        "specs":  {
+
+                  },
+        "industries":  [
+
+                       ],
+        "primary_image_url":  "/images/products/containers/vacuum-sealer-attachment-glass-jars.png",
+        "created_at":  "2026-04-17T09:51:57.048253+00:00",
+        "updated_at":  "2026-04-17T09:51:57.048253+00:00"
+    }
+]
