@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import AdminShell from "@/components/admin/AdminShell";
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
@@ -20,11 +21,7 @@ const STOCK_LABELS: Record<StockStatus, string> = {
 };
 
 async function getProducts() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const supabase = createServiceClient();
   const { data } = await supabase
     .from("products")
     .select("id, name, slug, sku, regular_price, sale_price, stock_status, stock_quantity, is_published, is_featured, sort_order, categories(name)")

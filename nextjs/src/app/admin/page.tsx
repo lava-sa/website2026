@@ -1,7 +1,8 @@
+export const dynamic = "force-dynamic";
 import AdminShell from "@/components/admin/AdminShell";
 import MonthlyRevenueChart, { MonthlyDataPoint } from "@/components/admin/charts/MonthlyRevenueChart";
 import OrderStatusDonut, { StatusDataPoint } from "@/components/admin/charts/OrderStatusDonut";
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase";
 import Link from "next/link";
 import {
   Package,
@@ -73,11 +74,7 @@ function toNumber(v: number | string | null | undefined): number {
 
 // ─── Data fetching ────────────────────────────────────────────────────────────
 async function getStats(): Promise<DashboardStats> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const supabase = createServiceClient();
 
   const [
     products,

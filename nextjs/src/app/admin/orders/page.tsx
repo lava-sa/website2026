@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import AdminShell from "@/components/admin/AdminShell";
 import { createClient } from "@supabase/supabase-js";
 import OrderStatusSelect from "@/components/admin/OrderStatusSelect";
@@ -22,11 +23,7 @@ function formatDate(iso: string) {
 }
 
 async function getOrders() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const supabase = createServiceClient();
   const { data } = await supabase
     .from("orders")
     .select("id, order_number, first_name, last_name, email, total, status, created_at")

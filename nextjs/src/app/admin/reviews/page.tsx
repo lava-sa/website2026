@@ -1,14 +1,11 @@
+export const dynamic = "force-dynamic";
 import AdminShell from "@/components/admin/AdminShell";
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase";
 import ReviewCard from "@/components/admin/ReviewCard";
 import { Star, Video } from "lucide-react";
 
 async function getReviews() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const supabase = createServiceClient();
   const { data } = await supabase
     .from("reviews")
     .select("id, name, email, company, city, machine, rating, headline, review, approved, created_at, review_type, video_url")
