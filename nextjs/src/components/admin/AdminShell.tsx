@@ -9,6 +9,7 @@ import {
   Package,
   ShoppingCart,
   Star,
+  Users,
   LogOut,
   Menu,
   X,
@@ -18,10 +19,11 @@ import {
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/admin/products", label: "Products", icon: Package, exact: false },
-  { href: "/admin/orders", label: "Orders", icon: ShoppingCart, exact: false },
-  { href: "/admin/reviews", label: "Reviews", icon: Star, exact: false },
+  { href: "/admin",           label: "Dashboard", icon: LayoutDashboard, exact: true  },
+  { href: "/admin/products",  label: "Products",  icon: Package,         exact: false },
+  { href: "/admin/orders",    label: "Orders",    icon: ShoppingCart,    exact: false },
+  { href: "/admin/customers", label: "Customers", icon: Users,           exact: false },
+  { href: "/admin/reviews",   label: "Reviews",   icon: Star,            exact: false },
 ];
 
 function NavItem({ href, label, icon: Icon, exact }: typeof NAV[0]) {
