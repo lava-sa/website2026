@@ -201,6 +201,7 @@ const SiteHeader = () => {
             <Image
               src="/images/logo/lava-sa-logo-petrol.webp"
               alt="Lava South Africa"
+              title="Lava South Africa — German Vacuum Sealers"
               width={200}
               height={56}
               className="h-11 sm:h-14 w-auto object-contain"

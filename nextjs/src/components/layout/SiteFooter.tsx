@@ -24,8 +24,9 @@ const SiteFooter = () => {
           <div className="space-y-6">
             <Link href="/" className="inline-block">
               <Image 
-                src="/images/logo/lava-sa-logo-white.webp" 
-                alt="Lava South Africa" 
+                src="/images/logo/lava-sa-logo-white.webp"
+                alt="Lava South Africa"
+                title="Lava South Africa — German Vacuum Sealers"
                 width={160} 
                 height={40} 
                 className="h-10 w-auto object-contain"

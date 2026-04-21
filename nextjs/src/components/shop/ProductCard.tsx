@@ -39,6 +39,7 @@ export default function ProductCard({ product }: Props) {
           <Image
             src={product.primary_image_url}
             alt={product.name}
+            title={product.name}
             fill
             className="object-contain group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
