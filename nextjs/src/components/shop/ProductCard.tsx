@@ -34,7 +34,7 @@ export default function ProductCard({ product }: Props) {
       />
 
       {/* Image */}
-      <div className="relative aspect-[4/3] bg-white overflow-hidden">
+      <div className="relative aspect-[4/3] bg-zinc-50 overflow-hidden">
         {product.primary_image_url ? (
           <Image
             src={product.primary_image_url}
