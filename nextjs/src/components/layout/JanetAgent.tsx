@@ -389,20 +389,20 @@ export const JanetAgent = () => {
   // RENDER PURE ORB UI
   // ────────────────────────────────────────────────────────────────────────────
   return (
-    <div className="fixed bottom-6 right-6 z-[200] flex flex-col items-end gap-3 font-sans">
+    <div className="fixed bottom-0 right-0 z-[200] flex flex-col items-end gap-3 font-sans">
       {!isOpen ? (
         <button
           onClick={openChat}
           className="flex items-center gap-0 shadow-2xl overflow-hidden hover:scale-[1.03] transition-all duration-300"
           style={{ borderRadius: "0px" }}
         >
-          <div className="bg-secondary px-8 py-6 flex flex-col items-start justify-center">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/80 leading-none mb-2">Need help?</p>
-            <p className="text-2xl font-black text-white leading-none tracking-tight">Call Janet</p>
+          <div className="bg-secondary px-4 py-3 md:px-6 md:py-4 flex flex-col items-start justify-center">
+            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] text-white/70 leading-none mb-1">Chat with</p>
+            <p className="text-lg md:text-xl font-black text-white leading-none tracking-tight">Janet</p>
           </div>
-          <div className="bg-primary h-full flex flex-col items-center justify-center px-6 py-6 relative">
-            <Mic className="h-10 w-10 text-white" />
-            <span className="absolute top-4 right-4 h-3 w-3 rounded-full bg-pink-400">
+          <div className="bg-primary h-full flex flex-col items-center justify-center px-4 py-3 md:px-5 md:py-4 relative">
+            <Mic className="h-6 w-6 md:h-7 md:w-7 text-white" />
+            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-pink-400">
               <span className="absolute inset-0 rounded-full bg-pink-400 animate-ping opacity-75" />
             </span>
           </div>

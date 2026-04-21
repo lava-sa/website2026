@@ -18,7 +18,7 @@ const SiteFooter = () => {
   return (
     <footer className="bg-primary text-white pt-20 pb-10">
       <div className="section-container">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-20">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8 mb-20">
           
           {/* Column 1: Brand */}
           <div className="space-y-6">
