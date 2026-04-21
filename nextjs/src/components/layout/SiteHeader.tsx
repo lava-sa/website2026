@@ -511,7 +511,8 @@ const SiteHeader = () => {
                 onChange={e => setSearchQuery(e.target.value)}
                 onKeyDown={e => {
                   if (e.key === "Enter" && searchQuery.trim()) {
-                    window.location.href = `/products/vacuum-machines?q=${encodeURIComponent(searchQuery.trim())}`;
+                    window.location.href = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
+                    setSearchOpen(false);
                   }
                   if (e.key === "Escape") setSearchOpen(false);
                 }}
@@ -524,7 +525,7 @@ const SiteHeader = () => {
             <div className="px-5 py-3 text-xs text-copy-muted">
               Popular: <span className="space-x-3">
                 {["V300", "V500", "Vacuum Bags", "Butchery", "Spare Parts"].map(t => (
-                  <button key={t} onClick={() => { window.location.href = `/products/vacuum-machines?q=${encodeURIComponent(t)}`; }}
+                  <button key={t} onClick={() => { window.location.href = `/search?q=${encodeURIComponent(t)}`; setSearchOpen(false); }}
                     className="hover:text-primary transition-colors">{t}</button>
                 ))}
               </span>
