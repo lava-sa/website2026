@@ -68,7 +68,7 @@ const STEPS: FunnelStep[] = [
         name: "Vacuum Rolls — 20cm × 6m",
         tagline: "Cut to any size or shape. Ideal for irregular portions.",
         regularPrice: 299,
-        image: "/images/products/bags/embossed-vacuum-sealer-rolls-20cm-x-6m-2-rolls.webp",
+        image: "/images/products/rolls/embossed-vacuum-sealer-rolls-20cm-x-6m-2-rolls.webp",
         sku: "ROLLS-20",
       },
       {
@@ -76,7 +76,7 @@ const STEPS: FunnelStep[] = [
         name: "Vacuum Rolls — 30cm × 6m",
         tagline: "Larger cuts, whole fish & roasts. Maximum flexibility.",
         regularPrice: 399,
-        image: "/images/products/bags/embossed-vacuum-sealer-rolls-30cm-x-6m-2-rolls.webp",
+        image: "/images/products/rolls/embossed-vacuum-sealer-rolls-30cm-x-6m-2-rolls.webp",
         sku: "ROLLS-30",
         badge: "Best Value",
       },
@@ -255,11 +255,12 @@ function BagsStep({
 // STEP 2 — SIZED PRODUCT + ORDER BUMP
 // ─────────────────────────────────────────────────────────────────────────────
 function SizedStep({
-  step, onContinue, onSkip,
+  step, onContinue, onSkip, onBack,
 }: {
   step: FunnelStep;
   onContinue: (product: FunnelProduct, size: string | null, bump: boolean) => void;
   onSkip: () => void;
+  onBack: () => void;
 }) {
   const product = step.products[0];
   const hasSize = (product.sizes?.length ?? 0) > 0;
@@ -381,6 +382,9 @@ function SizedStep({
         </button>
         <button onClick={onSkip} className="w-full text-sm font-bold text-copy hover:text-primary transition-colors text-center py-2 border border-border hover:border-primary bg-white">
           No thanks — skip this step →
+        </button>
+        <button onClick={onBack} className="w-full text-xs text-copy-muted hover:text-primary transition-colors text-center py-2 flex items-center justify-center gap-1.5">
+          ← Back to previous offer
         </button>
       </div>
     </div>
@@ -531,6 +535,13 @@ export default function FunnelPage() {
     }
   };
 
+  const goBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep((s) => s - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   const addToCart = (product: FunnelProduct, size?: string | null) => {
     const name = size ? `${product.name} — Size ${size}` : product.name;
     addItem({
@@ -661,6 +672,7 @@ export default function FunnelPage() {
                 step={step}
                 onContinue={handleApronContinue}
                 onSkip={advance}
+                onBack={goBack}
               />
             )}
 

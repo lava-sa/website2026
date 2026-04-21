@@ -59,24 +59,25 @@ export async function POST(req: NextRequest) {
   const supabase    = createServiceClient();
   const orderNumber = generateOrderNumber();
 
+  // Insert order — status always "pending" (valid in CHECK constraint).
+  // Bank-transfer orders are manually marked "paid" by admin once payment clears.
   const { data: order, error: orderErr } = await supabase
     .from("orders")
     .insert({
-      order_number:    orderNumber,
-      first_name:      customer.first_name,
-      last_name:       customer.last_name,
-      email:           customer.email,
-      phone:           customer.phone,
-      address:         customer.address,
-      city:            customer.city,
-      province:        customer.province,
-      postal_code:     customer.postal_code,
-      notes:           customer.notes ?? null,
+      order_number: orderNumber,
+      first_name:   customer.first_name,
+      last_name:    customer.last_name,
+      email:        customer.email,
+      phone:        customer.phone,
+      address:      customer.address,
+      city:         customer.city,
+      province:     customer.province,
+      postal_code:  customer.postal_code,
+      notes:        customer.notes ?? null,
       subtotal,
       shipping,
       total,
-      payment_method,
-      status:          payment_method === "bank_transfer" ? "awaiting_payment" : "pending",
+      status: "pending",
     })
     .select("id")
     .single();
@@ -85,6 +86,11 @@ export async function POST(req: NextRequest) {
     console.error("Order insert error:", orderErr.message);
     return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
   }
+
+  // ── 3b. Tag payment method (requires supabase-orders-payment-method.sql migration) ──
+  // Silent — if column doesn't exist yet this just logs a warning, order still succeeds.
+  await supabase.from("orders").update({ payment_method }).eq("id", order.id)
+    .then(({ error }) => { if (error) console.warn("payment_method column not found — run supabase-orders-payment-method.sql"); });
 
   // ── 4. Save order items ────────────────────────────────────────────────────
   const itemRows = cart.map((item) => ({
