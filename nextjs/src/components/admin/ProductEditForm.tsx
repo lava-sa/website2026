@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Save, Loader2, CheckCircle, ArrowLeft, ExternalLink, Trash2 } from "lucide-react";
 import type { StockStatus } from "@/types/product";
+import ImageUploader from "@/components/admin/ImageUploader";
 
 type Category = { id: string; name: string; slug: string };
 
@@ -280,26 +281,11 @@ export default function ProductEditForm({ product, categories }: { product: any;
               </div>
             </section>
 
-            {/* Product images */}
-            {product.product_images?.length > 0 && (
-              <section className="bg-white border border-gray-200 p-5">
-                <h2 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wide">Images</h2>
-                <div className="grid grid-cols-3 gap-2">
-                  {product.product_images
-                    .sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order)
-                    .map((img: { id: string; url: string; alt: string | null; is_primary: boolean }) => (
-                      <div key={img.id} className={`relative aspect-square border ${img.is_primary ? "border-primary" : "border-gray-200"} overflow-hidden`}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={img.url} alt={img.alt ?? ""} className="w-full h-full object-contain" />
-                        {img.is_primary && (
-                          <span className="absolute bottom-0 left-0 right-0 text-[8px] font-bold uppercase bg-primary text-white text-center py-0.5">Primary</span>
-                        )}
-                      </div>
-                    ))}
-                </div>
-                <p className="text-xs text-gray-400 mt-3">To update images, upload directly in Supabase Storage under <code>product-images/</code></p>
-              </section>
-            )}
+            {/* Product images — drag & drop uploader */}
+            <ImageUploader
+              productId={product.id}
+              initialImages={product.product_images ?? []}
+            />
 
             {/* Danger zone */}
             <section className="bg-white border border-red-200 p-5">

@@ -14,7 +14,8 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
   const isAdmin =
     pathname.startsWith("/admin") ||
-    pathname.startsWith("/lava-sa");
+    pathname.startsWith("/lava-sa") ||
+    pathname.startsWith("/buy");        // funnel — distraction-free, no header/footer
 
   if (isAdmin) {
     return <>{children}</>;

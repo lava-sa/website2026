@@ -3,11 +3,19 @@ import type { Product } from "@/types/product";
 
 // Server-side client (service role bypasses RLS)
 function getClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !key) {
+    if (process.env.NODE_ENV === "production" && typeof window === "undefined") {
+      console.warn("⚠️ getClient: Missing Supabase URL or Service Role Key. Operations will fail.");
+    }
+    return createClient("https://placeholder.supabase.co", "placeholder");
+  }
+
+  return createClient(url, key, {
+    auth: { autoRefreshToken: false, persistSession: false }
+  });
 }
 
 /** All published products in a category slug, with images */

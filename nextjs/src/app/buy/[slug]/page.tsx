@@ -10,9 +10,9 @@ import type { CartItem } from "@/lib/cart-context";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONFIG — change this one number and all funnel discounts update automatically
-// ⚠️  Anneke & Wilco to confirm the 20% figure before go-live
+// ⚠️  Anneke & Wilco to confirm the 10% figure before go-live
 // ─────────────────────────────────────────────────────────────────────────────
-const FUNNEL_DISCOUNT = 0.20;
+const FUNNEL_DISCOUNT = 0.10;
 const disc = (price: number) => Math.round(price * (1 - FUNNEL_DISCOUNT));
 const fmt  = (n: number)     => `R ${n.toLocaleString("en-ZA")}`;
 
@@ -50,15 +50,15 @@ const STEPS: FunnelStep[] = [
     theme: "bags",
     eyebrow: "Step 1 of 3 — Bags & Rolls",
     headline: "Your machine needs quality bags.",
-    body: "LAVA embossed bags and rolls are engineered specifically for your machine — the right seal width, the right thickness, the right texture. Pick any combination below at 20% off.",
+    body: "LAVA embossed bags and rolls are engineered specifically for your machine — the right seal width, the right thickness, the right texture. Pick any combination below at 10% off.",
     type: "multi",
     products: [
       {
         id: "funnel-bags-medium",
-        name: "Embossed Bags — Medium (20×30cm)",
+        name: "Embossed Bags — Medium (13×22.5cm)",
         tagline: "Perfect for steaks, game meat & biltong. 50 bags per box.",
         regularPrice: 349,
-        image: null, // ← replace with /images/products/... when Anneke provides no-bg image
+        image: "/images/products/bags/embossed-vacuum-bags-13-x-22.5-cm-50-bags.webp",
         sku: "BAGS-MED",
         recommended: true,
         badge: "Most Popular",
@@ -68,7 +68,7 @@ const STEPS: FunnelStep[] = [
         name: "Vacuum Rolls — 20cm × 6m",
         tagline: "Cut to any size or shape. Ideal for irregular portions.",
         regularPrice: 299,
-        image: null,
+        image: "/images/products/bags/embossed-vacuum-sealer-rolls-20cm-x-6m-2-rolls.webp",
         sku: "ROLLS-20",
       },
       {
@@ -76,7 +76,7 @@ const STEPS: FunnelStep[] = [
         name: "Vacuum Rolls — 30cm × 6m",
         tagline: "Larger cuts, whole fish & roasts. Maximum flexibility.",
         regularPrice: 399,
-        image: null,
+        image: "/images/products/bags/embossed-vacuum-sealer-rolls-30cm-x-6m-2-rolls.webp",
         sku: "ROLLS-30",
         badge: "Best Value",
       },
@@ -93,11 +93,11 @@ const STEPS: FunnelStep[] = [
       {
         id: "funnel-apron",
         name: "Professional Butcher Apron",
-        tagline: "Heavy-duty PVC + cotton. Waterproof, machine washable. Adjustable straps.",
+        tagline: "Heavy-duty PVC + cotton. Waterproof, machine washable. Adjustable straps. One Size Fits All.",
         regularPrice: 549,  // ⚠️  Anneke to confirm
-        image: null,        // ← replace when apron image available
+        image: "/images/products/butchery/professional-butchers-apron-premium-pvc-120cm-x-80cm.webp",
         sku: "APRON",
-        sizes: ["S", "M", "L", "XL"],
+        // No sizes — One Size Fits All
       },
     ],
     orderBump: {
@@ -236,15 +236,15 @@ function BagsStep({
         >
           <ShoppingBag className="h-5 w-5" />
           {selected.size > 0
-            ? `Yes! Add ${selected.size} item${selected.size > 1 ? "s" : ""} — ${fmt(selectedTotal)} (20% off)`
+            ? `Yes! Add ${selected.size} item${selected.size > 1 ? "s" : ""} — ${fmt(selectedTotal)} (10% off)`
             : "Select items above to add them"}
           <ChevronRight className="h-4 w-4" />
         </button>
         <button
           onClick={onSkip}
-          className="text-sm text-copy-muted hover:text-primary transition-colors text-center py-1"
+          className="w-full text-sm font-bold text-copy hover:text-primary transition-colors text-center py-2 border border-border hover:border-primary bg-white"
         >
-          No thanks, I already have bags — skip this step →
+          No thanks — skip this step →
         </button>
       </div>
     </div>
@@ -262,6 +262,7 @@ function SizedStep({
   onSkip: () => void;
 }) {
   const product = step.products[0];
+  const hasSize = (product.sizes?.length ?? 0) > 0;
   const [size, setSize] = useState<string | null>(product.sizes?.[1] ?? null);
   const [addBump, setAddBump] = useState(false);
 
@@ -278,12 +279,12 @@ function SizedStep({
           <h3 className="font-bold text-primary text-lg leading-snug mb-1">{product.name}</h3>
           <p className="text-sm text-copy-muted leading-relaxed mb-4">{product.tagline}</p>
 
-          {/* Size picker */}
-          {product.sizes && (
+          {/* Size picker — only shown when product has multiple sizes */}
+          {hasSize ? (
             <div className="mb-4">
               <p className="text-xs font-bold uppercase tracking-wider text-copy mb-2">Select your size:</p>
               <div className="flex gap-2 flex-wrap">
-                {product.sizes.map((s) => (
+                {product.sizes!.map((s) => (
                   <button
                     key={s}
                     type="button"
@@ -299,12 +300,17 @@ function SizedStep({
                 ))}
               </div>
             </div>
+          ) : (
+            <div className="mb-4 inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-3 py-2">
+              <Check className="h-4 w-4 text-emerald-600 shrink-0" />
+              <span className="text-sm font-bold text-emerald-700">One Size Fits All — adjustable straps</span>
+            </div>
           )}
 
           <div className="flex items-baseline gap-3 pt-3 border-t border-border">
             <span className="text-2xl font-black text-secondary">{fmt(disc(product.regularPrice))}</span>
             <span className="text-sm text-copy-muted line-through">{fmt(product.regularPrice)}</span>
-            <span className="text-xs font-black text-white bg-secondary px-2 py-0.5">20% OFF</span>
+            <span className="text-xs font-black text-white bg-secondary px-2 py-0.5">10% OFF</span>
           </div>
         </div>
 
@@ -365,16 +371,16 @@ function SizedStep({
 
       <div className="flex flex-col gap-3">
         <button
-          onClick={() => onContinue(product, size, addBump)}
-          disabled={!size}
+          onClick={() => onContinue(product, hasSize ? size : null, addBump)}
+          disabled={hasSize && !size}
           className="w-full flex items-center justify-center gap-2 bg-secondary text-white font-black py-4 text-base hover:bg-secondary/90 transition-colors disabled:opacity-40"
         >
           <ShoppingBag className="h-5 w-5" />
-          Yes! Add {addBump ? "apron + gloves" : "apron"} — {fmt(total)} (20% off)
+          Yes! Add {addBump ? "apron + gloves" : "apron"} — {fmt(total)} (10% off)
           <ChevronRight className="h-4 w-4" />
         </button>
-        <button onClick={onSkip} className="text-sm text-copy-muted hover:text-primary transition-colors text-center py-1">
-          No thanks, skip this step →
+        <button onClick={onSkip} className="w-full text-sm font-bold text-copy hover:text-primary transition-colors text-center py-2 border border-border hover:border-primary bg-white">
+          No thanks — skip this step →
         </button>
       </div>
     </div>
@@ -459,8 +465,8 @@ function KnivesStep({
             : "Select a knife above"}
           <ChevronRight className="h-4 w-4" />
         </button>
-        <button onClick={onSkip} className="text-sm text-copy-muted hover:text-primary transition-colors text-center py-1">
-          No thanks, go straight to checkout →
+        <button onClick={onSkip} className="w-full text-sm font-bold text-copy hover:text-primary transition-colors text-center py-2 border border-border hover:border-primary bg-white">
+          No thanks — go straight to checkout →
         </button>
       </div>
     </div>
@@ -629,7 +635,7 @@ export default function FunnelPage() {
               <div className="mt-4 inline-flex items-center gap-2 bg-secondary/10 border border-secondary/20 px-4 py-2">
                 <Tag className="h-4 w-4 text-secondary" />
                 <span className="text-sm font-bold text-secondary">
-                  Exclusive 20% off — machine buyers only
+                  Exclusive 10% off — machine buyers only
                 </span>
               </div>
             </div>
@@ -690,7 +696,7 @@ export default function FunnelPage() {
       {/* ── Footer note ───────────────────────────────────────── */}
       <div className="text-center py-8 pb-20 lg:pb-8">
         <p className="text-xs text-copy-muted">
-          ⚠️ Funnel prices are 20% off regular pricing — applied to these items only.
+          ⚠️ Funnel prices are 10% off regular pricing — applied to these items only.
           Machine price is unaffected. Prices to be confirmed by Lava South Africa.
         </p>
         <Link href="/cart" className="text-xs text-secondary font-bold mt-2 inline-block hover:underline">

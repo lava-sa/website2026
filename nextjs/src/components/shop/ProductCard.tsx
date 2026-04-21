@@ -34,7 +34,7 @@ export default function ProductCard({ product }: Props) {
       />
 
       {/* Image */}
-      <div className="overflow-hidden w-full">
+      <div className="relative overflow-hidden w-full">
         {product.primary_image_url ? (
           <Image
             src={product.primary_image_url}
