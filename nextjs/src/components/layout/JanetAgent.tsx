@@ -396,12 +396,12 @@ export const JanetAgent = () => {
           className="flex items-center gap-0 shadow-2xl overflow-hidden hover:scale-[1.03] transition-all duration-300"
           style={{ borderRadius: "0px" }}
         >
-          <div className="bg-secondary px-4 py-3 md:px-6 md:py-4 flex flex-col items-start justify-center">
-            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] text-white/70 leading-none mb-1">Chat with</p>
-            <p className="text-lg md:text-xl font-black text-white leading-none tracking-tight">Janet</p>
+          <div className="bg-secondary px-5 py-4 flex flex-col items-center justify-center text-center">
+            <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-white/70 leading-none mb-1">Chat with</p>
+            <p className="text-lg font-black text-white leading-none tracking-tight">Janet</p>
           </div>
-          <div className="bg-primary h-full flex flex-col items-center justify-center px-4 py-3 md:px-5 md:py-4 relative">
-            <Mic className="h-6 w-6 md:h-7 md:w-7 text-white" />
+          <div className="bg-primary flex items-center justify-center px-5 py-4 relative self-stretch">
+            <Mic className="h-6 w-6 text-white" />
             <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-pink-400">
               <span className="absolute inset-0 rounded-full bg-pink-400 animate-ping opacity-75" />
             </span>
