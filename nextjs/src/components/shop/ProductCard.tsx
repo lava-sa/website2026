@@ -34,18 +34,19 @@ export default function ProductCard({ product }: Props) {
       />
 
       {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden" style={{ backgroundColor: "#F2F2F2" }}>
+      <div className="overflow-hidden w-full">
         {product.primary_image_url ? (
           <Image
             src={product.primary_image_url}
             alt={product.name}
             title={product.name}
-            fill
-            className="object-contain group-hover:scale-105 transition-transform duration-500"
+            width={800}
+            height={600}
+            className="w-full h-auto group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-copy-muted text-sm">
+          <div className="h-48 flex items-center justify-center text-copy-muted text-sm">
             No image
           </div>
         )}
