@@ -23,8 +23,8 @@ export default function ProductCard({ product }: Props) {
 
   return (
     <div
-      className="card-hover-group group relative flex flex-col bg-white border border-border hover:border-primary
-                 hover:shadow-lg transition-all duration-300 overflow-hidden"
+      className="card-hover-group group relative flex flex-col hover:shadow-lg transition-all duration-300 overflow-hidden"
+      style={{ backgroundColor: "#FAFAFA" }}
     >
       {/* Full-card click target — sits above image & content, below interactive chips */}
       <Link
@@ -34,7 +34,7 @@ export default function ProductCard({ product }: Props) {
       />
 
       {/* Image */}
-      <div className="relative aspect-[4/3] bg-zinc-50 overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden" style={{ backgroundColor: "#F2F2F2" }}>
         {product.primary_image_url ? (
           <Image
             src={product.primary_image_url}
