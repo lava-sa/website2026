@@ -7,7 +7,6 @@ import {
   Phone,
   Search,
   User,
-  Heart,
   ShoppingBag,
   Menu,
   X,
@@ -136,6 +135,8 @@ function DropdownLinks({
 const SiteHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { count: cartCount } = useCart();
 
   useEffect(() => {
@@ -158,6 +159,7 @@ const SiteHeader = () => {
   ];
 
   return (
+    <>
     <header className="w-full sticky top-0 z-[100]">
 
       {/* ── Row 1: Social · Phone · Contact ──────────────────────────────── */}
@@ -273,14 +275,11 @@ const SiteHeader = () => {
 
           {/* Icons + mobile toggle */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            <button className="p-2 text-primary hover:text-secondary transition-colors hidden sm:flex" aria-label="Search">
+            <button onClick={() => setSearchOpen(true)} className="p-2 text-primary hover:text-secondary transition-colors hidden sm:flex" aria-label="Search">
               <Search className="h-5 w-5" />
             </button>
             <Link href="/account" className="p-2 text-primary hover:text-secondary transition-colors hidden sm:flex" aria-label="Account">
               <User className="h-5 w-5" />
-            </Link>
-            <Link href="/wishlist" className="p-2 text-primary hover:text-secondary transition-colors" aria-label="Wishlist">
-              <Heart className="h-5 w-5" />
             </Link>
             <Link href="/cart" className="relative p-2 text-primary hover:text-secondary transition-colors" aria-label="Cart">
               <ShoppingBag className="h-5 w-5" />
@@ -496,6 +495,44 @@ const SiteHeader = () => {
       )}
 
     </header>
+
+      {/* ── Search Overlay ──────────────────────────────────────────────────── */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-[300] bg-black/60 backdrop-blur-sm flex items-start justify-center pt-24 px-4"
+          onClick={() => setSearchOpen(false)}>
+          <div className="w-full max-w-2xl bg-white shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center border-b border-border px-5 py-4">
+              <Search className="h-5 w-5 text-copy-muted shrink-0 mr-3" />
+              <input
+                autoFocus
+                type="text"
+                placeholder="Search products…"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === "Enter" && searchQuery.trim()) {
+                    window.location.href = `/products/vacuum-machines?q=${encodeURIComponent(searchQuery.trim())}`;
+                  }
+                  if (e.key === "Escape") setSearchOpen(false);
+                }}
+                className="flex-1 text-base text-primary placeholder:text-copy-muted outline-none bg-transparent"
+              />
+              <button onClick={() => setSearchOpen(false)} className="ml-3 text-copy-muted hover:text-primary transition-colors">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="px-5 py-3 text-xs text-copy-muted">
+              Popular: <span className="space-x-3">
+                {["V300", "V500", "Vacuum Bags", "Butchery", "Spare Parts"].map(t => (
+                  <button key={t} onClick={() => { window.location.href = `/products/vacuum-machines?q=${encodeURIComponent(t)}`; }}
+                    className="hover:text-primary transition-colors">{t}</button>
+                ))}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
