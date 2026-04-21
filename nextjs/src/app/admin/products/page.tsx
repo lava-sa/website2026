@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import AdminShell from "@/components/admin/AdminShell";
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase";
 import Link from "next/link";
 import { Pencil, Plus } from "lucide-react";
 import StockToggle from "@/components/admin/StockToggle";
