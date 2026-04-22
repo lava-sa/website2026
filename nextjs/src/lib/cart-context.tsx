@@ -32,7 +32,7 @@ interface CartContextValue {
 const CartContext = createContext<CartContextValue | null>(null);
 
 const STORAGE_KEY = "lava-sa-cart";
-const FREE_SHIPPING_THRESHOLD = 2000;
+const FREE_SHIPPING_THRESHOLD = 2500;
 export const SHIPPING_FEE = 150;
 
 export function getShipping(subtotal: number): number {
