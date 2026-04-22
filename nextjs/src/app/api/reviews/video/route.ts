@@ -19,13 +19,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Video file too large (max 100 MB)" }, { status: 413 });
     }
 
-    const filename = `testimonials/${Date.now()}-${name.replace(/\s+/g, "-").toLowerCase()}.webm`;
+    const ext      = file.type.includes("mp4") ? "mp4" : "webm";
+    const filename = `testimonials/${Date.now()}-${name.replace(/\s+/g, "-").toLowerCase()}.${ext}`;
     const buffer   = Buffer.from(await file.arrayBuffer());
 
     const { error: uploadError } = await supabase.storage
       .from("videos")
       .upload(filename, buffer, {
-        contentType: "video/webm",
+        contentType: file.type || "video/webm",
         upsert: false,
       });
 

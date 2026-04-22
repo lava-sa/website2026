@@ -231,18 +231,24 @@ function VideoReviewForm() {
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      const isMobile = window.innerWidth < 768;
+      const videoConstraints = isMobile
+        ? { facingMode: "user", aspectRatio: { ideal: 9 / 16 } }
+        : { facingMode: "user" };
+      const stream = await navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true });
       streamRef.current = stream;
       if (videoRef.current) { videoRef.current.srcObject = stream; videoRef.current.play(); }
 
       chunksRef.current = [];
       const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
         ? "video/webm;codecs=vp9,opus"
-        : "video/webm";
+        : MediaRecorder.isTypeSupported("video/webm")
+        ? "video/webm"
+        : "video/mp4";
       const recorder = new MediaRecorder(stream, { mimeType });
       recorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
       recorder.onstop = () => {
-        const videoBlob = new Blob(chunksRef.current, { type: "video/webm" });
+        const videoBlob = new Blob(chunksRef.current, { type: mimeType });
         setBlob(videoBlob);
         if (previewRef.current) previewRef.current.src = URL.createObjectURL(videoBlob);
         streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -274,8 +280,9 @@ function VideoReviewForm() {
     if (!blob || !name || !permission) return;
     setMode("uploading");
     try {
+      const ext = blob.type.includes("mp4") ? "mp4" : "webm";
       const formData = new FormData();
-      formData.append("video", blob, `testimonial-${Date.now()}.webm`);
+      formData.append("video", blob, `testimonial-${Date.now()}.${ext}`);
       formData.append("name", name);
       formData.append("product", product);
       const res = await fetch("/api/reviews/video", { method: "POST", body: formData });
@@ -310,7 +317,7 @@ function VideoReviewForm() {
           <p className="text-sm font-bold text-primary mb-3">Tips for a great 30–60 second story:</p>
           <ul className="space-y-1.5 text-sm text-copy-muted">
             {[
-              "Hold your phone horizontally (landscape) for best results",
+              "Hold your phone vertically (portrait) — your face will fill the frame",
               "Face a window or light source — avoid backlighting",
               "Tell us: what you use LAVA for + your favourite feature",
               "Be yourself — natural and honest is always best",
@@ -323,7 +330,7 @@ function VideoReviewForm() {
         </div>
       )}
 
-      <div className="relative bg-black aspect-video overflow-hidden rounded-none">
+      <div className="relative bg-black aspect-[9/16] sm:aspect-video overflow-hidden rounded-none">
         <video ref={videoRef} muted playsInline
           className={`w-full h-full object-cover ${mode === "recording" ? "block" : "hidden"}`} />
         <video ref={previewRef} controls
@@ -403,7 +410,7 @@ function VideoReviewForm() {
             <input type="checkbox" checked={permission} onChange={(e) => setPermission(e.target.checked)}
               className="mt-0.5 h-4 w-4 accent-primary" />
             <span className="text-sm text-copy leading-relaxed">
-              I give Lava South Africa permission to publish this video on their website and social media.
+              I give Lava-SA permission to publish this video on their website and social media.
             </span>
           </label>
 
