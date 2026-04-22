@@ -23,8 +23,8 @@ const isProduction = process.env.VERCEL_ENV === "production";
 
 export const metadata: Metadata = {
     title: {
-        template: "%s | Lava South Africa",
-        default: "Lava South Africa — German Vacuum Sealers Since 2007",
+        template: "%s | Lava-SA",
+        default: "Lava-SA — German Vacuum Sealers Since 2007",
     },
     description:
         "South Africa's leading German vacuum sealer brand. Preserve game meat, fish, biltong and food with Lava's hospital-grade vacuum technology. Trusted by hunters, anglers, butchers and home cooks.",
@@ -39,10 +39,10 @@ export const metadata: Metadata = {
         "food preservation South Africa",
     ],
     openGraph: {
-        siteName: "Lava South Africa",
+        siteName: "Lava-SA",
         locale: "en_ZA",
         type: "website",
-        title: "Lava South Africa — German Vacuum Sealers Since 2007",
+        title: "Lava-SA — German Vacuum Sealers Since 2007",
         description:
             "South Africa's leading German vacuum sealer brand. Preserve game meat, fish, biltong and food with hospital-grade vacuum technology.",
         images: [
@@ -50,13 +50,13 @@ export const metadata: Metadata = {
                 url: "/images/headers/lava-sa-vacuum-sealers-V300-header-pick-1250.jpg",
                 width: 1250,
                 height: 830,
-                alt: "Lava South Africa — German Vacuum Sealers",
+                alt: "Lava-SA — German Vacuum Sealers",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Lava South Africa — German Vacuum Sealers Since 2007",
+        title: "Lava-SA — German Vacuum Sealers Since 2007",
         description: "South Africa's leading German vacuum sealer brand. Trusted by 350,000+ customers worldwide.",
         images: ["/images/headers/lava-sa-vacuum-sealers-V300-header-pick-1250.jpg"],
     },

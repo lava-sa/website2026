@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: { absolute: "About Lava South Africa — German Vacuum Sealers Since 2007" },
+  title: { absolute: "About Lava-SA — German Vacuum Sealers Since 2007" },
   description:
     "Lava South Africa has been the exclusive distributor of German-engineered LAVA vacuum sealers since 2007. Built on quality, sustainability and a passion for food preservation.",
 };

@@ -42,11 +42,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   try {
     const product = await getProductBySlug(slug);
     if (!product) return {};
-    const title = product.seo_title || `${product.name} — Lava South Africa`;
+    const title = product.seo_title || `${product.name} — Lava-SA`;
     const description =
       product.seo_description ||
       product.short_description ||
-      `Buy ${product.name} from Lava South Africa. German quality, 2-year warranty, nationwide delivery.`;
+      `Buy ${product.name} from Lava-SA. German quality, 2-year warranty, nationwide delivery.`;
     const image = product.primary_image_url || "/images/headers/lava-sa-vacuum-sealers-V300-header-pick-1250.jpg";
     const canonical = `/products/${slug}`;
     return {
