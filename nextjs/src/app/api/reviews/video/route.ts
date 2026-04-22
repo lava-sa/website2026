@@ -2,40 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+// POST /api/reviews/video  — save metadata after client has uploaded directly to Supabase
 export async function POST(req: NextRequest) {
   const { createServiceClient } = await import("@/lib/supabase");
   const supabase = createServiceClient();
   try {
-    const formData = await req.formData();
-    const file    = formData.get("video") as File | null;
-    const name    = formData.get("name") as string;
-    const product = formData.get("product") as string;
+    const { path, name, product } = await req.json();
 
-    if (!file || !name) {
+    if (!path || !name) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    if (file.size > 100 * 1024 * 1024) {
-      return NextResponse.json({ error: "Video file too large (max 100 MB)" }, { status: 413 });
-    }
-
-    const ext      = file.type.includes("mp4") ? "mp4" : "webm";
-    const filename = `testimonials/${Date.now()}-${name.replace(/\s+/g, "-").toLowerCase()}.${ext}`;
-    const buffer   = Buffer.from(await file.arrayBuffer());
-
-    const { error: uploadError } = await supabase.storage
-      .from("videos")
-      .upload(filename, buffer, {
-        contentType: file.type || "video/webm",
-        upsert: false,
-      });
-
-    if (uploadError) {
-      console.error("Supabase upload error:", uploadError);
-      return NextResponse.json({ error: "Upload failed" }, { status: 500 });
-    }
-
-    const { data: { publicUrl } } = supabase.storage.from("videos").getPublicUrl(filename);
+    const { data: { publicUrl } } = supabase.storage.from("videos").getPublicUrl(path);
 
     const { error: dbError } = await supabase.from("reviews").insert({
       name,
@@ -55,7 +33,32 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("Video review upload error:", err);
+    console.error("Video review metadata error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+// GET /api/reviews/video?name=xxx&ext=webm  — create a signed upload URL
+export async function GET(req: NextRequest) {
+  const { createServiceClient } = await import("@/lib/supabase");
+  const supabase = createServiceClient();
+  try {
+    const name = req.nextUrl.searchParams.get("name") || "unknown";
+    const ext  = req.nextUrl.searchParams.get("ext") === "mp4" ? "mp4" : "webm";
+    const path = `testimonials/${Date.now()}-${name.replace(/\s+/g, "-").toLowerCase()}.${ext}`;
+
+    const { data, error } = await supabase.storage
+      .from("videos")
+      .createSignedUploadUrl(path);
+
+    if (error || !data) {
+      console.error("Signed URL error:", error);
+      return NextResponse.json({ error: "Could not create upload URL" }, { status: 500 });
+    }
+
+    return NextResponse.json({ signedUrl: data.signedUrl, path });
+  } catch (err) {
+    console.error("Presign error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -281,12 +281,27 @@ function VideoReviewForm() {
     setMode("uploading");
     try {
       const ext = blob.type.includes("mp4") ? "mp4" : "webm";
-      const formData = new FormData();
-      formData.append("video", blob, `testimonial-${Date.now()}.${ext}`);
-      formData.append("name", name);
-      formData.append("product", product);
-      const res = await fetch("/api/reviews/video", { method: "POST", body: formData });
-      setMode(res.ok ? "done" : "error");
+
+      // Step 1: get a signed upload URL from the server (tiny request — no Vercel body limit)
+      const presignRes = await fetch(`/api/reviews/video?name=${encodeURIComponent(name)}&ext=${ext}`);
+      if (!presignRes.ok) { setMode("error"); return; }
+      const { signedUrl, path } = await presignRes.json();
+
+      // Step 2: upload video directly to Supabase Storage (bypasses Vercel entirely)
+      const uploadRes = await fetch(signedUrl, {
+        method: "PUT",
+        body: blob,
+        headers: { "Content-Type": blob.type || "video/webm" },
+      });
+      if (!uploadRes.ok) { setMode("error"); return; }
+
+      // Step 3: save metadata via API (small JSON request)
+      const metaRes = await fetch("/api/reviews/video", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path, name, product }),
+      });
+      setMode(metaRes.ok ? "done" : "error");
     } catch { setMode("error"); }
   };
 
