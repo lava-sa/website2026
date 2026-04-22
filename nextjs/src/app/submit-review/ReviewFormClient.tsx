@@ -12,7 +12,9 @@ const MACHINES = [
   "V.300® Premium X",
   "V.300® Black",
   "V.400® Premium",
-  "Other / Older model",
+  "Older / Different LAVA model",
+  "Butchery equipment",
+  "Other Lava-SA product",
 ];
 
 // ── Star rating picker ────────────────────────────────────────────────────────
