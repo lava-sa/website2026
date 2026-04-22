@@ -15,14 +15,18 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 const BAG_SIZES = [
-  { size: "10 × 15 cm",  use: "Spices, herbs, small cuts"       },
-  { size: "13 × 20 cm",  use: "Chicken fillets, fish, deli meat" },
-  { size: "13 × 22.5 cm",use: "Sausages, chicken pieces"         },
-  { size: "20 × 30 cm",  use: "Steaks, chops — most popular"     },
-  { size: "20 × 35 cm",  use: "Whole fish, large chops, biltong" },
-  { size: "20 × 40 cm",  use: "Roasts, game portions"            },
-  { size: "25 × 60 cm",  use: "Legs of lamb, large game"         },
-  { size: "30 × 60 cm",  use: "Whole chickens, shoulders"        },
+  { size: "13 × 22.5 cm", use: "Sausages, chicken pieces, small cuts"  },
+  { size: "15 × 45 cm",   use: "Biltong strips, sausages, whole fish"   },
+  { size: "16 × 25 cm",   use: "Steaks, chicken fillets, portions"       },
+  { size: "20 × 30 cm",   use: "Chops, steaks — most popular size"       },
+  { size: "25 × 35 cm",   use: "Large steaks, pork portions, fish"       },
+  { size: "25 × 40 cm",   use: "Roasts, game portions, whole fish"       },
+  { size: "30 × 40 cm",   use: "Whole chickens, shoulders, large roasts" },
+  { size: "30 × 50 cm",   use: "Large game portions, bulk packs"         },
+  { size: "35 × 50 cm",   use: "Legs of lamb, whole ducks, large game"   },
+  { size: "40 × 60 cm",   use: "Commercial use, large carcases"          },
+  { size: "60 × 80 cm",   use: "Whole carcases, butchery production"     },
+  { size: "70 × 100 cm",  use: "Industrial / large game carcases"        },
 ];
 
 export default async function VacuumBagsPage() {
