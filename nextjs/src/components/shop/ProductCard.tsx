@@ -98,21 +98,16 @@ export default function ProductCard({ product }: Props) {
         {/* Lava Points — clickable, links to rewards page */}
         <Link
           href="/rewards"
-          className="relative z-20 mt-1 flex items-center justify-between gap-2 border border-secondary/30 bg-secondary/5 hover:bg-secondary/10 px-3 py-2 transition-colors"
+          className="relative z-20 mt-1 flex items-center justify-between gap-1.5 border border-secondary/30 bg-secondary/5 hover:bg-secondary/10 px-3 py-2 transition-colors"
         >
-          <span className="flex items-center gap-2">
-            <Award className="h-4 w-4 text-secondary shrink-0" />
-            <div>
-              <span className="text-xs font-bold text-secondary uppercase tracking-wider block">
-                Earn {points.toLocaleString("en-ZA")} Lava Points
-              </span>
-              <span className="text-[10px] text-secondary/60">
-                = R{pointsRandValue.toFixed(2)} off your next order
-              </span>
-            </div>
+          <span className="flex items-center gap-1.5 min-w-0">
+            <Award className="h-3.5 w-3.5 text-secondary shrink-0" />
+            <span className="text-[11px] font-bold text-secondary uppercase tracking-wide truncate">
+              Earn {points.toLocaleString("en-ZA")} Lava Points
+            </span>
           </span>
-          <span className="text-[10px] font-bold text-secondary/70 uppercase tracking-wider shrink-0">
-            How it works →
+          <span className="text-[10px] font-bold text-secondary/70 uppercase tracking-wide shrink-0 ml-1">
+            →
           </span>
         </Link>
 
