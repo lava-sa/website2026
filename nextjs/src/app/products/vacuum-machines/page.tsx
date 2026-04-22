@@ -4,6 +4,7 @@ import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
 import ComparisonTable from "@/components/shop/ComparisonTable";
 import HuntexBanner from "@/components/home/HuntexBanner";
+import OpenJanetButton from "@/components/shop/OpenJanetButton";
 
 export const metadata: Metadata = {
   title: "Vacuum Machines — German-Engineered Vacuum Sealers",
@@ -185,6 +186,11 @@ export default async function VacuumMachinesPage() {
           <ComparisonTable {...COMMERCIAL_COMPARISON} />
         </div>
       </section>
+
+      {/* ── Janet CTA ─────────────────────────────────────────────────── */}
+      <div className="section-container pb-12">
+        <OpenJanetButton />
+      </div>
 
       {/* ── Huntex Banner ─────────────────────────────────────────────── */}
       <HuntexBanner variant="section" />

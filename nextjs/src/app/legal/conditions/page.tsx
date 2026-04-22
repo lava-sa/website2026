@@ -15,7 +15,7 @@ export default function ConditionsPage() {
           <p className="overline mb-3">Legal</p>
           <h1 className="text-4xl font-bold text-primary">Conditions of Use</h1>
           <p className="mt-3 text-copy-muted text-sm">
-            Last updated: April 2026 · Lava Vide South Africa (Pty) Ltd
+            Last updated: April 2026 · Lava Vide SA (Pty) Ltd
           </p>
           <p className="mt-4 text-copy-muted">
             By accessing and using <strong className="text-primary">lava-sa.co.za</strong> and
@@ -45,7 +45,7 @@ export default function ConditionsPage() {
 
           <Section id="use-of-site" title="3. Use of This Website">
             <ul>
-              <li>This website and all its content are the property of Lava Vide South Africa. You may not reproduce, redistribute or commercially exploit any content without prior written permission.</li>
+              <li>This website and all its content are the property of Lava Vide SA (Pty) Ltd. You may not reproduce, redistribute or commercially exploit any content without prior written permission.</li>
               <li>You may use this website only for lawful purposes and in a way that does not infringe the rights of others.</li>
               <li>We reserve the right to restrict or terminate access to the website if we believe these conditions are being violated.</li>
               <li>Links to third-party websites are provided for convenience only. We are not responsible for the content or privacy practices of any third-party site.</li>

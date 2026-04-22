@@ -16,7 +16,7 @@ export default function ShippingReturnsPage() {
           <p className="overline mb-3">Legal</p>
           <h1 className="text-4xl font-bold text-primary">Shipping & Returns</h1>
           <p className="mt-3 text-copy-muted text-sm">
-            Last updated: April 2026 · Lava Vide South Africa (Pty) Ltd
+            Last updated: April 2026 · Lava Vide SA (Pty) Ltd
           </p>
           <p className="mt-4 text-copy-muted">
             We want your order to arrive quickly, safely and exactly as expected.

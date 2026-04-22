@@ -15,7 +15,7 @@ export default function PrivacyPage() {
           <p className="overline mb-3">Legal</p>
           <h1 className="text-4xl font-bold text-primary">Privacy Policy</h1>
           <p className="mt-3 text-copy-muted text-sm">
-            Last updated: April 2026 · Lava Vide South Africa (Pty) Ltd
+            Last updated: April 2026 · Lava Vide SA (Pty) Ltd
           </p>
           <p className="mt-4 text-copy-muted">
             Lava South Africa is committed to protecting your personal information and
@@ -30,7 +30,7 @@ export default function PrivacyPage() {
 
           <Section id="responsible-party" title="1. Responsible Party">
             <Table rows={[
-              ["Organisation",  "Lava Vide South Africa (Pty) Ltd"],
+              ["Organisation",  "Lava Vide SA (Pty) Ltd"],
               ["Address",       "5 Stirling Road, Bryanston, Sandton 2191"],
               ["Email",         "info@lava-sa.co.za"],
               ["Telephone",     "+27 (0)72 160 5556"],

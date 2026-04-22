@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
 
 async function isAuthed(): Promise<boolean> {
   const store = await cookies();
@@ -61,6 +62,8 @@ export async function DELETE(
     }
   }
 
+  revalidatePath("/products", "layout");
+  revalidatePath("/");
   return NextResponse.json({ ok: true });
 }
 
@@ -96,5 +99,7 @@ export async function PATCH(
   // Update product primary_image_url
   await supabase.from("products").update({ primary_image_url: img.url }).eq("id", img.product_id);
 
+  revalidatePath("/products", "layout");
+  revalidatePath("/");
   return NextResponse.json({ ok: true });
 }

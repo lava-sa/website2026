@@ -16,12 +16,12 @@ export default function TermsPage() {
           <p className="overline mb-3">Legal</p>
           <h1 className="text-4xl font-bold text-primary">Terms & Conditions</h1>
           <p className="mt-3 text-copy-muted text-sm">
-            Last updated: April 2026 · Lava Vide South Africa (Pty) Ltd
+            Last updated: April 2026 · Lava Vide SA (Pty) Ltd
           </p>
           <p className="mt-4 text-copy-muted">
             These Terms and Conditions govern all orders placed through{" "}
             <strong className="text-primary">lava-sa.co.za</strong> and apply to
-            the purchase of products from Lava Vide South Africa. By placing an
+            the purchase of products from Lava Vide SA (Pty) Ltd. By placing an
             order you confirm that you have read, understood and agreed to these terms.
           </p>
         </div>
@@ -31,7 +31,7 @@ export default function TermsPage() {
           {/* Company */}
           <Section id="company" title="1. Company Information">
             <Table rows={[
-              ["Legal name",    "Lava Vide South Africa (Pty) Ltd"],
+              ["Legal name",    "Lava Vide SA (Pty) Ltd"],
               ["Trading as",    "Lava South Africa / lava-sa.co.za"],
               ["Address",       "5 Stirling Road, Bryanston, Sandton 2191, South Africa"],
               ["Telephone",     "+27 (0)72 160 5556"],

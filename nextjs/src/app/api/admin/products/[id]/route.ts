@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
 
 async function isAuthed(): Promise<boolean> {
   const store = await cookies();
@@ -36,5 +37,9 @@ export async function PATCH(
     .eq("id", id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  revalidatePath("/products", "layout");
+  revalidatePath("/");
+
   return NextResponse.json({ ok: true });
 }

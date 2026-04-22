@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
 
 async function isAuthed(): Promise<boolean> {
   const store = await cookies();
@@ -102,7 +103,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `DB insert failed: ${dbError.message}` }, { status: 500 });
   }
 
-  // ── Return file size info for the UI ─────────────────────────────────────
+  revalidatePath("/products", "layout");
+  revalidatePath("/");
+
   const originalKB  = Math.round(inputBuffer.byteLength / 1024);
   const convertedKB = Math.round(webpBuffer.byteLength  / 1024);
 

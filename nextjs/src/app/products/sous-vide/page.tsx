@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Award, CheckCircle2, Thermometer, Clock, ChefHat, Droplets } from "lucide-react";
+import OpenJanetButton from "@/components/shop/OpenJanetButton";
 import { calculatePointsEarned } from "@/lib/rewards-config";
 import { formatPrice } from "@/lib/products";
 
@@ -327,25 +328,23 @@ export default function SousVidePage() {
 
       {/* ── CTA ──────────────────────────────────────────────────────── */}
       <section className="py-20">
-        <div className="section-container text-center">
-          <p className="overline mb-3">Need advice?</p>
-          <h2 className="text-3xl font-bold text-primary mb-4">Not sure which set-up is right for you?</h2>
-          <p className="text-copy-muted max-w-lg mx-auto mb-8">
-            Our team is happy to help you choose. Contact us directly and we&apos;ll walk you through
-            the options based on how you plan to cook.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
+        <div className="section-container">
+          <div className="text-center mb-8">
+            <p className="overline mb-3">Need advice?</p>
+            <h2 className="text-3xl font-bold text-primary mb-4">Not sure which set-up is right for you?</h2>
+            <p className="text-copy-muted max-w-lg mx-auto">
+              Chat with Janet — our AI advisor will match you to the right sous vide setup based on how you cook.
+            </p>
+          </div>
+          <div className="max-w-xl mx-auto">
+            <OpenJanetButton />
+          </div>
+          <div className="flex flex-wrap justify-center gap-4 mt-6">
             <Link
               href="/contact"
-              className="bg-primary text-white font-bold px-8 py-4 hover:bg-primary/90 transition-colors"
+              className="text-sm font-semibold text-copy-muted hover:text-primary transition-colors"
             >
-              Contact Us
-            </Link>
-            <Link
-              href="/vacuum-packaging/advantages"
-              className="border border-primary text-primary font-bold px-8 py-4 hover:bg-primary hover:text-white transition-colors"
-            >
-              Why Vacuum Seal?
+              Prefer to talk to a person? Contact Us →
             </Link>
           </div>
         </div>

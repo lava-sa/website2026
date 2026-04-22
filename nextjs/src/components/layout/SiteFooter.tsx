@@ -113,7 +113,7 @@ const SiteFooter = () => {
               Cookie Settings
             </button>
           </div>
-          <p>© {currentYear} Lava Vide South Africa (Pty) Ltd. All Rights Reserved.</p>
+          <p>© {currentYear} Lava Vide SA (Pty) Ltd. All Rights Reserved.</p>
         </div>
       </div>
     </footer>
