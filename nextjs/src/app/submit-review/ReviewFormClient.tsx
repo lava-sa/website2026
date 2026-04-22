@@ -204,18 +204,21 @@ function WrittenReviewForm() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// VIDEO TESTIMONIAL RECORDER
+// VIDEO TESTIMONIAL — native file upload (mobile) + browser recorder (desktop)
 // ═══════════════════════════════════════════════════════════════════════════════
 function VideoReviewForm() {
-  const [mode, setMode]       = useState<"idle" | "recording" | "preview" | "uploading" | "done" | "error">("idle");
-  const [seconds, setSeconds] = useState(0);
-  const [blob, setBlob]       = useState<Blob | null>(null);
-  const [name, setName]       = useState("");
-  const [product, setProduct] = useState("");
+  const [mode, setMode]         = useState<"idle" | "recording" | "preview" | "uploading" | "done" | "error">("idle");
+  const [seconds, setSeconds]   = useState(0);
+  const [blob, setBlob]         = useState<Blob | null>(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [name, setName]         = useState("");
+  const [product, setProduct]   = useState("");
   const [permission, setPermission] = useState(false);
+  const [errMsg, setErrMsg]     = useState("");
 
   const videoRef    = useRef<HTMLVideoElement>(null);
   const previewRef  = useRef<HTMLVideoElement>(null);
+  const fileRef     = useRef<HTMLInputElement>(null);
   const streamRef   = useRef<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef   = useRef<Blob[]>([]);
@@ -229,39 +232,42 @@ function VideoReviewForm() {
     };
   }, []);
 
+  // ── Native file pick (mobile + desktop fallback) ──────────────────────────
+  const handleFilePick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    setBlob(file);
+    setPreviewUrl(url);
+    setMode("preview");
+  };
+
+  // ── Browser recorder (desktop) ────────────────────────────────────────────
   const startRecording = async () => {
     try {
-      const isMobile = window.innerWidth < 768;
-      const videoConstraints = isMobile
-        ? { facingMode: "user", aspectRatio: { ideal: 9 / 16 } }
-        : { facingMode: "user" };
-      const stream = await navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true });
       streamRef.current = stream;
       if (videoRef.current) { videoRef.current.srcObject = stream; videoRef.current.play(); }
-
       chunksRef.current = [];
       const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
         ? "video/webm;codecs=vp9,opus"
-        : MediaRecorder.isTypeSupported("video/webm")
-        ? "video/webm"
-        : "video/mp4";
+        : MediaRecorder.isTypeSupported("video/webm") ? "video/webm" : "video/mp4";
       const recorder = new MediaRecorder(stream, { mimeType });
       recorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
       recorder.onstop = () => {
         const videoBlob = new Blob(chunksRef.current, { type: mimeType });
+        const url = URL.createObjectURL(videoBlob);
         setBlob(videoBlob);
-        if (previewRef.current) previewRef.current.src = URL.createObjectURL(videoBlob);
+        setPreviewUrl(url);
         streamRef.current?.getTracks().forEach((t) => t.stop());
+        setMode("preview");
       };
       recorder.start(100);
       recorderRef.current = recorder;
       setSeconds(0);
       setMode("recording");
       timerRef.current = setInterval(() => {
-        setSeconds((s) => {
-          if (s + 1 >= MAX_SECONDS) { stopRecording(); return MAX_SECONDS; }
-          return s + 1;
-        });
+        setSeconds((s) => { if (s + 1 >= MAX_SECONDS) { stopRecording(); return MAX_SECONDS; } return s + 1; });
       }, 1000);
     } catch {
       alert("Could not access camera. Please allow camera permission and try again.");
@@ -271,38 +277,56 @@ function VideoReviewForm() {
   const stopRecording = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     recorderRef.current?.stop();
-    setMode("preview");
   };
 
-  const retake = () => { setBlob(null); setSeconds(0); setMode("idle"); };
+  const retake = () => {
+    setBlob(null);
+    setPreviewUrl("");
+    setSeconds(0);
+    setErrMsg("");
+    setMode("idle");
+    if (fileRef.current) fileRef.current.value = "";
+  };
 
+  // ── Upload via signed URL (direct to Supabase, bypasses Vercel limits) ───
   const handleUpload = async () => {
     if (!blob || !name || !permission) return;
     setMode("uploading");
+    setErrMsg("");
     try {
-      const ext = blob.type.includes("mp4") ? "mp4" : "webm";
+      const isFile = blob instanceof File;
+      const ext = blob.type.includes("mp4") || blob.type.includes("quicktime") ? "mp4" : "webm";
 
-      // Step 1: get a signed upload URL from the server (tiny request — no Vercel body limit)
       const presignRes = await fetch(`/api/reviews/video?name=${encodeURIComponent(name)}&ext=${ext}`);
-      if (!presignRes.ok) { setMode("error"); return; }
+      if (!presignRes.ok) {
+        const j = await presignRes.json().catch(() => ({}));
+        setErrMsg(`Step 1 failed: ${j.error || presignRes.status}`);
+        setMode("error"); return;
+      }
       const { signedUrl, path } = await presignRes.json();
 
-      // Step 2: upload video directly to Supabase Storage (bypasses Vercel entirely)
       const uploadRes = await fetch(signedUrl, {
         method: "PUT",
         body: blob,
-        headers: { "Content-Type": blob.type || "video/webm" },
+        headers: { "Content-Type": blob.type || (isFile ? "video/mp4" : "video/webm") },
       });
-      if (!uploadRes.ok) { setMode("error"); return; }
+      if (!uploadRes.ok) {
+        const txt = await uploadRes.text().catch(() => String(uploadRes.status));
+        setErrMsg(`Step 2 failed (${uploadRes.status}): ${txt.slice(0, 120)}`);
+        setMode("error"); return;
+      }
 
-      // Step 3: save metadata via API (small JSON request)
       const metaRes = await fetch("/api/reviews/video", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ path, name, product }),
       });
-      setMode(metaRes.ok ? "done" : "error");
-    } catch { setMode("error"); }
+      if (!metaRes.ok) { setErrMsg("Step 3 failed: metadata save"); setMode("error"); return; }
+      setMode("done");
+    } catch (err) {
+      setErrMsg(err instanceof Error ? err.message : "Unknown error");
+      setMode("error");
+    }
   };
 
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -314,8 +338,8 @@ function VideoReviewForm() {
         <CheckCircle className="h-14 w-14 text-emerald-500 mx-auto mb-5" />
         <h2 className="text-2xl font-bold text-primary mb-3">Amazing, {name.split(" ")[0]}!</h2>
         <p className="text-copy-muted leading-relaxed max-w-md mx-auto mb-6">
-          Your video story has been submitted. Anneke will watch it and once approved it will appear
-          in our video gallery. It means the world to us — baie dankie!
+          Your video story has been submitted. Anneke will watch it personally and once approved
+          it will appear in our video gallery. Baie dankie!
         </p>
         <Link href="/products/vacuum-machines"
           className="inline-flex items-center gap-2 text-sm font-bold text-secondary hover:text-primary transition-colors">
@@ -327,37 +351,88 @@ function VideoReviewForm() {
 
   return (
     <div className="space-y-5">
+
+      {/* ── WhatsApp option — always visible, zero tech ── */}
+      <a
+        href="https://wa.me/27721605556?text=Hi%20Anneke%2C%20ek%20wil%20graag%20'n%20video%20getuienis%20oor%20my%20LAVA%20stuur!"
+        target="_blank" rel="noopener noreferrer"
+        className="flex items-center gap-4 bg-[#25D366]/10 border border-[#25D366]/40 px-5 py-4 hover:bg-[#25D366]/20 transition-colors"
+      >
+        <svg viewBox="0 0 24 24" className="h-8 w-8 shrink-0 fill-[#25D366]" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        <div>
+          <p className="font-bold text-sm text-primary">Easiest: WhatsApp your video to Anneke</p>
+          <p className="text-xs text-copy-muted mt-0.5">Record with your phone camera → send to +27 72 160 5556</p>
+        </div>
+        <span className="ml-auto text-[#25D366] font-bold text-sm shrink-0">Open →</span>
+      </a>
+
+      <div className="flex items-center gap-3 text-xs text-copy-muted">
+        <div className="flex-1 h-px bg-border" />
+        <span>or upload a video file below</span>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+
+      {/* ── Tips (idle only) ── */}
       {mode === "idle" && (
-        <div className="bg-primary/5 border-l-4 border-secondary p-5">
-          <p className="text-sm font-bold text-primary mb-3">Tips for a great 30–60 second story:</p>
-          <ul className="space-y-1.5 text-sm text-copy-muted">
+        <div className="bg-primary/5 border-l-4 border-secondary p-4">
+          <p className="text-xs font-bold text-primary mb-2 uppercase tracking-wide">Tips for a great 30–60 sec story:</p>
+          <ul className="space-y-1 text-sm text-copy-muted">
             {[
-              "Hold your phone vertically (portrait) — your face will fill the frame",
-              "Face a window or light source — avoid backlighting",
+              "Record with your phone camera app (best quality, portrait mode)",
+              "Face a window — avoid sitting with bright light behind you",
               "Tell us: what you use LAVA for + your favourite feature",
-              "Be yourself — natural and honest is always best",
             ].map((tip) => (
               <li key={tip} className="flex items-start gap-2">
-                <span className="text-secondary shrink-0 font-bold">✓</span>{tip}
+                <span className="text-secondary font-bold shrink-0">✓</span>{tip}
               </li>
             ))}
           </ul>
         </div>
       )}
 
-      <div className="relative bg-black aspect-[9/16] sm:aspect-video overflow-hidden rounded-none">
-        <video ref={videoRef} muted playsInline
-          className={`w-full h-full object-cover ${mode === "recording" ? "block" : "hidden"}`} />
-        <video ref={previewRef} controls
-          className={`w-full h-full object-cover ${mode === "preview" || mode === "uploading" ? "block" : "hidden"}`} />
-        {mode === "idle" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white/40">
-            <Video className="h-14 w-14" />
-            <p className="text-sm">Camera preview will appear here</p>
-          </div>
-        )}
-        {mode === "recording" && (
-          <>
+      {/* ── Native file picker (primary on mobile, fallback on desktop) ── */}
+      {mode === "idle" && (
+        <div>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="video/*"
+            capture="user"
+            onChange={handleFilePick}
+            className="hidden"
+            id="video-file-input"
+          />
+          <label
+            htmlFor="video-file-input"
+            className="flex items-center justify-center gap-3 w-full border-2 border-dashed border-secondary/40 bg-secondary/5 hover:bg-secondary/10 py-8 cursor-pointer transition-colors"
+          >
+            <Upload className="h-6 w-6 text-secondary" />
+            <div className="text-center">
+              <p className="font-bold text-primary">Tap to record or choose a video</p>
+              <p className="text-xs text-copy-muted mt-1">Opens camera or gallery · MP4, MOV, WebM · max 500 MB</p>
+            </div>
+          </label>
+        </div>
+      )}
+
+      {/* ── Desktop browser recorder ── */}
+      {mode === "idle" && (
+        <div className="hidden sm:block">
+          <p className="text-xs text-copy-muted text-center mb-3">— or record directly in your browser —</p>
+          <button onClick={startRecording}
+            className="w-full flex items-center justify-center gap-2 border border-border py-3 text-sm font-bold text-primary hover:border-primary transition-colors">
+            <Circle className="h-4 w-4 fill-red-500 text-red-500" /> Record in Browser
+          </button>
+        </div>
+      )}
+
+      {/* ── Browser recorder live view ── */}
+      {mode === "recording" && (
+        <div className="space-y-3">
+          <div className="relative bg-black aspect-video overflow-hidden">
+            <video ref={videoRef} muted playsInline className="w-full h-full object-cover" />
             <div className="absolute top-3 left-3 flex items-center gap-2 bg-red-600 text-white text-xs font-bold px-3 py-1.5">
               <span className="h-2 w-2 bg-white rounded-full animate-pulse" />
               REC {fmt(seconds)} / {fmt(MAX_SECONDS)}
@@ -365,36 +440,26 @@ function VideoReviewForm() {
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
               <div className="h-full bg-secondary transition-all duration-1000" style={{ width: `${pct}%` }} />
             </div>
-          </>
-        )}
-        {mode === "preview" && (
-          <div className="absolute top-3 right-3 bg-emerald-600 text-white text-xs font-bold px-3 py-1.5">
-            Preview — happy with it?
           </div>
-        )}
-      </div>
-
-      <div className="flex gap-3">
-        {mode === "idle" && (
-          <button onClick={startRecording}
-            className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white font-bold py-4 hover:bg-red-700 transition-colors">
-            <Circle className="h-4 w-4 fill-white" /> Start Recording
-          </button>
-        )}
-        {mode === "recording" && (
           <button onClick={stopRecording}
-            className="flex-1 flex items-center justify-center gap-2 bg-primary text-white font-bold py-4 hover:bg-primary-dark transition-colors">
+            className="w-full flex items-center justify-center gap-2 bg-primary text-white font-bold py-4 hover:bg-primary/90 transition-colors">
             <StopCircle className="h-4 w-4" /> Stop &amp; Preview
           </button>
-        )}
-        {(mode === "preview" || mode === "uploading") && (
-          <button onClick={retake} disabled={mode === "uploading"}
-            className="flex items-center justify-center gap-2 border border-border px-6 py-4 text-sm font-bold text-primary hover:border-primary transition-colors disabled:opacity-40">
-            <RotateCcw className="h-4 w-4" /> Retake
-          </button>
-        )}
-      </div>
+        </div>
+      )}
 
+      {/* ── Preview ── */}
+      {(mode === "preview" || mode === "uploading" || mode === "error") && previewUrl && (
+        <div className="space-y-2">
+          <video src={previewUrl} controls className="w-full aspect-video bg-black" />
+          <button onClick={retake} disabled={mode === "uploading"}
+            className="flex items-center gap-2 text-sm font-bold text-copy-muted hover:text-primary transition-colors disabled:opacity-40">
+            <RotateCcw className="h-3.5 w-3.5" /> Choose a different video
+          </button>
+        </div>
+      )}
+
+      {/* ── Details form (after file picked or recorded) ── */}
       {(mode === "preview" || mode === "uploading" || mode === "error") && (
         <div className="space-y-5 border-t border-border pt-6">
           <p className="text-sm font-bold text-primary">Almost done — tell us who you are:</p>
@@ -429,9 +494,9 @@ function VideoReviewForm() {
             </span>
           </label>
 
-          {mode === "error" && (
-            <p className="text-sm text-red-600 bg-red-50 border border-red-200 px-4 py-3">
-              Upload failed. Please try again or WhatsApp Anneke at +27 72 160 5556.
+          {mode === "error" && errMsg && (
+            <p className="text-xs font-mono text-red-700 bg-red-50 border border-red-200 px-4 py-3 break-all">
+              {errMsg}
             </p>
           )}
 
@@ -445,6 +510,7 @@ function VideoReviewForm() {
           </button>
         </div>
       )}
+
     </div>
   );
 }
