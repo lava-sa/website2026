@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Conditions of Use — Lava South Africa",
+  title: "Conditions of Use",
   description: "Conditions of use for lava-sa.co.za — pricing, returns, defective products and your rights as a customer.",
 };
 

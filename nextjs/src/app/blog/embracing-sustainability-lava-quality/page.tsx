@@ -6,7 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Embracing Sustainability — How LAVA's Longevity Reduces Waste | Lava Blog",
+  title: "Embracing Sustainability — How LAVA's Longevity Reduces Waste",
   description:
     "A machine that lasts 20 years is the most sustainable choice. How LAVA's build quality, vacuum preservation and reforestation commitment align with a reduced-waste lifestyle.",
 };

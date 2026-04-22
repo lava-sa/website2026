@@ -4,7 +4,7 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import StaticHero from "@/components/home/StaticHero";
 
 export const metadata: Metadata = {
-  title: "Lava South Africa — German Vacuum Sealers Since 2007",
+  title: { absolute: "Lava South Africa — German Vacuum Sealers Since 2007" },
   description:
     "Buy LAVA German vacuum sealers in South Africa. Machines, bags, rolls, containers and spare parts — trusted by hunters, biltong makers, anglers and home cooks since 2007. 2-year warranty, nationwide delivery.",
   alternates: { canonical: "/" },

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Lava South Africa",
+  title: "Privacy Policy",
   description: "How Lava South Africa collects, uses and protects your personal information in accordance with POPIA (Protection of Personal Information Act).",
 };
 

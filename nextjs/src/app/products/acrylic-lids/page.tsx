@@ -5,7 +5,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "Universal Acrylic Vacuum Lids — LAVA South Africa",
+  title: "Universal Acrylic Vacuum Lids",
   description:
     "Integrated vacuum valve lids. Transform your existing bowls, jars and containers into vacuum storage solutions. Fits all LAVA vacuum pumps.",
 };

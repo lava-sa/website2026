@@ -3,7 +3,7 @@ import Link from "next/link";
 import { RefreshCw, Phone, Mail, CheckCircle, X, AlertTriangle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Returns & Exchanges — LAVA South Africa Returns Policy",
+  title: "Returns & Exchanges",
   description:
     "30-day change-of-mind returns on unused products. 6-month CPA implied warranty — repair, replace or refund on defective items. Free collection. Full returns process explained.",
 };

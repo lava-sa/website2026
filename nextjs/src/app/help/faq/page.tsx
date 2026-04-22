@@ -5,7 +5,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { faqSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions — LAVA Vacuum Sealers South Africa",
+  title: "Frequently Asked Questions",
   description:
     "Everything you need to know about LAVA vacuum sealers — buying, using, maintaining and troubleshooting. Answers from people who use these machines every day.",
 };

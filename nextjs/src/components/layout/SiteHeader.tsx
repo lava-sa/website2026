@@ -359,17 +359,6 @@ const SiteHeader = () => {
             </li>
             <li className="text-white/15">|</li>
 
-            <li>
-              <CategoryDropdown label="Accessories" href="/products/accessories" width="w-64">
-                <DropdownLinks
-                  links={[
-                    ["Vacuum Pumps & Adapters", "/products/accessories#pumps"],
-                    ["Replacement Parts", "/products/accessories#parts"],
-                  ]}
-                />
-              </CategoryDropdown>
-            </li>
-            <li className="text-white/15">|</li>
 
             <li>
               <CategoryDropdown label="Spare Parts" href="/products/spare-parts" width="w-64">
@@ -437,7 +426,6 @@ const SiteHeader = () => {
                   ["Vacuum Rolls", "/products/vacuum-rolls"],
                   ["Containers & Lids", "/products/containers-lids"],
                   ["Butchery Accessories", "/products/butchery-accessories"],
-                  ["Accessories", "/products/accessories"],
                   ["Sous Vide", "/products/sous-vide"],
                   ["Special Offers", "/products/special-offers"],
                   ["Spare Parts", "/products/spare-parts"],

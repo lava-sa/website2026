@@ -5,7 +5,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "Vacuum Sealer for Glass Jars — LAVA South Africa",
+  title: "Vacuum Sealer for Glass Jars",
   description:
     "Integrated vacuum valve solutions for standard glass jars. Preserve jams, preserves, and dry goods with our specialized glass jar sealer attachments.",
 };

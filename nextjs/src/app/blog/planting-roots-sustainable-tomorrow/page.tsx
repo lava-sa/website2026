@@ -6,7 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Planting Roots for a Sustainable Tomorrow — LAVA's Reforestation Commitment | Lava Blog",
+  title: "Planting Roots for a Sustainable Tomorrow — LAVA's Reforestation Commitment",
   description:
     "Every LAVA machine sold contributes to global reforestation. How a family business in Baden-Württemberg is helping plant the future.",
 };

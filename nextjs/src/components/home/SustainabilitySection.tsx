@@ -51,7 +51,7 @@ const SustainabilitySection = () => {
             </div>
 
             <Link
-              href="/about"
+              href="/about/sustainable-sealing"
               className="mt-10 inline-flex items-center gap-2.5 border border-primary px-8 py-3.5 text-sm font-semibold text-primary transition-all hover:bg-primary-wash hover:-translate-y-0.5"
             >
               Discover Sustainable Sealing

@@ -55,7 +55,6 @@ const SiteFooter = () => {
               <li><Link href="/products/bags-rolls" className="text-white/70 hover:text-white transition-colors">Vacuum Bags & Rolls</Link></li>
               <li><Link href="/products/containers-lids" className="text-white/70 hover:text-white transition-colors">Containers & Lids</Link></li>
               <li><Link href="/products/spare-parts" className="text-white/70 hover:text-white transition-colors">Spare Parts</Link></li>
-              <li><Link href="/products/accessories" className="text-white/70 hover:text-white transition-colors">Accessories</Link></li>
               <li><Link href="/products/sous-vide" className="text-white/70 hover:text-white transition-colors">Sous-Vide</Link></li>
               <li><Link href="/products/special-offers" className="text-secondary hover:text-white transition-colors">Special Offers</Link></li>
             </ul>

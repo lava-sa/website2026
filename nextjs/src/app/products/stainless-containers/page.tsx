@@ -5,7 +5,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "ES-Line Stainless Steel Vacuum Containers — LAVA South Africa",
+  title: "ES-Line Stainless Steel Vacuum Containers",
   description:
     "Professional-grade 18/8 stainless steel vacuum containers. Odour-resistant, dishwasher safe, and lifetime durability. Perfect for home and commercial kitchens.",
 };

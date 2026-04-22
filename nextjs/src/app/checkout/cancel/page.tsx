@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { XCircle } from "lucide-react";
 
-export const metadata: Metadata = { title: "Payment Cancelled — Lava South Africa" };
+export const metadata: Metadata = { title: "Payment Cancelled" };
 
 export default async function CancelPage({
   searchParams,

@@ -6,7 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "How to Vacuum Seal Fish After a Day on the Water | Lava Blog",
+  title: "How to Vacuum Seal Fish After a Day on the Water",
   description:
     "Snoek, yellowtail, cob, kingklip — how to handle, fillet, portion and vacuum seal fresh catch the right way. Includes species guide, step-by-step instructions and LAVA video.",
 };

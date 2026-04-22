@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Truck, RefreshCw, ShieldCheck, Clock, Phone, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Shipping & Returns — Lava South Africa",
+  title: "Shipping & Returns",
   description: "Delivery times, courier rates, returns policy and how to make a warranty claim with Lava South Africa.",
 };
 

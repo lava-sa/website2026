@@ -5,7 +5,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "G-Line Glass Vacuum Containers — LAVA South Africa",
+  title: "G-Line Glass Vacuum Containers",
   description:
     "Premium heat-resistant G-Line glass vacuum containers. Perfect for the oven, microwave, and deep-freeze. 100% airtight and odour resistant.",
 };

@@ -5,7 +5,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "Butchery Knives — German Giesser Quality | LAVA South Africa",
+  title: "Butchery Knives — German Giesser Quality",
   description:
     "Professional-grade German butchery knives. From gutting and boning to skinning and portioning. High-carbon stainless steel with ergonomic wet-grip handles.",
 };

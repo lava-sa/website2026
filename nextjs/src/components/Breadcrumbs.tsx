@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Breadcrumb mapping: pathname → [{ label, href }, ...]
+// Home is always prepended automatically — do NOT include it here.
 // ─────────────────────────────────────────────────────────────────────────────
 const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = {
   // Blog
@@ -52,6 +53,7 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
   ],
 
   // Vacuum Packaging Guides
+  "/vacuum-packaging": [{ label: "Vacuum Packaging" }],
   "/vacuum-packaging/advantages": [
     { label: "Vacuum Packaging", href: "/vacuum-packaging" },
     { label: "Advantages of Vacuum Packaging" },
@@ -74,11 +76,11 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
   ],
   "/vacuum-packaging/gift-ideas": [
     { label: "Vacuum Packaging", href: "/vacuum-packaging" },
-    { label: "Lava Gift Ideas" },
+    { label: "Gift Ideas" },
   ],
   "/vacuum-packaging/bags-guide": [
     { label: "Vacuum Packaging", href: "/vacuum-packaging" },
-    { label: "Our Vacuum Bags" },
+    { label: "Vacuum Bags Guide" },
   ],
 
   // Applications
@@ -112,97 +114,82 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
     { label: "Catering" },
   ],
 
-  // Products - Category Landing Pages
-  "/products/vacuum-machines": [
-    { label: "Products", href: "/products" },
-    { label: "Vacuum Machines" },
-  ],
-  "/products/bags-rolls": [
-    { label: "Products", href: "/products" },
-    { label: "Vacuum Bags & Rolls" },
-  ],
-  "/products/containers-lids": [
-    { label: "Products", href: "/products" },
-    { label: "Containers & Lids" },
-  ],
+  // Products — Category pages (no "Products" intermediate — Home > Category)
+  "/products/vacuum-machines": [{ label: "Vacuum Machines" }],
+  "/products/vacuum-bags":     [{ label: "Vacuum Bags" }],
+  "/products/vacuum-rolls":    [{ label: "Vacuum Rolls" }],
+  "/products/bags-rolls":      [{ label: "Vacuum Bags & Rolls" }],
+  "/products/containers-lids": [{ label: "Containers & Lids" }],
   "/products/glass-containers": [
-    { label: "Products", href: "/products" },
     { label: "Containers & Lids", href: "/products/containers-lids" },
     { label: "Glass Containers" },
   ],
   "/products/stainless-containers": [
-    { label: "Products", href: "/products" },
     { label: "Containers & Lids", href: "/products/containers-lids" },
     { label: "Stainless Containers" },
   ],
   "/products/acrylic-lids": [
-    { label: "Products", href: "/products" },
     { label: "Containers & Lids", href: "/products/containers-lids" },
     { label: "Acrylic Lids" },
   ],
-  "/products/butchery-accessories": [
-    { label: "Products", href: "/products" },
-    { label: "Butchery Accessories" },
+  "/products/glass-jar-sealer": [
+    { label: "Containers & Lids", href: "/products/containers-lids" },
+    { label: "Glass Jar Sealer" },
   ],
+  "/products/butchery-accessories": [{ label: "Butchery Accessories" }],
   "/products/butchery-knives": [
-    { label: "Products", href: "/products" },
     { label: "Butchery Accessories", href: "/products/butchery-accessories" },
     { label: "Knives & Sharpeners" },
   ],
   "/products/butchery-protective": [
-    { label: "Products", href: "/products" },
     { label: "Butchery Accessories", href: "/products/butchery-accessories" },
     { label: "Protective Gear" },
   ],
   "/products/butchery-tools": [
-    { label: "Products", href: "/products" },
     { label: "Butchery Accessories", href: "/products/butchery-accessories" },
     { label: "Tools & Equipment" },
   ],
   "/products/butchery-scales": [
-    { label: "Products", href: "/products" },
     { label: "Butchery Accessories", href: "/products/butchery-accessories" },
     { label: "Scales & Displays" },
   ],
   "/products/butchery-hanging": [
-    { label: "Products", href: "/products" },
     { label: "Butchery Accessories", href: "/products/butchery-accessories" },
     { label: "Hanging Systems" },
   ],
   "/products/butchery-boards": [
-    { label: "Products", href: "/products" },
     { label: "Butchery Accessories", href: "/products/butchery-accessories" },
     { label: "Cutting Boards" },
   ],
   "/products/butchery-machinery": [
-    { label: "Products", href: "/products" },
     { label: "Butchery Accessories", href: "/products/butchery-accessories" },
     { label: "Machinery" },
   ],
-  "/products/spare-parts": [
-    { label: "Products", href: "/products" },
-    { label: "Spare Parts" },
-  ],
+  "/products/spare-parts":    [{ label: "Spare Parts" }],
+  "/products/sous-vide":      [{ label: "Sous Vide" }],
+  "/products/special-offers": [{ label: "Special Offers" }],
 
-  // Help
+  // Shopping Help
+  "/help": [{ label: "Shopping Help" }],
   "/help/delivery": [
-    { label: "Help", href: "/help" },
+    { label: "Shopping Help", href: "/help" },
     { label: "Delivery & Shipping" },
   ],
   "/help/returns": [
-    { label: "Help", href: "/help" },
+    { label: "Shopping Help", href: "/help" },
     { label: "Returns & Exchanges" },
   ],
   "/help/warranty": [
-    { label: "Help", href: "/help" },
+    { label: "Shopping Help", href: "/help" },
     { label: "2-Year Warranty" },
   ],
   "/help/faq": [
-    { label: "Help", href: "/help" },
+    { label: "Shopping Help", href: "/help" },
     { label: "FAQ" },
   ],
 
   // Legal
+  "/legal": [{ label: "Legal" }],
   "/legal/terms": [
     { label: "Legal", href: "/legal" },
     { label: "Terms & Conditions" },
@@ -220,13 +207,27 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
     { label: "Shipping & Returns" },
   ],
 
-  // Other
+  // About
   "/about": [{ label: "About Lava-SA" }],
-  "/contact": [{ label: "Contact" }],
-  "/lava-tv": [{ label: "Lava TV" }],
-  "/submit-review": [{ label: "Submit a Review" }],
-  "/account": [{ label: "My Account" }],
-  "/rewards": [{ label: "Lava Points" }],
+  "/about/lasting-quality": [
+    { label: "About Lava-SA", href: "/about" },
+    { label: "Lasting Quality" },
+  ],
+  "/about/sustainable-sealing": [
+    { label: "About Lava-SA", href: "/about" },
+    { label: "Sustainable Sealing" },
+  ],
+  "/about/green-mission": [
+    { label: "About Lava-SA", href: "/about" },
+    { label: "Green Mission" },
+  ],
+
+  // Other static pages
+  "/contact":        [{ label: "Contact" }],
+  "/lava-tv":        [{ label: "Lava TV" }],
+  "/submit-review":  [{ label: "Submit a Review" }],
+  "/account":        [{ label: "My Account" }],
+  "/rewards":        [{ label: "Lava Points" }],
   "/account/dashboard": [
     { label: "My Account", href: "/account" },
     { label: "My Dashboard" },
@@ -239,34 +240,16 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
 export function Breadcrumbs() {
   const pathname = usePathname();
 
-  // Find breadcrumb config for this path
-  let breadcrumbs = BREADCRUMB_MAP[pathname];
+  const breadcrumbs = BREADCRUMB_MAP[pathname];
 
-  // If exact match not found, try dynamic routes
-  if (!breadcrumbs) {
-    // Handle dynamic product pages: /products/[slug]
-    if (pathname.startsWith("/products/") && pathname.split("/").length === 3) {
-      const slug = pathname.split("/")[2];
-      // Extract readable name from slug (v300-premium-x → V300 Premium X)
-      const name = slug
-        .split("-")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
-      breadcrumbs = [
-        { label: "Products", href: "/products" },
-        { label: name },
-      ];
-    }
-  }
-
-  // Don't render if no breadcrumbs found or on homepage
+  // Don't render on homepage, on dynamic product detail pages (they render
+  // their own inline breadcrumb), or on any path not in the map.
   if (!breadcrumbs || pathname === "/") return null;
 
   return (
     <nav aria-label="Breadcrumb" className="py-3 px-4 bg-surface/30 border-b border-border/40">
       <div className="section-container">
-        <ol className="flex items-center gap-2 text-sm">
-          {/* Always include Home */}
+        <ol className="flex items-center gap-2 text-sm flex-wrap">
           <li>
             <Link href="/" className="text-primary hover:text-secondary transition-colors font-medium">
               Home
@@ -275,7 +258,7 @@ export function Breadcrumbs() {
 
           {breadcrumbs.map((crumb, idx) => (
             <li key={idx} className="flex items-center gap-2">
-              <ChevronRight className="h-4 w-4 text-copy-muted" />
+              <ChevronRight className="h-4 w-4 text-copy-muted shrink-0" />
               {crumb.href ? (
                 <Link href={crumb.href} className="text-primary hover:text-secondary transition-colors font-medium">
                   {crumb.label}

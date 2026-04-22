@@ -5,7 +5,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "Cutting and Display Boards — Butchery Essentials | LAVA South Africa",
+  title: "Cutting and Display Boards — Butchery Essentials",
   description:
     "Professional-grade cutting and display boards. Durable surfaces designed for heavy-duty butchery, food preparation, and elegant presentation.",
 };

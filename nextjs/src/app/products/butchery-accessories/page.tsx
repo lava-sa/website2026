@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "Professional Butchery Accessories & Equipment | LAVA South Africa",
+  title: "Professional Butchery Accessories & Equipment",
   description:
     "Explore LAVA's full range of professional butchery equipment: German Giesser knives, stainless steel hanging systems, digital scales, and meat processing machinery.",
 };

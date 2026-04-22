@@ -5,7 +5,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "Specialized Butchery Tools — Bone Crushers & Scrapers | LAVA South Africa",
+  title: "Specialized Butchery Tools — Bone Crushers & Scrapers",
   description:
     "Essential specialized tools for professional meat processing. High-quality bone crushers, rib cutters, and stainless steel board scrapers.",
 };

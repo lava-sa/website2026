@@ -6,7 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "A Family Business from Baden-Württemberg — 40 Years of Precision | Lava Blog",
+  title: "A Family Business from Baden-Württemberg — 40 Years of Precision",
   description:
     "The Landig family have been building vacuum sealers in southern Germany since 1982. Here's how their obsession with quality found a home in South Africa.",
 };

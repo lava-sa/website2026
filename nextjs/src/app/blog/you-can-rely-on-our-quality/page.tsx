@@ -6,7 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "You Can Rely on Our Quality — Why LAVA Machines Are Built to Last | Lava Blog",
+  title: "You Can Rely on Our Quality — Why LAVA Machines Are Built to Last",
   description:
     "Cheap vacuum sealers fail within a year. LAVA machines are still sealing perfectly after 20 years. Here's what genuine German engineering looks like on the inside.",
 };

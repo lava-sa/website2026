@@ -6,7 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Vacuum Sealing & Load Shedding — Protect Your Food During Power Outages | Lava Blog",
+  title: "Vacuum Sealing & Load Shedding — Protect Your Food During Power Outages",
   description:
     "Load shedding puts your freezer at serious risk. Vacuum sealed food survives power outages far better than loose food. Here's your complete South African load-shedding food strategy.",
 };

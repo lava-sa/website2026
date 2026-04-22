@@ -6,7 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "The Hunter's Guide to Vacuum Sealing Game Meat in South Africa | Lava Blog",
+  title: "The Hunter's Guide to Vacuum Sealing Game Meat in South Africa",
   description:
     "Blesbok, kudu, impala, warthog — how to process, portion and vacuum seal wild game properly so nothing goes to waste after the hunt. Includes species-specific tips and a step-by-step guide.",
 };

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle, Clock, Phone, Mail, Building2, Copy } from "lucide-react";
 
-export const metadata: Metadata = { title: "Order Confirmed — Lava South Africa" };
+export const metadata: Metadata = { title: "Order Confirmed" };
 
 // ── Bank details — Wilco to fill these in ────────────────────────────────────
 const BANK = {

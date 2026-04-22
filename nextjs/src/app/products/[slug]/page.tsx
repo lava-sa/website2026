@@ -337,7 +337,7 @@ export default async function ProductDetailPage({
                 <div className="flex flex-col gap-3 mt-1">
                   <AddToCartButton
                     product={{ id: product.id, slug: product.slug, name: product.name, price, image: product.primary_image_url, sku: product.sku }}
-                    funnelSlug={product.slug}
+                    funnelSlug={product.categories?.slug === "vacuum-machines" ? product.slug : undefined}
                     priceDisplay={
                       <div className="flex flex-col items-start gap-1">
                         <StockBadge status={product.stock_status} quantity={product.stock_quantity} />

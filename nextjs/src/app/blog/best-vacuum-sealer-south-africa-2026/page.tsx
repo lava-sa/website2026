@@ -6,7 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Best Vacuum Sealer in South Africa 2026 — Honest Comparison Guide | Lava Blog",
+  title: "Best Vacuum Sealer in South Africa 2026 — Honest Comparison Guide",
   description:
     "What to look for, what to avoid, and which LAVA model fits your needs and budget. An honest guide from South Africa's official LAVA distributor. Includes comparison table and video.",
 };

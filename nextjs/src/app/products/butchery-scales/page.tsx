@@ -5,7 +5,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "Precision Butchery Scales — Platform & Hanging | LAVA South Africa",
+  title: "Precision Butchery Scales — Platform & Hanging",
   description:
     "Professional digital scales for butchery and food processing. High-precision platform scales and heavy-duty hanging scales for every operation.",
 };
