@@ -43,9 +43,16 @@ export default function ContactPage() {
     e.preventDefault();
     if (!validate()) return;
     setStatus("sending");
-    // TODO: wire to Resend API route once RESEND_API_KEY is set
-    await new Promise(r => setTimeout(r, 1200));
-    setStatus("done");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      setStatus(res.ok ? "done" : "error");
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -153,6 +160,11 @@ export default function ContactPage() {
                     placeholder="Tell us what you need — machine recommendation, order question, warranty claim, etc."
                     className={`${inputCls(errors.message)} resize-none`} />
                 </Field>
+                {status === "error" && (
+                  <p className="text-sm text-red-600 bg-red-50 border border-red-200 px-4 py-3">
+                    Something went wrong. Please try again or WhatsApp Anneke at +27 72 160 5556.
+                  </p>
+                )}
                 <button type="submit" disabled={status === "sending"}
                   className="btn-primary flex items-center gap-2 px-10 py-4 disabled:opacity-60">
                   {status === "sending" ? (
