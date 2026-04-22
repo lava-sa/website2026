@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, AlertTriangle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Vacuum Sealing Shelf Life Chart — Complete Food Storage Guide | Lava South Africa",
+  title: "Vacuum Sealing Shelf Life Chart — Complete Food Storage Guide",
   description:
     "Comprehensive shelf life chart for vacuum sealed food — fridge, freezer and pantry. Includes all major food categories with and without vacuum sealing.",
 };

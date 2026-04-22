@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Gift } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "LAVA Gift Ideas — The Gift That Keeps Saving | Lava South Africa",
+  title: "LAVA Gift Ideas — The Gift That Keeps Saving",
   description:
     "A LAVA vacuum sealer is one of the few gifts that pays for itself. Ideas for hunters, fishermen, home cooks, biltong makers and foodies.",
 };

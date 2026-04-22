@@ -91,7 +91,7 @@ export default async function VacuumMachinesPage() {
       {/* ── Page Hero ─────────────────────────────────────────────────── */}
       <section className="bg-primary py-16">
         <div className="section-container">
-          <p className="overline text-secondary mb-3">Made in Germany since 1983</p>
+          <p className="overline text-secondary mb-3">Made in Germany since 1982</p>
           <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight max-w-2xl">
             LAVA Vacuum Sealing Machines
           </h1>
@@ -119,15 +119,6 @@ export default async function VacuumMachinesPage() {
         </div>
       </section>
 
-      {/* ── Trust strip ──────────────────────────────────────────────── */}
-      <div className="bg-on-dark-subtle border-b border-on-dark-border py-3">
-        <div className="section-container flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-[11px] font-bold uppercase tracking-widest text-on-dark-muted">
-          <span>✓ Made in Germany</span>
-          <span>✓ 2-Year Warranty</span>
-          <span>✓ Free Delivery over R2,000</span>
-          <span>✓ 350,000+ SA Hunters Trust Lava</span>
-        </div>
-      </div>
 
       {/* ── Empty state ───────────────────────────────────────────────── */}
       {products.length === 0 && (

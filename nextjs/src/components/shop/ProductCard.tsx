@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Award } from "lucide-react";
 import { formatPrice } from "@/lib/products";
-import { calculatePointsEarned } from "@/lib/rewards-config";
+import { calculatePointsEarned, calculatePointValue } from "@/lib/rewards-config";
 import type { Product, StockStatus } from "@/types/product";
 
 const STOCK_LABELS: Record<StockStatus, { label: string; className: string }> = {
@@ -20,6 +20,7 @@ export default function ProductCard({ product }: Props) {
   const stock = STOCK_LABELS[product.stock_status] ?? STOCK_LABELS.on_order;
   const href = `/products/${product.slug}`;
   const points = calculatePointsEarned(product.sale_price || product.regular_price);
+  const pointsRandValue = calculatePointValue(points);
 
   return (
     <div
@@ -58,8 +59,8 @@ export default function ProductCard({ product }: Props) {
           </span>
         )}
 
-        {/* Slide-up overlay */}
-        <div className="card-hover-overlay">View Product →</div>
+        {/* Slide-up overlay — decorative; card Link carries the accessible label */}
+        <div className="card-hover-overlay" aria-hidden="true">View {product.name} →</div>
       </div>
 
       {/* Content */}
@@ -101,11 +102,16 @@ export default function ProductCard({ product }: Props) {
         >
           <span className="flex items-center gap-2">
             <Award className="h-4 w-4 text-secondary shrink-0" />
-            <span className="text-xs font-bold text-secondary uppercase tracking-wider">
-              Earn {points.toLocaleString("en-ZA")} Lava Points
-            </span>
+            <div>
+              <span className="text-xs font-bold text-secondary uppercase tracking-wider block">
+                Earn {points.toLocaleString("en-ZA")} Lava Points
+              </span>
+              <span className="text-[10px] text-secondary/60">
+                = R{pointsRandValue.toFixed(2)} off your next order
+              </span>
+            </div>
           </span>
-          <span className="text-[10px] font-bold text-secondary/70 uppercase tracking-wider">
+          <span className="text-[10px] font-bold text-secondary/70 uppercase tracking-wider shrink-0">
             How it works →
           </span>
         </Link>

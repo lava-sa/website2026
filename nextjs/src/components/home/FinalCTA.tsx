@@ -67,7 +67,7 @@ const FinalCTA = () => {
                 Send us a message
               </h3>
               <p className="mt-1 text-sm text-copy-muted">
-                We&apos;ll reach out within 1 business hour.
+                We&apos;ll reply within 1 business day.
               </p>
 
               <form className="mt-7 space-y-4">
@@ -102,7 +102,7 @@ const FinalCTA = () => {
                     <option value="">Select a machine…</option>
                     <option>V.100 Premium X</option>
                     <option>V.300 Premium X</option>
-                    <option>V.333 Premium Black</option>
+                    <option>V.333® Chrome</option>
                     <option>V.400 Premium</option>
                     <option>Vacuum Bags &amp; Accessories</option>
                     <option>Technical Support</option>

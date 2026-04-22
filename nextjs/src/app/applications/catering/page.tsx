@@ -4,7 +4,7 @@ import Image from "next/image";
 import { ArrowRight, CheckCircle, Clock, TrendingDown, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Vacuum Sealing for Catering & Restaurants | Lava South Africa",
+  title: "Vacuum Sealing for Catering & Restaurants",
   description:
     "Professional vacuum sealing for caterers, restaurants and food service businesses. Reduce waste, extend shelf life, improve portion control and deliver better food quality every time.",
 };

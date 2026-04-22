@@ -391,6 +391,14 @@ export const JanetAgent = () => {
   return (
     <div className="fixed bottom-0 right-0 z-[200] flex flex-col items-end gap-3 font-sans">
       {!isOpen ? (
+        <div className="relative group flex flex-col items-end">
+          {/* AI disclosure tooltip */}
+          <div className="absolute bottom-full mb-2 right-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+            <div className="bg-zinc-800 text-white text-[11px] font-medium px-3 py-1.5 flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-pink-400 shrink-0" />
+              AI assistant — not a human
+            </div>
+          </div>
         <button
           onClick={openChat}
           className="flex items-center gap-0 shadow-2xl overflow-hidden hover:scale-[1.03] transition-all duration-300"
@@ -407,6 +415,7 @@ export const JanetAgent = () => {
             </span>
           </div>
         </button>
+        </div>
       ) : (
         <div
           className="bg-white shadow-2xl border border-border flex flex-col overflow-hidden"
@@ -420,7 +429,7 @@ export const JanetAgent = () => {
               </div>
               <div>
                 <p className="text-base font-bold text-white leading-none">Janet</p>
-                <p className="text-[10px] uppercase tracking-widest text-white/60 font-bold mt-1">LAVA Sales Agent</p>
+                <p className="text-[10px] uppercase tracking-widest text-white/60 font-bold mt-1">AI Sales Assistant</p>
               </div>
             </div>
             <button onClick={closeChat} className="p-2 text-white/60 hover:text-white bg-white/5 rounded-full hover:bg-white/10 transition-colors">

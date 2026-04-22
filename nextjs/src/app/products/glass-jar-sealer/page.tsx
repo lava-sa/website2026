@@ -51,7 +51,7 @@ export default async function GlassJarSealerPage() {
           <span>✓ Airtight Seal in Seconds</span>
           <span>✓ Sustainable Packaging</span>
           <span>✓ Works with All Machines</span>
-          <span>✓ Free Delivery over R2,000</span>
+          <span>✓ Free Delivery over R2,500</span>
         </div>
       </div>
 

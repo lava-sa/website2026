@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle, Leaf, Clock, ShieldCheck, TrendingDown, DollarSign, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Advantages of Vacuum Packaging — Why It's Worth It | Lava South Africa",
+  title: "Advantages of Vacuum Packaging — Why It's Worth It",
   description:
     "Food lasts 3–5× longer, less waste, better flavour, sous vide capability — the complete guide to what vacuum packaging actually gives you.",
 };
@@ -33,10 +33,10 @@ const advantages = [
   },
   {
     icon: ShieldCheck,
-    title: "Flavour Locked In",
-    desc: "Oxidation doesn't just spoil food — it degrades flavour long before the food becomes unsafe. Vacuum sealed food tastes exactly as good six months later as it did on the day it was sealed.",
-    stat: "100%",
-    statLabel: "flavour retention",
+    title: "Flavour Noticeably Preserved",
+    desc: "Oxidation degrades flavour long before food becomes unsafe. By reducing residual oxygen to under 1%, LAVA machines dramatically slow this process — sealed food stays noticeably fresher-tasting far longer than conventional freezer bags.",
+    stat: "<1%",
+    statLabel: "residual oxygen after sealing",
   },
   {
     icon: Zap,

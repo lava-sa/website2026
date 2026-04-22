@@ -132,7 +132,7 @@ export default function SousVidePage() {
         <div className="section-container flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-[11px] font-bold uppercase tracking-widest text-on-dark-muted">
           <span>✓ ±0.1°C Precision</span>
           <span>✓ Works with LAVA Vacuum Bags</span>
-          <span>✓ Free Delivery over R2,000</span>
+          <span>✓ Free Delivery over R2,500</span>
           <span>✓ German Engineering</span>
         </div>
       </div>
@@ -179,7 +179,7 @@ export default function SousVidePage() {
                         {product.badge}
                       </span>
                     )}
-                    <div className="card-hover-overlay">View Product →</div>
+                    <div className="card-hover-overlay" aria-hidden="true">View {product.name} →</div>
                   </div>
 
                   {/* Content */}

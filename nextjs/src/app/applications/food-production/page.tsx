@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "LAVA for Food Production & Small Business | Lava South Africa",
+  title: "LAVA for Food Production & Small Business",
   description:
     "Farmers market suppliers, deli owners, caterers and small food producers — LAVA commercial machines produce consistent, presentation-quality vacuum seals for all-day use.",
 };

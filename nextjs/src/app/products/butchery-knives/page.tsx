@@ -47,7 +47,7 @@ export default async function ButcheryKnivesPage() {
           <span>✓ Ergonomic Wet-Grip</span>
           <span>✓ High-Carbon Stainless Steel</span>
           <span>✓ Easy to Sharpen</span>
-          <span>✓ Free Delivery over R2,000</span>
+          <span>✓ Free Delivery over R2,500</span>
         </div>
       </div>
 

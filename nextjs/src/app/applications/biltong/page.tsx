@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, AlertTriangle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Vacuum Sealing Biltong & Charcuterie in South Africa | Lava South Africa",
+  title: "Vacuum Sealing Biltong & Charcuterie in South Africa",
   description:
     "Biltong makers, droëwors producers and charcuterie enthusiasts — vacuum sealing extends shelf life, enables distribution and protects your product. The correct technique for dry and wet biltong.",
 };
@@ -101,7 +101,7 @@ export default function BiltongPage() {
           <p>
             Droëwors is even more suitable for vacuum sealing than biltong — it&apos;s fully
             dried with very low moisture. Sealed droëwors keeps 6–9 months at room temperature
-            and 2+ years frozen, with no flavour loss.
+            and 2+ years frozen, with minimal flavour loss.
           </p>
           <p>
             European-style charcuterie (coppa, bresaola, lonza) works identically — the dry

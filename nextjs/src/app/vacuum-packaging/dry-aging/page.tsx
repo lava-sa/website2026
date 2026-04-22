@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight, AlertTriangle, CheckCircle, Thermometer } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Dry Aging Beef at Home — Complete South African Guide | Lava South Africa",
+  title: "Dry Aging Beef at Home — Complete South African Guide",
   description:
     "Dry-aged steak costs R400+ in a restaurant. With a LAVA vacuum sealer and your fridge, you can achieve similar results at home. Complete step-by-step guide.",
 };

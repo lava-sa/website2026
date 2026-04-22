@@ -1,13 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BarChart3, LogIn, HelpCircle } from "lucide-react";
+import { redirect } from "next/navigation";
+import { BarChart3, Award, HelpCircle, LogIn } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
 
 export const metadata: Metadata = {
-  title: "My Account | Lava South Africa",
-  description: "Manage your Lava account, view your Lava Points, and track orders.",
+  title: "My Account",
+  description: "Manage your Lava account, view your Lava Points, and track your orders.",
 };
 
-export default function AccountPage() {
+export default async function AccountPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Logged-in users go straight to the dashboard
+  if (user) {
+    redirect("/account/dashboard");
+  }
+
+  // Not logged in — show sign-in landing
   return (
     <main className="min-h-screen bg-surface/30">
       <section className="section-container py-16 sm:py-20">
@@ -16,42 +27,47 @@ export default function AccountPage() {
             My Account
           </h1>
           <p className="text-copy-muted mb-12">
-            Manage your Lava account, view your Lava Points, and track your orders.
+            Sign in to view your Lava Points balance, track your orders, and manage your account.
           </p>
 
+          {/* Sign In CTA */}
+          <Link
+            href="/account/login"
+            className="flex items-center gap-4 p-8 bg-primary text-white hover:bg-primary/90 transition-all mb-6"
+          >
+            <div className="h-12 w-12 bg-white/15 flex items-center justify-center shrink-0">
+              <LogIn className="h-6 w-6" />
+            </div>
+            <div className="flex-1">
+              <p className="font-bold text-lg mb-1">Sign In to My Account</p>
+              <p className="text-white/70 text-sm">
+                Access your Lava Points, order history, and account settings.
+              </p>
+            </div>
+            <span className="font-bold text-white/80 text-lg">→</span>
+          </Link>
+
           <div className="grid sm:grid-cols-2 gap-6">
-            {/* Dashboard */}
-            <Link
-              href="/account/dashboard"
-              className="flex flex-col p-8 bg-white border-2 border-primary hover:shadow-lg transition-all"
-            >
+            {/* Dashboard preview */}
+            <div className="flex flex-col p-8 bg-white border border-border opacity-60">
               <BarChart3 className="h-8 w-8 text-primary mb-4" />
-              <h2 className="font-bold text-lg text-primary mb-2">
-                My Dashboard
-              </h2>
-              <p className="text-sm text-copy-muted flex-1 mb-4">
+              <h2 className="font-bold text-lg text-primary mb-2">My Dashboard</h2>
+              <p className="text-sm text-copy-muted flex-1">
                 View your points balance, purchase history, and redemptions.
               </p>
-              <span className="text-sm font-bold text-primary">
-                View Dashboard →
-              </span>
-            </Link>
+            </div>
 
-            {/* Rewards */}
+            {/* Points preview */}
             <Link
               href="/rewards"
               className="flex flex-col p-8 bg-white border border-border hover:border-primary hover:shadow-lg transition-all"
             >
-              <LogIn className="h-8 w-8 text-secondary mb-4" />
-              <h2 className="font-bold text-lg text-primary mb-2">
-                Lava Points
-              </h2>
+              <Award className="h-8 w-8 text-secondary mb-4" />
+              <h2 className="font-bold text-lg text-primary mb-2">Lava Points</h2>
               <p className="text-sm text-copy-muted flex-1 mb-4">
-                Learn how to earn and redeem Lava Points on your purchases.
+                Earn 1 point per R5 spent. Redeem for discounts on future orders.
               </p>
-              <span className="text-sm font-bold text-secondary">
-                Learn More →
-              </span>
+              <span className="text-sm font-bold text-secondary">Explore Lava Points →</span>
             </Link>
 
             {/* Help */}
@@ -60,25 +76,21 @@ export default function AccountPage() {
               className="sm:col-span-2 flex flex-col p-8 bg-white border border-border hover:border-primary hover:shadow-lg transition-all"
             >
               <HelpCircle className="h-8 w-8 text-copy-muted mb-4" />
-              <h2 className="font-bold text-lg text-primary mb-2">
-                Need Help?
-              </h2>
+              <h2 className="font-bold text-lg text-primary mb-2">Need Help?</h2>
               <p className="text-sm text-copy-muted flex-1 mb-4">
-                Contact us with any questions about your account or orders.
+                Contact Anneke directly — real people, not chatbots.
               </p>
-              <span className="text-sm font-bold text-primary">
-                Contact Support →
-              </span>
+              <span className="text-sm font-bold text-primary">Contact Support →</span>
             </Link>
           </div>
 
-          {/* Authentication Note */}
-          <div className="mt-12 p-6 bg-amber-50 border border-amber-200 text-amber-900 text-sm">
-            <p className="font-bold mb-2">Note:</p>
-            <p>
-              This is a preview of the account dashboard. In production, you'll need to log in with your email address to access your personal account information, points balance, and purchase history.
-            </p>
-          </div>
+          <p className="text-center text-xs text-copy-muted mt-8">
+            Already ordered before?{" "}
+            <Link href="/account/login" className="text-primary font-bold hover:underline">
+              Set up your account
+            </Link>{" "}
+            to access your order history and Lava Points.
+          </p>
         </div>
       </section>
     </main>

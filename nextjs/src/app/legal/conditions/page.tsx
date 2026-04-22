@@ -66,13 +66,23 @@ export default function ConditionsPage() {
           </Section>
 
           <Section id="reporting" title="5. Reporting a Problem">
+
+            <div className="bg-blue-50 border border-blue-200 p-4 mb-4 text-sm text-blue-900">
+              <strong>CPA §56 — Implied warranty of quality:</strong> South African law provides a
+              6-month implied warranty from delivery. If a product is defective within this period,
+              you may demand repair, replacement, or a full refund — your choice. This right
+              cannot be limited by any contractual condition.
+            </div>
+
+            <p className="font-semibold text-primary">Transit damage or wrong item received:</p>
             <p>
-              If you receive a damaged, defective or incorrect product, you must notify us
-              within <strong className="text-primary">5 business days</strong> of receiving
-              your order. Contact us at:
+              Please inspect your delivery in the presence of the courier driver. If goods arrive
+              visibly damaged or are not what you ordered, notify us within{" "}
+              <strong className="text-primary">5 business days</strong> of receiving your order
+              so we can engage the courier and resolve the issue promptly. Contact us at:
             </p>
             <Table rows={[
-              ["Email",   "anneke@lava-sa.co.za"],
+              ["Email",   "info@lava-sa.co.za"],
               ["Phone",   "+27 (0)72 160 5556"],
               ["Hours",   "Monday – Friday, 09:00 – 17:00"],
             ]} />
@@ -80,24 +90,50 @@ export default function ConditionsPage() {
               Please have your order number and a description (or photograph) of the issue
               ready. We will respond within 1 business day with a resolution plan.
             </p>
+            <p className="text-sm text-copy-muted">
+              Note: the 5-business-day window above applies to transit damage and wrong-item
+              claims. Manufacturing or quality defects are covered for 6 months under the CPA
+              and 24 months under our factory warranty — see Section 6 below.
+            </p>
           </Section>
 
           <Section id="defective" title="6. Defective Products">
+
+            <p className="font-semibold text-primary">First 6 months — CPA §56 implied warranty:</p>
             <ul>
-              <li>Defective machines must be reported within 5 business days of receipt.</li>
-              <li>Once a defect is confirmed, we will arrange courier collection at our cost.</li>
-              <li>Replacement machines are dispatched prepaid once the returned unit has been assessed.</li>
-              <li>Defects caused by misuse, unauthorised modification, or failure to follow operating instructions are not covered.</li>
+              <li>If a manufacturing or quality defect appears within 6 months of delivery, you may choose: repair, replacement, or full refund.</li>
+              <li>Courier collection is at our cost. No restocking fee or deduction applies.</li>
             </ul>
+
+            <p className="font-semibold text-primary mt-4">6–24 months — contractual factory warranty:</p>
+            <ul>
+              <li>Manufacturing defects reported between 6 and 24 months after delivery are covered by our 2-year factory warranty.</li>
+              <li>We will repair or replace the machine at our cost, including courier collection and redelivery.</li>
+              <li>A refund is offered if repair or equivalent replacement cannot be completed within a reasonable time.</li>
+            </ul>
+
+            <p className="font-semibold text-primary mt-4">Not covered (both periods):</p>
+            <ul>
+              <li>Damage caused by misuse, unauthorised modification, or failure to follow operating instructions.</li>
+              <li>Normal wear components: sealing strips, foam seals (available as spare parts).</li>
+              <li>Cosmetic damage that does not affect function.</li>
+            </ul>
+
           </Section>
 
-          <Section id="returns" title="7. Returns — Non-Defective Products">
+          <Section id="returns" title="7. Returns — Change of Mind (Non-Defective Products)">
+            <p className="text-sm text-copy-muted">
+              This section applies to voluntary returns of products that are not defective.
+              Returns of defective products are governed by Section 6 above and the CPA —
+              the restocking fee and conditions below do not apply to those.
+            </p>
             <ul>
-              <li>Returns of non-defective products require prior written authorisation from Lava South Africa.</li>
+              <li>Returns require prior written authorisation from Lava South Africa.</li>
               <li>You must notify us within <strong className="text-primary">30 days</strong> of receiving the product.</li>
               <li>Returned products must be in original, unused condition with all original packaging, tags, labels and documentation intact.</li>
-              <li>A <strong className="text-primary">10% handling and restocking fee</strong> applies, plus return courier costs.</li>
-              <li>Products that show signs of use, have been opened (for consumables), or are missing packaging will not be accepted for return.</li>
+              <li>A <strong className="text-primary">10% handling and restocking fee</strong> applies to change-of-mind returns on non-defective goods, plus return courier costs.</li>
+              <li>This fee does <strong>not</strong> apply to defective product returns, CPA §56 warranty claims, or CPA §20 direct-marketing cooling-off cancellations.</li>
+              <li>Products that show signs of use, have been opened (for consumables), or are missing packaging will not be accepted for change-of-mind return.</li>
               <li>Refunds are processed within 10 business days of receiving the returned product in acceptable condition.</li>
             </ul>
             <p>
@@ -173,7 +209,7 @@ function LegalFooter() {
     <div className="mt-16 pt-8 border-t border-border">
       <p className="text-xs text-copy-muted">
         Questions? Contact{" "}
-        <a href="mailto:anneke@lava-sa.co.za" className="text-primary font-semibold">anneke@lava-sa.co.za</a>
+        <a href="mailto:info@lava-sa.co.za" className="text-primary font-semibold">info@lava-sa.co.za</a>
         {" "}or call{" "}
         <a href="tel:+27721605556" className="text-primary font-semibold">+27 72 160 5556</a>.
       </p>

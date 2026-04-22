@@ -28,7 +28,7 @@ export default function ShippingReturnsPage() {
         {/* Quick summary cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
           {[
-            { icon: Truck,       title: "Free Delivery",   sub: "On orders over R2,000" },
+            { icon: Truck,       title: "Free Delivery",   sub: "On orders over R2,500" },
             { icon: Clock,       title: "2–4 Days",        sub: "After payment clears" },
             { icon: RefreshCw,   title: "30-Day Returns",  sub: "Unused, original packaging" },
             { icon: ShieldCheck, title: "2-Year Warranty", sub: "All LAVA machines" },
@@ -68,8 +68,8 @@ export default function ShippingReturnsPage() {
 
             <h3 className="font-bold text-primary mt-6">Delivery Rates</h3>
             <Table rows={[
-              ["Orders over R2,000",    "FREE standard courier delivery"],
-              ["Orders under R2,000",   "R150 flat rate (most orders)"],
+              ["Orders over R2,500",    "FREE standard courier delivery"],
+              ["Orders under R2,500",   "R150 flat rate (most orders)"],
               ["Outlying / remote areas", "Quoted at checkout — may differ"],
             ]} />
 
@@ -92,34 +92,55 @@ export default function ShippingReturnsPage() {
 
           <Section id="returns" title="2. Returns Policy">
 
-            <h3 className="font-bold text-primary">Defective or Incorrect Products</h3>
+            <div className="bg-blue-50 border border-blue-200 p-4 mb-6 text-sm text-blue-900">
+              <strong>Your statutory rights — Consumer Protection Act (CPA), Act 68 of 2008:</strong>
+              <ul className="mt-2 space-y-1 list-disc list-inside">
+                <li><strong>Section 56 — Implied warranty (0–6 months):</strong> If a product is defective within 6 months of delivery, you may demand repair, replacement, or a <strong>full refund</strong> — your choice. No fee, no deduction.</li>
+                <li><strong>Section 20 — Cooling-off (direct marketing only):</strong> If you purchased as a result of unsolicited direct marketing from us, you may cancel within 5 business days of delivery for a full refund with no deduction.</li>
+              </ul>
+              <p className="mt-2">These rights apply in addition to — and cannot be reduced by — our commercial policies below.</p>
+            </div>
+
+            <h3 className="font-bold text-primary">Transit damage, wrong item, or CPA §56 warranty claim</h3>
             <p>
-              If you receive a product that is defective, damaged in transit, or not what
-              you ordered:
+              If you receive a product that is damaged in transit, not what you ordered, or
+              develops a defect within 6 months of delivery:
             </p>
             <ul>
-              <li>Notify us within <strong className="text-primary">5 business days</strong> of receiving the order.</li>
-              <li>Email <a href="mailto:anneke@lava-sa.co.za" className="text-primary font-semibold">anneke@lava-sa.co.za</a> with your order number, a description of the issue and photographs where possible.</li>
+              <li>For <strong>transit damage or wrong items</strong>: notify us within <strong className="text-primary">5 business days</strong> so we can engage the courier.</li>
+              <li>For <strong>manufacturing or quality defects within 6 months</strong>: notify us as soon as the defect appears — the CPA gives you the full 6 months.</li>
+              <li>Email <a href="mailto:info@lava-sa.co.za" className="text-primary font-semibold">info@lava-sa.co.za</a> with your order number, a description and photographs where possible.</li>
               <li>Once confirmed, we arrange courier collection at <strong className="text-primary">our cost</strong>.</li>
-              <li>A replacement is dispatched prepaid, or a full refund is issued — your choice.</li>
+              <li>For CPA §56 claims: you choose repair, replacement, or full refund. No restocking fee applies.</li>
             </ul>
 
-            <h3 className="font-bold text-primary mt-6">Change of Mind Returns</h3>
+            <h3 className="font-bold text-primary mt-6">Warranty defects — 6 to 24 months</h3>
             <p>
-              If you ordered without seeing the product in person and wish to return it:
+              Defects that appear between 6 and 24 months after delivery are covered by our
+              2-year factory warranty:
+            </p>
+            <ul>
+              <li>We will repair or replace at our cost, including courier collection and redelivery.</li>
+              <li>A refund is offered if repair or equivalent replacement cannot be completed within a reasonable time.</li>
+            </ul>
+
+            <h3 className="font-bold text-primary mt-6">Change-of-mind returns (voluntary, non-defective goods)</h3>
+            <p>
+              As a courtesy beyond statutory minimums, we accept change-of-mind returns within
+              30 days of delivery, provided the goods are non-defective:
             </p>
             <ul>
               <li>Notify us in writing within <strong className="text-primary">30 days</strong> of delivery.</li>
               <li>The product must be unused, in its original packaging with all accessories, manuals and tags intact.</li>
               <li>Products showing signs of use, or with missing/damaged packaging, cannot be returned.</li>
-              <li>A <strong className="text-primary">10% restocking fee</strong> applies, plus the cost of return courier.</li>
+              <li>A <strong className="text-primary">10% restocking fee</strong> applies to change-of-mind returns on non-defective goods, plus the cost of return courier. This fee does <strong>not</strong> apply to defective product returns or CPA claims.</li>
               <li>Refunds are processed within <strong className="text-primary">10 business days</strong> of us receiving and inspecting the returned goods.</li>
               <li>Refunds are made via EFT to your South African bank account.</li>
             </ul>
 
-            <h3 className="font-bold text-primary mt-6">Products That Cannot Be Returned</h3>
+            <h3 className="font-bold text-primary mt-6">Products that cannot be returned (change of mind)</h3>
             <ul>
-              <li>Opened vacuum bags and rolls (for hygiene reasons)</li>
+              <li>Opened vacuum bags and rolls (hygiene)</li>
               <li>Special-order commercial machines (V.400, V.500 range)</li>
               <li>Products that have been used, modified or repaired by a third party</li>
               <li>Products without original packaging or accessories</li>
@@ -161,12 +182,12 @@ export default function ShippingReturnsPage() {
                   <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
                 </div>
               </a>
-              <a href="mailto:anneke@lava-sa.co.za"
+              <a href="mailto:info@lava-sa.co.za"
                 className="flex items-center gap-3 border border-border bg-surface px-4 py-4 hover:border-primary hover:bg-white transition-all">
                 <Mail className="h-5 w-5 text-secondary shrink-0" />
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-copy-muted">Email</p>
-                  <p className="font-bold text-primary">anneke@lava-sa.co.za</p>
+                  <p className="font-bold text-primary">info@lava-sa.co.za</p>
                   <p className="text-xs text-copy-muted">Reply within 1 business day</p>
                 </div>
               </a>
@@ -210,7 +231,7 @@ function LegalFooter() {
     <div className="mt-16 pt-8 border-t border-border">
       <p className="text-xs text-copy-muted">
         Questions? Contact{" "}
-        <a href="mailto:anneke@lava-sa.co.za" className="text-primary font-semibold">anneke@lava-sa.co.za</a>
+        <a href="mailto:info@lava-sa.co.za" className="text-primary font-semibold">info@lava-sa.co.za</a>
         {" "}or call{" "}
         <a href="tel:+27721605556" className="text-primary font-semibold">+27 72 160 5556</a>.
       </p>

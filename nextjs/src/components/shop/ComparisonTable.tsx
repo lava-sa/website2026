@@ -103,8 +103,9 @@ export default function ComparisonTable({
                   <Link
                     href={`/products/${m.slug}`}
                     className="inline-block btn-primary text-xs px-5 py-2.5"
+                    aria-label={`View the ${m.name}`}
                   >
-                    View →
+                    View {m.name} →
                   </Link>
                 </td>
               ))}

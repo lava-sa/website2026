@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle, X } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Our Vacuum Bags — Which Bag for Which Job | Lava South Africa",
+  title: "Our Vacuum Bags — Which Bag for Which Job",
   description:
     "Embossed vs smooth bags, sizes explained, BPA-free materials, reuse guide — everything you need to choose the right LAVA vacuum bag for every application.",
 };

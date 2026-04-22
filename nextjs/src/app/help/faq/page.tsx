@@ -5,7 +5,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { faqSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions — LAVA Vacuum Sealers South Africa | Lava South Africa",
+  title: "Frequently Asked Questions — LAVA Vacuum Sealers South Africa",
   description:
     "Everything you need to know about LAVA vacuum sealers — buying, using, maintaining and troubleshooting. Answers from people who use these machines every day.",
 };
@@ -16,7 +16,7 @@ const faqs = [
     questions: [
       {
         q: "Which LAVA machine should I buy?",
-        a: "For most South African home users — hunters, fishermen, home cooks, families — the V.300® Premium X is the right choice. It handles every domestic application with a 42 cm sealing width, Liquid Stop, pressure control and a jar attachment. If you process large quantities of game or run a small butchery, consider the V.333® Chrome or V.400® Premium. Contact Anneke at anneke@lava-sa.co.za if you're unsure — she'll give you an honest recommendation.",
+        a: "For most South African home users — hunters, fishermen, home cooks, families — the V.300® Premium X is the right choice. It handles every domestic application with a 42 cm sealing width, Liquid Stop, pressure control and a jar attachment. If you process large quantities of game or run a small butchery, consider the V.333® Chrome or V.400® Premium. Contact Anneke at info@lava-sa.co.za if you're unsure — she'll give you an honest recommendation.",
         link: ["/products/vacuum-machines", "View all machines →"],
       },
       {
@@ -214,10 +214,10 @@ export default function FAQPage() {
                 <p className="text-xs text-white/60">Mon–Fri 09:00–17:00</p>
               </div>
             </a>
-            <a href="mailto:anneke@lava-sa.co.za" className="flex items-center gap-3 border border-white/20 px-4 py-3 hover:border-white transition-colors">
+            <a href="mailto:info@lava-sa.co.za" className="flex items-center gap-3 border border-white/20 px-4 py-3 hover:border-white transition-colors">
               <Mail className="h-5 w-5 text-secondary shrink-0" />
               <div>
-                <p className="font-bold text-white text-sm">anneke@lava-sa.co.za</p>
+                <p className="font-bold text-white text-sm">info@lava-sa.co.za</p>
                 <p className="text-xs text-white/60">Reply within 1 business day</p>
               </div>
             </a>

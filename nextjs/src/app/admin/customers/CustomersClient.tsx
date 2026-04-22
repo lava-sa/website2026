@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Download, Search, Mail, Star, Users } from "lucide-react";
+import { Download, Search, Mail, Star, Users, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+
+type SortKey = "name" | "email" | "city" | "total_spent" | "order_count" | "points_balance" | "last_order_date";
+type SortDir = "asc" | "desc";
 
 interface Customer {
   email: string;
@@ -22,7 +25,7 @@ interface Customer {
 }
 
 function fmt(n: number) {
-  return new Intl.NumberFormat("en-ZA", { style: "currency", currency: "ZAR", minimumFractionDigits: 0 }).format(n);
+  return new Intl.NumberFormat("en-ZA", { style: "currency", currency: "ZAR", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
 }
 
 function fmtDate(d: string | null | undefined) {
@@ -63,15 +66,33 @@ function exportCSV(rows: Customer[], newsletterOnly: boolean) {
 }
 
 export default function CustomersClient({ customers }: { customers: Customer[] }) {
-  const [search,       setSearch]       = useState("");
-  const [vipOnly,      setVipOnly]      = useState(false);
+  const [search,        setSearch]        = useState("");
+  const [vipOnly,       setVipOnly]       = useState(false);
   const [marketingOnly, setMarketingOnly] = useState(false);
+  const [sortKey,       setSortKey]       = useState<SortKey>("total_spent");
+  const [sortDir,       setSortDir]       = useState<SortDir>("desc");
+
+  function handleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortDir((d) => d === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir("desc");
+    }
+  }
+
+  function SortIcon({ col }: { col: SortKey }) {
+    if (sortKey !== col) return <ChevronsUpDown className="h-3 w-3 opacity-30 inline ml-1" />;
+    return sortDir === "asc"
+      ? <ChevronUp   className="h-3 w-3 text-primary inline ml-1" />
+      : <ChevronDown className="h-3 w-3 text-primary inline ml-1" />;
+  }
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return customers.filter((c) => {
-      if (vipOnly      && !c.is_vip)           return false;
-      if (marketingOnly && c.marketing_opt_in === false) return false;
+    let rows = customers.filter((c) => {
+      if (vipOnly       && !c.is_vip)                      return false;
+      if (marketingOnly && c.marketing_opt_in === false)   return false;
       if (!q) return true;
       return (
         c.email?.toLowerCase().includes(q) ||
@@ -81,7 +102,37 @@ export default function CustomersClient({ customers }: { customers: Customer[] }
         (c.billing_city ?? c.city ?? "").toLowerCase().includes(q)
       );
     });
-  }, [customers, search, vipOnly, marketingOnly]);
+
+    rows = [...rows].sort((a, b) => {
+      let av: string | number = 0;
+      let bv: string | number = 0;
+      if (sortKey === "name") {
+        av = `${a.first_name ?? ""} ${a.last_name ?? ""}`.trim().toLowerCase();
+        bv = `${b.first_name ?? ""} ${b.last_name ?? ""}`.trim().toLowerCase();
+      } else if (sortKey === "email") {
+        av = a.email?.toLowerCase() ?? "";
+        bv = b.email?.toLowerCase() ?? "";
+      } else if (sortKey === "city") {
+        av = (a.billing_city ?? a.city ?? "").toLowerCase();
+        bv = (b.billing_city ?? b.city ?? "").toLowerCase();
+      } else if (sortKey === "total_spent") {
+        av = a.total_spent ?? 0; bv = b.total_spent ?? 0;
+      } else if (sortKey === "order_count") {
+        av = a.order_count ?? 0; bv = b.order_count ?? 0;
+      } else if (sortKey === "points_balance") {
+        av = a.points_balance ?? 0; bv = b.points_balance ?? 0;
+      } else if (sortKey === "last_order_date") {
+        av = a.last_order_date ? new Date(a.last_order_date).getTime() : 0;
+        bv = b.last_order_date ? new Date(b.last_order_date).getTime() : 0;
+      }
+      if (typeof av === "string") {
+        return sortDir === "asc" ? av.localeCompare(bv as string) : (bv as string).localeCompare(av);
+      }
+      return sortDir === "asc" ? av - (bv as number) : (bv as number) - av;
+    });
+
+    return rows;
+  }, [customers, search, vipOnly, marketingOnly, sortKey, sortDir]);
 
   const newsletterCount = customers.filter((c) => c.marketing_opt_in !== false).length;
   const vipCount        = customers.filter((c) => c.is_vip).length;
@@ -171,13 +222,37 @@ export default function CustomersClient({ customers }: { customers: Customer[] }
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="text-left px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">Customer</th>
+                <th className="text-left px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">
+                  <button onClick={() => handleSort("name")} className="flex items-center gap-1 hover:text-primary transition-colors">
+                    Customer <SortIcon col="name" />
+                  </button>
+                </th>
                 <th className="text-left px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">Contact</th>
-                <th className="text-left px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">Location</th>
-                <th className="text-right px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">Spent</th>
-                <th className="text-right px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">Orders</th>
-                <th className="text-right px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">Points</th>
-                <th className="text-left px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">Last Order</th>
+                <th className="text-left px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">
+                  <button onClick={() => handleSort("city")} className="flex items-center gap-1 hover:text-primary transition-colors">
+                    Location <SortIcon col="city" />
+                  </button>
+                </th>
+                <th className="text-right px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">
+                  <button onClick={() => handleSort("total_spent")} className="flex items-center justify-end gap-1 w-full hover:text-primary transition-colors">
+                    Spent <SortIcon col="total_spent" />
+                  </button>
+                </th>
+                <th className="text-right px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">
+                  <button onClick={() => handleSort("order_count")} className="flex items-center justify-end gap-1 w-full hover:text-primary transition-colors">
+                    Orders <SortIcon col="order_count" />
+                  </button>
+                </th>
+                <th className="text-right px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">
+                  <button onClick={() => handleSort("points_balance")} className="flex items-center justify-end gap-1 w-full hover:text-primary transition-colors">
+                    Points <SortIcon col="points_balance" />
+                  </button>
+                </th>
+                <th className="text-left px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">
+                  <button onClick={() => handleSort("last_order_date")} className="flex items-center gap-1 hover:text-primary transition-colors">
+                    Last Order <SortIcon col="last_order_date" />
+                  </button>
+                </th>
                 <th className="text-center px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">Tags</th>
               </tr>
             </thead>

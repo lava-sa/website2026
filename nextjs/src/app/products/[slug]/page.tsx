@@ -407,7 +407,7 @@ export default async function ProductDetailPage({
                   <Truck className="h-5 w-5 text-secondary shrink-0" />
                   <div>
                     <p className="text-xs font-bold text-primary leading-none">Free Delivery</p>
-                    <p className="text-[9px] text-copy-muted mt-0.5">Orders over R2,000</p>
+                    <p className="text-[9px] text-copy-muted mt-0.5">Orders over R2,500</p>
                   </div>
                 </Link>
                 <Link href="/help/returns"

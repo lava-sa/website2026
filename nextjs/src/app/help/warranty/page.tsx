@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ShieldCheck, Wrench, Phone, Mail, CheckCircle, X, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "2-Year LAVA Warranty — What's Covered & How to Claim | Lava South Africa",
+  title: "2-Year LAVA Warranty — What's Covered & How to Claim",
   description:
     "All LAVA vacuum machines carry a 2-year factory warranty. Free collection, repair and redelivery. 10+ years spare parts availability. Here's exactly what's covered.",
 };
@@ -42,6 +42,33 @@ export default function WarrantyPage() {
 
         <div className="prose-lava">
 
+          <div className="bg-blue-50 border border-blue-200 p-5 mb-8 text-sm text-blue-900">
+            <strong className="block mb-2">Your statutory rights under the Consumer Protection Act (CPA §56)</strong>
+            <p className="mb-3">South African law provides a two-tier protection, separate from our contractual warranty:</p>
+            <table className="w-full text-xs border border-blue-200">
+              <thead>
+                <tr className="bg-blue-100">
+                  <th className="text-left py-2 px-3 font-bold">Period</th>
+                  <th className="text-left py-2 px-3 font-bold">Your rights</th>
+                  <th className="text-left py-2 px-3 font-bold">Your choice</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-t border-blue-200 bg-white">
+                  <td className="py-2 px-3 font-semibold">0 – 6 months from delivery</td>
+                  <td className="py-2 px-3">CPA §56 implied warranty of quality</td>
+                  <td className="py-2 px-3 font-semibold text-blue-800">Repair, replacement, <em>or full refund</em></td>
+                </tr>
+                <tr className="border-t border-blue-200 bg-blue-50">
+                  <td className="py-2 px-3 font-semibold">6 – 24 months from delivery</td>
+                  <td className="py-2 px-3">LAVA 2-year factory warranty</td>
+                  <td className="py-2 px-3">Repair or replacement (refund if we can&apos;t repair/replace)</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="mt-3">No restocking fee or deduction applies to any warranty or CPA claim. All courier costs are covered by us.</p>
+          </div>
+
           <h2 className="text-2xl font-bold text-primary mb-4">What the Warranty Covers</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div className="border border-green-200 bg-green-50 p-5">
@@ -75,7 +102,7 @@ export default function WarrantyPage() {
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How to Make a Warranty Claim</h2>
           <div className="space-y-3 mb-8">
             {[
-              { step: "1", title: "Contact us", detail: "Email anneke@lava-sa.co.za or call +27 72 160 5556 with your order number and a description of the fault. Photos or a short video are extremely helpful." },
+              { step: "1", title: "Contact us", detail: "Email info@lava-sa.co.za or call +27 72 160 5556 with your order number and a description of the fault. Photos or a short video are extremely helpful." },
               { step: "2", title: "Troubleshoot together", detail: "Many issues can be resolved over the phone or by email without needing to return the machine. We'll walk through the problem with you first — often it's something simple." },
               { step: "3", title: "We arrange collection", detail: "If the machine needs to come in, we arrange a courier to collect it at no cost to you. We'll give you a collection date and a reference number." },
               { step: "4", title: "Repair or replacement", detail: "Most machines are repaired and returned within 5–10 business days. If a repair isn't possible, we replace with the equivalent model. We keep you updated throughout." },
@@ -139,10 +166,10 @@ export default function WarrantyPage() {
                   <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
                 </div>
               </a>
-              <a href="mailto:anneke@lava-sa.co.za" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">
+              <a href="mailto:info@lava-sa.co.za" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">
                 <Mail className="h-5 w-5 text-secondary shrink-0" />
                 <div>
-                  <p className="font-bold text-primary text-sm">anneke@lava-sa.co.za</p>
+                  <p className="font-bold text-primary text-sm">info@lava-sa.co.za</p>
                   <p className="text-xs text-copy-muted">Reply within 1 business day</p>
                 </div>
               </a>

@@ -19,7 +19,7 @@ const testimonials = [
   {
     quote: "A superb device. We treated ourselves to this machine for Christmas. I'm absolutely satisfied with its excellent quality. With minimal pressure, the device immediately begins creating the vacuum.",
     name: "Ralf A.",
-    tag: "V.333 Premium Black · Verified Purchaser",
+    tag: "V.333® Chrome · Verified Purchaser",
     country: "Germany",
     image: "/images/testimonials/ralf.jpg",
   },

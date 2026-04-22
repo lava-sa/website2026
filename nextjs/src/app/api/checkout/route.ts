@@ -4,7 +4,7 @@ import { createServiceClient } from "@/lib/supabase";
 import { generateSignature, getPayFastUrl } from "@/lib/payfast";
 import type { CartItem } from "@/lib/cart-context";
 
-const FREE_SHIPPING_THRESHOLD = 2000;
+const FREE_SHIPPING_THRESHOLD = 2500;
 const SHIPPING_FEE = 150;
 
 function getShipping(subtotal: number): number {

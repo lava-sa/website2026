@@ -205,7 +205,7 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
   // Legal
   "/legal/terms": [
     { label: "Legal", href: "/legal" },
-    { label: "Terms of Service" },
+    { label: "Terms & Conditions" },
   ],
   "/legal/privacy": [
     { label: "Legal", href: "/legal" },
@@ -213,7 +213,7 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
   ],
   "/legal/conditions": [
     { label: "Legal", href: "/legal" },
-    { label: "Conditions of Sale" },
+    { label: "Conditions of Use" },
   ],
   "/legal/shipping-returns": [
     { label: "Legal", href: "/legal" },

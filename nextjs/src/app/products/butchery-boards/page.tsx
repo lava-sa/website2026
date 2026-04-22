@@ -46,7 +46,7 @@ export default async function ButcheryBoardsPage() {
           <span>✓ Easy to Clean</span>
           <span>✓ Professional Standard</span>
           <span>✓ Durable Surface</span>
-          <span>✓ Free Delivery over R2,000</span>
+          <span>✓ Free Delivery over R2,500</span>
         </div>
       </div>
 

@@ -46,7 +46,7 @@ export default async function ButcheryProtectivePage() {
           <span>✓ Waterproof PVC</span>
           <span>✓ Easy to Sanitize</span>
           <span>✓ Comfortable Fit</span>
-          <span>✓ Free Delivery over R2,000</span>
+          <span>✓ Free Delivery over R2,500</span>
         </div>
       </div>
 

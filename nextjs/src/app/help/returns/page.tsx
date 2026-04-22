@@ -3,9 +3,9 @@ import Link from "next/link";
 import { RefreshCw, Phone, Mail, CheckCircle, X, AlertTriangle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Returns & Exchanges — LAVA South Africa Returns Policy | Lava South Africa",
+  title: "Returns & Exchanges — LAVA South Africa Returns Policy",
   description:
-    "30-day returns on unused products. 5-day defective product policy. Free collection on faulty items. Full returns process explained clearly.",
+    "30-day change-of-mind returns on unused products. 6-month CPA implied warranty — repair, replace or refund on defective items. Free collection. Full returns process explained.",
 };
 
 export default function ReturnsPage() {
@@ -26,7 +26,7 @@ export default function ReturnsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
           {[
             { icon: RefreshCw, title: "30-Day Returns", sub: "Change of mind, unused product" },
-            { icon: CheckCircle, title: "5-Day Defective", sub: "Report faulty goods within 5 days" },
+            { icon: CheckCircle, title: "6-Month CPA Right", sub: "Defects: repair, replace or refund" },
             { icon: Phone, title: "Free Collection", sub: "On confirmed defective items" },
           ].map(({ icon: Icon, title, sub }) => (
             <div key={title} className="border border-border bg-surface p-4 text-center">
@@ -42,14 +42,23 @@ export default function ReturnsPage() {
         <div className="prose-lava">
 
           <h2 className="text-2xl font-bold text-primary mb-4">Defective or Incorrect Products</h2>
+
+          <div className="bg-blue-50 border border-blue-200 p-4 mb-6 text-sm text-blue-900">
+            <strong>Your statutory right — CPA Section 56:</strong> South African law gives you a
+            6-month implied warranty of quality from delivery. If your product is defective within
+            this period, you may demand <strong>repair, replacement, or a full refund</strong> —
+            your choice. No restocking fee. No deduction. This right exists regardless of any
+            other policy on this page.
+          </div>
+
           <p>
             If you receive a product that is defective, damaged in transit, or not what
             you ordered — we fix it. No argument, no complicated process.
           </p>
           <div className="space-y-3 my-6">
             {[
-              "Notify us within 5 business days of receiving the order.",
-              "Email anneke@lava-sa.co.za with your order number, a description and photographs where possible.",
+              "For transit damage or wrong items: notify us within 5 business days. For manufacturing defects: notify us as soon as the defect appears — you have 6 months under the CPA.",
+              "Email info@lava-sa.co.za with your order number, a description and photographs where possible.",
               "Once the defect is confirmed, we arrange courier collection at our cost.",
               "A replacement is dispatched prepaid, or a full refund is issued — your choice.",
               "We respond to all defective product reports within 1 business day.",
@@ -112,10 +121,10 @@ export default function ReturnsPage() {
                   <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
                 </div>
               </a>
-              <a href="mailto:anneke@lava-sa.co.za" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">
+              <a href="mailto:info@lava-sa.co.za" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">
                 <Mail className="h-5 w-5 text-secondary shrink-0" />
                 <div>
-                  <p className="font-bold text-primary text-sm">anneke@lava-sa.co.za</p>
+                  <p className="font-bold text-primary text-sm">info@lava-sa.co.za</p>
                   <p className="text-xs text-copy-muted">Reply within 1 business day</p>
                 </div>
               </a>

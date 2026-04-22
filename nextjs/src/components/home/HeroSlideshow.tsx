@@ -44,7 +44,7 @@ const slides = [
     tag: "Hunters & Game Farmers",
     headline: "Protect Your Hunt.",
     headlineAccent: "Preserve Your Harvest.",
-    body: "Vacuum seal game meat for up to 3 years without freezer burn. Trusted by South Africa's 350,000 registered hunters.",
+    body: "Vacuum seal game meat for up to 3 years without freezer burn. Trusted by 350,000+ customers worldwide.",
     cta: { label: "For Hunters & Game", href: "/applications/hunter-game" },
     ctaSecondary: { label: "Shop Machines", href: "/products/vacuum-machines" },
   },

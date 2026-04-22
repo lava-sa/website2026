@@ -12,7 +12,7 @@ const QualitySection = () => {
             <div className="relative aspect-[4/5] overflow-hidden bg-surface shadow-xl">
               <Image
                 src="/images/homepage/lava-german-quality.webp"
-                alt="LAVA vacuum sealer — German quality, built to last a lifetime"
+                alt="LAVA vacuum sealer — German quality, engineered to perform for decades"
                 fill
                 className="object-cover object-center transition-transform duration-700 ease-in-out group-hover:scale-105"
               />
@@ -39,7 +39,7 @@ const QualitySection = () => {
             <div className="quality__body mt-6 space-y-4 text-[15px] leading-relaxed text-copy">
               <p>
                 When you invest in LAVA vacuum sealers, you&apos;re choosing{" "}
-                <strong className="font-semibold text-primary">high-performance vacuum sealing machines built to last a lifetime</strong>.
+                <strong className="font-semibold text-primary">high-performance vacuum sealing machines engineered to deliver decades of reliable service</strong>.
                 Crafted with precision engineering and premium materials, our machines are designed
                 to meet the demands of both professional and home use.
               </p>

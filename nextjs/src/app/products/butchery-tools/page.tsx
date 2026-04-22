@@ -46,7 +46,7 @@ export default async function ButcheryToolsPage() {
           <span>✓ Precision Impact</span>
           <span>✓ Durable Construction</span>
           <span>✓ Professional Standard</span>
-          <span>✓ Free Delivery over R2,000</span>
+          <span>✓ Free Delivery over R2,500</span>
         </div>
       </div>
 

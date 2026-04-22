@@ -30,9 +30,9 @@ export default function PrivacyPage() {
 
           <Section id="responsible-party" title="1. Responsible Party">
             <Table rows={[
-              ["Organisation",  "Lava Vide South Africa"],
+              ["Organisation",  "Lava Vide South Africa (Pty) Ltd"],
               ["Address",       "5 Stirling Road, Bryanston, Sandton 2191"],
-              ["Email",         "anneke@lava-sa.co.za"],
+              ["Email",         "info@lava-sa.co.za"],
               ["Telephone",     "+27 (0)72 160 5556"],
               ["Website",       "lava-sa.co.za"],
             ]} />
@@ -120,8 +120,8 @@ export default function PrivacyPage() {
             </ul>
             <p>
               To exercise any of these rights, email us at{" "}
-              <a href="mailto:anneke@lava-sa.co.za" className="text-primary font-semibold hover:text-secondary transition-colors">
-                anneke@lava-sa.co.za
+              <a href="mailto:info@lava-sa.co.za" className="text-primary font-semibold hover:text-secondary transition-colors">
+                info@lava-sa.co.za
               </a>.
               We will respond within 30 days.
             </p>
@@ -184,7 +184,7 @@ function LegalFooter() {
     <div className="mt-16 pt-8 border-t border-border">
       <p className="text-xs text-copy-muted">
         Privacy questions? Contact{" "}
-        <a href="mailto:anneke@lava-sa.co.za" className="text-primary font-semibold">anneke@lava-sa.co.za</a>
+        <a href="mailto:info@lava-sa.co.za" className="text-primary font-semibold">info@lava-sa.co.za</a>
         {" "}or call{" "}
         <a href="tel:+27721605556" className="text-primary font-semibold">+27 72 160 5556</a>.
       </p>

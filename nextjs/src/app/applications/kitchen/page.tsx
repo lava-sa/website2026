@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Vacuum Sealing for Home Kitchen & Meal Prep | Lava South Africa",
+  title: "Vacuum Sealing for Home Kitchen & Meal Prep",
   description:
     "Meal prep, bulk buying, sous vide, load-shedding protection and zero food waste — LAVA in the home kitchen pays for itself within the first year.",
 };

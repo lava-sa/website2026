@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "LAVA for Anglers — Vacuum Sealing Fresh Catch in South Africa | Lava South Africa",
+  title: "LAVA for Anglers — Vacuum Sealing Fresh Catch in South Africa",
   description:
     "Snoek, yellowtail, cob, kingklip — vacuum sealed same-day catch is still excellent 12 months later. No freezer burn, no off-flavour. The angler's choice.",
 };

@@ -159,7 +159,7 @@ export default function CartPage() {
               </div>
               {shipping > 0 && (
                 <p className="text-xs text-copy-muted bg-surface p-2.5 border border-border">
-                  Add {formatPrice(2000 - total)} more for free delivery
+                  Add {formatPrice(2500 - total)} more for free delivery
                 </p>
               )}
               <div className="border-t border-border pt-3 flex justify-between text-base">

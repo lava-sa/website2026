@@ -77,7 +77,7 @@ export default async function ButcheryMachineryPage() {
           <span>✓ Precision Engineering</span>
           <span>✓ High-Capacity Processing</span>
           <span>✓ Easy Maintenance</span>
-          <span>✓ Free Delivery over R2,000</span>
+          <span>✓ Free Delivery over R2,500</span>
         </div>
       </div>
 

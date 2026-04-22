@@ -83,7 +83,7 @@ export default async function BagsRollsPage() {
           <span>✓ BPA-Free & Food Safe</span>
           <span>✓ Freezer & Sous-Vide Safe</span>
           <span>✓ Fits All LAVA Machines</span>
-          <span>✓ Free Delivery over R2,000</span>
+          <span>✓ Free Delivery over R2,500</span>
         </div>
       </div>
 
@@ -122,18 +122,24 @@ export default async function BagsRollsPage() {
             <h2 className="text-2xl font-bold text-primary">Bag Size Guide</h2>
             <p className="mt-2 text-copy-muted">Not sure which size? Use this quick reference.</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-border overflow-hidden">
-            {BAG_SIZES.map((item, i) => (
-              <div
-                key={item.size}
-                className={`p-4 border-b border-r border-border last:border-r-0 ${
-                  i % 4 === 3 ? "border-r-0" : ""
-                }`}
-              >
-                <p className="text-sm font-bold text-primary">{item.size}</p>
-                <p className="text-xs text-copy-muted mt-1">{item.use}</p>
-              </div>
-            ))}
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border border-border">
+              <caption className="sr-only">Bag Size Guide — recommended uses for each bag dimension</caption>
+              <thead>
+                <tr className="bg-primary text-white">
+                  <th scope="col" className="text-left py-3 px-4 font-bold">Bag Size</th>
+                  <th scope="col" className="text-left py-3 px-4 font-bold">Best For</th>
+                </tr>
+              </thead>
+              <tbody>
+                {BAG_SIZES.map((item) => (
+                  <tr key={item.size} className="border-b border-border odd:bg-surface">
+                    <td className="py-2.5 px-4 font-semibold text-primary">{item.size}</td>
+                    <td className="py-2.5 px-4 text-copy">{item.use}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -164,18 +170,24 @@ export default async function BagsRollsPage() {
           )}
 
           {/* Roll size guide */}
-          <div className="mt-12 border border-border overflow-hidden">
-            <div className="bg-primary px-5 py-3">
-              <p className="text-xs font-bold uppercase tracking-widest text-white">Roll Width Guide</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-x divide-y divide-border">
-              {ROLL_SIZES.map((item) => (
-                <div key={item.size} className="p-4">
-                  <p className="text-sm font-bold text-primary">{item.size}</p>
-                  <p className="text-xs text-copy-muted mt-1">{item.use}</p>
-                </div>
-              ))}
-            </div>
+          <div className="mt-12 overflow-x-auto border border-border">
+            <table className="w-full text-sm">
+              <caption className="sr-only">Roll Width Guide — recommended uses for each roll width</caption>
+              <thead>
+                <tr className="bg-primary text-white">
+                  <th scope="col" className="text-left py-3 px-5 font-bold text-xs uppercase tracking-widest">Roll Width</th>
+                  <th scope="col" className="text-left py-3 px-5 font-bold text-xs uppercase tracking-widest">Best For</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ROLL_SIZES.map((item) => (
+                  <tr key={item.size} className="border-t border-border odd:bg-surface">
+                    <td className="py-2.5 px-5 font-semibold text-primary">{item.size}</td>
+                    <td className="py-2.5 px-5 text-copy-muted">{item.use}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -186,25 +198,32 @@ export default async function BagsRollsPage() {
           <div className="max-w-3xl mx-auto text-center">
             <p className="overline mb-3">Important</p>
             <h3 className="text-xl font-bold text-primary mb-4">Machine Compatibility</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm text-copy-muted text-left">
-              <div className="bg-white border border-border p-5">
-                <p className="font-bold text-primary mb-2">V.100 Premium X</p>
-                <p>Seal width: 340 mm</p>
-                <p className="mt-1 text-xs">Bags up to <strong>30 cm wide</strong> ✓</p>
-                <p className="text-xs">Rolls up to <strong>30 cm wide</strong> ✓</p>
-              </div>
-              <div className="bg-white border border-border p-5">
-                <p className="font-bold text-primary mb-2">V.300 Premium X / Black</p>
-                <p>Seal width: 300 mm</p>
-                <p className="mt-1 text-xs">Bags up to <strong>25 cm wide</strong> ✓</p>
-                <p className="text-xs">Rolls up to <strong>25 cm wide</strong> ✓</p>
-              </div>
-              <div className="bg-white border border-border p-5">
-                <p className="font-bold text-primary mb-2">V.400 / V.500 Commercial</p>
-                <p>Seal width: 450–1200 mm</p>
-                <p className="mt-1 text-xs">All bags & rolls ✓</p>
-                <p className="text-xs">Custom widths available</p>
-              </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border border-border">
+                <caption className="sr-only">Bag and roll compatibility by LAVA machine model</caption>
+                <thead>
+                  <tr className="bg-primary text-white">
+                    <th scope="col" className="text-left py-3 px-4 font-bold">Machine</th>
+                    <th scope="col" className="text-left py-3 px-4 font-bold">Seal Width</th>
+                    <th scope="col" className="text-left py-3 px-4 font-bold">Max Bag Width</th>
+                    <th scope="col" className="text-left py-3 px-4 font-bold">Max Roll Width</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["V.100 Premium X",        "340 mm", "30 cm", "30 cm"],
+                    ["V.300 Premium X / Black", "300 mm", "25 cm", "25 cm"],
+                    ["V.400 / V.500 Commercial","450–1200 mm", "All sizes", "Custom widths available"],
+                  ].map(([model, seal, bags, rolls]) => (
+                    <tr key={model} className="border-b border-border odd:bg-surface">
+                      <td className="py-2.5 px-4 font-semibold text-primary">{model}</td>
+                      <td className="py-2.5 px-4 text-copy">{seal}</td>
+                      <td className="py-2.5 px-4 text-copy">{bags}</td>
+                      <td className="py-2.5 px-4 text-copy">{rolls}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

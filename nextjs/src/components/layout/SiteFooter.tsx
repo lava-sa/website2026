@@ -3,14 +3,16 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { 
-  Facebook, 
-  Instagram, 
-  Mail, 
-  MapPin, 
-  Phone, 
-  ExternalLink 
+import {
+  Facebook,
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+  ExternalLink,
+  Cookie,
 } from "lucide-react";
+import { clearConsent } from "@/lib/cookie-consent";
 
 const SiteFooter = () => {
   const currentYear = new Date().getFullYear();
@@ -103,8 +105,16 @@ const SiteFooter = () => {
             <Link href="/legal/terms" className="hover:text-white transition-colors">Terms & Conditions</Link>
             <Link href="/legal/conditions" className="hover:text-white transition-colors">Conditions of Use</Link>
             <Link href="/legal/shipping-returns" className="hover:text-white transition-colors">Shipping & Returns</Link>
+            <button
+              onClick={() => { clearConsent(); window.location.reload(); }}
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+              aria-label="Review cookie preferences"
+            >
+              <Cookie className="h-3 w-3" />
+              Cookie Settings
+            </button>
           </div>
-          <p>© {currentYear} Lava-SA South Africa. All Rights Reserved.</p>
+          <p>© {currentYear} Lava Vide South Africa (Pty) Ltd. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

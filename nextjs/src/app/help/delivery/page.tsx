@@ -3,9 +3,9 @@ import Link from "next/link";
 import { Truck, Clock, MapPin, Phone, Mail, AlertTriangle, CheckCircle, Package } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Delivery & Shipping — How We Get Your LAVA to You | Lava South Africa",
+  title: "Delivery & Shipping — How We Get Your LAVA to You",
   description:
-    "Free delivery on orders over R2,000. Same-day dispatch before 15:00. Tracked courier to your door anywhere in South Africa. Full delivery information and rates.",
+    "Free delivery on orders over R2,500. Same-day dispatch before 15:00. Tracked courier to your door anywhere in South Africa. Full delivery information and rates.",
 };
 
 export default function DeliveryPage() {
@@ -25,7 +25,7 @@ export default function DeliveryPage() {
         {/* Quick stat cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
           {[
-            { icon: Truck, title: "Free Delivery", sub: "On orders over R2,000" },
+            { icon: Truck, title: "Free Delivery", sub: "On orders over R2,500" },
             { icon: Clock, title: "Same Day", sub: "Dispatch before 15:00 weekdays" },
             { icon: MapPin, title: "Nationwide", sub: "All 9 provinces" },
             { icon: Package, title: "Fully Tracked", sub: "Email + SMS updates" },
@@ -52,8 +52,8 @@ export default function DeliveryPage() {
             </thead>
             <tbody>
               {[
-                ["Orders over R2,000", "FREE standard tracked courier"],
-                ["Orders under R2,000", "R150 flat rate (most destinations)"],
+                ["Orders over R2,500", "FREE standard tracked courier"],
+                ["Orders under R2,500", "R150 flat rate (most destinations)"],
                 ["Outlying / remote areas", "Quoted at checkout — may differ"],
               ].map(([order, cost]) => (
                 <tr key={order} className="border-b border-border odd:bg-surface">
@@ -145,11 +145,11 @@ export default function DeliveryPage() {
                 <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
               </div>
             </a>
-            <a href="mailto:anneke@lava-sa.co.za" className="flex items-center gap-3 border border-border bg-surface px-4 py-4 hover:border-primary transition-all">
+            <a href="mailto:info@lava-sa.co.za" className="flex items-center gap-3 border border-border bg-surface px-4 py-4 hover:border-primary transition-all">
               <Mail className="h-5 w-5 text-secondary shrink-0" />
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-copy-muted">Email</p>
-                <p className="font-bold text-primary">anneke@lava-sa.co.za</p>
+                <p className="font-bold text-primary">info@lava-sa.co.za</p>
                 <p className="text-xs text-copy-muted">Reply within 1 business day</p>
               </div>
             </a>

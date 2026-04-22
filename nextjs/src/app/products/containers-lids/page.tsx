@@ -64,7 +64,7 @@ export default async function ContainersLidsPage() {
           <span>✓ Dishwasher Safe</span>
           <span>✓ Fits All LAVA Machines</span>
           <span>✓ Marinate 3× Faster</span>
-          <span>✓ Free Delivery over R2,000</span>
+          <span>✓ Free Delivery over R2,500</span>
         </div>
       </div>
 
@@ -133,28 +133,38 @@ export default async function ContainersLidsPage() {
       <div className="bg-surface border-y border-border py-12">
         <div className="section-container">
           <h3 className="text-center text-lg font-bold text-primary mb-8">Acrylic vs Stainless Steel — which is right for you?</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto text-sm">
-            <div className="bg-white border border-border p-6">
-              <p className="font-bold text-primary text-base mb-4">Acrylic Containers</p>
-              <ul className="space-y-2 text-copy-muted">
-                <li>✓ See-through — know what&apos;s inside at a glance</li>
-                <li>✓ Lightweight and easy to handle</li>
-                <li>✓ More affordable</li>
-                <li>✓ Great for everyday home use</li>
-                <li>✗ Can absorb strong odours over time</li>
-              </ul>
-            </div>
-            <div className="bg-white border-2 border-primary p-6">
-              <p className="font-bold text-primary text-base mb-1">ES-Line Stainless Steel</p>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-secondary mb-4">Premium Choice</p>
-              <ul className="space-y-2 text-copy-muted">
-                <li>✓ 100% odour and stain resistant</li>
-                <li>✓ Professional durability — lasts a lifetime</li>
-                <li>✓ Fully dishwasher safe</li>
-                <li>✓ Perfect for strong-smelling foods (game, fish, garlic)</li>
-                <li>✗ Higher price point</li>
-              </ul>
-            </div>
+          <div className="max-w-3xl mx-auto overflow-x-auto">
+            <table className="w-full text-sm border border-border">
+              <caption className="sr-only">Feature comparison: Acrylic vs ES-Line Stainless Steel containers</caption>
+              <thead>
+                <tr className="bg-primary text-white">
+                  <th scope="col" className="text-left py-3 px-4 font-bold w-2/5">Feature</th>
+                  <th scope="col" className="text-center py-3 px-4 font-bold">Acrylic</th>
+                  <th scope="col" className="text-center py-3 px-4 font-bold">
+                    ES-Line Stainless
+                    <span className="block text-[10px] font-bold uppercase tracking-widest text-secondary mt-0.5">Premium Choice</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["See-through",           "✓",  "✗"],
+                  ["Lightweight",           "✓",  "—"],
+                  ["More affordable",       "✓",  "—"],
+                  ["Great for everyday use","✓",  "✓"],
+                  ["Odour & stain resistant","Partial", "✓"],
+                  ["Dishwasher safe",       "—",  "✓"],
+                  ["Professional durability","—", "✓"],
+                  ["Best for strong-smelling foods (game, fish, garlic)", "—", "✓"],
+                ].map(([feature, acrylic, steel]) => (
+                  <tr key={feature} className="border-b border-border odd:bg-surface">
+                    <td className="py-2.5 px-4 text-copy">{feature}</td>
+                    <td className={`py-2.5 px-4 text-center font-semibold ${acrylic === "✓" ? "text-emerald-600" : acrylic === "✗" ? "text-copy-muted" : "text-copy-muted"}`}>{acrylic}</td>
+                    <td className={`py-2.5 px-4 text-center font-semibold ${steel === "✓" ? "text-emerald-600" : steel === "✗" ? "text-copy-muted" : "text-copy-muted"}`}>{steel}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

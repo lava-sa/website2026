@@ -5,7 +5,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "How to Vacuum Seal Biltong — Keep It Dry, Tender and Perfectly Preserved | Lava South Africa",
+  title: "How to Vacuum Seal Biltong — Keep It Dry, Tender and Perfectly Preserved",
   description:
     "Biltong and vacuum sealing seem like opposites. Here's the correct technique to seal biltong without ruining the texture — wet, dry and sliced.",
 };

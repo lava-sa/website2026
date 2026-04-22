@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Lightbulb } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Expert Vacuum Sealing Tips — Get the Most from Your LAVA | Lava South Africa",
+  title: "Expert Vacuum Sealing Tips — Get the Most from Your LAVA",
   description:
     "Pro-level tips for better seals, longer shelf life, vacuum marinating, sous vide, containers and troubleshooting. From people who use LAVA machines every day.",
 };

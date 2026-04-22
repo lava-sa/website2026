@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ExternalLink, Play, Youtube } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Lava TV — Vacuum Sealing Video Guides | Lava South Africa",
+  title: "Lava TV — Vacuum Sealing Video Guides",
   description:
     "Watch LAVA vacuum sealing in action — game meat, fish, sous vide, dry goods, containers and more. Video guides from the LAVA Germany YouTube channel.",
   openGraph: {

@@ -586,7 +586,7 @@ export default function AboutPage() {
           </h2>
           <p className="text-on-dark-muted max-w-lg mx-auto mb-10 text-lg leading-relaxed">
             Browse the full range of LAVA vacuum sealers, bags and accessories —
-            with free delivery on orders over R2,000.
+            with free delivery on orders over R2,500.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link

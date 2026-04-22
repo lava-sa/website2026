@@ -37,6 +37,7 @@ const orgSchema = {
 };
 
 import StatsBand from "@/components/home/StatsBand";
+import TrustBar from "@/components/home/TrustBar";
 import ReviewCTA from "@/components/home/ReviewCTA";
 import ProductGallery from "@/components/home/ProductGallery";
 import HeritageSection from "@/components/home/HeritageSection";
@@ -58,6 +59,9 @@ export default function HomePage() {
 
       {/* 2 — Credentials: 4 stats + partner logos */}
       <StatsBand />
+
+      {/* 2b — Trust badges: one consolidated strip */}
+      <TrustBar />
 
       {/* 3 — Customer review CTA: written + video */}
       <ReviewCTA />

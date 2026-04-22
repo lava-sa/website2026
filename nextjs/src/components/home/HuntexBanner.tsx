@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, MapPin, Calendar, Ticket } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,13 +19,30 @@ interface HuntexBannerProps {
  *   - "section"  → full homepage section (used between hero and products)
  *   - "bar"      → slim dismissible announcement bar at top of page
  */
+// HuntEx runs 24–27 April 2026 at Gallagher Convention Centre
+const HUNTEX_START = new Date("2026-04-24T00:00:00+02:00");
+const HUNTEX_END   = new Date("2026-04-27T23:59:59+02:00");
+
+function useDaysUntilHuntex() {
+  const [days, setDays] = useState<number | null>(null);
+  useEffect(() => {
+    const now = new Date();
+    if (now > HUNTEX_END) { setDays(-1); return; }
+    const ms = HUNTEX_START.getTime() - now.getTime();
+    setDays(ms <= 0 ? 0 : Math.ceil(ms / (1000 * 60 * 60 * 24)));
+  }, []);
+  return days;
+}
+
 export default function HuntexBanner({
   variant = "section",
   className,
 }: HuntexBannerProps) {
   const [dismissed, setDismissed] = useState(false);
+  const daysUntil = useDaysUntilHuntex();
 
-  if (dismissed) return null;
+  // Hide banner after the event has ended
+  if (dismissed || daysUntil === -1) return null;
 
   /* ── Slim top bar ─────────────────────────────────────────────────── */
   if (variant === "bar") {

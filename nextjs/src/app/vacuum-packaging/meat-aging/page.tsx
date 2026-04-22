@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Meat Aging in a Vacuum — Wet Aging Explained | Lava South Africa",
+  title: "Meat Aging in a Vacuum — Wet Aging Explained",
   description:
     "Wet aging vs dry aging — what the difference is, why vacuum aging produces consistently tender results, and how to do it at home with a LAVA machine.",
 };

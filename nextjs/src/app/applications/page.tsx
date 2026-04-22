@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Vacuum Sealing Applications — LAVA for Every South African Kitchen | Lava South Africa",
+  title: "Vacuum Sealing Applications — LAVA for Every South African Kitchen",
   description:
     "Whether you hunt, fish, braai, make biltong, run a butchery or cook sous vide — there's a LAVA vacuum sealer built for how you work.",
 };

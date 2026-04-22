@@ -46,7 +46,7 @@ export default async function ButcheryScalesPage() {
           <span>✓ Stainless Steel Plates</span>
           <span>✓ Up to 300kg Capacity</span>
           <span>✓ Easy-to-Read Displays</span>
-          <span>✓ Free Delivery over R2,000</span>
+          <span>✓ Free Delivery over R2,500</span>
         </div>
       </div>
 

@@ -31,11 +31,11 @@ export default function TermsPage() {
           {/* Company */}
           <Section id="company" title="1. Company Information">
             <Table rows={[
-              ["Legal name",    "Lava Vide South Africa"],
+              ["Legal name",    "Lava Vide South Africa (Pty) Ltd"],
               ["Trading as",    "Lava South Africa / lava-sa.co.za"],
               ["Address",       "5 Stirling Road, Bryanston, Sandton 2191, South Africa"],
               ["Telephone",     "+27 (0)72 160 5556"],
-              ["Email",         "anneke@lava-sa.co.za"],
+              ["Email",         "info@lava-sa.co.za"],
               ["Business hours","Monday – Friday, 09:00 – 17:00 SAST"],
             ]} />
           </Section>
@@ -66,7 +66,7 @@ export default function TermsPage() {
             <ul>
               <li>All prices displayed are in South African Rand (ZAR) and include 15% VAT.</li>
               <li>Delivery fees are calculated at checkout based on order weight and destination.</li>
-              <li>Orders over R2,000 qualify for free standard courier delivery within South Africa.</li>
+              <li>Orders over R2,500 qualify for free standard courier delivery within South Africa.</li>
               <li>We reserve the right to correct any pricing errors prior to dispatch.</li>
             </ul>
           </Section>
@@ -100,33 +100,63 @@ export default function TermsPage() {
 
           {/* Warranty */}
           <Section id="guarantee" title="7. Warranty">
+
+            <div className="bg-blue-50 border border-blue-200 p-4 mb-4 text-sm text-blue-900">
+              <strong>Your rights under the Consumer Protection Act (CPA), Act 68 of 2008 — Section 56:</strong>
+              {" "}In addition to our contractual warranty below, South African law provides an implied
+              warranty of quality on all goods. During the first <strong>6 months from delivery</strong>,
+              if a product has a defect, you may demand — at your choice — repair, replacement, or a
+              full refund. These statutory rights cannot be limited by any contractual term.
+            </div>
+
+            <p className="font-semibold text-primary">Statutory implied warranty (CPA §56) — first 6 months:</p>
             <ul>
-              <li>All LAVA vacuum sealing machines carry a <strong className="text-primary">2-year factory warranty</strong> from the date of delivery.</li>
+              <li>If a defect arises within 6 months of delivery, you may choose: <strong>(a) repair</strong>, <strong>(b) replacement</strong>, or <strong>(c) full refund</strong>.</li>
+              <li>We will arrange courier collection and redelivery at our cost for any defect reported within this period.</li>
+              <li>No restocking fee, handling fee, or deduction applies to a CPA §56 claim.</li>
+            </ul>
+
+            <p className="font-semibold text-primary mt-4">Contractual factory warranty — 2 years from delivery:</p>
+            <ul>
+              <li>All LAVA vacuum sealing machines carry a <strong className="text-primary">2-year factory warranty</strong> from the date of delivery, covering manufacturing defects in materials and workmanship.</li>
               <li>An optional 5-year extended warranty is available on selected machines at an additional charge.</li>
               <li>The warranty covers electrical and mechanical components: pump, motor, transformer, electronics and switches.</li>
-              <li><strong>Not covered by warranty:</strong> damage caused by improper use, unauthorized repairs, normal wear components (sealing strips, foam seals), cosmetic damage, or damage caused by failure to follow operating instructions.</li>
-              <li>To make a warranty claim, contact us within 14 days of discovering the defect. After 14 days without notification, the product is deemed to have been received in acceptable condition.</li>
-              <li>Approved warranty repairs or replacements are handled at our cost, including courier collection and redelivery.</li>
+              <li><strong>Not covered:</strong> damage from improper use, unauthorised repairs, normal wear components (sealing strips, foam seals), cosmetic damage, or failure to follow operating instructions.</li>
+              <li>For defects discovered between 6 and 24 months after delivery, we will repair or replace the machine at our cost, including courier collection and redelivery. A refund is offered if a repair or equivalent replacement cannot be completed within a reasonable time.</li>
+              <li>To facilitate a warranty claim, please contact us as soon as a defect becomes apparent. Prompt notification helps us resolve the issue quickly and does not affect your statutory rights.</li>
             </ul>
+
           </Section>
 
           {/* Cancellation */}
           <Section id="cancellation" title="8. Right of Cancellation">
+
+            <p className="font-semibold text-primary">CPA cooling-off — direct marketing (Section 20):</p>
             <p>
-              If you purchased a product without having seen it in person, you have the right
-              to cancel your order within <strong>30 days of receipt</strong> of the goods
-              (cooling-off period), provided:
+              If you purchased as a result of direct marketing initiated by us (e.g. a promotional
+              email or SMS offer), you have the right to cancel within{" "}
+              <strong>5 business days of receipt</strong> of the goods. In this case, we will
+              arrange collection at our cost and issue a full refund with no deductions.
+            </p>
+
+            <p className="font-semibold text-primary mt-4">Our voluntary 30-day change-of-mind policy:</p>
+            <p>
+              As a courtesy beyond statutory minimums, we accept change-of-mind returns within
+              30 days of delivery, provided:
             </p>
             <ul>
               <li>The product is in its original, unused condition with all original packaging intact.</li>
-              <li>You notify us in writing (email to anneke@lava-sa.co.za) within 30 days of delivery.</li>
-              <li>The product is not a customised or special-order item.</li>
+              <li>You notify us in writing (email to info@lava-sa.co.za) within 30 days of delivery.</li>
+              <li>The product is not a customised or special-order item (V.400, V.500 commercial range).</li>
             </ul>
             <p>
-              Upon approved cancellation we will arrange courier collection at our cost.
-              Refunds are processed within 10 business days of receiving the returned goods
-              in acceptable condition. A 10% restocking fee may apply to non-defect returns.
+              Upon approved return we will arrange courier collection at our cost. Refunds are
+              processed within 10 business days of receiving the goods in acceptable condition.
+              A <strong>10% restocking and handling fee</strong> applies to change-of-mind returns
+              on non-defective goods only. This fee does <strong>not</strong> apply to returns
+              made under the CPA §56 implied warranty or the §20 direct-marketing cooling-off right.
             </p>
+
           </Section>
 
           {/* Liability */}
@@ -199,7 +229,7 @@ function LegalFooter() {
     <div className="mt-16 pt-8 border-t border-border">
       <p className="text-xs text-copy-muted">
         Questions about these terms? Contact us at{" "}
-        <a href="mailto:anneke@lava-sa.co.za" className="text-primary font-semibold">anneke@lava-sa.co.za</a>
+        <a href="mailto:info@lava-sa.co.za" className="text-primary font-semibold">info@lava-sa.co.za</a>
         {" "}or call{" "}
         <a href="tel:+27721605556" className="text-primary font-semibold">+27 72 160 5556</a>.
       </p>

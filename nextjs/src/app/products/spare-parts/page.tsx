@@ -95,7 +95,7 @@ export default async function SparePartsPage() {
           <span>✓ Genuine LAVA Parts</span>
           <span>✓ Made in Germany</span>
           <span>✓ In Stock — Ships Fast</span>
-          <span>✓ Free Delivery over R2,000</span>
+          <span>✓ Free Delivery over R2,500</span>
         </div>
       </div>
 
@@ -219,8 +219,8 @@ export default async function SparePartsPage() {
               +27 72 160 5556
             </a>{" "}
             or email{" "}
-            <a href="mailto:anneke@lava-sa.co.za" className="font-semibold text-primary hover:text-secondary transition-colors">
-              anneke@lava-sa.co.za
+            <a href="mailto:info@lava-sa.co.za" className="font-semibold text-primary hover:text-secondary transition-colors">
+              info@lava-sa.co.za
             </a>
             .
           </p>

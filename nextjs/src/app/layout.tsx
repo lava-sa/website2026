@@ -16,6 +16,11 @@ const outfit = Outfit({
     display: "swap",
 });
 
+// Only the live production domain should be indexed.
+// VERCEL_ENV is set automatically: 'production' | 'preview' | 'development'
+// When undefined (local dev) we also default to noindex.
+const isProduction = process.env.VERCEL_ENV === "production";
+
 export const metadata: Metadata = {
     title: {
         template: "%s | Lava South Africa",
@@ -52,22 +57,28 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Lava South Africa — German Vacuum Sealers Since 2007",
-        description: "South Africa's leading German vacuum sealer brand. Trusted by 350,000+ SA hunters.",
+        description: "South Africa's leading German vacuum sealer brand. Trusted by 350,000+ customers worldwide.",
         images: ["/images/headers/lava-sa-vacuum-sealers-V300-header-pick-1250.jpg"],
     },
     alternates: {
         canonical: "/",
     },
-    robots: {
-        index: true,
-        follow: true,
-        googleBot: {
+    robots: isProduction
+        ? {
             index: true,
             follow: true,
-            "max-image-preview": "large",
-            "max-snippet": -1,
+            googleBot: {
+                index: true,
+                follow: true,
+                "max-image-preview": "large",
+                "max-snippet": -1,
+            },
+        }
+        : {
+            index: false,
+            follow: false,
+            googleBot: { index: false, follow: false },
         },
-    },
 };
 
 const localBusinessSchema = {
