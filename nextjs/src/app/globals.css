@@ -372,3 +372,11 @@ body {
 .prose-lava strong {
   @apply font-semibold;
 }
+
+/* Prevent wide tables from breaking page width on mobile */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
