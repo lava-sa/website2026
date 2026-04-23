@@ -3,18 +3,18 @@ import Image from "next/image";
 
 const HeritageSection = () => {
   return (
-    <section className="heritage bg-white py-24">
+    <section className="heritage bg-gray-100 py-24">
       <div className="section-container">
         <div className="heritage__grid grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
 
           {/* ── Left: image ─────────────────────────────────────── */}
           <div className="heritage__media group relative mx-auto w-full max-w-md lg:max-w-none">
-            <div className="relative aspect-[4/5] overflow-hidden bg-surface shadow-xl">
+            <div className="relative aspect-[3/2] overflow-hidden bg-surface shadow-xl">
               <Image
                 src="/images/about/landig-family.webp"
                 alt="The Landig family — makers of Lava vacuum sealers, Bad Saulgau Germany"
                 fill
-                className="object-cover object-center transition-transform duration-700 ease-in-out group-hover:scale-105"
+                className="object-cover object-top transition-transform duration-700 ease-in-out group-hover:scale-105"
               />
 
               {/* Year badge */}
@@ -36,7 +36,7 @@ const HeritageSection = () => {
             </div>
 
             <h2 className="heritage__heading font-heading text-4xl font-bold sm:text-5xl">
-              40 years of precision.
+              44 years of precision.
             </h2>
             <p className="mt-1.5 text-lg font-semibold text-primary">
               Now in South Africa.
@@ -47,7 +47,7 @@ const HeritageSection = () => {
               <p className="text-base italic leading-relaxed text-copy">
                 &ldquo;For two generations, we, the Landig family, have been passionately
                 running our family business in Bad Saulgau, Upper Swabia. What began
-                over 40 years ago as a small specialist operation has evolved into a
+                over 44 years ago as a small specialist operation has evolved into a
                 global leader in vacuum sealing technology.&rdquo;
               </p>
             </blockquote>

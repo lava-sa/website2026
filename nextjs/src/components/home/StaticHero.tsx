@@ -38,7 +38,7 @@ const StaticHero = () => {
           {/* Sub-heading */}
           <p className="hero__subheading mt-5 max-w-lg text-base leading-relaxed text-on-dark-muted">
             German-engineered vacuum sealers and accessories that chefs, hunters,
-            and households rely on. For over 40 years, Lava has set the standard
+            and households rely on. For over 44 years, Lava has set the standard
             for precision food preservation.
           </p>
 

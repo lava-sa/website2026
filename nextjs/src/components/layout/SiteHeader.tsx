@@ -268,8 +268,8 @@ const SiteHeader = () => {
 
             <span className="text-border mx-2 opacity-50">|</span>
 
-            <Link href="/about" className="text-sm font-bold tracking-tight text-primary hover:text-secondary transition-colors uppercase pt-0.5">About Lava-SA</Link>
-            <Link href="/lava-tv" className="text-sm font-bold tracking-tight text-primary hover:text-secondary transition-colors uppercase pt-0.5">Lava TV</Link>
+            <Link href="/about" className="text-sm font-bold tracking-tight text-primary hover:text-secondary transition-colors pt-0.5">About Lava-SA</Link>
+            <Link href="/lava-tv" className="text-sm font-bold tracking-tight text-primary hover:text-secondary transition-colors pt-0.5">Lava TV</Link>
 
           </nav>
 
