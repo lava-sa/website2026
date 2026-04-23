@@ -193,7 +193,6 @@ const SiteHeader = () => {
     ["V.300® Premium X", "/products/v300-premium-x"],
     ["V.300® White (Limited Edition)", "/products/v300-white"],
     ["V.300® Black (Limited Edition)", "/products/v300-black"],
-    ["V.333® Chrome", "/products/v333-chrome"],
     ["V.400® Premium (Commercial)", "/products/v400-premium"],
     ["V.500® Premium (72cm)", "/products/v500-premium"],
     ["V.500® Premium XXL (121cm)", "/products/v500-premium-xxl"],
