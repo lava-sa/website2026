@@ -20,7 +20,7 @@ const FoundersSection = () => {
                 For two generations, we, the Landig family, have been passionately running our family business in Bad Saulgau, Upper Swabia, crafting <strong>LAVA vacuum sealers</strong> renowned for their durability and precision.
               </p>
               <p>
-                What began over 40 years ago as a small specialist operation has evolved into a thriving medium-sized company, proudly serving over 350,000 customers worldwide with <strong>German-made vacuum sealers</strong> and high-quality kitchen equipment.
+                What began over 44 years ago as a small specialist operation has evolved into a thriving medium-sized company, proudly serving over 350,000 customers worldwide with <strong>German-made vacuum sealers</strong> and high-quality kitchen equipment.
               </p>
               <p>
                 Our journey from humble beginnings to a global leader in <strong>vacuum sealing technology</strong> reflects our unwavering commitment to innovation and excellence.
@@ -35,7 +35,7 @@ const FoundersSection = () => {
           <div className="relative">
              <div className="relative rounded-3xl overflow-hidden shadow-2xl p-2 bg-white border border-border/60">
                 <Image 
-                  src="/images/about/founders.webp"
+                  src="/images/about/lava-directors-001.webp"
                   alt="Landig Family Business - German Made Lava Vacuum Sealers"
                   width={800}
                   height={600}

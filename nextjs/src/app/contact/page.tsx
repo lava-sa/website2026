@@ -69,11 +69,11 @@ export default function ContactPage() {
         <div className="relative section-container">
           <p className="overline text-secondary mb-3">We&apos;re Here to Help</p>
           <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight max-w-2xl">
-            Talk to a real person.<br />Not a chatbot.
+            We&apos;re always ready<br />to help.
           </h1>
           <p className="mt-5 text-on-dark-muted text-lg max-w-xl leading-relaxed">
-            When you contact Lava South Africa, Anneke Hofmeyr answers personally —
-            every call, every email, every warranty claim.
+            When you contact Lava South Africa, Anneke answers personally —
+            every call, every email, and every product enquiry.
           </p>
         </div>
       </section>

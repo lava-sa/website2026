@@ -11,8 +11,8 @@ const QualitySection = () => {
           <div className="quality__media group relative mx-auto w-full max-w-md lg:max-w-none">
             <div className="relative aspect-[4/5] overflow-hidden bg-surface shadow-xl">
               <Image
-                src="/images/homepage/lava-german-quality.webp"
-                alt="LAVA vacuum sealer — German quality, engineered to perform for decades"
+                src="/images/homepage/lava-v300-premium-x-vacuum-sealer-machine.webp"
+                alt="LAVA V.300 Premium X vacuum sealer — German quality, engineered to perform for decades"
                 fill
                 className="object-cover object-center transition-transform duration-700 ease-in-out group-hover:scale-105"
               />

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Star } from "lucide-react";
+import { calculatePointsEarned } from "@/lib/rewards-config";
 
 const products = [
   {
@@ -12,7 +13,7 @@ const products = [
     tier: "Entry Level",
     tierColor: "bg-petrol-100 text-primary",
     price: "R 11,000",
-    rewards: 11000,
+    priceValue: 11000,
     href: "/products/v100-premium-x",
   },
   {
@@ -24,7 +25,7 @@ const products = [
     tier: "Home & Domestic",
     tierColor: "bg-secondary/10 text-secondary",
     price: "R 14,500",
-    rewards: 14500,
+    priceValue: 14500,
     href: "/products/v300-premium-x",
   },
   {
@@ -36,7 +37,7 @@ const products = [
     tier: "Home & Domestic",
     tierColor: "bg-secondary/10 text-secondary",
     price: "R 14,200",
-    rewards: 14200,
+    priceValue: 14200,
     href: "/products/v300-black",
   },
   {
@@ -48,7 +49,7 @@ const products = [
     tier: "Commercial",
     tierColor: "bg-petrol-600/10 text-petrol-600",
     price: "R 29,890",
-    rewards: 29890,
+    priceValue: 29890,
     href: "/products/v400-premium",
   },
 ];
@@ -130,7 +131,7 @@ const ProductGallery = () => {
               <div className="product-gallery__rewards flex items-center gap-2 border-t border-border px-4 py-2.5">
                 <Star className="h-3 w-3 fill-secondary text-secondary shrink-0" />
                 <span className="text-[10px] font-semibold uppercase tracking-widest text-copy-muted">
-                  Earn {product.rewards.toLocaleString()} Lava Points
+                  Earn {calculatePointsEarned(product.priceValue).toLocaleString("en-ZA")} Lava Points
                 </span>
               </div>
             </Link>

@@ -30,7 +30,7 @@ const slides = [
   },
   {
     id: 3,
-    image: "/images/homepage/lava-german-quality.webp",
+    image: "/images/homepage/lava-v300-premium-x-vacuum-sealer-machine.webp",
     tag: "Fresh Food · Less Waste",
     headline: "Fresh Food,",
     headlineAccent: "Longer.",

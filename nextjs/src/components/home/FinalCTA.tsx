@@ -102,7 +102,7 @@ const FinalCTA = () => {
                     <option value="">Select a machine…</option>
                     <option>V.100 Premium X</option>
                     <option>V.300 Premium X</option>
-                    <option>V.333® Chrome</option>
+                    <option>V.500</option>
                     <option>V.400 Premium</option>
                     <option>Vacuum Bags &amp; Accessories</option>
                     <option>Technical Support</option>

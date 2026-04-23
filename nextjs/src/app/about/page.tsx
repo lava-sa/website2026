@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 const STATS = [
   { value: "1982",   label: "LAVA founded in Germany" },
   { value: "2007",   label: "SA distributor established" },
-  { value: "40+",    label: "Years of German engineering" },
+  { value: "44+",    label: "Years of German engineering" },
   { value: "350k+",  label: "Customers worldwide" },
 ];
 
@@ -90,7 +90,7 @@ export default function AboutPage() {
           <div className="max-w-3xl">
             <p className="overline text-secondary mb-4">Our Story</p>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight">
-              40 years of German<br />
+              44 years of German<br />
               <span className="text-secondary">obsession</span>.<br />
               Now South Africa&apos;s own.
             </h1>
@@ -159,7 +159,7 @@ export default function AboutPage() {
                 <p className="text-base italic leading-relaxed text-copy">
                   &ldquo;For two generations, we, the Landig family, have been passionately
                   running our family business in Bad Saulgau, Upper Swabia. What began
-                  over 40 years ago as a small specialist operation has evolved into a
+                  over 44 years ago as a small specialist operation has evolved into a
                   global leader in vacuum sealing technology.&rdquo;
                 </p>
                 <footer className="mt-3 text-xs font-bold uppercase tracking-widest text-copy-muted">
@@ -308,7 +308,7 @@ export default function AboutPage() {
             <div className="group relative mx-auto w-full max-w-md lg:max-w-none">
               <div className="relative aspect-[4/5] overflow-hidden shadow-2xl">
                 <Image
-                  src="/images/about/founders.webp"
+                  src="/images/about/lava-directors-001.webp"
                   alt="Wilco Uys and Anneke Hofmeyr — Lava South Africa"
                   fill
                   className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
@@ -582,7 +582,7 @@ export default function AboutPage() {
         <div className="section-container text-center">
           <p className="overline text-secondary mb-4">Ready to experience it?</p>
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6 max-w-2xl mx-auto leading-tight">
-            40 years in the making.<br />Delivered to your door.
+            44 years in the making.<br />Delivered to your door.
           </h2>
           <p className="text-on-dark-muted max-w-lg mx-auto mb-10 text-lg leading-relaxed">
             Browse the full range of LAVA vacuum sealers, bags and accessories —
