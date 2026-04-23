@@ -400,21 +400,6 @@ const SiteHeader = () => {
             </li>
             <li className="text-white/15">|</li>
 
-
-            <li>
-              <CategoryDropdown label="Spare Parts" href="/products/spare-parts" width="w-64">
-                <DropdownLinks
-                  links={[
-                    ["Sealing Strips",    "/products/spare-parts#sealing-strips"],
-                    ["Liquid Trap Lids",  "/products/spare-parts#liquid-trap-lids"],
-                    ["Vacuum Seal Sets",  "/products/spare-parts#vacuum-seals"],
-                    ["Compatibility Guide", "/products/spare-parts#compatibility"],
-                  ]}
-                />
-              </CategoryDropdown>
-            </li>
-            <li className="text-white/15">|</li>
-
             <li>
               <CategoryDropdown label="Sous Vide" href="/products/sous-vide" width="w-64">
                 <DropdownLinks
