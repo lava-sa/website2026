@@ -6,6 +6,7 @@ import SiteFooter from "@/components/layout/SiteFooter";
 import { JanetAgent } from "@/components/layout/JanetAgent";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import CookieConsent from "@/components/CookieConsent";
+import CartDrawer from "@/components/shop/CartDrawer";
 
 /**
  * Conditionally renders the site chrome (header, breadcrumbs, footer, Janet).
@@ -29,6 +30,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       {children}
       <SiteFooter />
       <JanetAgent />
+      <CartDrawer />
       <CookieConsent />
     </>
   );

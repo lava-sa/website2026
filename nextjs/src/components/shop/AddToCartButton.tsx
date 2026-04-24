@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function AddToCartButton({ product, funnelSlug, priceDisplay }: Props) {
-  const { addItem, isHydrated } = useCart();
+  const { addItem, isHydrated, openDrawer } = useCart();
   const router      = useRouter();
   const [qty, setQty]     = useState(1);
   const [added, setAdded] = useState(false);
@@ -30,7 +30,7 @@ export default function AddToCartButton({ product, funnelSlug, priceDisplay }: P
     setAdded(true);
     setTimeout(() => {
       setAdded(false);
-      router.push("/cart");
+      openDrawer("add");
     }, 250);
   };
 
