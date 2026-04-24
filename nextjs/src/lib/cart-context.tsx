@@ -24,10 +24,14 @@ interface CartContextValue {
   count: number;
   total: number;
   isHydrated: boolean;
+  isDrawerOpen: boolean;
+  drawerOpenReason: "manual" | "add";
   addItem: (item: Omit<CartItem, "quantity">) => void;
   removeItem: (id: string) => void;
   updateQty: (id: string, qty: number) => void;
   clearCart: () => void;
+  openDrawer: (reason?: "manual" | "add") => void;
+  closeDrawer: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -46,6 +50,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     isHydrated: false,
   });
   const { items, isHydrated } = state;
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [drawerOpenReason, setDrawerOpenReason] = useState<"manual" | "add">("manual");
 
   // Hydrate from localStorage after mount (prevents SSR mismatch)
   useEffect(() => {
@@ -102,13 +108,34 @@ export function CartProvider({ children }: { children: ReactNode }) {
     () => setState((prev) => ({ ...prev, items: [] })),
     []
   );
+  const openDrawer = useCallback((reason: "manual" | "add" = "manual") => {
+    setDrawerOpenReason(reason);
+    setIsDrawerOpen(true);
+  }, []);
+  const closeDrawer = useCallback(() => {
+    setIsDrawerOpen(false);
+    setDrawerOpenReason("manual");
+  }, []);
 
   const count = items.reduce((sum, i) => sum + i.quantity, 0);
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   return (
     <CartContext.Provider
-      value={{ items, count, total, isHydrated, addItem, removeItem, updateQty, clearCart }}
+      value={{
+        items,
+        count,
+        total,
+        isHydrated,
+        isDrawerOpen,
+        drawerOpenReason,
+        addItem,
+        removeItem,
+        updateQty,
+        clearCart,
+        openDrawer,
+        closeDrawer,
+      }}
     >
       {children}
     </CartContext.Provider>
