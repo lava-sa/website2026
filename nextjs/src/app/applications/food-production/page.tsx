@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -7,18 +8,6 @@ export const metadata: Metadata = {
   description:
     "Farmers market suppliers, deli owners, caterers and small food producers — LAVA commercial machines produce consistent, presentation-quality vacuum seals for all-day use.",
 };
-
-function Placeholder({ label, aspect = "aspect-[16/7]" }: { label: string; aspect?: string }) {
-  return (
-    <div className={`${aspect} bg-primary/10 flex items-end relative overflow-hidden`}>
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-      <div className="relative p-3 w-full bg-black/20">
-        <p className="text-[9px] font-bold uppercase tracking-widest text-white/60">Image needed</p>
-        <p className="text-xs font-semibold text-white/80">{label}.jpg</p>
-      </div>
-    </div>
-  );
-}
 
 export default function FoodProductionPage() {
   return (
@@ -37,7 +26,13 @@ export default function FoodProductionPage() {
           </p>
         </div>
 
-        <Placeholder label="app-food-production-farmers-market" />
+        <Image 
+          src="/images/applications/app-food-production-farmers-market.webp" 
+          alt="Farmers market food production with LAVA vacuum sealer" 
+          width={1200} 
+          height={525}
+          className="w-full h-auto rounded-lg mb-8"
+        />
 
         <div className="prose-lava mt-12">
 
@@ -61,7 +56,13 @@ export default function FoodProductionPage() {
             ))}
           </div>
 
-          <Placeholder label="app-food-production-restaurant-kitchen" aspect="aspect-[16/6]" />
+          <Image 
+            src="/images/applications/app-food-production-restaurant-kitchen.webp" 
+            alt="Restaurant kitchen vacuum sealing with LAVA" 
+            width={1200} 
+            height={450}
+            className="w-full h-auto rounded-lg mb-8"
+          />
 
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">What Continuous Commercial Use Requires</h2>
           <p>
@@ -80,7 +81,7 @@ export default function FoodProductionPage() {
             <li><strong>10+ year spare parts availability</strong> — a commercial machine that can&apos;t be repaired is a liability, not an asset</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Restaurant & Catering Applications</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Restaurant &amp; Catering Applications</h2>
           <p>
             Vacuum sealing in the professional kitchen changes the economics of prep work:
           </p>
@@ -92,7 +93,13 @@ export default function FoodProductionPage() {
             <li><strong>Sauce and stock portioning</strong> — large batch production sealed in single-service portions</li>
           </ul>
 
-          <Placeholder label="app-food-production-commercial-sealing-session" aspect="aspect-[16/6]" />
+          <Image 
+            src="/images/applications/app-food-production-commercial-sealing-session.webp" 
+            alt="Commercial vacuum sealing session for food production" 
+            width={1200} 
+            height={450}
+            className="w-full h-auto rounded-lg mb-8"
+          />
 
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Commercial Machine Selector</h2>
           <table className="w-full text-sm border border-border mb-6">

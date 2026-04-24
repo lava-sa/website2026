@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, AlertTriangle } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -7,18 +8,6 @@ export const metadata: Metadata = {
   description:
     "Biltong makers, droëwors producers and charcuterie enthusiasts — vacuum sealing extends shelf life, enables distribution and protects your product. The correct technique for dry and wet biltong.",
 };
-
-function Placeholder({ label, aspect = "aspect-[16/7]" }: { label: string; aspect?: string }) {
-  return (
-    <div className={`${aspect} bg-primary/10 flex items-end relative overflow-hidden`}>
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-      <div className="relative p-3 w-full bg-black/20">
-        <p className="text-[9px] font-bold uppercase tracking-widest text-white/60">Image needed</p>
-        <p className="text-xs font-semibold text-white/80">{label}.jpg</p>
-      </div>
-    </div>
-  );
-}
 
 export default function BiltongPage() {
   return (
@@ -37,7 +26,13 @@ export default function BiltongPage() {
           </p>
         </div>
 
-        <Placeholder label="app-biltong-hanging-drying" />
+        <Image 
+          src="/images/applications/app-biltong-hanging-drying.webp" 
+          alt="Biltong hanging and drying for vacuum sealing" 
+          width={1200} 
+          height={525}
+          className="w-full h-auto rounded-lg mb-8"
+        />
 
         <div className="prose-lava mt-12">
 
@@ -82,7 +77,13 @@ export default function BiltongPage() {
             </p>
           </div>
 
-          <Placeholder label="app-biltong-finished-product-varieties" aspect="aspect-[16/6]" />
+          <Image 
+            src="/images/applications/app-biltong-finished-product-varieties.webp" 
+            alt="Finished biltong product varieties" 
+            width={1200} 
+            height={450}
+            className="w-full h-auto rounded-lg mb-8"
+          />
 
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">For Biltong Producers</h2>
           <p>
@@ -109,7 +110,13 @@ export default function BiltongPage() {
             in the result and extends shelf life significantly.
           </p>
 
-          <Placeholder label="app-biltong-vacuum-sealed-packaged" aspect="aspect-[16/6]" />
+          <Image 
+            src="/images/applications/app-biltong-vacuum-sealed-packaged.webp" 
+            alt="Vacuum sealed biltong packaging" 
+            width={1200} 
+            height={450}
+            className="w-full h-auto rounded-lg mb-8"
+          />
 
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Recommended Machine</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -7,18 +8,6 @@ export const metadata: Metadata = {
   description:
     "Snoek, yellowtail, cob, kingklip — vacuum sealed same-day catch is still excellent 12 months later. No freezer burn, no off-flavour. The angler's choice.",
 };
-
-function Placeholder({ label, aspect = "aspect-[16/7]" }: { label: string; aspect?: string }) {
-  return (
-    <div className={`${aspect} bg-primary/10 flex items-end relative overflow-hidden`}>
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-      <div className="relative p-3 w-full bg-black/20">
-        <p className="text-[9px] font-bold uppercase tracking-widest text-white/60">Image needed</p>
-        <p className="text-xs font-semibold text-white/80">{label}.jpg</p>
-      </div>
-    </div>
-  );
-}
 
 export default function AnglerFishingPage() {
   return (
@@ -37,7 +26,13 @@ export default function AnglerFishingPage() {
           </p>
         </div>
 
-        <Placeholder label="app-fishing-snoek-west-coast" />
+        <Image 
+          src="/images/applications/app-fishing-snoek-west-coast.webp" 
+          alt="West Coast snoek fishing with LAVA vacuum sealer" 
+          width={1200} 
+          height={525}
+          className="w-full h-auto rounded-lg mb-8"
+        />
 
         <div className="mt-8 mb-4">
           <p className="text-xs font-bold uppercase tracking-widest text-secondary mb-3">Watch: Vacuum-Packing Fish & Salmon</p>
@@ -113,7 +108,13 @@ export default function AnglerFishingPage() {
             ))}
           </div>
 
-          <Placeholder label="app-fishing-fillet-vacuum-sealing" aspect="aspect-[16/6]" />
+          <Image 
+            src="/images/applications/app-fishing-fillet-vacuum-sealing.webp" 
+            alt="Vacuum sealing fish fillets with LAVA" 
+            width={1200} 
+            height={450}
+            className="w-full h-auto rounded-lg mb-8"
+          />
 
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Smoked Snoek — Vacuum Sealed</h2>
           <p>

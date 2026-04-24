@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image"; // 👈 ADDED
 import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -7,18 +8,6 @@ export const metadata: Metadata = {
   description:
     "Process blesbok, kudu, impala, warthog and eland properly. Vacuum seal wild game for 2–3 years without freezer burn. South Africa's hunters' choice since 2007.",
 };
-
-function Placeholder({ label, aspect = "aspect-[16/7]" }: { label: string; aspect?: string }) {
-  return (
-    <div className={`${aspect} bg-primary/10 flex items-end relative overflow-hidden`}>
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-      <div className="relative p-3 w-full bg-black/20">
-        <p className="text-[9px] font-bold uppercase tracking-widest text-white/60">Image needed</p>
-        <p className="text-xs font-semibold text-white/80">{label}.jpg</p>
-      </div>
-    </div>
-  );
-}
 
 export default function HunterGamePage() {
   return (
@@ -37,7 +26,14 @@ export default function HunterGamePage() {
           </p>
         </div>
 
-        <Placeholder label="app-hunter-game-field" />
+        {/* REPLACED Placeholder with real Image */}
+        <Image
+          src="/images/applications/app-hunter-game-field.webp"
+          alt="Hunter field processing game meat with LAVA vacuum sealer"
+          width={1200}
+          height={525}
+          className="rounded-xl mb-6 border border-border"
+        />
 
         {/* Video */}
         <div className="mt-8 mb-4">
@@ -77,7 +73,14 @@ export default function HunterGamePage() {
             ))}
           </div>
 
-          <Placeholder label="app-hunter-venison-processing" aspect="aspect-[16/6]" />
+          {/* REPLACED Placeholder with real Image */}
+          <Image
+            src="/images/applications/app-hunter-venison-processing.webp"
+            alt="Venison processing and vacuum sealing with LAVA machine"
+            width={1200}
+            height={450}
+            className="rounded-xl my-6 border border-border"
+          />
 
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">The Game Processor&apos;s Workflow</h2>
           <div className="space-y-3 my-6">
@@ -128,7 +131,14 @@ export default function HunterGamePage() {
             </tbody>
           </table>
 
-          <Placeholder label="app-hunter-sealed-portions-labelled" aspect="aspect-[16/6]" />
+          {/* REPLACED Placeholder with real Image */}
+          <Image
+            src="/images/applications/app-hunter-sealed-portions-labelled.webp"
+            alt="Vacuum sealed and labelled game meat portions ready for freezer storage"
+            width={1200}
+            height={450}
+            className="rounded-xl my-6 border border-border"
+          />
 
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Recommended Machines for Hunters</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

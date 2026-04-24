@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -7,18 +8,6 @@ export const metadata: Metadata = {
   description:
     "Extend display life, reduce shrinkage, improve presentation and protect margins. LAVA commercial vacuum sealers for South African butcheries, large and small.",
 };
-
-function Placeholder({ label, aspect = "aspect-[16/7]" }: { label: string; aspect?: string }) {
-  return (
-    <div className={`${aspect} bg-primary/10 flex items-end relative overflow-hidden`}>
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-      <div className="relative p-3 w-full bg-black/20">
-        <p className="text-[9px] font-bold uppercase tracking-widest text-white/60">Image needed</p>
-        <p className="text-xs font-semibold text-white/80">{label}.jpg</p>
-      </div>
-    </div>
-  );
-}
 
 export default function ButcheryPage() {
   return (
@@ -36,7 +25,13 @@ export default function ButcheryPage() {
           </p>
         </div>
 
-        <Placeholder label="app-butchery-meat-counter" />
+        <Image 
+          src="/images/applications/app-butchery-meat-counter.webp" 
+          alt="Butchery meat counter with vacuum sealed cuts" 
+          width={1200} 
+          height={525}
+          className="w-full h-auto rounded-lg mb-8"
+        />
 
         <div className="prose-lava mt-12">
 
@@ -59,7 +54,13 @@ export default function ButcheryPage() {
             ))}
           </div>
 
-          <Placeholder label="app-butchery-sealing-primal-cuts" aspect="aspect-[16/6]" />
+          <Image 
+            src="/images/applications/app-butchery-sealing-primal-cuts.webp" 
+            alt="Sealing primal cuts in butchery" 
+            width={1200} 
+            height={450}
+            className="w-full h-auto rounded-lg mb-8"
+          />
 
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Choosing the Right Commercial LAVA</h2>
           <table className="w-full text-sm border border-border mb-8">
@@ -88,7 +89,13 @@ export default function ButcheryPage() {
             </tbody>
           </table>
 
-          <Placeholder label="app-butchery-vacuum-sealed-display" aspect="aspect-[16/6]" />
+          <Image 
+            src="/images/applications/app-butchery-vacuum-sealed-display.webp" 
+            alt="Vacuum sealed meat display in butchery" 
+            width={1200} 
+            height={450}
+            className="w-full h-auto rounded-lg mb-8"
+          />
 
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Butchery Accessories</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
