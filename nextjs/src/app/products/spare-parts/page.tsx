@@ -5,7 +5,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "Spare Parts — Genuine LAVA Replacement Parts",
+  title: "Replacement Spare Parts",
   description:
     "Genuine LAVA replacement parts for all machines. Sealing strips, liquid trap lids and vacuum seal sets — keep your vacuum sealer performing like new.",
 };

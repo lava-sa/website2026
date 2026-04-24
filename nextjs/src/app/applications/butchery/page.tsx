@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "LAVA for Butcheries — Commercial Vacuum Sealing in South Africa",
+  title: "Butchery & Meat Processing — Commercial Vacuum Sealing in South Africa",
   description:
     "Extend display life, reduce shrinkage, improve presentation and protect margins. LAVA commercial vacuum sealers for South African butcheries, large and small.",
 };

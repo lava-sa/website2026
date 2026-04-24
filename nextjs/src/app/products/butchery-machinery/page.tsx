@@ -5,7 +5,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "Butchery Machinery — Professional Meat Processing",
+  title: "Professional Meat Processing Machinery",
   description:
     "Professional-grade meat mincers and sausage fillers. Specialized equipment for efficient butchery and food preparation. Designed for home and small commercial settings.",
 };

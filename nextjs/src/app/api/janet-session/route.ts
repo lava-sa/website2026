@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
+import { getEmailConfig, getResendClient } from "@/lib/email-config";
 
 export async function POST(req: Request) {
   try {
@@ -34,11 +34,13 @@ export async function POST(req: Request) {
 
     // Attempt Resend Email
     let emailSuccess = false;
-    if (process.env.RESEND_API_KEY) {
-      const resend = new Resend(process.env.RESEND_API_KEY);
+    const resend = getResendClient();
+    if (resend) {
+      const { fromEmail, adminEmails, replyToEmail } = getEmailConfig();
       const emailRes = await resend.emails.send({
-        from: "LAVA AI Agents <onboarding@resend.dev>", // Or verified domain
-        to: "info@lava-sa.co.za",
+        from: fromEmail,
+        to: adminEmails,
+        ...(replyToEmail ? { replyTo: replyToEmail } : {}),
         subject: `New Lead from Janet Voice Agent - ${durationSeconds}s`,
         html: `
           <h3>New Janet Voice Session</h3>

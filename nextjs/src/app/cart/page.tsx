@@ -15,9 +15,11 @@ function formatPrice(amount: number): string {
 }
 
 export default function CartPage() {
-  const { items, total, removeItem, updateQty, count } = useCart();
+  const { items, total, removeItem, updateQty, count, isHydrated } = useCart();
   const shipping = getShipping(total);
   const orderTotal = total + shipping;
+
+  if (!isHydrated) return null;
 
   if (count === 0) {
     return (

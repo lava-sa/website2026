@@ -15,7 +15,7 @@ export default function WarrantyPage() {
 
         <div className="mb-12">
           <p className="overline mb-3">Shopping Help</p>
-          <h1 className="text-4xl font-black text-primary">2-Year Warranty</h1>
+          <h1 className="text-4xl font-black text-primary">2-Year LAVA Warranty</h1>
           <p className="mt-4 text-lg text-copy-muted leading-relaxed">
             Every LAVA vacuum sealing machine sold by Lava-SA carries a 2-year factory
             warranty. If your machine develops a fault, we collect it, fix it and return it —
