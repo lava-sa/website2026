@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "LAVA for Hunters — Vacuum Sealing Game Meat in South Africa",
+  title: "Hunters & Game Processing — Vacuum Sealing Game Meat in South Africa",
   description:
     "Process blesbok, kudu, impala, warthog and eland properly. Vacuum seal wild game for 2–3 years without freezer burn. South Africa's hunters' choice since 2007.",
 };

@@ -33,7 +33,7 @@ type PaymentMethod = "payfast" | "bank_transfer";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, total, count, clearCart } = useCart();
+  const { items, total, count, clearCart, isHydrated } = useCart();
   const shipping   = getShipping(total);
   const orderTotal = total + shipping;
 
@@ -42,8 +42,15 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("payfast");
   const [submitting,    setSubmitting]    = useState(false);
   const [serverError,   setServerError]   = useState("");
+  const [orderPlaced,   setOrderPlaced]   = useState(false);
 
-  useEffect(() => { if (count === 0) router.replace("/cart"); }, [count, router]);
+  useEffect(() => {
+    // Only bounce to cart when checkout is truly empty.
+    // After placing an order, we clear cart intentionally and redirect to success.
+    if (isHydrated && count === 0 && !submitting && !orderPlaced) {
+      router.replace("/cart");
+    }
+  }, [count, isHydrated, orderPlaced, router, submitting]);
 
   const set = (field: keyof FormState) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -89,6 +96,7 @@ export default function CheckoutPage() {
 
       if (data.method === "bank_transfer") {
         // Bank transfer — clear cart and redirect to success with EFT flag
+        setOrderPlaced(true);
         clearCart();
         router.push(`/checkout/success?order=${data.orderNumber}&method=eft`);
         return;
@@ -112,7 +120,7 @@ export default function CheckoutPage() {
     }
   }
 
-  if (count === 0) return null;
+  if (!isHydrated || count === 0) return null;
 
   return (
     <main className="min-h-screen bg-surface">

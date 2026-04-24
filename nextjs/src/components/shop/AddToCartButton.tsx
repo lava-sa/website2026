@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function AddToCartButton({ product, funnelSlug, priceDisplay }: Props) {
-  const { addItem } = useCart();
+  const { addItem, isHydrated } = useCart();
   const router      = useRouter();
   const [qty, setQty]     = useState(1);
   const [added, setAdded] = useState(false);
@@ -28,7 +28,10 @@ export default function AddToCartButton({ product, funnelSlug, priceDisplay }: P
       return;
     }
     setAdded(true);
-    setTimeout(() => setAdded(false), 2200);
+    setTimeout(() => {
+      setAdded(false);
+      router.push("/cart");
+    }, 250);
   };
 
   return (
@@ -82,12 +85,16 @@ export default function AddToCartButton({ product, funnelSlug, priceDisplay }: P
 
       {/* Add to cart */}
       <button
+        type="button"
         onClick={handleAdd}
+        disabled={!isHydrated}
         className={`btn-primary flex items-center justify-center gap-2 text-base py-4 transition-all duration-300 ${
           added ? "bg-emerald-600 border-emerald-600" : ""
         }`}
       >
-        {added ? (
+        {!isHydrated ? (
+          <>Loading…</>
+        ) : added ? (
           <><Check className="h-5 w-5" /> Added to Cart!</>
         ) : (
           <><ShoppingBag className="h-5 w-5" /> Add to Cart</>

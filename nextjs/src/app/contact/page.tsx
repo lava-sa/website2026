@@ -184,8 +184,8 @@ export default function ContactPage() {
             <div className="border border-border overflow-hidden">
               <div className="relative h-56">
                 <Image
-                  src="/images/about/founders.webp"
-                  alt="Anneke Hofmeyr — Lava South Africa Manager"
+                  src="/images/homepage/lava-sustainable.webp"
+                  alt="Lava South Africa support team"
                   fill className="object-cover object-top"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent" />

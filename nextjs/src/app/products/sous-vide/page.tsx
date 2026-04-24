@@ -7,7 +7,7 @@ import { calculatePointsEarned } from "@/lib/rewards-config";
 import { formatPrice } from "@/lib/products";
 
 export const metadata: Metadata = {
-  title: "Sous Vide Machines — Precision Cooking",
+  title: "LAVA Sous Vide Machines",
   description:
     "Achieve restaurant-quality results at home with LAVA sous vide precision cookers. Perfectly cooked steak, fish, and vegetables every time — vacuum sealed and slow-cooked to perfection.",
 };

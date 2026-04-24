@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getEmailConfig, getResendClient } from "@/lib/email-config";
 
 export const dynamic = "force-dynamic";
 
@@ -10,12 +11,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const { Resend } = await import("resend");
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    const resend = getResendClient();
+    if (!resend) {
+      return NextResponse.json({ error: "Email service not configured" }, { status: 500 });
+    }
+    const { fromEmail, adminEmails } = getEmailConfig();
 
-    await resend.emails.send({
-      from: "Lava-SA Website <noreply@lava-sa.online>",
-      to:   ["info@lava-sa.co.za"],
+    const emailRes = await resend.emails.send({
+      from: fromEmail,
+      to: adminEmails,
       replyTo: email,
       subject: `[Contact Form] ${enquiry_type} — ${name}`,
       html: `
@@ -38,6 +42,10 @@ export async function POST(req: NextRequest) {
         </div>
       `,
     });
+    if (emailRes.error) {
+      console.error("Contact form Resend error:", emailRes.error);
+      return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {

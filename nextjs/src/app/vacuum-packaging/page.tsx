@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BookOpen, Clock, Flame, Gift, ShoppingBag, Droplets, Star } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Vacuum Packaging Guides & Tips",
+  title: "Vacuum Packaging",
   description:
     "Everything you need to know about vacuum packaging — shelf life, techniques, bag guides, dry aging, and expert tips from LAVA South Africa.",
 };

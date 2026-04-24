@@ -5,7 +5,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
-  title: "Protective Clothing — Cut-Resistant Gloves & PVC Aprons",
+  title: "Protective Butchery Clothing",
   description:
     "Safety first in the butchery. Level 5 cut-resistant gloves and waterproof PVC aprons. Professional protective gear for hunters, farmers, and butchers.",
 };

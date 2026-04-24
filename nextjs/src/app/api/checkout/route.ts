@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
 import { generateSignature, getPayFastUrl } from "@/lib/payfast";
+import { sendOrderPlacedEmails } from "@/lib/order-email";
 import type { CartItem } from "@/lib/cart-context";
 
 const FREE_SHIPPING_THRESHOLD = 2500;
@@ -108,6 +109,17 @@ export async function POST(req: NextRequest) {
     console.error("Order items insert error:", itemsErr.message);
     // Non-fatal — order exists, continue to PayFast
   }
+
+  // ── 4b. Send order confirmation emails (non-fatal) ─────────────────────────
+  await sendOrderPlacedEmails({
+    orderNumber,
+    paymentMethod: payment_method,
+    customer,
+    cart,
+    subtotal,
+    shipping,
+    total,
+  });
 
   // ── 5. Bank transfer — return order number, no PayFast needed ────────────
   if (payment_method === "bank_transfer") {

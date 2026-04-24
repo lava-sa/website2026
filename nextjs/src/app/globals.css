@@ -373,6 +373,92 @@ body {
   @apply font-semibold;
 }
 
+/* ── Shared article readability layer ─────────────────────────────────────── */
+.article-page .section-container {
+  @apply mx-auto px-4 sm:px-6 lg:px-8;
+  max-width: 1180px;
+}
+
+.article-page .prose-lava {
+  max-width: 72ch;
+  margin-inline: auto;
+}
+
+.article-page .prose-lava > * + * {
+  margin-top: 1rem;
+}
+
+.article-page .prose-lava h2 {
+  @apply text-3xl font-black text-primary;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.article-page .prose-lava h3 {
+  @apply text-xl font-bold text-primary;
+  line-height: 1.3;
+  margin-top: 1.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.article-page .prose-lava p,
+.article-page .prose-lava li {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.article-page .prose-lava ul,
+.article-page .prose-lava ol {
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* Keep media visually strong, but no longer oversized. */
+.article-page img {
+  width: 100%;
+  height: auto;
+  max-width: 920px;
+  margin-inline: auto;
+}
+
+.article-page .aspect-video {
+  max-width: 920px;
+  margin-inline: auto;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+/* Improve readability where dark green cards used muted gray text. */
+.article-page .bg-primary .text-copy-muted,
+.article-page .bg-primary [class*="text-white/70"] {
+  color: var(--color-on-dark-muted) !important;
+}
+
+.article-page .bg-primary p,
+.article-page .bg-primary li,
+.article-page .bg-primary span {
+  text-wrap: pretty;
+}
+
+.article-page .prose-lava table {
+  max-width: 920px;
+  margin-inline: auto;
+  margin-top: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.article-page .prose-lava tr:hover td {
+  background: color-mix(in oklab, var(--color-surface) 75%, white);
+}
+
+.article-page .prose-lava .grid {
+  gap: 1rem;
+}
+
 /* Prevent wide tables from breaking page width on mobile */
 table {
   display: block;

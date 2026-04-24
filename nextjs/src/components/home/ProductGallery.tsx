@@ -24,8 +24,8 @@ const products = [
     badge: "Most Popular",
     tier: "Home & Domestic",
     tierColor: "bg-secondary/10 text-secondary",
-    price: "R 14,500",
-    priceValue: 14500,
+    price: "R 13,500",
+    priceValue: 13500,
     href: "/products/v300-premium-x",
   },
   {

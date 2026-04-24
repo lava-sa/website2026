@@ -4,7 +4,7 @@ import Image from "next/image";
 import { ArrowRight, CheckCircle, Clock, TrendingDown, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Vacuum Sealing for Catering & Restaurants",
+  title: "Catering & Restaurants — Vacuum Sealing for Professional Kitchens",
   description:
     "Professional vacuum sealing for caterers, restaurants and food service businesses. Reduce waste, extend shelf life, improve portion control and deliver better food quality every time.",
 };
@@ -77,9 +77,12 @@ export default function CateringPage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary mb-4">
             Applications — Catering &amp; Restaurants
           </p>
-          <h1 className="text-4xl sm:text-5xl font-black text-white leading-tight mb-6">
-            Less waste.<br />Better food.<br />Faster service.
+          <h1 className="text-4xl sm:text-5xl font-black text-white leading-tight mb-3">
+            Catering &amp; Restaurants
           </h1>
+          <p className="text-secondary font-semibold text-sm uppercase tracking-[0.16em] mb-6">
+            Less waste. Better food. Faster service.
+          </p>
           <p className="text-lg text-white/70 max-w-2xl leading-relaxed mb-8">
             Professional kitchens across South Africa use LAVA vacuum sealers to reduce food costs,
             deliver consistent quality and stay HACCP compliant. German engineering built for the

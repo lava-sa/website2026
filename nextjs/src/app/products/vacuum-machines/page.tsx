@@ -7,7 +7,7 @@ import HuntexBanner from "@/components/home/HuntexBanner";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
 
 export const metadata: Metadata = {
-  title: "Vacuum Machines — German-Engineered Vacuum Sealers",
+  title: "LAVA Vacuum Sealing Machines",
   description:
     "Browse the full range of LAVA vacuum sealing machines. From compact home models to commercial industrial sealers — all made in Germany with a 2-year warranty.",
 };

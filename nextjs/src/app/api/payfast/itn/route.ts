@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
 import { verifyITNSignature, validateITNWithPayFast } from "@/lib/payfast";
+import { sendPaymentReceivedEmails } from "@/lib/order-email";
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest) {
 
   const { data: order, error: findErr } = await supabase
     .from("orders")
-    .select("id, total, status")
+    .select("id, total, status, first_name, last_name, email")
     .eq("order_number", orderNumber)
     .single();
 
@@ -80,6 +81,19 @@ export async function POST(req: NextRequest) {
   if (updateErr) {
     console.error(`Order update error for ${orderNumber}:`, updateErr.message);
     return NextResponse.json({ error: "Failed to update order" }, { status: 500 });
+  }
+
+  // Send payment confirmation emails only on the transition into "paid".
+  if (newStatus === "paid" && order.status !== "paid" && order.email) {
+    await sendPaymentReceivedEmails({
+      orderNumber,
+      customer: {
+        first_name: order.first_name ?? "",
+        last_name: order.last_name ?? "",
+        email: order.email,
+      },
+      total: Number(order.total),
+    });
   }
 
   console.log(`ITN processed: ${orderNumber} → ${newStatus}`);
