@@ -3,15 +3,26 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Save, Loader2, CheckCircle, ArrowLeft, ExternalLink, Trash2 } from "lucide-react";
+import { Save, Loader2, CheckCircle, ArrowLeft, ExternalLink, Trash2, Monitor, Smartphone } from "lucide-react";
 import type { StockStatus } from "@/types/product";
 import ImageUploader from "@/components/admin/ImageUploader";
+import { parseFunnelConfig, type FunnelStepConfig } from "@/lib/funnel";
 
 type Category = { id: string; name: string; slug: string };
+type ProductChoice = { id: string; name: string; slug: string; categories?: { name?: string } | null };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function ProductEditForm({ product, categories }: { product: any; categories: Category[] }) {
+export default function ProductEditForm({
+  product,
+  categories,
+  productChoices,
+}: {
+  product: any;
+  categories: Category[];
+  productChoices: ProductChoice[];
+}) {
   const router = useRouter();
+  const initialFunnelConfig = parseFunnelConfig(product.specs?.funnel_config);
 
   const [form, setForm] = useState({
     name:              product.name ?? "",
@@ -29,11 +40,80 @@ export default function ProductEditForm({ product, categories }: { product: any;
     seo_description:   product.seo_description ?? "",
     weight_kg:         product.weight_kg ?? "",
     sort_order:        product.sort_order ?? 0,
+    funnel_enabled:    initialFunnelConfig.enabled,
+    funnel_steps:      initialFunnelConfig.steps,
   });
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
+  /** Per funnel step: true = narrow mobile-style preview */
+  const [funnelPreviewMobile, setFunnelPreviewMobile] = useState<Record<number, boolean>>({});
+
+  function applyMarkdown(percent: 10 | 15 | 20 | 25) {
+    const regular = Number(form.regular_price);
+    if (!regular || regular <= 0) return;
+    const discounted = Math.round(regular * (1 - percent / 100));
+    setForm((prev) => ({ ...prev, sale_price: discounted }));
+    setSaved(false);
+  }
+
+  function setStepCount(stepCount: number) {
+    setForm((prev) => {
+      const existing = prev.funnel_steps;
+      const nextSteps = Array.from({ length: stepCount }, (_, idx) => (
+        existing[idx] ?? ({ title: `Step ${idx + 1} Offer`, description: "", productIds: [], discountPercent: 10 } as FunnelStepConfig)
+      ));
+      return { ...prev, funnel_steps: nextSteps };
+    });
+    setSaved(false);
+  }
+
+  function updateStepTitle(index: number, title: string) {
+    setForm((prev) => ({
+      ...prev,
+      funnel_steps: prev.funnel_steps.map((step, i) =>
+        i === index ? { ...step, title } : step
+      ),
+    }));
+    setSaved(false);
+  }
+
+  function updateStepDescription(index: number, description: string) {
+    setForm((prev) => ({
+      ...prev,
+      funnel_steps: prev.funnel_steps.map((step, i) =>
+        i === index ? { ...step, description } : step
+      ),
+    }));
+    setSaved(false);
+  }
+
+  function updateStepDiscount(index: number, discount: 10 | 15 | 20 | 25) {
+    setForm((prev) => ({
+      ...prev,
+      funnel_steps: prev.funnel_steps.map((step, i) =>
+        i === index ? { ...step, discountPercent: discount } : step
+      ),
+    }));
+    setSaved(false);
+  }
+
+  function toggleStepProduct(index: number, productId: string) {
+    setForm((prev) => {
+      const nextSteps = prev.funnel_steps.map((step, i) => {
+        if (i !== index) return step;
+        const exists = step.productIds.includes(productId);
+        if (exists) {
+          return { ...step, productIds: step.productIds.filter((id) => id !== productId) };
+        }
+        if (step.productIds.length >= 3) return step;
+        return { ...step, productIds: [...step.productIds, productId] };
+      });
+      return { ...prev, funnel_steps: nextSteps };
+    });
+    setSaved(false);
+  }
 
   function set(field: string) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -58,6 +138,13 @@ export default function ProductEditForm({ product, categories }: { product: any;
       weight_kg:     form.weight_kg === "" ? null : Number(form.weight_kg),
       sort_order:    Number(form.sort_order),
       category_id:   form.category_id || null,
+      specs: {
+        ...(product.specs ?? {}),
+        funnel_config: JSON.stringify({
+          enabled: form.funnel_enabled,
+          steps: form.funnel_steps,
+        }),
+      },
     };
 
     const res = await fetch(`/api/admin/products/${product.id}`, {
@@ -183,6 +270,19 @@ export default function ProductEditForm({ product, categories }: { product: any;
                       min="0" step="1" placeholder="Leave blank for no sale"
                       className={`${inputCls} pl-7`} />
                   </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Quick markdown</span>
+                    {[10, 15, 20, 25].map((pct) => (
+                      <button
+                        key={pct}
+                        type="button"
+                        onClick={() => applyMarkdown(pct as 10 | 15 | 20 | 25)}
+                        className="border border-gray-200 px-2.5 py-1 text-xs font-bold text-gray-700 transition-colors hover:border-primary hover:text-primary"
+                      >
+                        -{pct}%
+                      </button>
+                    ))}
+                  </div>
                   {form.sale_price !== "" && Number(form.sale_price) > 0 && Number(form.sale_price) < Number(form.regular_price) && (
                     <p className="text-xs text-emerald-600 font-semibold mt-1">
                       Saving: R{(Number(form.regular_price) - Number(form.sale_price)).toLocaleString()} ({Math.round((1 - Number(form.sale_price) / Number(form.regular_price)) * 100)}% off)
@@ -251,7 +351,9 @@ export default function ProductEditForm({ product, categories }: { product: any;
                 <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                   <div>
                     <p className="text-sm font-semibold text-gray-900">Featured</p>
-                    <p className="text-xs text-gray-500">Show &quot;Most Popular&quot; badge</p>
+                    <p className="text-xs text-gray-500">
+                      Include in homepage featured slider
+                    </p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" checked={form.is_featured}
@@ -260,8 +362,174 @@ export default function ProductEditForm({ product, categories }: { product: any;
                     <div className="w-10 h-5 bg-gray-200 peer-checked:bg-secondary rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-5" />
                   </label>
                 </div>
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">Funnel Enabled</p>
+                    <p className="text-xs text-gray-500">Open post-add funnel journey for this product</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.funnel_enabled}
+                      onChange={(e) => setForm((p) => ({ ...p, funnel_enabled: e.target.checked }))}
+                      className="sr-only peer"
+                    />
+                    <div className="w-10 h-5 bg-gray-200 peer-checked:bg-primary rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-5" />
+                  </label>
+                </div>
               </div>
             </section>
+
+            {form.funnel_enabled && (
+              <section className="bg-white border border-gray-200 p-5">
+                <h2 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wide">Funnel Setup</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className={labelCls}>Number of Steps</label>
+                    <div className="flex items-center gap-2">
+                      {[1, 2, 3].map((count) => (
+                        <button
+                          key={count}
+                          type="button"
+                          onClick={() => setStepCount(count)}
+                          className={`px-3 py-1.5 text-xs font-bold border transition-colors ${
+                            form.funnel_steps.length === count
+                              ? "border-primary bg-primary text-white"
+                              : "border-gray-200 text-gray-700 hover:border-primary"
+                          }`}
+                        >
+                          {count} Step{count > 1 ? "s" : ""}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {form.funnel_steps.map((step, stepIndex) => (
+                    <div key={stepIndex} className="border border-gray-200 p-4">
+                      <p className="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">
+                        Step {stepIndex + 1}
+                      </p>
+                      <div className="mb-3">
+                        <label className={labelCls}>Step Title</label>
+                        <input
+                          type="text"
+                          value={step.title ?? ""}
+                          onChange={(e) => updateStepTitle(stepIndex, e.target.value)}
+                          placeholder={`Step ${stepIndex + 1} Offer`}
+                          className={inputCls}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label className={labelCls}>Step Subtitle / Description</label>
+                        <textarea
+                          value={step.description ?? ""}
+                          onChange={(e) => updateStepDescription(stepIndex, e.target.value)}
+                          placeholder="Optional persuasive copy shown under the title"
+                          rows={2}
+                          className={`${inputCls} resize-none`}
+                        />
+                      </div>
+                      <div className="mb-3 border border-dashed border-gray-300 bg-gray-50 px-3 py-3">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary">
+                            Preview
+                          </p>
+                          <div className="inline-flex rounded border border-gray-200 bg-white p-0.5 text-[11px] font-bold">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setFunnelPreviewMobile((prev) => ({ ...prev, [stepIndex]: false }))
+                              }
+                              className={`inline-flex items-center gap-1 rounded px-2 py-1 transition-colors ${
+                                !(funnelPreviewMobile[stepIndex] ?? false)
+                                  ? "bg-primary text-white"
+                                  : "text-gray-600 hover:bg-gray-100"
+                              }`}
+                            >
+                              <Monitor className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                              Desktop
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setFunnelPreviewMobile((prev) => ({ ...prev, [stepIndex]: true }))
+                              }
+                              className={`inline-flex items-center gap-1 rounded px-2 py-1 transition-colors ${
+                                funnelPreviewMobile[stepIndex]
+                                  ? "bg-primary text-white"
+                                  : "text-gray-600 hover:bg-gray-100"
+                              }`}
+                            >
+                              <Smartphone className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                              Mobile
+                            </button>
+                          </div>
+                        </div>
+                        <div
+                          className={`mx-auto rounded border border-gray-200 bg-white px-3 py-3 transition-[max-width] duration-200 ${
+                            funnelPreviewMobile[stepIndex]
+                              ? "max-w-[min(100%,20rem)] shadow-sm"
+                              : "max-w-2xl"
+                          }`}
+                        >
+                          <h3
+                            className={`font-black text-primary leading-tight mb-1 ${
+                              funnelPreviewMobile[stepIndex] ? "text-base" : "text-lg"
+                            }`}
+                          >
+                            {step.title?.trim() || `Step ${stepIndex + 1} Offer`}
+                          </h3>
+                          <p
+                            className={`text-gray-600 leading-relaxed ${
+                              funnelPreviewMobile[stepIndex] ? "text-xs" : "text-sm"
+                            }`}
+                          >
+                            {step.description?.trim() || "Optional persuasive copy will appear here."}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mb-3">
+                        <label className={labelCls}>Discount Percentage</label>
+                        <select
+                          value={step.discountPercent}
+                          onChange={(e) =>
+                            updateStepDiscount(stepIndex, Number(e.target.value) as 10 | 15 | 20 | 25)
+                          }
+                          className={inputCls}
+                        >
+                          <option value={10}>10%</option>
+                          <option value={15}>15%</option>
+                          <option value={20}>20%</option>
+                          <option value={25}>25%</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className={labelCls}>Step Products (up to 3)</label>
+                        <div className="max-h-44 overflow-y-auto border border-gray-200">
+                          {productChoices.map((choice) => {
+                            const selected = step.productIds.includes(choice.id);
+                            return (
+                              <button
+                                key={choice.id}
+                                type="button"
+                                onClick={() => toggleStepProduct(stepIndex, choice.id)}
+                                className={`w-full text-left px-3 py-2 border-b border-gray-100 text-sm transition-colors ${
+                                  selected ? "bg-primary/5 text-primary" : "hover:bg-gray-50 text-gray-700"
+                                }`}
+                              >
+                                <span className="font-semibold">{choice.name}</span>
+                                <span className="text-xs text-gray-500 ml-2">{choice.categories?.name ?? "No category"}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">Selected: {step.productIds.length}/3</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {/* Shipping */}
             <section className="bg-white border border-gray-200 p-5">
@@ -276,7 +544,9 @@ export default function ProductEditForm({ product, categories }: { product: any;
                   <label className={labelCls}>Sort Order</label>
                   <input type="number" value={form.sort_order} onChange={set("sort_order")}
                     min="0" step="1" className={inputCls} />
-                  <p className="text-xs text-gray-400 mt-1">Lower number = shown first</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Lower number = shown first (including featured slider order on homepage).
+                  </p>
                 </div>
               </div>
             </section>

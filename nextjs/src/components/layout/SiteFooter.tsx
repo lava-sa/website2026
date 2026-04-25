@@ -13,6 +13,7 @@ import {
   Cookie,
 } from "lucide-react";
 import { clearConsent } from "@/lib/cookie-consent";
+import MailingListSignup from "@/components/common/MailingListSignup";
 
 const SiteFooter = () => {
   const currentYear = new Date().getFullYear();
@@ -20,6 +21,16 @@ const SiteFooter = () => {
   return (
     <footer className="bg-primary text-white pt-20 pb-10">
       <div className="section-container">
+        <div className="mb-12 border border-white/15 bg-white/5 p-5 sm:p-6">
+          <MailingListSignup
+            source="footer"
+            compact
+            inverted
+            title="Join the LAVA Mailing List"
+            subtitle="Real product updates, practical vacuum-sealing tips, and occasional member-only specials."
+          />
+        </div>
+
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8 mb-20">
           
           {/* Column 1: Brand */}

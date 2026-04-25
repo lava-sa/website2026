@@ -21,3 +21,4 @@ nextjs/.env*.local
 
 # Re-ignore inside .claude
 .claude/settings.local.json
+.claude/worktrees/

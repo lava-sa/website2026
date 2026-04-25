@@ -9,21 +9,29 @@ import {
   Package,
   ShoppingCart,
   Star,
+  Mail,
   Users,
   LogOut,
   Menu,
   X,
   ChevronRight,
   ExternalLink,
+  Upload,
+  History,
+  Monitor,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/admin",           label: "Dashboard", icon: LayoutDashboard, exact: true  },
-  { href: "/admin/products",  label: "Products",  icon: Package,         exact: false },
-  { href: "/admin/orders",    label: "Orders",    icon: ShoppingCart,    exact: false },
-  { href: "/admin/customers", label: "Customers", icon: Users,           exact: false },
-  { href: "/admin/reviews",   label: "Reviews",   icon: Star,            exact: false },
+  { href: "/admin",             label: "Dashboard",     icon: LayoutDashboard, exact: true  },
+  { href: "/admin/display",     label: "Live display",  icon: Monitor,         exact: true  },
+  { href: "/admin/products",    label: "Products",      icon: Package,         exact: false },
+  { href: "/admin/orders",      label: "Orders",        icon: ShoppingCart,    exact: false },
+  { href: "/admin/order-history", label: "Order history", icon: History,      exact: false },
+  { href: "/admin/import",      label: "Import data",   icon: Upload,          exact: false },
+  { href: "/admin/mailing-list", label: "Mailing list", icon: Mail,            exact: false },
+  { href: "/admin/customers",   label: "Customers",     icon: Users,           exact: false },
+  { href: "/admin/reviews",     label: "Reviews",       icon: Star,            exact: false },
 ];
 
 function NavItem({ href, label, icon: Icon, exact }: typeof NAV[0]) {

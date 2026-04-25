@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { Download, Search, Mail, Star, Users, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 
 type SortKey = "name" | "email" | "city" | "total_spent" | "order_count" | "points_balance" | "last_order_date";
 type SortDir = "asc" | "desc";
 
 interface Customer {
+  id?: string;
   email: string;
   first_name?: string | null;
   last_name?: string | null;
@@ -253,12 +255,13 @@ export default function CustomersClient({ customers }: { customers: Customer[] }
                     Last Order <SortIcon col="last_order_date" />
                   </button>
                 </th>
+                <th className="text-center px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">CRM</th>
                 <th className="text-center px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">Tags</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filtered.slice(0, 200).map((c, i) => (
-                <tr key={`${c.email}-${i}`} className="hover:bg-gray-50 transition-colors">
+                <tr key={c.id ?? `${c.email}-${i}`} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-3">
                     <p className="font-semibold text-gray-900">
                       {[c.first_name, c.last_name].filter(Boolean).join(" ") || "—"}
@@ -277,6 +280,18 @@ export default function CustomersClient({ customers }: { customers: Customer[] }
                     {c.points_balance ? c.points_balance.toLocaleString("en-ZA") : "—"}
                   </td>
                   <td className="px-4 py-3 text-xs text-gray-500">{fmtDate(c.last_order_date)}</td>
+                  <td className="px-4 py-3 text-center">
+                    {c.id ? (
+                      <Link
+                        href={`/admin/customers/${c.id}`}
+                        className="text-[10px] font-black uppercase text-primary border border-primary/30 px-2 py-1 hover:bg-primary/5"
+                      >
+                        View
+                      </Link>
+                    ) : (
+                      <span className="text-[10px] text-gray-300">—</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-center gap-1 flex-wrap">
                       {c.is_vip && (

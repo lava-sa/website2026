@@ -5,6 +5,7 @@ import { Search, Plus, Pencil } from "lucide-react";
 import Link from "next/link";
 import StockToggle from "@/components/admin/StockToggle";
 import PublishToggle from "@/components/admin/PublishToggle";
+import FeaturedToggle from "@/components/admin/FeaturedToggle";
 import type { StockStatus } from "@/types/product";
 
 const STOCK_COLOURS: Record<StockStatus, string> = {
@@ -41,6 +42,7 @@ export default function ProductsClient({
   const [category, setCategory] = useState("all");
   const [stock,    setStock]    = useState("all");
   const [pubFilter,setPubFilter]= useState("all");
+  const [featuredFilter, setFeaturedFilter] = useState("all");
   const [sortBy,   setSortBy]   = useState<"sort_order"|"name_asc"|"name_desc"|"price_asc"|"price_desc">("sort_order");
 
   const filtered = useMemo(() => {
@@ -50,6 +52,8 @@ export default function ProductsClient({
       if (stock    !== "all" && p.stock_status !== stock)                 return false;
       if (pubFilter === "published"   && !p.is_published) return false;
       if (pubFilter === "unpublished" &&  p.is_published) return false;
+      if (featuredFilter === "featured" && !p.is_featured) return false;
+      if (featuredFilter === "not_featured" && p.is_featured) return false;
       if (!q) return true;
       return (
         p.name.toLowerCase().includes(q) ||
@@ -67,10 +71,15 @@ export default function ProductsClient({
       return 0;
     });
     return rows;
-  }, [products, search, category, stock, pubFilter, sortBy]);
+  }, [products, search, category, stock, pubFilter, featuredFilter, sortBy]);
 
   const selectCls = "border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:border-primary transition-colors";
-  const hasFilters = search || category !== "all" || stock !== "all" || pubFilter !== "all";
+  const hasFilters =
+    search ||
+    category !== "all" ||
+    stock !== "all" ||
+    pubFilter !== "all" ||
+    featuredFilter !== "all";
 
   return (
     <div className="max-w-6xl">
@@ -121,6 +130,13 @@ export default function ProductsClient({
           <option value="unpublished">Unpublished only</option>
         </select>
 
+        {/* Featured */}
+        <select value={featuredFilter} onChange={(e) => setFeaturedFilter(e.target.value)} className={selectCls}>
+          <option value="all">Featured &amp; non-featured</option>
+          <option value="featured">Featured only</option>
+          <option value="not_featured">Non-featured only</option>
+        </select>
+
         {/* Sort */}
         <select value={sortBy} onChange={(e) => setSortBy(e.target.value as typeof sortBy)} className={selectCls}>
           <option value="sort_order">Sort order</option>
@@ -131,7 +147,14 @@ export default function ProductsClient({
         </select>
 
         {hasFilters && (
-          <button onClick={() => { setSearch(""); setCategory("all"); setStock("all"); setPubFilter("all"); }}
+          <button
+            onClick={() => {
+              setSearch("");
+              setCategory("all");
+              setStock("all");
+              setPubFilter("all");
+              setFeaturedFilter("all");
+            }}
             className="text-xs text-gray-400 hover:text-primary transition-colors whitespace-nowrap">
             Clear filters
           </button>
@@ -144,7 +167,7 @@ export default function ProductsClient({
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
-                {["Product","SKU","Category","Price","Stock","Published","Actions"].map((h) => (
+                {["Product","SKU","Category","Price","Featured Order","Stock","Published","Actions"].map((h) => (
                   <th key={h} className="text-left px-5 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
@@ -166,6 +189,19 @@ export default function ProductsClient({
                     <p className="font-bold text-gray-900">{fmt(p.regular_price)}</p>
                     {p.sale_price && (
                       <p className="text-xs text-emerald-600 font-semibold">Sale: {fmt(p.sale_price)}</p>
+                    )}
+                  </td>
+                  <td className="px-5 py-4">
+                    {p.is_featured ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-primary">#{p.sort_order}</span>
+                        <FeaturedToggle productId={p.id} current={p.is_featured} />
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-400">—</span>
+                        <FeaturedToggle productId={p.id} current={p.is_featured} />
+                      </div>
                     )}
                   </td>
                   <td className="px-5 py-4">

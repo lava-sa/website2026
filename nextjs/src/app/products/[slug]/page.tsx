@@ -23,6 +23,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import StockBadge from "@/components/shop/StockBadge";
 import AddToCartButton from "@/components/shop/AddToCartButton";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
+import { parseFunnelConfig } from "@/lib/funnel";
 
 // ── Static params ────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
@@ -171,6 +172,7 @@ export default async function ProductDetailPage({
   const isOnOrder = product.stock_status === "on_order";
   const price     = product.sale_price ?? product.regular_price;
   const isVacuumMachine = product.categories?.slug === "vacuum-machines";
+  const funnelConfig = parseFunnelConfig(product.specs?.funnel_config);
 
   // ── Consumables (bags + rolls) — only loaded on machine pages ───────────────
   let compatibleBags: Awaited<ReturnType<typeof getProductsByCategory>> = [];
@@ -337,7 +339,7 @@ export default async function ProductDetailPage({
                 <div className="flex flex-col gap-3 mt-1">
                   <AddToCartButton
                     product={{ id: product.id, slug: product.slug, name: product.name, price, image: product.primary_image_url, sku: product.sku }}
-                    funnelSlug={undefined}
+                    funnelSlug={funnelConfig.enabled ? product.slug : undefined}
                     priceDisplay={
                       <div className="flex flex-col items-start gap-1">
                         <StockBadge status={product.stock_status} quantity={product.stock_quantity} />

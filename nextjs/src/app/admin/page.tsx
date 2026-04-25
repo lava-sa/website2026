@@ -1,8 +1,8 @@
 export const dynamic = "force-dynamic";
+import type { ComponentType } from "react";
 import AdminShell from "@/components/admin/AdminShell";
-import MonthlyRevenueChart, { MonthlyDataPoint } from "@/components/admin/charts/MonthlyRevenueChart";
-import OrderStatusDonut, { StatusDataPoint } from "@/components/admin/charts/OrderStatusDonut";
-import { createServiceClient } from "@/lib/supabase";
+import MonthlyRevenueChart from "@/components/admin/charts/MonthlyRevenueChart";
+import OrderStatusDonut from "@/components/admin/charts/OrderStatusDonut";
 import Link from "next/link";
 import {
   Package,
@@ -15,222 +15,19 @@ import {
   Calendar,
   BarChart3,
   Trophy,
+  Upload,
+  Monitor,
 } from "lucide-react";
-import { formatZAR, formatNumber, formatMonthShort } from "@/lib/format";
+import { formatZAR, formatNumber } from "@/lib/format";
+import { getDashboardStats } from "@/lib/admin-dashboard-stats";
 
 export const revalidate = 60; // refresh dashboard every minute
-
-// ─── Configuration ────────────────────────────────────────────────────────────
-// Statuses that count as real revenue (money collected or en route)
-const REVENUE_STATUSES_CURRENT = ["paid", "processing", "shipped", "delivered"];
-// Historical WooCommerce statuses that count as revenue
-const REVENUE_STATUSES_WC = ["wc-completed", "wc-processing", "wc-on-hold"];
-
-// Colour palette for the status donut
-const STATUS_COLOURS: Record<string, string> = {
-  pending:    "#f59e0b", // amber
-  paid:       "#3b82f6", // blue
-  processing: "#8b5cf6", // purple
-  shipped:    "#6366f1", // indigo
-  delivered:  "#10b981", // emerald
-  "on-hold":  "#fbbf24", // yellow
-  completed:  "#059669", // emerald dark
-  cancelled:  "#ef4444", // red
-  refunded:   "#6b7280", // gray
-  failed:     "#dc2626", // red dark
-};
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-type OrderRow = { total: number | string; created_at: string; status: string };
-type HistoryRow = { total: number | string; order_date: string; status: string };
-type ItemRow = { product_name: string; product_id?: string | null; quantity: number; line_total: number | string };
-
-interface DashboardStats {
-  // Product / review / customer counts
-  productCount: number;
-  pendingReviews: number;
-  outOfStock: Array<{ id: string; name: string; stock_status: string }>;
-  customerCount: number;
-  // Revenue KPIs
-  totalRevenue: number;
-  totalOrders: number;
-  revenue2026: number;
-  revenue2025: number;
-  revenue2024: number;
-  revenueThisMonth: number;
-  ordersThisMonth: number;
-  avgOrderValue: number;
-  // Chart data
-  monthlyData: MonthlyDataPoint[];
-  statusData: StatusDataPoint[];
-  topProducts: Array<{ name: string; units: number; revenue: number }>;
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-function toNumber(v: number | string | null | undefined): number {
-  if (v == null) return 0;
-  return typeof v === "number" ? v : parseFloat(v) || 0;
-}
-
-// ─── Data fetching ────────────────────────────────────────────────────────────
-async function getStats(): Promise<DashboardStats> {
-  const supabase = createServiceClient();
-
-  const [
-    products,
-    reviews,
-    lowStock,
-    currentOrders,
-    historyOrders,
-    customers,
-    currentItems,
-  ] = await Promise.allSettled([
-    // Published product count
-    supabase.from("products").select("id", { count: "exact", head: true }).eq("is_published", true),
-    // Pending review count
-    supabase.from("reviews").select("id", { count: "exact", head: true }).eq("approved", false),
-    // Out-of-stock products list
-    supabase
-      .from("products")
-      .select("id, name, stock_status")
-      .eq("stock_status", "out_of_stock")
-      .eq("is_published", true)
-      .limit(20),
-    // All current orders (post-launch)
-    supabase.from("orders").select("total, created_at, status"),
-    // All historical orders (from WP migration)
-    supabase.from("order_history").select("total, order_date, status"),
-    // Customer count
-    supabase.from("customers").select("id", { count: "exact", head: true }),
-    // Current order items (for top products)
-    supabase.from("order_items").select("product_name, product_id, quantity, line_total"),
-  ]);
-
-  // ─── Unwrap fetched data (graceful fallback if table missing) ───────────────
-  const productCount = products.status === "fulfilled" ? (products.value.count ?? 0) : 0;
-  const pendingReviews = reviews.status === "fulfilled" ? (reviews.value.count ?? 0) : 0;
-  const outOfStock = lowStock.status === "fulfilled" ? (lowStock.value.data ?? []) : [];
-  const customerCount = customers.status === "fulfilled" ? (customers.value.count ?? 0) : 0;
-
-  const currentRows: OrderRow[] =
-    currentOrders.status === "fulfilled" && currentOrders.value.data ? currentOrders.value.data : [];
-  const historyRows: HistoryRow[] =
-    historyOrders.status === "fulfilled" && historyOrders.value.data ? historyOrders.value.data : [];
-  const itemRows: ItemRow[] =
-    currentItems.status === "fulfilled" && currentItems.value.data ? currentItems.value.data : [];
-
-  // ─── Normalise into a single revenue stream ─────────────────────────────────
-  const allRevenueEvents = [
-    ...currentRows
-      .filter((r) => REVENUE_STATUSES_CURRENT.includes(r.status))
-      .map((r) => ({ date: new Date(r.created_at), total: toNumber(r.total) })),
-    ...historyRows
-      .filter((r) => REVENUE_STATUSES_WC.includes(r.status))
-      .map((r) => ({ date: new Date(r.order_date), total: toNumber(r.total) })),
-  ];
-
-  // ─── Totals ─────────────────────────────────────────────────────────────────
-  const totalRevenue = allRevenueEvents.reduce((s, e) => s + e.total, 0);
-  const totalOrders = currentRows.length + historyRows.length;
-
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth();
-
-  const revenue2026 = allRevenueEvents.filter((e) => e.date.getFullYear() === 2026).reduce((s, e) => s + e.total, 0);
-  const revenue2025 = allRevenueEvents.filter((e) => e.date.getFullYear() === 2025).reduce((s, e) => s + e.total, 0);
-  const revenue2024 = allRevenueEvents.filter((e) => e.date.getFullYear() === 2024).reduce((s, e) => s + e.total, 0);
-
-  const thisMonthEvents = allRevenueEvents.filter(
-    (e) => e.date.getFullYear() === currentYear && e.date.getMonth() === currentMonth
-  );
-  const revenueThisMonth = thisMonthEvents.reduce((s, e) => s + e.total, 0);
-
-  const thisMonthOrdersAll = [
-    ...currentRows.map((r) => ({ date: new Date(r.created_at) })),
-    ...historyRows.map((r) => ({ date: new Date(r.order_date) })),
-  ].filter((r) => r.date.getFullYear() === currentYear && r.date.getMonth() === currentMonth);
-  const ordersThisMonth = thisMonthOrdersAll.length;
-
-  const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-
-  // ─── Monthly chart data (last 12 months rolling) ────────────────────────────
-  const monthlyBuckets = new Map<string, { revenue: number; orders: number; date: Date }>();
-  for (let i = 11; i >= 0; i--) {
-    const d = new Date(currentYear, currentMonth - i, 1);
-    const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
-    monthlyBuckets.set(key, { revenue: 0, orders: 0, date: d });
-  }
-  for (const e of allRevenueEvents) {
-    const key = `${e.date.getFullYear()}-${String(e.date.getMonth()).padStart(2, "0")}`;
-    const bucket = monthlyBuckets.get(key);
-    if (bucket) {
-      bucket.revenue += e.total;
-      bucket.orders += 1;
-    }
-  }
-  const monthlyData: MonthlyDataPoint[] = Array.from(monthlyBuckets.values()).map((b) => ({
-    month: formatMonthShort(b.date),
-    revenue: b.revenue,
-    orders: b.orders,
-  }));
-
-  // ─── Status breakdown (current + historical, normalised) ────────────────────
-  const statusCounts = new Map<string, number>();
-  for (const r of currentRows) {
-    statusCounts.set(r.status, (statusCounts.get(r.status) ?? 0) + 1);
-  }
-  for (const r of historyRows) {
-    // Strip "wc-" prefix so historical & current roll up under one label
-    const key = r.status?.replace(/^wc-/, "") || "unknown";
-    statusCounts.set(key, (statusCounts.get(key) ?? 0) + 1);
-  }
-  const statusData: StatusDataPoint[] = Array.from(statusCounts.entries())
-    .map(([status, count]) => ({
-      status,
-      count,
-      color: STATUS_COLOURS[status] ?? "#9ca3af",
-    }))
-    .sort((a, b) => b.count - a.count);
-
-  // ─── Top products by revenue (from current order_items only) ────────────────
-  const productTotals = new Map<string, { units: number; revenue: number }>();
-  for (const it of itemRows) {
-    const name = it.product_name || "Unknown";
-    const cur = productTotals.get(name) ?? { units: 0, revenue: 0 };
-    cur.units += it.quantity ?? 0;
-    cur.revenue += toNumber(it.line_total);
-    productTotals.set(name, cur);
-  }
-  const topProducts = Array.from(productTotals.entries())
-    .map(([name, v]) => ({ name, units: v.units, revenue: v.revenue }))
-    .sort((a, b) => b.revenue - a.revenue)
-    .slice(0, 5);
-
-  return {
-    productCount,
-    pendingReviews,
-    outOfStock,
-    customerCount,
-    totalRevenue,
-    totalOrders,
-    revenue2026,
-    revenue2025,
-    revenue2024,
-    revenueThisMonth,
-    ordersThisMonth,
-    avgOrderValue,
-    monthlyData,
-    statusData,
-    topProducts,
-  };
-}
 
 // ─── Small presentational helpers ─────────────────────────────────────────────
 interface KPIProps {
   label: string;
   value: string | number;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string }>;
   href?: string;
   color: string;
   sub?: string;
@@ -268,7 +65,7 @@ function PanelHeader({
   title,
   accent,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string }>;
   title: string;
   accent?: string;
 }) {
@@ -282,17 +79,37 @@ function PanelHeader({
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default async function AdminDashboard() {
-  const stats = await getStats();
+  const stats = await getDashboardStats();
 
   return (
     <AdminShell>
       <div className="max-w-7xl">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-black text-gray-900">Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Welcome back, Anneke. Here&apos;s how Lava-SA is performing.
-          </p>
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-black text-gray-900">Dashboard</h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Welcome back, Anneke. Here&apos;s how Lava-SA is performing.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/display"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 border border-gray-300 bg-white text-gray-800 text-xs font-bold px-4 py-2.5 hover:border-primary hover:text-primary transition-colors"
+            >
+              <Monitor className="h-3.5 w-3.5" />
+              Numbers display (new tab)
+            </Link>
+            <Link
+              href="/admin/import"
+              className="inline-flex items-center gap-2 bg-primary text-white text-xs font-bold px-4 py-2.5 hover:bg-primary/90 transition-colors"
+            >
+              <Upload className="h-3.5 w-3.5" />
+              Import order history
+            </Link>
+          </div>
         </div>
 
         {/* Row 1 — Primary KPIs */}

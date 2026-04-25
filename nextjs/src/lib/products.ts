@@ -37,6 +37,29 @@ export async function getProductsByCategory(categorySlug: string): Promise<Produ
   return (data ?? []) as Product[];
 }
 
+/** All featured products for homepage/marketing sections */
+export async function getFeaturedProducts(): Promise<Product[]> {
+  const supabase = getClient();
+
+  const { data, error } = await supabase
+    .from("products")
+    .select(`
+      id, sku, name, slug, short_description, description,
+      regular_price, sale_price, stock_status, stock_quantity,
+      weight_kg, length_cm, width_cm, height_cm, category_id,
+      is_published, is_featured, sort_order, seo_title, seo_description,
+      tags, specs, industries, primary_image_url, created_at, updated_at,
+      categories ( id, name, slug )
+    `)
+    .eq("is_published", true)
+    .eq("is_featured", true)
+    .order("sort_order", { ascending: true })
+    .order("updated_at", { ascending: false });
+
+  if (error) throw new Error(`getFeaturedProducts: ${error.message}`);
+  return (data ?? []) as Product[];
+}
+
 /** Single product by slug, with images */
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   const supabase = getClient();

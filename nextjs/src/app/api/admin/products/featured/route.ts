@@ -9,31 +9,15 @@ async function isAuthed(): Promise<boolean> {
   return store.get("admin_session")?.value === "authenticated";
 }
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest) {
   if (!(await isAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id } = await params;
-  const body = await request.json();
-
-  // Only allow safe fields to be updated
-  const allowed = [
-    "name", "sku", "short_description", "description",
-    "regular_price", "sale_price", "stock_status", "stock_quantity",
-    "is_published", "is_featured", "category_id",
-    "seo_title", "seo_description", "weight_kg", "sort_order", "specs",
-  ];
-
-  const update: Record<string, unknown> = { updated_at: new Date().toISOString() };
-  for (const key of allowed) {
-    if (key in body) update[key] = body[key];
-  }
+  const { id, is_featured } = await request.json();
+  if (!id || is_featured === undefined) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
   const { error } = await createServiceClient()
     .from("products")
-    .update(update)
+    .update({ is_featured, updated_at: new Date().toISOString() })
     .eq("id", id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
