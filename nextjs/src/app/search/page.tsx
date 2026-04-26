@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Search, Package, BookOpen, ArrowRight, X } from "lucide-react";
+import ProductCatalogImage from "@/components/shop/ProductCatalogImage";
 import { getSupabase } from "@/lib/supabase";
 import { blogPosts } from "@/lib/blog-posts";
 import type { BlogPost } from "@/lib/blog-posts";
@@ -165,11 +166,12 @@ function SearchResults() {
                     <Link key={p.id} href={`/products/${p.slug}`}
                       className="group bg-white hover:shadow-md transition-all duration-200 overflow-hidden">
                       {p.primary_image_url && (
-                        <div className="overflow-hidden" style={{ backgroundColor: "#F2F2F2" }}>
-                          <Image src={p.primary_image_url} alt={p.name} title={p.name}
-                            width={400} height={300}
-                            className="w-full h-auto group-hover:scale-105 transition-transform duration-300" />
-                        </div>
+                        <ProductCatalogImage
+                          src={p.primary_image_url}
+                          alt={p.name}
+                          title={p.name}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        />
                       )}
                       <div className="p-4">
                         <p className="text-[10px] font-bold uppercase tracking-wider text-copy-muted mb-1">

@@ -1,17 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle, Clock, Phone, Mail, Building2, Copy } from "lucide-react";
+import { CheckCircle, Clock, Phone, Mail, Building2 } from "lucide-react";
+import { getEftBankDetails } from "@/lib/bank-details";
 
 export const metadata: Metadata = { title: "Order Confirmed" };
-
-// ── Bank details — Wilco to fill these in ────────────────────────────────────
-const BANK = {
-  bank:        "Nedbank",
-  accountName: "LAVA VIDE SA (PTY) LTD",
-  accountNo:   "1123920508",
-  branchCode:  "198765",  // Nedbank universal branch code
-  accountType: "Cheque / Current",
-};
 
 function BankRow({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
@@ -31,6 +23,7 @@ export default async function SuccessPage({
 }) {
   const { order, method } = await searchParams;
   const isEFT = method === "eft";
+  const BANK = getEftBankDetails();
 
   return (
     <main className="min-h-screen bg-surface py-20">

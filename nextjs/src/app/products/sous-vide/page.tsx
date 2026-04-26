@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import ProductCatalogImage from "@/components/shop/ProductCatalogImage";
 import { Award, CheckCircle2, Thermometer, Clock, ChefHat, Droplets } from "lucide-react";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
 import { calculatePointsEarned } from "@/lib/rewards-config";
@@ -165,23 +165,16 @@ export default function SousVidePage() {
                     className="absolute inset-0 z-10"
                   />
 
-                  {/* Image */}
-                  <div className="relative overflow-hidden w-full" style={{ backgroundColor: "#F2F2F2" }}>
-                    <Image
-                      src={product.primary_image_url}
-                      alt={product.name}
-                      title={product.name}
-                      width={800}
-                      height={600}
-                      className="w-full h-auto group-hover:scale-105 transition-transform duration-500"
-                    />
+                  <ProductCatalogImage src={product.primary_image_url} alt={product.name} title={product.name}>
                     {product.badge && (
-                      <span className="absolute top-3 left-3 z-10 bg-secondary text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1">
+                      <span className="pointer-events-none absolute top-3 left-3 z-10 bg-secondary text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1">
                         {product.badge}
                       </span>
                     )}
-                    <div className="card-hover-overlay" aria-hidden="true">View {product.name} →</div>
-                  </div>
+                    <div className="card-hover-overlay pointer-events-none z-[5]" aria-hidden="true">
+                      View {product.name} →
+                    </div>
+                  </ProductCatalogImage>
 
                   {/* Content */}
                   <div className="flex flex-col flex-1 p-5 gap-3">

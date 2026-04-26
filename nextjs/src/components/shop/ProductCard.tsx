@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Award } from "lucide-react";
 import { formatPrice } from "@/lib/products";
+import ProductCatalogImage from "@/components/shop/ProductCatalogImage";
 import { calculatePointsEarned, calculatePointValue } from "@/lib/rewards-config";
 import type { Product, StockStatus } from "@/types/product";
 
@@ -34,34 +34,23 @@ export default function ProductCard({ product }: Props) {
         className="absolute inset-0 z-10"
       />
 
-      {/* Image */}
-      <div className="relative overflow-hidden w-full">
-        {product.primary_image_url ? (
-          <Image
-            src={product.primary_image_url}
-            alt={product.name}
-            title={product.name}
-            width={800}
-            height={600}
-            className="w-full h-auto group-hover:scale-105 transition-transform duration-500"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          />
-        ) : (
-          <div className="h-48 flex items-center justify-center text-copy-muted text-sm">
-            No image
+      {/* Image — fixed 870:670 frame; mixed square/rect sources align via object-cover */}
+      {product.primary_image_url ? (
+        <ProductCatalogImage src={product.primary_image_url} alt={product.name} title={product.name}>
+          {product.is_featured && (
+            <span className="pointer-events-none absolute top-3 left-3 z-10 bg-secondary text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1">
+              Most Popular
+            </span>
+          )}
+          <div className="card-hover-overlay pointer-events-none z-[5]" aria-hidden="true">
+            View {product.name} →
           </div>
-        )}
-
-        {/* Featured badge */}
-        {product.is_featured && (
-          <span className="absolute top-3 left-3 z-10 bg-secondary text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1">
-            Most Popular
-          </span>
-        )}
-
-        {/* Slide-up overlay — decorative; card Link carries the accessible label */}
-        <div className="card-hover-overlay" aria-hidden="true">View {product.name} →</div>
-      </div>
+        </ProductCatalogImage>
+      ) : (
+        <div className="relative flex aspect-[870/670] w-full items-center justify-center bg-[#F2F2F2] text-copy-muted text-sm">
+          No image
+        </div>
+      )}
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-5 gap-3">

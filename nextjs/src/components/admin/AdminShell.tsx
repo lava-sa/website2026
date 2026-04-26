@@ -18,13 +18,11 @@ import {
   ExternalLink,
   Upload,
   History,
-  Monitor,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/admin",             label: "Dashboard",     icon: LayoutDashboard, exact: true  },
-  { href: "/admin/display",     label: "Live display",  icon: Monitor,         exact: true  },
   { href: "/admin/products",    label: "Products",      icon: Package,         exact: false },
   { href: "/admin/orders",      label: "Orders",        icon: ShoppingCart,    exact: false },
   { href: "/admin/order-history", label: "Order history", icon: History,      exact: false },

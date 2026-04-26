@@ -35,19 +35,32 @@ function NavDropdown({
     function handleOutside(e: MouseEvent | TouchEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     }
-    document.addEventListener("mousedown", handleOutside);
-    document.addEventListener("touchstart", handleOutside);
+    // Use click (bubble) so we don’t fight link activation order on the same tap.
+    document.addEventListener("click", handleOutside, true);
+    document.addEventListener("touchstart", handleOutside, true);
     return () => {
-      document.removeEventListener("mousedown", handleOutside);
-      document.removeEventListener("touchstart", handleOutside);
+      document.removeEventListener("click", handleOutside, true);
+      document.removeEventListener("touchstart", handleOutside, true);
     };
   }, [open]);
 
   return (
-    <div className="relative" ref={ref}>
+    <div
+      className="relative"
+      ref={ref}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocusCapture={() => setOpen(true)}
+      onBlurCapture={(e) => {
+        const next = e.relatedTarget as Node | null;
+        if (next && ref.current?.contains(next)) return;
+        setOpen(false);
+      }}
+    >
       <button
+        type="button"
         className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-secondary transition-colors py-2"
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
       >
         {label}
@@ -55,12 +68,11 @@ function NavDropdown({
       </button>
       <div
         className={cn(
-          "absolute top-full left-0 bg-white shadow-2xl border border-border/80 z-50",
-          "transition-all duration-300 ease-out",
+          "absolute top-full left-0 bg-white shadow-2xl border border-border/80 z-[500]",
+          "transition-all duration-200 ease-out",
           width,
-          open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-2 pointer-events-none"
+          open ? "opacity-100 translate-y-0 pointer-events-auto visible" : "invisible opacity-0 translate-y-2 pointer-events-none"
         )}
-        onClick={() => setOpen(false)}
       >
         {children}
       </div>
@@ -90,18 +102,30 @@ function CategoryDropdown({
     function handleOutside(e: MouseEvent | TouchEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     }
-    document.addEventListener("mousedown", handleOutside);
-    document.addEventListener("touchstart", handleOutside);
+    document.addEventListener("click", handleOutside, true);
+    document.addEventListener("touchstart", handleOutside, true);
     return () => {
-      document.removeEventListener("mousedown", handleOutside);
-      document.removeEventListener("touchstart", handleOutside);
+      document.removeEventListener("click", handleOutside, true);
+      document.removeEventListener("touchstart", handleOutside, true);
     };
   }, [open]);
 
   return (
-    <div className="relative" ref={ref}>
+    <div
+      className="relative"
+      ref={ref}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocusCapture={() => setOpen(true)}
+      onBlurCapture={(e) => {
+        const next = e.relatedTarget as Node | null;
+        if (next && ref.current?.contains(next)) return;
+        setOpen(false);
+      }}
+    >
       <button
-        onClick={() => setOpen(o => !o)}
+        type="button"
+        onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         className={cn(
           "flex items-center gap-1 text-[10px] font-bold tracking-[0.12em] uppercase py-3 transition-colors",
@@ -113,12 +137,11 @@ function CategoryDropdown({
       </button>
       <div
         className={cn(
-          "absolute top-full left-0 bg-white shadow-2xl border border-border/80 z-50",
-          "transition-all duration-300 ease-out",
+          "absolute top-full left-0 bg-white shadow-2xl border border-border/80 z-[500]",
+          "transition-all duration-200 ease-out",
           width,
-          open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-2 pointer-events-none"
+          open ? "opacity-100 translate-y-0 pointer-events-auto visible" : "invisible opacity-0 translate-y-2 pointer-events-none"
         )}
-        onClick={() => setOpen(false)}
       >
         <div className="border-b border-border/60 px-5 py-2.5">
           <Link href={href} className="text-[11px] font-bold uppercase tracking-wider text-primary hover:text-secondary transition-colors">
@@ -201,7 +224,7 @@ const SiteHeader = () => {
 
   return (
     <>
-    <header className="w-full sticky top-0 z-[100]">
+    <header className="w-full sticky top-0 z-[280] overflow-visible">
 
       {/* ── Row 1: Social · Phone · Contact ──────────────────────────────── */}
       <div className="bg-primary text-white border-b border-white/10">
@@ -236,7 +259,7 @@ const SiteHeader = () => {
       </div>
 
       {/* ── Row 2: Logo · Nav · Icons ─────────────────────────────────────── */}
-      <div className={cn("bg-white border-b border-border/60 transition-all duration-200", isScrolled ? "py-2 shadow-md" : "py-3")}>
+      <div className={cn("bg-white border-b border-border/60 transition-all duration-200 overflow-visible", isScrolled ? "py-2 shadow-md" : "py-3")}>
         <div className="section-container flex items-center justify-between gap-6">
 
           {/* Logo */}
@@ -343,7 +366,7 @@ const SiteHeader = () => {
       </div>
 
       {/* ── Row 3: Product Category Bar with Dropdowns ───────────────────── */}
-      <div className="bg-on-dark-subtle text-white hidden lg:block">
+      <div className="bg-on-dark-subtle text-white hidden lg:block overflow-visible">
         <div className="section-container">
           <ul className="flex items-center justify-between">
 
