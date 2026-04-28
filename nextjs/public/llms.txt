@@ -1,8 +1,8 @@
-# Lava South Africa
+# Lava-SA
 
 > South Africa's authorised distributor of German-engineered LAVA vacuum sealers. Operating since 2007. Trusted by hunters, anglers, butchers, biltong makers, caterers and home cooks across South Africa.
 
-Lava South Africa (Lava-SA) imports and distributes the full LAVA range of vacuum sealing machines, consumables, and food preservation accessories — manufactured in Germany by Landig + Lava GmbH. Every machine carries a 2-year factory warranty and is backed by direct local support from owner Anneke Uys.
+Lava-SA imports and distributes the full LAVA range of vacuum sealing machines, consumables, and food preservation accessories — manufactured in Germany by Landig + Lava GmbH. Every machine carries a 2-year factory warranty and is backed by direct local support from owner Anneke Uys.
 
 ## About
 
@@ -48,7 +48,7 @@ Lava South Africa (Lava-SA) imports and distributes the full LAVA range of vacuu
 
 ## Key Facts
 
-- Company: Lava South Africa (Lava-SA)
+- Company: Lava-SA
 - Founded: 2007
 - Location: 5 Stirling Road, Bryanston, Johannesburg 2191, South Africa
 - Phone: +27 72 160 5556

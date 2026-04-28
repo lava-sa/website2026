@@ -243,6 +243,20 @@ export default function SustainableSealingPage() {
         </div>
       </section>
 
+      <section className="py-12 bg-surface border-t border-border">
+        <div className="section-container max-w-3xl">
+          <p className="text-xs font-black uppercase tracking-wide text-secondary mb-3">Pillar Guide Links</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Link href="/guides/food-preservation-reducing-waste" className="border border-border bg-white px-4 py-3 text-sm hover:border-primary hover:text-primary transition-colors">
+              Food Preservation & Reducing Waste →
+            </Link>
+            <Link href="/guides/how-to-vacuum-seal" className="border border-border bg-white px-4 py-3 text-sm hover:border-primary hover:text-primary transition-colors">
+              How to Vacuum Seal →
+            </Link>
+          </div>
+        </div>
+      </section>
+
 
     </main>
   );

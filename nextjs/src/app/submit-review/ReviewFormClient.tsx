@@ -187,7 +187,7 @@ function WrittenReviewForm() {
             onChange={(e) => { setForm((p) => ({ ...p, permission: e.target.checked })); setErrors((p) => ({ ...p, permission: "" })); }}
             className="mt-0.5 h-4 w-4 accent-primary" />
           <span className="text-sm text-copy leading-relaxed">
-            I confirm this review is genuine and I give Lava South Africa permission to publish it on their website.
+            I confirm this review is genuine and I give Lava-SA permission to publish it on their website.
           </span>
         </label>
         {errors.permission && <p className="text-xs text-red-600 mt-1 ml-7">{errors.permission}</p>}

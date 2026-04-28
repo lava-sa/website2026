@@ -67,6 +67,14 @@ export default function VacuumPackagingPage() {
             Everything you need to get the most from your LAVA machine — shelf life charts,
             technique guides, bag selection, and expert tips.
           </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/guides/how-to-vacuum-seal" className="border border-white/30 text-white text-xs font-bold uppercase tracking-wide px-3 py-2 hover:bg-white/10 transition-colors">
+              How-To Pillar
+            </Link>
+            <Link href="/guides/food-preservation-reducing-waste" className="border border-white/30 text-white text-xs font-bold uppercase tracking-wide px-3 py-2 hover:bg-white/10 transition-colors">
+              Preservation Pillar
+            </Link>
+          </div>
         </div>
       </section>
 

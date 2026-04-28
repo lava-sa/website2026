@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Checkout — Lava South Africa",
-  description: "Secure PayFast checkout for Lava South Africa.",
+  title: "Checkout — Lava-SA",
+  description: "Secure PayFast checkout for Lava-SA.",
   robots: { index: false, follow: false },
 };
 

@@ -37,7 +37,12 @@ export default function PostSustainability() {
         </div>
 
         <div className="relative aspect-[16/7] bg-primary/10 mb-12 overflow-hidden">
-          <Image src="/images/about/lava-reforestation.webp" alt="LAVA and sustainability" fill className="object-cover" />
+          <Image
+            src="/images/about/lava-reforestation.webp"
+            alt="Reforestation project image representing Lava-SA sustainability commitment"
+            fill
+            className="object-cover"
+          />
         </div>
 
         <div className="prose-lava">

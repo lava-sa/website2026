@@ -29,7 +29,7 @@ const PartnersSection = () => {
             <div key={index} className="relative h-20 w-32 md:h-24 md:w-40 hover:opacity-100 transition-opacity duration-300">
                <Image 
                  src={partner.src}
-                 alt={`${partner.name} Logo`}
+                 alt={`${partner.name} logo`}
                  fill
                  className="object-contain filter grayscale hover:grayscale-0 transition-all duration-500"
                />

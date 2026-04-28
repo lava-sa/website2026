@@ -68,7 +68,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       <div className="px-5 py-5 border-b border-white/10">
         <Image
           src="/images/logo/lava-sa-logo-white.webp"
-          alt="Lava South Africa"
+          alt="Lava-SA logo"
           width={140}
           height={40}
           className="h-9 w-auto object-contain"

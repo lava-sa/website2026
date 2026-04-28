@@ -49,6 +49,8 @@ export default function ProductEditForm({
   const [error, setError] = useState("");
   /** Per funnel step: true = narrow mobile-style preview */
   const [funnelPreviewMobile, setFunnelPreviewMobile] = useState<Record<number, boolean>>({});
+  /** Per funnel step: search query for product selector */
+  const [funnelProductSearch, setFunnelProductSearch] = useState<Record<number, string>>({});
 
   function applyMarkdown(percent: 10 | 15 | 20 | 25) {
     const regular = Number(form.regular_price);
@@ -505,8 +507,30 @@ export default function ProductEditForm({
                       </div>
                       <div>
                         <label className={labelCls}>Step Products (up to 3)</label>
-                        <div className="max-h-44 overflow-y-auto border border-gray-200">
-                          {productChoices.map((choice) => {
+                        {(() => {
+                          const query = (funnelProductSearch[stepIndex] ?? "").trim().toLowerCase();
+                          const filteredChoices = productChoices.filter((choice) => {
+                            if (!query) return true;
+                            const categoryName = choice.categories?.name?.toLowerCase() ?? "";
+                            return (
+                              choice.name.toLowerCase().includes(query) ||
+                              choice.slug.toLowerCase().includes(query) ||
+                              categoryName.includes(query)
+                            );
+                          });
+                          return (
+                            <>
+                        <input
+                          type="text"
+                          value={funnelProductSearch[stepIndex] ?? ""}
+                          onChange={(e) =>
+                            setFunnelProductSearch((prev) => ({ ...prev, [stepIndex]: e.target.value }))
+                          }
+                          placeholder="Search products by name, slug, or category..."
+                          className={`${inputCls} mb-2`}
+                        />
+                        <div className="max-h-64 overflow-y-auto border border-gray-200">
+                          {filteredChoices.map((choice) => {
                             const selected = step.productIds.includes(choice.id);
                             return (
                               <button
@@ -522,8 +546,14 @@ export default function ProductEditForm({
                               </button>
                             );
                           })}
+                          {filteredChoices.length === 0 && (
+                            <p className="px-3 py-3 text-sm text-gray-500">No products match this search.</p>
+                          )}
                         </div>
                         <p className="text-xs text-gray-400 mt-1">Selected: {step.productIds.length}/3</p>
+                            </>
+                          );
+                        })()}
                       </div>
                     </div>
                   ))}

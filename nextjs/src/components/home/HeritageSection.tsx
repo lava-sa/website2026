@@ -53,7 +53,7 @@ const HeritageSection = () => {
             </blockquote>
 
             <p className="mb-8 text-sm leading-relaxed text-copy">
-              Lava South Africa has been the exclusive distributor since 2007 —
+              Lava-SA has been the exclusive distributor since 2007 —
               bringing German-factory quality directly to SA homes, hunting camps,
               butcheries, and cold rooms.
             </p>

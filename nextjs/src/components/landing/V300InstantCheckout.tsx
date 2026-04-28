@@ -12,7 +12,7 @@ const PRODUCT = {
   slug: "v300-premium-x",
   name: "LAVA V.300 Premium X",
   sku: "VL0300XP",
-  price: 14500,
+  price: 13500,
   image: "/images/products/machines/v300-premium-x/lava-vacuum-sealer-v300-premium-x.webp",
 };
 
@@ -82,7 +82,6 @@ export default function V300InstantCheckout({ placement = "top" }: { placement?:
                 fill
                 className="object-contain"
                 sizes="(max-width: 1024px) 100vw, 45vw"
-                priority={placement === "top"}
               />
             </div>
           </div>

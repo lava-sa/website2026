@@ -13,7 +13,7 @@ type SessionStatus = "idle" | "connecting" | "active" | "ended" | "error";
 
 const MACHINE_SPECS = [
   { name: "V.100 Premium X", price: "R11,000", suction: "35 ltr/min", maxVacuum: "-0.94 bar", width: "340 mm", seal: "Double", auto: "No", bestFor: "Occasional home use" },
-  { name: "V.300 Premium X", price: "R14,500", suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "Yes", bestFor: "Regular home / hunting" },
+  { name: "V.300 Premium X", price: "R13,500", suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "Yes", bestFor: "Regular home / hunting" },
   { name: "V.300 Black",     price: "R14,200", suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "Yes", bestFor: "Style-conscious users" },
   { name: "V.300 White",     price: "R14,200", suction: "35 ltr/min", maxVacuum: "-0.96 bar", width: "340 mm", seal: "Double", auto: "Yes", bestFor: "Maximum vacuum power" },
   { name: "V.400 Premium",   price: "R29,890", suction: "35 ltr/min", maxVacuum: "-0.92 bar", width: "450 mm", seal: "Triple", auto: "Yes", bestFor: "Restaurant / butchery" },

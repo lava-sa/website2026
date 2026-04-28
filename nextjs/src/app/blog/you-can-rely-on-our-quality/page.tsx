@@ -46,7 +46,12 @@ export default function PostQuality() {
         </div>
 
         <div className="relative aspect-[16/7] bg-primary/10 mb-12 overflow-hidden">
-          <Image src="/images/about/lava-german-quality.webp" alt="LAVA German Quality Engineering" fill className="object-cover" />
+          <Image
+            src="/images/about/lava-german-quality.webp"
+            alt="Internal Lava vacuum sealer components showing German build quality"
+            fill
+            className="object-cover"
+          />
         </div>
 
         <div className="prose-lava">

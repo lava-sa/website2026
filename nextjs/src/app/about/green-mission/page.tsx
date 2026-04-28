@@ -196,9 +196,10 @@ export default function GreenMissionPage() {
         <div className="absolute inset-0">
           <Image
             src="/images/homepage/lava-reforestation.webp"
-            alt=""
+            alt="Reforestation landscape representing Lava sustainability mission"
             fill
             className="object-cover opacity-15"
+            sizes="100vw"
           />
         </div>
         <div className="relative section-container max-w-xl mx-auto">
@@ -216,6 +217,20 @@ export default function GreenMissionPage() {
             </Link>
             <Link href="/about/sustainable-sealing" className="inline-block border border-white/30 text-white/80 font-semibold px-8 py-3 hover:bg-white/10 hover:text-white transition-colors">
               Discover Sustainable Sealing
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 bg-surface border-t border-border">
+        <div className="section-container max-w-3xl">
+          <p className="text-xs font-black uppercase tracking-wide text-secondary mb-3">Pillar Guide Links</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Link href="/guides/food-preservation-reducing-waste" className="border border-border bg-white px-4 py-3 text-sm hover:border-primary hover:text-primary transition-colors">
+              Food Preservation & Reducing Waste →
+            </Link>
+            <Link href="/guides/vacuum-sealer-buying-guide" className="border border-border bg-white px-4 py-3 text-sm hover:border-primary hover:text-primary transition-colors">
+              Vacuum Sealer Buying Guide →
             </Link>
           </div>
         </div>

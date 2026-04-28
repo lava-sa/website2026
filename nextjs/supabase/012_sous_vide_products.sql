@@ -46,7 +46,7 @@ VALUES (
   false,
   (SELECT id FROM categories WHERE slug = 'sous-vide' LIMIT 1),
   100,
-  'LX 20 Sous Vide Stick — Lava South Africa',
+  'LX 20 Sous Vide Stick — Lava-SA',
   'Buy the LAVA LX 20 sous vide precision cooker — ±0.1°C accuracy, 1,200 W, nationwide delivery from Lava-SA.',
   jsonb_build_object(
     'temperature_range', '25°C – 95°C',
@@ -120,7 +120,7 @@ VALUES (
   true,
   (SELECT id FROM categories WHERE slug = 'sous-vide' LIMIT 1),
   101,
-  'Sous Vide Set XXL — Lava South Africa',
+  'Sous Vide Set XXL — Lava-SA',
   'LAVA sous vide complete set with LX 20 stick, basin, rack and cover — German precision, SA support.',
   jsonb_build_object(
     'includes', 'LX 20 Stick + Basin + Rack + Insulation',

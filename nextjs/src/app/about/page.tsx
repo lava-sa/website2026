@@ -59,7 +59,7 @@ const TIMELINE = [
   { year: "1982", event: "Klaus Landig founds LAVA in Bad Saulgau, Upper Swabia. The first vacuum sealer rolls off the production line." },
   { year: "1990s", event: "LAVA expands across Europe. The V.300 becomes the best-selling home vacuum sealer in Germany." },
   { year: "2000s", event: "The commercial V.400 and V.500 range launches. Restaurants, butcheries and food producers across Europe adopt LAVA." },
-  { year: "2007", event: "Wilco Uys establishes Lava South Africa — the exclusive distributor for the continent. The first shipment lands in Johannesburg." },
+  { year: "2007", event: "Wilco Uys establishes Lava-SA — the exclusive distributor for the continent. The first shipment lands in Johannesburg." },
   { year: "2010s", event: "South Africa's hunting and outdoor community discovers LAVA. Word spreads camp to camp, farm to farm." },
   { year: "2024+", event: "A new digital platform launches, bringing the full LAVA range directly to South African homes, butcheries, restaurants and hunting lodges — anywhere in the country." },
 ];
@@ -244,7 +244,7 @@ export default function AboutPage() {
                     }`}>
                       {year === "2007" && (
                         <p className="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">
-                          Lava South Africa Founded
+                          Lava-SA Founded
                         </p>
                       )}
                       <p className={`text-sm leading-relaxed ${year === "2007" ? "text-white/90" : "text-copy"}`}>
@@ -283,7 +283,7 @@ export default function AboutPage() {
                   imitations, but the real thing, direct from the factory in Germany.
                 </p>
                 <p>
-                  Lava South Africa was born. Wilco leads the business with a commitment to
+                  Lava-SA was born. Wilco leads the business with a commitment to
                   integrity and a product he believes in completely. Anneke Hofmeyr manages
                   day-to-day operations and customer service — and when you call, it&apos;s
                   Anneke who answers. Personally.
@@ -324,14 +324,14 @@ export default function AboutPage() {
               <div className="relative aspect-[4/5] overflow-hidden shadow-2xl">
                 <Image
                   src="/images/about/lava-directors-001.webp"
-                  alt="Wilco Uys and Anneke Hofmeyr — Lava South Africa"
+                  alt="Wilco Uys and Anneke Hofmeyr — Lava-SA"
                   fill
                   className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-primary/80 to-transparent p-6">
                   <p className="text-xs font-bold uppercase tracking-widest text-white/70 mb-1">Bryanston, Johannesburg</p>
                   <p className="text-white font-bold text-lg">Wilco Uys &amp; Anneke Hofmeyr</p>
-                  <p className="text-white/70 text-sm">Owner &amp; Manager · Lava South Africa est. 2007</p>
+                  <p className="text-white/70 text-sm">Owner &amp; Manager · Lava-SA est. 2007</p>
                 </div>
               </div>
               {/* Accent */}
@@ -516,7 +516,7 @@ export default function AboutPage() {
             <p className="overline mb-3">Service & Contact</p>
             <h2 className="text-4xl font-bold text-primary">We&apos;re here. Always.</h2>
             <p className="mt-4 text-copy-muted max-w-lg mx-auto">
-              When you call Lava South Africa, Anneke Hofmeyr answers — the person who
+              When you call Lava-SA, Anneke Hofmeyr answers — the person who
               manages every order and personally backs every machine we sell.
             </p>
           </div>

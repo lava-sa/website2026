@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
     ["cell_number",     customer.phone],
     ["m_payment_id",    orderNumber],
     ["amount",          total.toFixed(2)],
-    ["item_name",       truncate(`Lava South Africa — Order ${orderNumber}`, 100)],
+    ["item_name",       truncate(`Lava-SA — Order ${orderNumber}`, 100)],
     ["item_description", itemSummary],
   ];
 

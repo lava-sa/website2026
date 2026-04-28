@@ -120,6 +120,14 @@ export default function ApplicationsPage() {
             floor — LAVA vacuum sealers are built for the way South Africans actually work
             with food.
           </p>
+          <div className="mt-5">
+            <Link
+              href="/guides/vacuum-sealing-applications"
+              className="inline-flex items-center gap-2 text-sm font-bold text-secondary hover:text-primary transition-colors"
+            >
+              Open Applications Pillar Guide <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
 
         {/* Application cards */}

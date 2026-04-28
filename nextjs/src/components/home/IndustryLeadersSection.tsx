@@ -99,9 +99,10 @@ const IndustryLeadersSection = () => {
               <div className="industry-leaders__logo relative h-28 w-full max-w-[220px]">
                 <Image
                   src={company.logo}
-                  alt={company.name}
+                  alt={`${company.name} logo`}
                   fill
                   className="object-contain transition-all duration-300 grayscale group-hover:grayscale-0"
+                  sizes="(max-width: 640px) 50vw, 25vw"
                 />
               </div>
               <div>

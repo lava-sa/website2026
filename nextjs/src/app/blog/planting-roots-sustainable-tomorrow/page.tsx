@@ -37,7 +37,12 @@ export default function PostPlantingRoots() {
         </div>
 
         <div className="relative aspect-[16/7] bg-primary/10 mb-12 overflow-hidden">
-          <Image src="/images/about/lava-reforestation.webp" alt="LAVA Reforestation" fill className="object-cover" />
+          <Image
+            src="/images/about/lava-reforestation.webp"
+            alt="Reforestation trees supported by Lava-SA sustainability efforts"
+            fill
+            className="object-cover"
+          />
         </div>
 
         <div className="prose-lava">

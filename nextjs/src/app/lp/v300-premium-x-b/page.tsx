@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Lava V.300 Premium X — Vacuum Like a Professional | Lava South Africa",
+  title: "Lava V.300 Premium X — Vacuum Like a Professional | Lava-SA",
   description:
     "The German-engineered vacuum sealer trusted by hunters, chefs and butchers across South Africa. 500W double pump. -0.94 bar. 2-year warranty. Free shipping over R3,500.",
   robots: { index: false, follow: false }, // landing page — paid traffic only
@@ -100,10 +100,11 @@ export default function V300PremiumXLandingPage() {
         <div className="absolute inset-0 opacity-30">
           <Image
             src="/images/homepage/lava-precision-durability.webp"
-            alt=""
+            alt="Lava V.300 Premium X landing page hero background image"
             fill
             priority
             className="object-cover"
+            sizes="100vw"
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-petrol-800 via-petrol-800/90 to-transparent" />
@@ -135,7 +136,7 @@ export default function V300PremiumXLandingPage() {
                 className="btn-primary shadow-lg"
                 data-cta="hero-primary"
               >
-                Order Yours — R14,500
+                Order Yours — R13,500
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path
                     d="M2.5 7h9M7 2.5l4.5 4.5L7 11.5"
@@ -188,8 +189,8 @@ export default function V300PremiumXLandingPage() {
               src="/images/products/machines/v300-premium-x/lava-vacuum-sealer-v300-premium-x.webp"
               alt="Lava V.300 Premium X vacuum sealer"
               fill
-              priority
               className="object-contain drop-shadow-2xl"
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
         </div>
@@ -286,7 +287,7 @@ export default function V300PremiumXLandingPage() {
               >
                 <Image
                   src={`/images/products/machines/v300-premium-x/${img}`}
-                  alt="Lava V.300 Premium X detail"
+                  alt={`Lava V.300 Premium X product image ${i + 1}`}
                   fill
                   className="object-contain"
                 />
@@ -314,7 +315,7 @@ export default function V300PremiumXLandingPage() {
               className="btn-primary mt-8 self-start shadow-lg"
               data-cta="midpage"
             >
-              Order Yours — R14,500
+              Order Yours — R13,500
             </Link>
           </div>
         </div>
@@ -427,7 +428,7 @@ export default function V300PremiumXLandingPage() {
               className="btn-primary shadow-2xl"
               data-cta="final"
             >
-              Order the V.300 Premium X — R14,500
+              Order the V.300 Premium X — R13,500
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path
                   d="M2.5 7h9M7 2.5l4.5 4.5L7 11.5"
@@ -446,7 +447,7 @@ export default function V300PremiumXLandingPage() {
             </Link>
           </div>
           <p className="mt-6 text-xs uppercase tracking-[0.2em] text-on-dark-faint">
-            Lava South Africa · Authorised distributor since 2007
+            Lava-SA · Authorised distributor since 2007
           </p>
         </div>
       </section>

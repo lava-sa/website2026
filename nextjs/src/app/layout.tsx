@@ -85,7 +85,7 @@ export const metadata: Metadata = {
 const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "Store"],
-    "name": "Lava South Africa",
+    "name": "Lava-SA",
     "alternateName": "Lava-SA",
     "url": "https://www.lava-sa.co.za",
     "description":

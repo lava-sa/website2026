@@ -38,7 +38,7 @@ const SiteFooter = () => {
             <Link href="/" className="inline-block">
               <Image 
                 src="/images/logo/lava-sa-logo-white.webp"
-                alt="Lava South Africa"
+                alt="Lava South Africa logo"
                 title="Lava South Africa — German Vacuum Sealers"
                 width={160} 
                 height={40} 

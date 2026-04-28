@@ -74,6 +74,7 @@ export default function FunnelPage() {
   const [funnel, setFunnel] = useState<FunnelResponse | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedByStep, setSelectedByStep] = useState<Record<number, string | null>>({});
+  const [quantityByStep, setQuantityByStep] = useState<Record<number, 1 | 2 | 3>>({});
 
   const hasPrimaryInCart = useMemo(
     () => items.some((item) => item.slug === slug && !item.name.includes("Funnel Offer")),
@@ -116,7 +117,8 @@ export default function FunnelPage() {
     : null;
 
   function goNext() {
-    if (currentStep < funnel.steps.length - 1) {
+    const stepCount = funnel?.steps.length ?? 0;
+    if (currentStep < stepCount - 1) {
       setCurrentStep((s) => s + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
@@ -126,14 +128,17 @@ export default function FunnelPage() {
 
   function addSelectedAndContinue() {
     if (!selectedProduct) return;
-    addItem({
-      id: `${selectedProduct.id}__funnel_${slug}_step${currentStep + 1}`,
-      slug: selectedProduct.slug,
-      name: `${selectedProduct.name} (Funnel Offer -${step.discountPercent}%)`,
-      price: applyFunnelDiscount(selectedProduct.regular_price, step.discountPercent),
-      image: selectedProduct.primary_image_url,
-      sku: selectedProduct.sku,
-    });
+    const qty = quantityByStep[currentStep] ?? 1;
+    for (let i = 0; i < qty; i += 1) {
+      addItem({
+        id: `${selectedProduct.id}__funnel_${slug}_step${currentStep + 1}`,
+        slug: selectedProduct.slug,
+        name: `${selectedProduct.name} (Funnel Offer -${step.discountPercent}%)`,
+        price: applyFunnelDiscount(selectedProduct.regular_price, step.discountPercent),
+        image: selectedProduct.primary_image_url,
+        sku: selectedProduct.sku,
+      });
+    }
     goNext();
   }
 
@@ -162,8 +167,8 @@ export default function FunnelPage() {
       </header>
 
       <div className="max-w-5xl mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 gap-8">
+          <div>
             <div className="mb-8">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary mb-2">
                 Step {currentStep + 1} of {funnel.steps.length}
@@ -181,6 +186,34 @@ export default function FunnelPage() {
                 <span className="text-sm font-bold text-secondary">
                   Exclusive {step.discountPercent}% off — bundle with your main product
                 </span>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-xs font-bold uppercase tracking-wide text-copy-muted mb-2">
+                Quantity to add
+              </label>
+              <div className="inline-flex items-center gap-2 bg-white border border-border p-2">
+                {[1, 2, 3].map((qty) => {
+                  const selectedQty = quantityByStep[currentStep] ?? 1;
+                  const isActive = selectedQty === qty;
+                  return (
+                    <button
+                      key={qty}
+                      type="button"
+                      onClick={() =>
+                        setQuantityByStep((prev) => ({ ...prev, [currentStep]: qty as 1 | 2 | 3 }))
+                      }
+                      className={`h-9 min-w-9 px-3 text-sm font-bold border transition-colors ${
+                        isActive
+                          ? "bg-primary text-white border-primary"
+                          : "bg-white text-primary border-border hover:border-primary"
+                      }`}
+                    >
+                      {qty}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -222,7 +255,9 @@ export default function FunnelPage() {
                 className="w-full flex items-center justify-center gap-2 bg-secondary text-white font-black py-4 text-base hover:bg-secondary/90 transition-colors disabled:opacity-40"
               >
                 <ShoppingBag className="h-5 w-5" />
-                {selectedProduct && finalPrice ? `Add for ${fmt(finalPrice)}` : "Select a product"}
+                {selectedProduct && finalPrice
+                  ? `Add ${(quantityByStep[currentStep] ?? 1)} for ${fmt(finalPrice * (quantityByStep[currentStep] ?? 1))}`
+                  : "Select a product"}
                 <ChevronRight className="h-4 w-4" />
               </button>
               <button
@@ -232,9 +267,6 @@ export default function FunnelPage() {
                 No thanks — skip this step
               </button>
             </div>
-          </div>
-
-          <div className="hidden lg:block">
             <CartSummary items={items} total={total} />
           </div>
         </div>

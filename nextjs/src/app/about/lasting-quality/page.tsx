@@ -119,7 +119,7 @@ export default function LastingQualityPage() {
               <div className="space-y-4 text-copy-muted text-[15px] leading-relaxed">
                 <p>
                   A R700 vacuum sealer that fails after 18 months has cost you R467 per year.
-                  A LAVA machine at R14,500 that runs for 15 years costs you R967 per year — and
+                  A LAVA machine at R13,500 that runs for 15 years costs you R900 per year — and
                   that calculation doesn&apos;t include the frustration, the food wasted during
                   downtime, or the cost of replacement bags that don&apos;t seal properly.
                 </p>
@@ -192,6 +192,20 @@ export default function LastingQualityPage() {
             </Link>
             <Link href="/about" className="inline-block border border-border text-copy font-semibold px-8 py-3 hover:border-primary hover:text-primary transition-colors">
               Our Story
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 bg-surface border-t border-border">
+        <div className="section-container max-w-3xl">
+          <p className="text-xs font-black uppercase tracking-wide text-secondary mb-3">Pillar Guide Links</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Link href="/guides/vacuum-sealer-buying-guide" className="border border-border bg-white px-4 py-3 text-sm hover:border-primary hover:text-primary transition-colors">
+              Vacuum Sealer Buying Guide →
+            </Link>
+            <Link href="/guides/vacuum-sealing-applications" className="border border-border bg-white px-4 py-3 text-sm hover:border-primary hover:text-primary transition-colors">
+              Applications Guide →
             </Link>
           </div>
         </div>

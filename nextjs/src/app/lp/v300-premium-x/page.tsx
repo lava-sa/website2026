@@ -197,7 +197,7 @@ export default function V300PremiumXLandingPage() {
       {/* Minimal footer */}
       <footer className="bg-primary text-on-dark-muted py-10 border-t-4 border-[#c41230]">
         <div className="section-container max-w-4xl text-center text-sm space-y-3">
-          <p className="text-white font-bold">Lava South Africa — authorised distributor</p>
+          <p className="text-white font-bold">Lava-SA — authorised distributor</p>
           <p>
             Questions?{" "}
             <a href="mailto:info@lava-sa.co.za" className="text-secondary hover:underline font-semibold">

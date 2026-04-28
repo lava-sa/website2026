@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Lava South Africa",
+  name: "Lava-SA",
   url: SITE_URL,
   inLanguage: "en-ZA",
   potentialAction: {
@@ -38,7 +38,7 @@ const websiteSchema = {
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Lava South Africa",
+  name: "Lava-SA",
   url: SITE_URL,
   logo: `${SITE_URL}/images/logo/lava-sa-logo.png`,
   image: `${SITE_URL}${DEFAULT_OG_IMAGE}`,

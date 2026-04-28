@@ -105,7 +105,7 @@ const machines = [
 <li><strong>Magnetic lid system</strong> — no pressure required on the lid</li>
 <li><strong>Container compatible</strong> — includes vacuum pump attachment</li>
 </ul>`,
-    regular_price: 14500,
+    regular_price: 13500,
     stock_status:  "in_stock",
     stock_quantity: 6,
     weight_kg:     4.40,

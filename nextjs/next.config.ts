@@ -31,6 +31,11 @@ const nextConfig: NextConfig = {
   },
 
   images: {
+    // Explicit optimization policy for predictable SEO/Core Web Vitals behavior.
+    // Next/Image will generate responsive srcset and serve AVIF/WebP when supported.
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 120, 180, 256, 384],
     remotePatterns: [
       // LocalWP dev
       {
@@ -56,6 +61,29 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+  },
+  async redirects() {
+    return [
+      // Canonical host policy: route all variants to https://www.lava-sa.co.za
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "lava-sa.co.za" }],
+        destination: "https://www.lava-sa.co.za/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "lava-sa.com" }],
+        destination: "https://www.lava-sa.co.za/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.lava-sa.com" }],
+        destination: "https://www.lava-sa.co.za/:path*",
+        permanent: true,
+      },
+    ];
   },
   async rewrites() {
     return [

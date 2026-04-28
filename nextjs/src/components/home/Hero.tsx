@@ -67,7 +67,7 @@ const Hero = () => {
              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/50 bg-white">
                 <Image 
                   src="/images/products/lava-v300-premium-white-aesthetic-vacuum-sealer-003.webp"
-                  alt="Lava V.300 Premium X"
+                  alt="Lava V.300 Premium X vacuum sealer on a kitchen counter"
                   width={800}
                   height={600}
                   className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700"

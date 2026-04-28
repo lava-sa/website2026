@@ -22,7 +22,7 @@ const DOMESTIC_COMPARISON = {
   subtitle: "Both are German-engineered home machines. Here's how they differ.",
   models: [
     { name: "V.100 Premium X",  slug: "v100-premium-x", price: "R11,000", badge: "Entry Level" },
-    { name: "V.300 Premium X",  slug: "v300-premium-x", price: "R14,500", badge: "Most Popular", badgeColor: "bg-secondary text-white" },
+    { name: "V.300 Premium X",  slug: "v300-premium-x", price: "R13,500", badge: "Most Popular", badgeColor: "bg-secondary text-white" },
     { name: "V.300 Black",      slug: "v300-black",      price: "R14,200", badge: "Limited Edition" },
     { name: "V.300 White",      slug: "v300-white",      price: "R14,200", badge: "Limited Edition" },
   ],

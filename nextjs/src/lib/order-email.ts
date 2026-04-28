@@ -196,7 +196,7 @@ export async function sendPaymentReceivedEmails(args: SendPaymentReceivedEmailAr
       <p style="margin:0 0 10px;">Hi ${esc(args.customer.first_name)},</p>
       <p style="margin:0 0 10px;">We have received your payment of <strong>${formatPrice(args.total)}</strong>.</p>
       <p style="margin:0 0 10px;">Your order is now being prepared for dispatch.</p>
-      <p style="font-size:12px;color:#666;">Thank you for choosing Lava South Africa.</p>
+      <p style="font-size:12px;color:#666;">Thank you for choosing Lava-SA.</p>
     </div>
   `;
 

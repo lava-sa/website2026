@@ -63,7 +63,10 @@ export default function ContactPage() {
         <div className="absolute inset-0 opacity-15">
           <Image
             src="/images/homepage/lava-sa-vacuum-sealers-header-pick-003.webp"
-            alt="" fill className="object-cover object-center"
+            alt="Lava-SA support team background image"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
           />
         </div>
         <div className="relative section-container">
@@ -72,7 +75,7 @@ export default function ContactPage() {
             We&apos;re always ready<br />to help.
           </h1>
           <p className="mt-5 text-on-dark-muted text-lg max-w-xl leading-relaxed">
-            When you contact Lava South Africa, Anneke answers personally —
+            When you contact Lava-SA, Anneke answers personally —
             every call, every email, and every product enquiry.
           </p>
         </div>
@@ -185,13 +188,13 @@ export default function ContactPage() {
               <div className="relative h-56">
                 <Image
                   src="/images/homepage/lava-sustainable.webp"
-                  alt="Lava South Africa support team"
+                  alt="Lava-SA support team"
                   fill className="object-cover object-top"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent" />
                 <div className="absolute bottom-4 left-4">
                   <p className="text-white font-bold">Anneke Hofmeyr</p>
-                  <p className="text-white/70 text-xs">Manager · Lava South Africa</p>
+                  <p className="text-white/70 text-xs">Manager · Lava-SA</p>
                 </div>
               </div>
               <div className="p-5 bg-surface">

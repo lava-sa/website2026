@@ -196,7 +196,11 @@ export default function ImageUploader({
                 ${img.is_primary ? "border-primary" : "border-gray-200"}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img.url} alt={img.alt ?? ""} className="w-full h-full object-contain bg-gray-50" />
+              <img
+                src={img.url}
+                alt={img.alt?.trim() || "Product gallery image"}
+                className="w-full h-full object-contain bg-gray-50"
+              />
 
               {/* Primary badge */}
               {img.is_primary && (

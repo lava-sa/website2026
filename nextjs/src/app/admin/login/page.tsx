@@ -51,7 +51,7 @@ function LoginForm() {
         <div className="text-center mb-8">
           <Image
             src="/images/logo/lava-sa-logo-petrol.webp"
-            alt="Lava South Africa"
+            alt="Lava-SA logo"
             width={160}
             height={45}
             className="h-11 w-auto object-contain mx-auto"

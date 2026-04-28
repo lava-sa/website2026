@@ -35,7 +35,7 @@ export default function NotFound() {
             action="/search"
             method="get"
             role="search"
-            className="mb-10 flex items-center border border-border bg-white focus-within:border-primary transition-colors"
+            className="mb-8 flex items-center border border-border bg-white focus-within:border-primary transition-colors"
           >
             <label htmlFor="not-found-search" className="sr-only">
               Search Lava-SA
@@ -56,6 +56,30 @@ export default function NotFound() {
               Search
             </button>
           </form>
+
+          {/* Popular products */}
+          <div className="mb-10">
+            <p className="text-xs font-black uppercase tracking-widest text-secondary mb-3">
+              Popular Products
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {[
+                ["/products/v300-premium-x", "V.300 Premium X"],
+                ["/products/v100-premium-x", "V.100 Premium X"],
+                ["/products/vacuum-bags", "Vacuum Bags"],
+                ["/products/sous-vide", "Sous Vide"],
+              ].map(([href, label]) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="border border-border bg-white px-3 py-2 text-xs font-bold text-primary hover:border-primary transition-colors"
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
 
           {/* Quick links */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">

@@ -479,14 +479,21 @@ export default async function ProductDetailPage({
                 </div>
                 <div className="flex items-center justify-between gap-2 w-full mt-3">
                   {[
-                    { src: "/images/payment/payfast.png",             alt: "PayFast", className: "h-5 sm:h-5" },
-                    { src: "/images/payment/visa.png",                alt: "Visa"                   },
-                    { src: "/images/payment/mastercard.png",          alt: "Mastercard"             },
-                    { src: "/images/payment/visa-verified.png",       alt: "Verified by Visa"       },
-                    { src: "/images/payment/mastercard-securecode.png", alt: "Mastercard SecureCode" },
+                    { src: "/images/payment/payfast.png",             alt: "PayFast logo", className: "h-5 sm:h-5" },
+                    { src: "/images/payment/visa.png",                alt: "Visa logo"                   },
+                    { src: "/images/payment/mastercard.png",          alt: "Mastercard logo"             },
+                    { src: "/images/payment/visa-verified.png",       alt: "Verified by Visa logo"       },
+                    { src: "/images/payment/mastercard-securecode.png", alt: "Mastercard SecureCode logo" },
                   ].map(({ src, alt, className }) => (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img key={alt} src={src} alt={alt} className={`${className || "h-7 sm:h-8"} w-auto object-contain`} />
+                    <div key={alt} className={`relative ${className || "h-7 sm:h-8"} w-16 sm:w-20`}>
+                      <Image
+                        src={src}
+                        alt={alt}
+                        fill
+                        sizes="(max-width: 640px) 64px, 80px"
+                        className="object-contain"
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
