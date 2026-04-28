@@ -33,7 +33,7 @@ const companies = [
   {
     name: "SA Game Breeders",
     category: "Game Breeders Association",
-    logo: "/images/partners/sa-game-breeders.webp", // TODO: add logo file
+    logo: "/images/partners/dry-ager-south-africa.webp",
     href: "https://www.sagamebreeders.com/",
     tooltip: "South Africa's leading game breeders association — LAVA preferred for game meat preservation.",
   },

@@ -59,7 +59,6 @@ import TestimonialsSection from "@/components/home/TestimonialsSection";
 import ReviewCTA from "@/components/home/ReviewCTA";
 import IndustryLeadersSection from "@/components/home/IndustryLeadersSection";
 import FinalCTA from "@/components/home/FinalCTA";
-import MailingListSignup from "@/components/common/MailingListSignup";
 
 export default function HomePage() {
   return (
@@ -97,16 +96,6 @@ export default function HomePage() {
 
       {/* 10 — Industry leaders: SA business partners */}
       <IndustryLeadersSection />
-
-      <section className="py-14 bg-surface border-y border-border">
-        <div className="section-container max-w-3xl">
-          <MailingListSignup
-            source="homepage"
-            title="Stay in the Loop"
-            subtitle="Join the LAVA Mailing List for practical preservation tips, product updates, and member-only specials."
-          />
-        </div>
-      </section>
 
       {/* 12 — Closing conversion */}
       <FinalCTA />
