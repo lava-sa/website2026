@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Replacement Spare Parts",
   description:
-    "Genuine LAVA replacement parts for all machines. Sealing strips, liquid trap lids and vacuum seal sets — keep your vacuum sealer performing like new.",
-};
+    "Genuine LAVA spare parts South Africa — sealing strips, liquid trap lids, vacuum seals. Keep your sealer performing like new. From the official distributor.",
+  path: "/products/spare-parts",
+});
 
 export const revalidate = 3600;
 
@@ -54,8 +56,21 @@ export default async function SparePartsPage() {
   const liquidTrapLids    = products.filter((p) => p.tags?.includes("liquid-trap"));
   const vacuumSeals       = products.filter((p) => p.tags?.includes("vacuum-seals"));
 
+  const collectionLd = collectionPageSchema({
+    name: "Replacement Spare Parts",
+    description: "Genuine LAVA spare parts South Africa — sealing strips, liquid trap lids, vacuum seals. Keep your sealer performing like new. From the official distributor.",
+    url: "/products/spare-parts",
+    image: "/images/og-fallback/og-spare-parts.jpg",
+    items: products.map((p) => ({ name: p.name, url: `/products/${p.slug}`, image: p.primary_image_url })),
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Spare Parts", url: "/products/spare-parts" },
+  ]);
+
   return (
     <main className="min-h-screen bg-white">
+      <JsonLd data={[collectionLd, crumbLd]} />
 
       {/* ── Page Hero ──────────────────────────────────────────────────────── */}
       <section className="bg-primary py-16">

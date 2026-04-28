@@ -11,6 +11,7 @@ const slides = [
   {
     id: 1,
     image: "/images/headers/lava-sa-vacuum-sealers-header-pick-001.jpg",
+    alt: "LAVA German vacuum sealer in a South African kitchen — gold standard food preservation since 2007",
     tag: "German Engineering · Since 2007",
     headline: "The Gold Standard of",
     headlineAccent: "Vacuum Sealing.",
@@ -21,6 +22,7 @@ const slides = [
   {
     id: 2,
     image: "/images/homepage/lava-precision-durability.webp",
+    alt: "LAVA V.300 Premium X vacuum sealer demonstrating precision and durability",
     tag: "Hunters · Chefs · Butchers",
     headline: "Seal it once.",
     headlineAccent: "Keep it for years.",
@@ -31,6 +33,7 @@ const slides = [
   {
     id: 3,
     image: "/images/homepage/lava-v300-premium-x-vacuum-sealer-machine.webp",
+    alt: "LAVA V.300 Premium X vacuum sealer machine — keep food fresh longer with less waste",
     tag: "Fresh Food · Less Waste",
     headline: "Fresh Food,",
     headlineAccent: "Longer.",
@@ -41,6 +44,7 @@ const slides = [
   {
     id: 4,
     image: "/images/headers/lava-sa-vacuum-sealers-header-pick-004.jpg",
+    alt: "Vacuum sealing game meat in South Africa — protect your hunt and preserve your harvest with LAVA",
     tag: "Hunters & Game Farmers",
     headline: "Protect Your Hunt.",
     headlineAccent: "Preserve Your Harvest.",
@@ -125,7 +129,7 @@ const HeroSlideshow = () => {
         >
           <Image
             src={s.image}
-            alt=""
+            alt={s.alt}
             fill
             className="object-cover object-center"
             priority={i === 0}

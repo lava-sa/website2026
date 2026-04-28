@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Vacuum Bags & Rolls — German-Quality Embossed Packaging",
   description:
-    "LAVA embossed vacuum bags and rolls in all sizes. BPA-free, food-safe, freezer and sous-vide compatible. Compatible with all LAVA vacuum sealing machines.",
-};
+    "LAVA embossed vacuum bags & rolls South Africa — every size, BPA-free, freezer-safe, sous vide compatible. Works with all LAVA vacuum sealing machines.",
+  path: "/products/bags-rolls",
+});
 
 export const revalidate = 3600;
 
@@ -42,8 +44,21 @@ export default async function BagsRollsPage() {
     // Supabase not available — show empty state
   }
 
+  const collectionLd = collectionPageSchema({
+    name: "Vacuum Bags & Rolls — German-Quality Embossed Packaging",
+    description: "LAVA embossed vacuum bags & rolls South Africa — every size, BPA-free, freezer-safe, sous vide compatible. Works with all LAVA vacuum sealing machines.",
+    url: "/products/bags-rolls",
+    image: "/images/og-fallback/og-bags-rolls.jpg",
+    items: [...bags, ...rolls].map((p) => ({ name: p.name, url: `/products/${p.slug}`, image: p.primary_image_url })),
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Vacuum Bags & Rolls", url: "/products/bags-rolls" },
+  ]);
+
   return (
     <main className="min-h-screen bg-white">
+      <JsonLd data={[collectionLd, crumbLd]} />
 
       {/* ── Page Hero ──────────────────────────────────────────────────────── */}
       <section className="bg-primary py-16">

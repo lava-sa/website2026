@@ -1,17 +1,31 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, CheckCircle } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, webPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Butchery & Meat Processing — Commercial Vacuum Sealing in South Africa",
   description:
     "Extend display life, reduce shrinkage, improve presentation and protect margins. LAVA commercial vacuum sealers for South African butcheries, large and small.",
-};
+  path: "/applications/butchery",
+});
 
 export default function ButcheryPage() {
+  const pageLd = webPageSchema({
+    name: "Butchery & Meat Processing — Commercial Vacuum Sealing in South Africa",
+    description: "Extend display life, reduce shrinkage, improve presentation and protect margins. LAVA commercial vacuum sealers for South African butcheries, large and small.",
+    url: "/applications/butchery",
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Applications", url: "/applications" },
+    { name: "Butchery", url: "/applications/butchery" },
+  ]);
+
   return (
     <main className="py-16">
+      <JsonLd data={[pageLd, crumbLd]} />
       <div className="section-container max-w-3xl">
 
         <div className="mb-10">

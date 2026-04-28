@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, webPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Applications — LAVA for Every Use",
   description:
     "Whether you hunt, fish, braai, make biltong, run a butchery or cook sous vide — there's a LAVA vacuum sealer built for how you work.",
-};
+  path: "/applications",
+});
 
 const applications = [
   {
@@ -94,8 +96,19 @@ function PlaceholderImage({ name, aspect = "aspect-[16/9]" }: { name: string; as
 }
 
 export default function ApplicationsPage() {
+  const pageLd = webPageSchema({
+    name: "Applications — LAVA for Every Use",
+    description: "Whether you hunt, fish, braai, make biltong, run a butchery or cook sous vide — there's a LAVA vacuum sealer built for how you work.",
+    url: "/applications",
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Applications", url: "/applications" },
+  ]);
+
   return (
     <main className="py-16">
+      <JsonLd data={[pageLd, crumbLd]} />
       <div className="section-container">
 
         {/* Header */}

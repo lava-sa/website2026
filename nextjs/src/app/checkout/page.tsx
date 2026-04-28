@@ -215,12 +215,12 @@ export default function CheckoutPage() {
                     </p>
                     <div className="flex items-center gap-2 flex-wrap">
                       {[
-                        "/images/payment/payfast.png",
-                        "/images/payment/visa.png",
-                        "/images/payment/mastercard.png",
-                      ].map((src) => (
+                        { src: "/images/payment/payfast.png", alt: "PayFast secure payment" },
+                        { src: "/images/payment/visa.png", alt: "Visa accepted" },
+                        { src: "/images/payment/mastercard.png", alt: "Mastercard accepted" },
+                      ].map(({ src, alt }) => (
                         <div key={src} className="relative h-6 w-12">
-                          <Image src={src} alt="" fill className="object-contain" sizes="48px" />
+                          <Image src={src} alt={alt} fill className="object-contain" sizes="48px" />
                         </div>
                       ))}
                     </div>

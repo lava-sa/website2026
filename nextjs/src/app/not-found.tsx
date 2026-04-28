@@ -25,10 +25,37 @@ export default function NotFound() {
           <h1 className="text-3xl sm:text-4xl font-black text-primary mb-4 leading-tight">
             Oops — this page<br />doesn&apos;t exist
           </h1>
-          <p className="text-copy-muted text-base leading-relaxed mb-10 max-w-sm mx-auto">
+          <p className="text-copy-muted text-base leading-relaxed mb-8 max-w-sm mx-auto">
             The page you&apos;re looking for may have moved or been removed.
             Let&apos;s get you back on track.
           </p>
+
+          {/* Search */}
+          <form
+            action="/search"
+            method="get"
+            role="search"
+            className="mb-10 flex items-center border border-border bg-white focus-within:border-primary transition-colors"
+          >
+            <label htmlFor="not-found-search" className="sr-only">
+              Search Lava-SA
+            </label>
+            <Search className="h-4 w-4 text-secondary ml-4 shrink-0" aria-hidden="true" />
+            <input
+              id="not-found-search"
+              type="search"
+              name="q"
+              placeholder="Search products, guides, FAQs…"
+              className="flex-1 px-3 py-3 text-sm text-primary placeholder:text-copy-muted bg-transparent outline-none"
+              autoComplete="off"
+            />
+            <button
+              type="submit"
+              className="bg-primary text-white text-xs font-bold uppercase tracking-wider px-5 py-3 hover:bg-secondary transition-colors"
+            >
+              Search
+            </button>
+          </form>
 
           {/* Quick links */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">

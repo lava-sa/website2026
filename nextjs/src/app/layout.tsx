@@ -24,7 +24,8 @@ const isProduction = process.env.VERCEL_ENV === "production";
 export const metadata: Metadata = {
     title: {
         template: "%s | Lava-SA",
-        default: "Lava-SA — German Vacuum Sealers Since 2007",
+        default:
+            "LAVA Vacuum Sealers South Africa | Premium German Food Preservation Since 2007 | Lava-SA",
     },
     description:
         "South Africa's leading German vacuum sealer brand. Preserve game meat, fish, biltong and food with Lava's hospital-grade vacuum technology. Trusted by hunters, anglers, butchers and home cooks.",

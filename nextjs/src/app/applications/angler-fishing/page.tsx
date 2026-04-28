@@ -1,17 +1,31 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, webPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Anglers & Fishing — Vacuum Sealing Fresh Catch in South Africa",
   description:
     "Snoek, yellowtail, cob, kingklip — vacuum sealed same-day catch is still excellent 12 months later. No freezer burn, no off-flavour. The angler's choice.",
-};
+  path: "/applications/angler-fishing",
+});
 
 export default function AnglerFishingPage() {
+  const pageLd = webPageSchema({
+    name: "Anglers & Fishing — Vacuum Sealing Fresh Catch in South Africa",
+    description: "Snoek, yellowtail, cob, kingklip — vacuum sealed same-day catch is still excellent 12 months later. No freezer burn, no off-flavour. The angler's choice.",
+    url: "/applications/angler-fishing",
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Applications", url: "/applications" },
+    { name: "Anglers & Fishing", url: "/applications/angler-fishing" },
+  ]);
+
   return (
     <main className="py-16">
+      <JsonLd data={[pageLd, crumbLd]} />
       <div className="section-container max-w-3xl">
 
         <div className="mb-10">

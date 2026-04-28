@@ -1,16 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import ProductCatalogImage from "@/components/shop/ProductCatalogImage";
 import { Award, CheckCircle2, Thermometer, Clock, ChefHat, Droplets } from "lucide-react";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
 import { calculatePointsEarned } from "@/lib/rewards-config";
 import { formatPrice } from "@/lib/products";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "LAVA Sous Vide Machines",
   description:
-    "Achieve restaurant-quality results at home with LAVA sous vide precision cookers. Perfectly cooked steak, fish, and vegetables every time — vacuum sealed and slow-cooked to perfection.",
-};
+    "LAVA sous vide precision cookers South Africa. Restaurant-quality steak, fish & vegetables at home — vacuum sealed and slow-cooked to perfection. German build.",
+  path: "/products/sous-vide",
+});
 
 export const revalidate = 3600;
 
@@ -97,8 +99,20 @@ const HOW_IT_WORKS = [
 ];
 
 export default function SousVidePage() {
+  const collectionLd = collectionPageSchema({
+    name: "LAVA Sous Vide Machines",
+    description: "LAVA sous vide precision cookers South Africa. Restaurant-quality steak, fish & vegetables at home — vacuum sealed and slow-cooked to perfection. German build.",
+    url: "/products/sous-vide",
+    image: "/images/og-fallback/og-sous-vide.jpg",
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Sous Vide", url: "/products/sous-vide" },
+  ]);
+
   return (
     <main className="min-h-screen bg-white">
+      <JsonLd data={[collectionLd, crumbLd]} />
 
       {/* ── Page Hero ─────────────────────────────────────────────────── */}
       <section className="bg-primary py-16">

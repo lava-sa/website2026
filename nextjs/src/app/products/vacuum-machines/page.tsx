@@ -1,15 +1,17 @@
-import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
 import ComparisonTable from "@/components/shop/ComparisonTable";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "LAVA Vacuum Sealing Machines",
   description:
-    "Browse the full range of LAVA vacuum sealing machines. From compact home models to commercial industrial sealers — all made in Germany with a 2-year warranty.",
-};
+    "LAVA vacuum sealers South Africa — V.100, V.300 Premium X, V.333 Chrome, V.400 Premium. German-engineered for hunters, butchers & home cooks. 2-year warranty.",
+  path: "/products/vacuum-machines",
+});
 
 export const revalidate = 3600;
 
@@ -85,8 +87,21 @@ export default async function VacuumMachinesPage() {
   const featured = products.filter((p) => p.is_featured);
   const standard = products.filter((p) => !p.is_featured);
 
+  const collectionLd = collectionPageSchema({
+    name: "LAVA Vacuum Sealing Machines",
+    description: "LAVA vacuum sealers South Africa — V.100, V.300 Premium X, V.333 Chrome, V.400 Premium. German-engineered for hunters, butchers & home cooks. 2-year warranty.",
+    url: "/products/vacuum-machines",
+    image: "/images/og-fallback/og-machines.jpg",
+    items: products.map((p) => ({ name: p.name, url: `/products/${p.slug}`, image: p.primary_image_url })),
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Vacuum Machines", url: "/products/vacuum-machines" },
+  ]);
+
   return (
     <main className="min-h-screen bg-white">
+      <JsonLd data={[collectionLd, crumbLd]} />
 
       {/* ── Page Hero ─────────────────────────────────────────────────── */}
       <section className="bg-primary py-16">

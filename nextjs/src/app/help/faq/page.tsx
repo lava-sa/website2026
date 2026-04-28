@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { Phone, Mail, ArrowRight } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
-import { faqSchema } from "@/lib/seo";
+import { faqSchema, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Frequently Asked Questions",
   description:
     "Everything you need to know about LAVA vacuum sealers — buying, using, maintaining and troubleshooting. Answers from people who use these machines every day.",
-};
+  path: "/help/faq",
+});
 
 const faqs = [
   {

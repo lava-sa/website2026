@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -13,12 +12,16 @@ import {
   ArrowRight,
   Quote,
 } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, webPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: { absolute: "About Lava-SA — German Vacuum Sealers Since 2007" },
+export const metadata = pageMetadata({
+  title: "About Lava-SA — German Vacuum Sealers Since 2007",
   description:
-    "Lava South Africa has been the exclusive distributor of German-engineered LAVA vacuum sealers since 2007. Built on quality, sustainability and a passion for food preservation.",
-};
+    "Lava South Africa is the exclusive distributor of German-engineered LAVA vacuum sealers since 2007. Built on quality, sustainability and a passion for food preservation.",
+  path: "/about",
+  titleAbsolute: true,
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -64,8 +67,20 @@ const TIMELINE = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function AboutPage() {
+  const pageLd = webPageSchema({
+    type: "AboutPage",
+    name: "About Lava-SA — German Vacuum Sealers Since 2007",
+    description: "Lava South Africa is the exclusive distributor of German-engineered LAVA vacuum sealers since 2007. Built on quality, sustainability and a passion for food preservation.",
+    url: "/about",
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "About", url: "/about" },
+  ]);
+
   return (
     <main className="min-h-screen bg-white">
+      <JsonLd data={[pageLd, crumbLd]} />
 
       {/* ════════════════════════════════════════════════════════════════════
           SECTION 1 — HERO
