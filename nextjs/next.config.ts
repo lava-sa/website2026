@@ -77,12 +77,6 @@ const nextConfig: NextConfig = {
         destination: "https://www.lava-sa.com/:path*",
         permanent: true,
       },
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "www.lava-sa.com" }],
-        destination: "https://www.lava-sa.com/:path*",
-        permanent: true,
-      },
     ];
   },
   async rewrites() {
