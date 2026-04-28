@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Embossed Vacuum Rolls — Custom Length Vacuum Packaging",
   description:
-    "LAVA embossed vacuum rolls in multiple widths. Cut exactly the length you need. BPA-free, food-safe, and compatible with all LAVA machines.",
-};
+    "LAVA embossed vacuum rolls South Africa — cut to any length. BPA-free, freezer-safe, sous vide compatible. Works with every LAVA vacuum sealing machine.",
+  path: "/products/vacuum-rolls",
+});
 
 export const revalidate = 3600;
 
@@ -30,8 +31,22 @@ export default async function VacuumRollsPage() {
     // Supabase not available
   }
 
+  const collectionLd = collectionPageSchema({
+    name: "Embossed Vacuum Rolls — Custom Length Vacuum Packaging",
+    description: "LAVA embossed vacuum rolls South Africa — cut to any length. BPA-free, freezer-safe, sous vide compatible. Works with every LAVA vacuum sealing machine.",
+    url: "/products/vacuum-rolls",
+    image: "/images/og-fallback/og-bags-rolls.jpg",
+    items: rolls.map((p) => ({ name: p.name, url: `/products/${p.slug}`, image: p.primary_image_url })),
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Vacuum Bags & Rolls", url: "/products/bags-rolls" },
+    { name: "Embossed Vacuum Rolls", url: "/products/vacuum-rolls" },
+  ]);
+
   return (
     <main className="min-h-screen bg-white">
+      <JsonLd data={[collectionLd, crumbLd]} />
       {/* ── Breadcrumb ──────────────────────────────────────────────── */}
       <nav className="bg-surface border-b border-border py-4">
         <div className="section-container flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-copy-muted">

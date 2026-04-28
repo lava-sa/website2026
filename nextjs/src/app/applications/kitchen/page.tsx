@@ -1,17 +1,31 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image"; // 👈 ADDED
+import Image from "next/image";
 import { ArrowRight, CheckCircle } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, webPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Vacuum Sealing for Home Kitchen & Meal Prep",
   description:
-    "Meal prep, bulk buying, sous vide, load-shedding protection and zero food waste — LAVA in the home kitchen pays for itself within the first year.",
-};
+    "Meal prep, bulk buying, sous vide, load-shedding protection and zero food waste — LAVA in the South African home kitchen pays for itself within the first year.",
+  path: "/applications/kitchen",
+});
 
 export default function KitchenApplicationPage() {
+  const pageLd = webPageSchema({
+    name: "Vacuum Sealing for Home Kitchen & Meal Prep",
+    description: "Meal prep, bulk buying, sous vide, load-shedding protection and zero food waste — LAVA in the South African home kitchen pays for itself within the first year.",
+    url: "/applications/kitchen",
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Applications", url: "/applications" },
+    { name: "Home Kitchen", url: "/applications/kitchen" },
+  ]);
+
   return (
     <main className="py-16">
+      <JsonLd data={[pageLd, crumbLd]} />
       <div className="section-container max-w-3xl">
 
         <div className="mb-10">

@@ -1,17 +1,31 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, AlertTriangle } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, webPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Vacuum Sealing Biltong & Charcuterie in South Africa",
   description:
-    "Biltong makers, droëwors producers and charcuterie enthusiasts — vacuum sealing extends shelf life, enables distribution and protects your product. The correct technique for dry and wet biltong.",
-};
+    "Biltong, droëwors and charcuterie — vacuum sealing extends shelf life and protects your product. The correct technique for dry and wet biltong, by Lava-SA.",
+  path: "/applications/biltong",
+});
 
 export default function BiltongPage() {
+  const pageLd = webPageSchema({
+    name: "Vacuum Sealing Biltong & Charcuterie in South Africa",
+    description: "Biltong, droëwors and charcuterie — vacuum sealing extends shelf life and protects your product. The correct technique for dry and wet biltong, by Lava-SA.",
+    url: "/applications/biltong",
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Applications", url: "/applications" },
+    { name: "Biltong & Charcuterie", url: "/applications/biltong" },
+  ]);
+
   return (
     <main className="py-16">
+      <JsonLd data={[pageLd, crumbLd]} />
       <div className="section-container max-w-3xl">
 
         <div className="mb-10">

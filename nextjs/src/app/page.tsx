@@ -4,10 +4,22 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import StaticHero from "@/components/home/StaticHero";
 
 export const metadata: Metadata = {
-  title: { absolute: "Lava-SA — German Vacuum Sealers Since 2007" },
+  title: {
+    absolute:
+      "LAVA Vacuum Sealers South Africa | Premium German Food Preservation Since 2007 | Lava-SA",
+  },
   description:
-    "Buy LAVA German vacuum sealers in South Africa. Machines, bags, rolls, containers and spare parts — trusted by hunters, biltong makers, anglers and home cooks since 2007. 2-year warranty, nationwide delivery.",
+    "LAVA vacuum sealers South Africa — German-engineered V.300 Premium X, bags, rolls & accessories. 2-year warranty, free shipping over R2,500. Since 2007.",
   alternates: { canonical: "/" },
+  openGraph: {
+    title:
+      "LAVA Vacuum Sealers South Africa | Premium German Food Preservation Since 2007 | Lava-SA",
+    url: "/",
+  },
+  twitter: {
+    title:
+      "LAVA Vacuum Sealers South Africa | Premium German Food Preservation | Lava-SA",
+  },
 };
 
 const websiteSchema = {

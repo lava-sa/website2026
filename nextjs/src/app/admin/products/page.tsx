@@ -9,13 +9,14 @@ type ProductRow = {
   regular_price: number; sale_price: number | null;
   stock_status: StockStatus; is_published: boolean; is_featured: boolean;
   sort_order: number; categories: { name: string } | null;
+  primary_image_url: string | null;
 };
 
 async function getProducts() {
   const supabase = createServiceClient();
   const { data } = await supabase
     .from("products")
-    .select("id, name, slug, sku, regular_price, sale_price, stock_status, is_published, is_featured, sort_order, categories(name)")
+    .select("id, name, slug, sku, regular_price, sale_price, stock_status, is_published, is_featured, sort_order, primary_image_url, categories(name)")
     .order("sort_order", { ascending: true });
   return (data ?? []) as unknown as ProductRow[];
 }

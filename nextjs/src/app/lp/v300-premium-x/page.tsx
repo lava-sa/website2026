@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
@@ -6,14 +5,16 @@ import V300InstantCheckout from "@/components/landing/V300InstantCheckout";
 import V300ManualGallery from "@/components/landing/V300ManualGallery";
 import V300LpReviews from "@/components/landing/V300LpReviews";
 import { V300_MANUAL_DE_EXCERPT } from "@/content/v300-manual-de-excerpt";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "V.300 Premium X — Buy the Machine South Africa Trusts | Lava-SA",
   description:
     "German-engineered LAVA V.300 Premium X — direct add-to-cart, 2-year warranty, free shipping over R2,500. For hunters, anglers, and serious kitchens.",
-  alternates: { canonical: "/lp/v300-premium-x" },
-  robots: { index: false, follow: true },
-};
+  path: "/lp/v300-premium-x",
+  titleAbsolute: true,
+  noIndex: true,
+});
 
 const RIBBON_BENEFITS = [
   "Stop losing game, fish & bulk prep to failed seals and freezer burn",

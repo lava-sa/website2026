@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Vacuum Containers & Lids — Acrylic & Stainless Steel",
   description:
-    "LAVA vacuum containers in acrylic and stainless steel. From 650ml to 4000ml — compatible with all LAVA vacuum sealing machines. Preserve, marinate and store with ease.",
-};
+    "LAVA vacuum containers South Africa — acrylic & stainless steel, 650ml to 4000ml. Compatible with every LAVA sealer. Preserve, marinate and store fresh.",
+  path: "/products/containers-lids",
+});
 
 export const revalidate = 3600;
 
@@ -26,8 +28,21 @@ export default async function ContainersLidsPage() {
   const esLineSets = products.filter((p) => p.tags?.includes("stainless-steel") && p.tags?.includes("set"));
   const lids      = products.filter((p) => p.tags?.includes("lid"));
 
+  const collectionLd = collectionPageSchema({
+    name: "Vacuum Containers & Lids — Acrylic & Stainless Steel",
+    description: "LAVA vacuum containers South Africa — acrylic & stainless steel, 650ml to 4000ml. Compatible with every LAVA sealer. Preserve, marinate and store fresh.",
+    url: "/products/containers-lids",
+    image: "/images/og-fallback/og-containers.jpg",
+    items: products.map((p) => ({ name: p.name, url: `/products/${p.slug}`, image: p.primary_image_url })),
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Containers & Lids", url: "/products/containers-lids" },
+  ]);
+
   return (
     <main className="min-h-screen bg-white">
+      <JsonLd data={[collectionLd, crumbLd]} />
 
       {/* ── Hero ───────────────────────────────────────────────────────────── */}
       <section className="bg-primary py-16">

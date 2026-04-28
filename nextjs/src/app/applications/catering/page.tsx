@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, CheckCircle, Clock, TrendingDown, ShieldCheck } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, webPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Catering & Restaurants — Vacuum Sealing for Professional Kitchens",
   description:
-    "Professional vacuum sealing for caterers, restaurants and food service businesses. Reduce waste, extend shelf life, improve portion control and deliver better food quality every time.",
-};
+    "Professional vacuum sealing for South African caterers, restaurants and food service. Reduce waste, extend shelf life, improve portion control. LAVA German build.",
+  path: "/applications/catering",
+});
 
 const benefits = [
   {
@@ -68,8 +70,20 @@ function ImagePlaceholder({ label }: { label: string }) {
 }
 
 export default function CateringPage() {
+  const pageLd = webPageSchema({
+    name: "Catering & Restaurants — Vacuum Sealing for Professional Kitchens",
+    description: "Professional vacuum sealing for South African caterers, restaurants and food service. Reduce waste, extend shelf life, improve portion control. LAVA German build.",
+    url: "/applications/catering",
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Applications", url: "/applications" },
+    { name: "Catering & Restaurants", url: "/applications/catering" },
+  ]);
+
   return (
     <main>
+      <JsonLd data={[pageLd, crumbLd]} />
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="bg-primary py-20">

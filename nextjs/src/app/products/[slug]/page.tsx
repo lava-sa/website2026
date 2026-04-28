@@ -43,19 +43,41 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   try {
     const product = await getProductBySlug(slug);
     if (!product) return {};
-    const title = product.seo_title || `${product.name} — Lava-SA`;
+
+    // Vacuum-sealer machines get a richer SEO title with German Engineering + warranty
+    // hooks. Other categories use the bare product name (so a roll or knife doesn't
+    // claim "Vacuum Sealer"). DB-supplied seo_title overrides everything as absolute.
+    const categorySlug = product.categories?.slug ?? "";
+    const isMachine = categorySlug === "vacuum-machines";
+    const machineFallback = `LAVA ${product.name.replace(/^LAVA\s+/i, "")} Vacuum Sealer | German Engineering | 2-Year Warranty | Lava-SA`;
+
+    const titleField: Metadata["title"] = product.seo_title
+      ? { absolute: product.seo_title }
+      : isMachine
+        ? { absolute: machineFallback }
+        : product.name;
+
+    const fallbackDescription = isMachine
+      ? `Buy the LAVA ${product.name.replace(/^LAVA\s+/i, "")} vacuum sealer in South Africa. German engineering, 2-year warranty, free shipping over R2,500. Trusted since 2007.`
+      : `Buy ${product.name} from Lava-SA — German quality, 2-year warranty, nationwide South African delivery. Trusted distributor since 2007.`;
+
     const description =
       product.seo_description ||
       product.short_description ||
-      `Buy ${product.name} from Lava-SA. German quality, 2-year warranty, nationwide delivery.`;
-    const image = product.primary_image_url || "/images/headers/lava-sa-vacuum-sealers-V300-header-pick-1250.jpg";
+      fallbackDescription;
+
+    const ogTitle =
+      product.seo_title ||
+      (isMachine ? machineFallback : `${product.name} | Lava-SA — German Vacuum Sealers`);
+    const image = product.primary_image_url || categoryOgFallback(categorySlug);
     const canonical = `/products/${slug}`;
+
     return {
-      title,
+      title: titleField,
       description,
       alternates: { canonical },
       openGraph: {
-        title,
+        title: ogTitle,
         description,
         url: canonical,
         type: "website",
@@ -63,7 +85,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       },
       twitter: {
         card: "summary_large_image",
-        title,
+        title: ogTitle,
         description,
         images: [image],
       },
@@ -75,7 +97,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 import reviewsData from "@/data/reviews.json";
 import JsonLd from "@/components/seo/JsonLd";
-import { productSchema, breadcrumbSchema } from "@/lib/seo";
+import { productSchema, breadcrumbSchema, categoryOgFallback } from "@/lib/seo";
 import type { ProductImage } from "@/types/product";
 
 // ── Spec labels ───────────────────────────────────────────────────────────────

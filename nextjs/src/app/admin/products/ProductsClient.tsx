@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Search, Plus, Pencil } from "lucide-react";
+import { Search, Plus, Pencil, ImageOff, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import StockToggle from "@/components/admin/StockToggle";
 import PublishToggle from "@/components/admin/PublishToggle";
@@ -26,6 +26,7 @@ type ProductRow = {
   regular_price: number; sale_price: number | null;
   stock_status: StockStatus; is_published: boolean; is_featured: boolean;
   sort_order: number; categories: { name: string } | null;
+  primary_image_url: string | null;
 };
 
 function fmt(n: number) {
@@ -43,7 +44,13 @@ export default function ProductsClient({
   const [stock,    setStock]    = useState("all");
   const [pubFilter,setPubFilter]= useState("all");
   const [featuredFilter, setFeaturedFilter] = useState("all");
+  const [imageFilter, setImageFilter] = useState<"all"|"missing">("all");
   const [sortBy,   setSortBy]   = useState<"sort_order"|"name_asc"|"name_desc"|"price_asc"|"price_desc">("sort_order");
+
+  const missingImageCount = useMemo(
+    () => products.filter((p) => !p.primary_image_url).length,
+    [products],
+  );
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -54,6 +61,7 @@ export default function ProductsClient({
       if (pubFilter === "unpublished" &&  p.is_published) return false;
       if (featuredFilter === "featured" && !p.is_featured) return false;
       if (featuredFilter === "not_featured" && p.is_featured) return false;
+      if (imageFilter === "missing" && p.primary_image_url) return false;
       if (!q) return true;
       return (
         p.name.toLowerCase().includes(q) ||
@@ -71,7 +79,7 @@ export default function ProductsClient({
       return 0;
     });
     return rows;
-  }, [products, search, category, stock, pubFilter, featuredFilter, sortBy]);
+  }, [products, search, category, stock, pubFilter, featuredFilter, imageFilter, sortBy]);
 
   const selectCls = "border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:border-primary transition-colors";
   const hasFilters =
@@ -79,10 +87,32 @@ export default function ProductsClient({
     category !== "all" ||
     stock !== "all" ||
     pubFilter !== "all" ||
-    featuredFilter !== "all";
+    featuredFilter !== "all" ||
+    imageFilter !== "all";
 
   return (
     <div className="max-w-6xl">
+
+      {/* Missing-image banner */}
+      {missingImageCount > 0 && (
+        <div className="mb-4 flex items-start gap-3 border-l-4 border-amber-500 bg-amber-50 px-4 py-3">
+          <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+          <div className="flex-1 text-sm text-amber-900">
+            <p className="font-bold">
+              {missingImageCount} {missingImageCount === 1 ? "product is" : "products are"} missing a primary image
+            </p>
+            <p className="text-xs mt-0.5 text-amber-800">
+              Without a primary image, these products fall back to the default V.300 banner when shared on WhatsApp, Facebook or Google. Upload an image to fix the social preview.
+            </p>
+          </div>
+          <button
+            onClick={() => setImageFilter(imageFilter === "missing" ? "all" : "missing")}
+            className="shrink-0 text-xs font-bold uppercase tracking-wide bg-amber-600 hover:bg-amber-700 text-white px-3 py-2 transition-colors"
+          >
+            {imageFilter === "missing" ? "Show all" : "Show only these"}
+          </button>
+        </div>
+      )}
 
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -154,6 +184,7 @@ export default function ProductsClient({
               setStock("all");
               setPubFilter("all");
               setFeaturedFilter("all");
+              setImageFilter("all");
             }}
             className="text-xs text-gray-400 hover:text-primary transition-colors whitespace-nowrap">
             Clear filters
@@ -177,11 +208,18 @@ export default function ProductsClient({
                 <tr key={p.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-5 py-4">
                     <p className="font-semibold text-gray-900 leading-snug">{p.name}</p>
-                    {p.is_featured && (
-                      <span className="text-[9px] font-bold uppercase bg-secondary/10 text-secondary px-1.5 py-0.5 mt-0.5 inline-block">
-                        Featured
-                      </span>
-                    )}
+                    <div className="flex flex-wrap gap-1.5 mt-0.5">
+                      {p.is_featured && (
+                        <span className="text-[9px] font-bold uppercase bg-secondary/10 text-secondary px-1.5 py-0.5 inline-block">
+                          Featured
+                        </span>
+                      )}
+                      {!p.primary_image_url && (
+                        <span className="text-[9px] font-bold uppercase bg-amber-100 text-amber-800 px-1.5 py-0.5 inline-flex items-center gap-1">
+                          <ImageOff className="h-3 w-3" /> No image
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-5 py-4 text-gray-500 font-mono text-xs">{p.sku ?? "—"}</td>
                   <td className="px-5 py-4 text-gray-500 text-xs">{p.categories?.name ?? "—"}</td>

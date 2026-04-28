@@ -1,17 +1,31 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image"; // 👈 ADDED
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
+import { pageMetadata, webPageSchema, breadcrumbSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Hunters & Game Processing — Vacuum Sealing Game Meat in South Africa",
   description:
     "Process blesbok, kudu, impala, warthog and eland properly. Vacuum seal wild game for 2–3 years without freezer burn. South Africa's hunters' choice since 2007.",
-};
+  path: "/applications/hunter-game",
+});
 
 export default function HunterGamePage() {
+  const pageLd = webPageSchema({
+    name: "Hunters & Game Processing — Vacuum Sealing Game Meat in South Africa",
+    description: "Process blesbok, kudu, impala, warthog and eland properly. Vacuum seal wild game for 2–3 years without freezer burn. South Africa's hunters' choice since 2007.",
+    url: "/applications/hunter-game",
+  });
+  const crumbLd = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Applications", url: "/applications" },
+    { name: "Hunters & Game", url: "/applications/hunter-game" },
+  ]);
+
   return (
     <main className="py-16">
+      <JsonLd data={[pageLd, crumbLd]} />
       <div className="section-container max-w-3xl">
 
         <div className="mb-10">
