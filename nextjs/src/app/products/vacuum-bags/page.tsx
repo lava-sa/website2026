@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
-import HuntexBanner from "@/components/home/HuntexBanner";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
@@ -114,7 +113,6 @@ export default async function VacuumBagsPage() {
         </div>
       </section>
 
-      <HuntexBanner variant="section" />
     </main>
   );
 }

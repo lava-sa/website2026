@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
-import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
   title: "Professional Meat Processing Machinery",
@@ -130,7 +129,6 @@ export default async function ButcheryMachineryPage() {
         </div>
       </section>
 
-      <HuntexBanner variant="section" />
     </main>
   );
 }

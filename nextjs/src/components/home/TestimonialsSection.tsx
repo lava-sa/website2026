@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 const testimonials = [
   {
@@ -96,23 +95,6 @@ const TestimonialsSection = () => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* ── Submit a review CTA ──────────────────────────────────── */}
-        <div className="mt-12 border border-border bg-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <p className="font-bold text-primary text-lg leading-snug">Happy with your LAVA machine?</p>
-            <p className="text-sm text-copy-muted mt-1 max-w-md leading-relaxed">
-              Your review helps other South Africans make the right choice. It takes 60 seconds —
-              and Anneke personally reads every one.
-            </p>
-          </div>
-          <Link
-            href="/submit-review"
-            className="shrink-0 bg-secondary text-white text-sm font-bold px-7 py-3.5 hover:bg-primary transition-colors whitespace-nowrap"
-          >
-            Leave a Review →
-          </Link>
         </div>
 
       </div>

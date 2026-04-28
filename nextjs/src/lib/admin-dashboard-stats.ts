@@ -9,8 +9,16 @@ const REVENUE_STATUSES_CURRENT = new Set(["paid"]);
 /**
  * WooCommerce history — Anneke often leaves orders in Processing after dispatch.
  * We treat completed + processing + on-hold as “realised / operational” sales (excludes pending payment, cancelled, refunded).
+ * Accept both `wc-*` and plain slugs (some CSVs / DB rows omit the prefix).
  */
-const REVENUE_STATUSES_WC = new Set(["wc-completed", "wc-processing", "wc-on-hold"]);
+const REVENUE_STATUSES_WC = new Set([
+  "wc-completed",
+  "wc-processing",
+  "wc-on-hold",
+  "completed",
+  "processing",
+  "on-hold",
+]);
 
 const STATUS_COLOURS: Record<string, string> = {
   pending: "#f59e0b",
@@ -90,6 +98,8 @@ export interface DashboardStats {
     seasonalMonthlyTargets: MonthlyTargetRow[];
   };
   revenueLensExplanation: string;
+  /** Populated when any Supabase query failed (wrong keys, RLS, missing table, etc.) */
+  loadErrors: string[];
 }
 
 function toNumber(v: number | string | null | undefined): number {
@@ -102,7 +112,11 @@ function countsAsRevenueCurrent(status: string): boolean {
 }
 
 function countsAsRevenueWc(status: string): boolean {
-  return REVENUE_STATUSES_WC.has(status);
+  const raw = (status ?? "").trim().toLowerCase().replace(/\s+/g, "-");
+  if (!raw) return false;
+  if (REVENUE_STATUSES_WC.has(raw)) return true;
+  const normalized = raw.startsWith("wc-") ? raw : `wc-${raw}`;
+  return REVENUE_STATUSES_WC.has(normalized);
 }
 
 function parseHistoryLineItems(raw: unknown): Array<{ name: string; qty: number; lineTotal: number }> {
@@ -137,6 +151,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const supabase = createServiceClient();
   const estimatedMarginPct = getEstimatedMarginPct();
   const yoyGrowthPct = getTargetYoYGrowth();
+  const loadErrors: string[] = [];
 
   const [products, reviews, lowStock, currentOrders, historyOrders, customers] = await Promise.all([
     supabase.from("products").select("id", { count: "exact", head: true }).eq("is_published", true),
@@ -152,19 +167,20 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     supabase.from("customers").select("id", { count: "exact", head: true }),
   ]);
 
-  const productCount = products.status === "fulfilled" ? (products.value.count ?? 0) : 0;
-  const pendingReviews = reviews.status === "fulfilled" ? (reviews.value.count ?? 0) : 0;
-  const outOfStock = lowStock.status === "fulfilled" ? (lowStock.value.data ?? []) : [];
-  const customerCount = customers.status === "fulfilled" ? (customers.value.count ?? 0) : 0;
+  if (products.error) loadErrors.push(`products: ${products.error.message}`);
+  if (reviews.error) loadErrors.push(`reviews: ${reviews.error.message}`);
+  if (lowStock.error) loadErrors.push(`out-of-stock products: ${lowStock.error.message}`);
+  if (currentOrders.error) loadErrors.push(`orders: ${currentOrders.error.message}`);
+  if (historyOrders.error) loadErrors.push(`order_history: ${historyOrders.error.message}`);
+  if (customers.error) loadErrors.push(`customers: ${customers.error.message}`);
 
-  const currentRows: OrderRow[] =
-    currentOrders.status === "fulfilled" && currentOrders.value.data
-      ? (currentOrders.value.data as OrderRow[])
-      : [];
-  const historyRows: HistoryRow[] =
-    historyOrders.status === "fulfilled" && historyOrders.value.data
-      ? (historyOrders.value.data as HistoryRow[])
-      : [];
+  const productCount = products.error ? 0 : products.count ?? 0;
+  const pendingReviews = reviews.error ? 0 : reviews.count ?? 0;
+  const outOfStock = lowStock.error ? [] : (lowStock.data ?? []);
+  const customerCount = customers.error ? 0 : customers.count ?? 0;
+
+  const currentRows: OrderRow[] = currentOrders.error ? [] : ((currentOrders.data ?? []) as OrderRow[]);
+  const historyRows: HistoryRow[] = historyOrders.error ? [] : ((historyOrders.data ?? []) as HistoryRow[]);
 
   const allOrdersCount = currentRows.length + historyRows.length;
 
@@ -378,5 +394,6 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       seasonalMonthlyTargets,
     },
     revenueLensExplanation,
+    loadErrors,
   };
 }

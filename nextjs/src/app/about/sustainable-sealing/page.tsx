@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Recycle, Clock, TrendingDown, Leaf } from "lucide-react";
-import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
   title: "Discover Sustainable Sealing",
@@ -244,7 +243,6 @@ export default function SustainableSealingPage() {
         </div>
       </section>
 
-      <HuntexBanner variant="section" />
 
     </main>
   );

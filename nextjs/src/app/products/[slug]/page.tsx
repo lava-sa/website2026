@@ -76,6 +76,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 import reviewsData from "@/data/reviews.json";
 import JsonLd from "@/components/seo/JsonLd";
 import { productSchema, breadcrumbSchema } from "@/lib/seo";
+import type { ProductImage } from "@/types/product";
 
 // ── Spec labels ───────────────────────────────────────────────────────────────
 const SPEC_LABELS: Record<string, string> = {
@@ -166,12 +167,28 @@ export default async function ProductDetailPage({
 
   if (!product) notFound();
 
-  const images   = sortImages(product.product_images ?? []);
+  const sortedGallery = sortImages(product.product_images ?? []);
+  const images: ProductImage[] =
+    sortedGallery.length > 0
+      ? sortedGallery
+      : product.primary_image_url
+        ? [
+            {
+              id: `${product.id}-primary`,
+              product_id: product.id,
+              url: product.primary_image_url,
+              alt: product.name,
+              is_primary: true,
+              sort_order: 0,
+            },
+          ]
+        : [];
   const specs    = product.specs ?? {};
   const hasSpecs = Object.keys(specs).length > 0;
   const isOnOrder = product.stock_status === "on_order";
   const price     = product.sale_price ?? product.regular_price;
   const isVacuumMachine = product.categories?.slug === "vacuum-machines";
+  const isSousVide = product.categories?.slug === "sous-vide";
   const funnelConfig = parseFunnelConfig(product.specs?.funnel_config);
 
   // ── Consumables (bags + rolls) — only loaded on machine pages ───────────────
@@ -467,7 +484,9 @@ export default async function ProductDetailPage({
         <section className="py-20 bg-surface border-y border-border">
           <div className="section-container max-w-3xl mx-auto">
             <p className="overline mb-3">Everything you need to know</p>
-            <h2 className="text-3xl font-bold text-primary mb-8">About This Machine</h2>
+            <h2 className="text-3xl font-bold text-primary mb-8">
+              {isSousVide ? "About This Product" : "About This Machine"}
+            </h2>
             <div
               className="prose prose-lg max-w-none text-copy"
               dangerouslySetInnerHTML={{ __html: product.description }}

@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "crop:catalog-images": "node scripts/crop-product-catalog-images.mjs"
+    "crop:catalog-images": "node scripts/crop-product-catalog-images.mjs",
+    "import:woo-orders": "node scripts/import-woo-orders-csv.mjs",
+    "import:wp-users": "node scripts/import-wp-users-csv.mjs",
+    "cleanup:spam-customers": "node scripts/cleanup-spam-customers.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.89.0",

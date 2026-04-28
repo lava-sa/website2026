@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
-import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
   title: "Replacement Spare Parts",
@@ -279,9 +278,6 @@ export default async function SparePartsPage() {
           </div>
         </div>
       </section>
-
-      {/* ── Huntex Banner ──────────────────────────────────────────────────── */}
-      <HuntexBanner variant="section" />
 
     </main>
   );

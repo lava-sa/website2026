@@ -38,14 +38,13 @@ const orgSchema = {
 
 import StatsBand from "@/components/home/StatsBand";
 import TrustBar from "@/components/home/TrustBar";
-import ReviewCTA from "@/components/home/ReviewCTA";
 import ProductGallery from "@/components/home/ProductGallery";
 import HeritageSection from "@/components/home/HeritageSection";
 import QualitySection from "@/components/home/QualitySection";
 import SustainabilitySection from "@/components/home/SustainabilitySection";
 import GreenLivingSection from "@/components/home/GreenLivingSection";
-import HuntexBanner from "@/components/home/HuntexBanner";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
+import ReviewCTA from "@/components/home/ReviewCTA";
 import IndustryLeadersSection from "@/components/home/IndustryLeadersSection";
 import FinalCTA from "@/components/home/FinalCTA";
 import MailingListSignup from "@/components/common/MailingListSignup";
@@ -64,10 +63,7 @@ export default function HomePage() {
       {/* 2b — Trust badges: one consolidated strip */}
       <TrustBar />
 
-      {/* 3 — Customer review CTA: written + video */}
-      <ReviewCTA />
-
-      {/* 4 — Product range: V.100, V.300, V.333, V.400 */}
+      {/* 3 — Product range: V.100, V.300, V.333, V.400 */}
       <ProductGallery />
 
       {/* 5 — Heritage: German family story, Landig family */}
@@ -82,13 +78,12 @@ export default function HomePage() {
       {/* 8 — Green Living: reforestation, responsible future */}
       <GreenLivingSection />
 
-      {/* 9 — Event: Huntex 2026 */}
-      <HuntexBanner variant="section" />
-
-      {/* 10 — Social proof: 3 verified reviews */}
+      {/* 9 — Social proof: 3 verified reviews + full review / gratitude CTA */}
       <TestimonialsSection />
 
-      {/* 11 — Industry leaders: SA business partners */}
+      <ReviewCTA />
+
+      {/* 10 — Industry leaders: SA business partners */}
       <IndustryLeadersSection />
 
       <section className="py-14 bg-surface border-y border-border">

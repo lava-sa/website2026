@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Leaf, TreePine, Globe, Users } from "lucide-react";
-import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
   title: "Join Our Green Mission",
@@ -222,7 +221,6 @@ export default function GreenMissionPage() {
         </div>
       </section>
 
-      <HuntexBanner variant="section" />
 
     </main>
   );

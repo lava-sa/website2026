@@ -15,6 +15,29 @@ type Subscriber = {
   created_at: string;
 };
 
+type Broadcast = {
+  id: string;
+  name: string;
+  segment_type: "opted_in" | "purchasers" | "region";
+  region: string | null;
+  template_key: string;
+  subject: string;
+  status: "draft" | "scheduled" | "sending" | "sent" | "failed";
+  scheduled_for: string | null;
+  sent_at: string | null;
+  recipient_count: number;
+  sent_count: number;
+  failed_count: number;
+  created_at: string;
+};
+
+type Template = {
+  key: string;
+  name: string;
+  subject: string;
+  html_body: string;
+};
+
 async function getSubscribers(): Promise<Subscriber[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
@@ -29,12 +52,40 @@ async function getSubscribers(): Promise<Subscriber[]> {
   return (data ?? []) as Subscriber[];
 }
 
+async function getBroadcasts(): Promise<Broadcast[]> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("marketing_broadcasts")
+    .select(`
+      id, name, segment_type, region, template_key, subject, status, scheduled_for,
+      sent_at, recipient_count, sent_count, failed_count, created_at
+    `)
+    .order("created_at", { ascending: false })
+    .limit(50);
+  if (error) return [];
+  return (data ?? []) as Broadcast[];
+}
+
+async function getTemplates(): Promise<Template[]> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("marketing_email_templates")
+    .select("key, name, subject, html_body")
+    .order("name", { ascending: true });
+  if (error) return [];
+  return (data ?? []) as Template[];
+}
+
 export default async function MailingListPage() {
-  const subscribers = await getSubscribers();
+  const [subscribers, broadcasts, templates] = await Promise.all([
+    getSubscribers(),
+    getBroadcasts(),
+    getTemplates(),
+  ]);
 
   return (
     <AdminShell>
-      <MailingListClient subscribers={subscribers} />
+      <MailingListClient subscribers={subscribers} broadcasts={broadcasts} templates={templates} />
     </AdminShell>
   );
 }

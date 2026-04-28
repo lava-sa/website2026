@@ -323,7 +323,12 @@ function VideoReviewForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ path, name, product }),
       });
-      if (!metaRes.ok) { setErrMsg("Step 3 failed: metadata save"); setMode("error"); return; }
+      if (!metaRes.ok) {
+        const j = await metaRes.json().catch(() => ({}));
+        setErrMsg(typeof j?.error === "string" ? j.error : "Step 3 failed: could not save your video. Try WhatsApp or email us.");
+        setMode("error");
+        return;
+      }
       setMode("done");
     } catch (err) {
       setErrMsg(err instanceof Error ? err.message : "Unknown error");

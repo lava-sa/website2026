@@ -6,6 +6,8 @@ const STATIC_ROUTES = [
   "",
   "/about",
   "/contact",
+  "/v300-premium-x",
+  "/lp/v300-premium-x",
   "/blog",
   "/lava-tv",
   "/applications",

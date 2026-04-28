@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Shield, Wrench, Clock, Star } from "lucide-react";
-import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
   title: "LAVA's Lasting Quality — Built to Last Decades",
@@ -198,7 +197,6 @@ export default function LastingQualityPage() {
         </div>
       </section>
 
-      <HuntexBanner variant="section" />
 
     </main>
   );

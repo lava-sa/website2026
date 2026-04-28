@@ -79,6 +79,7 @@ const SiteFooter = () => {
               <li><Link href="/vacuum-packaging/advantages" className="text-white/70 hover:text-white transition-colors">Why Vacuum Seal?</Link></li>
               <li><Link href="/lava-tv" className="text-white/70 hover:text-white transition-colors">Lava TV</Link></li>
               <li><Link href="/help/faq" className="text-white/70 hover:text-white transition-colors">FAQ</Link></li>
+              <li><Link href="/mailing/unsubscribe" className="text-white/70 hover:text-white transition-colors">Mailing list unsubscribe</Link></li>
               <li><Link href="https://la-va.com" target="_blank" className="text-white/70 hover:text-white transition-colors inline-flex items-center gap-1.5">Lava Germany (HQ) <ExternalLink className="h-3 w-3" /></Link></li>
             </ul>
           </div>

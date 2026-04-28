@@ -29,6 +29,10 @@ export async function POST(req: NextRequest) {
 
     if (dbError) {
       console.error("DB insert error:", dbError);
+      return NextResponse.json(
+        { error: "Could not save your video submission. Please try again or use WhatsApp." },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ success: true });

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
-import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
   title: "Special Offers & Promotions",
@@ -15,13 +14,6 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 const UPCOMING_EVENTS = [
-  {
-    name: "Huntex 2026",
-    date: "24–27 April 2026",
-    location: "Gallagher Estate, Midrand",
-    description:
-      "South Africa's premier hunting & outdoor expo. Look out for exclusive show pricing on vacuum sealers, bags and butchery accessories.",
-  },
   {
     name: "Braai Season",
     date: "August – October",
@@ -163,8 +155,8 @@ export default async function SpecialOffersPage() {
             </div>
             <div className="relative aspect-[4/3] overflow-hidden">
               <Image
-                src="/images/lava-sa-huntex-expo-2026.png"
-                alt="LAVA South Africa at Huntex 2026"
+                src="/images/headers/lava-sa-vacuum-sealers-header-pick-012.webp"
+                alt="LAVA vacuum sealing at trade and outdoor events across South Africa"
                 fill
                 className="object-cover"
               />
@@ -235,9 +227,6 @@ export default async function SpecialOffersPage() {
           </div>
         </div>
       </section>
-
-      {/* ── Huntex Banner ─────────────────────────────────────────────────────── */}
-      <HuntexBanner variant="section" />
 
     </main>
   );

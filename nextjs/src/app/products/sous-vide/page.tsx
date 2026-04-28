@@ -26,7 +26,8 @@ const SOUS_VIDE_PRODUCTS = [
       "Professional precision immersion circulator. Set your temperature, seal your food, and achieve flawless restaurant-quality results every time.",
     regular_price: 4240,
     sale_price: null,
-    primary_image_url: "/images/products/sous-vide/lava-sa-lx20-sous-vide-stick.webp",
+    primary_image_url:
+      "/images/products/sous-vide/lava-sous-vide-stick-lx-20/lava-sous-vide-stick-lx-20.webp",
     stock_status: "in_stock" as const,
     is_featured: false,
     specs: {
@@ -44,12 +45,13 @@ const SOUS_VIDE_PRODUCTS = [
     id: "sv-lx0033",
     sku: "LX0033",
     slug: "lx33-sous-vide-set",
-    name: "Sous Vide Complete Set",
+    name: "Sous Vide Set XXL",
     short_description:
       "Everything you need to start cooking sous vide. Includes the LX 20 stick, 12-litre basin, rack, and insulation cover — ready to go out of the box.",
     regular_price: 6210,
     sale_price: null,
-    primary_image_url: "/images/products/sous-vide/lava-sa-lx33-sous-vide-set.webp",
+    primary_image_url:
+      "/images/products/sous-vide/sous-vide-set-xxl/lava-sous-vide-set-xxl.webp",
     stock_status: "in_stock" as const,
     is_featured: true,
     specs: {

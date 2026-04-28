@@ -44,9 +44,10 @@ export default function ImportHistoryClient() {
         <div>
           <p className="font-bold">Before you import</p>
           <ul className="list-disc pl-4 mt-1 space-y-0.5 text-amber-900/90">
-            <li>Each row needs a numeric <strong>wp_order_id</strong> (Woo order ID) — unique key.</li>
-            <li>Use ISO dates for <strong>order_date</strong> (e.g. 2019-03-15T10:00:00.000Z).</li>
-            <li>Optional <strong>items</strong> column: JSON array of line items (or leave empty / []).</li>
+            <li>Each row needs a numeric order id — we accept <strong>order_id</strong> or <strong>wp_order_id</strong> (Woo) — unique key.</li>
+            <li><strong>order_date</strong>: ISO or Woo format (e.g. <code className="text-xs">2026-04-26 12:38:42</code>) is fine.</li>
+            <li>Wide Woo exports: <strong>status</strong> values like <code className="text-xs">processing</code> are normalised to <code className="text-xs">wc-processing</code>. <strong>Product Item 1…N</strong> columns are mapped into line items for dashboard top products.</li>
+            <li>Optional <strong>items</strong> column: JSON array of line items (or rely on Product Item columns).</li>
             <li>Run <strong>Validate</strong> first; then <strong>Import</strong>.</li>
           </ul>
         </div>

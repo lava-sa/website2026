@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { CheckCircle2, Loader2, Mail } from "lucide-react";
 
 interface Props {
@@ -101,7 +102,14 @@ export default function MailingListSignup({
             )}
           </button>
           <p className={`text-[11px] ${inverted ? "text-white/60" : "text-copy-muted"}`}>
-            No spam. Unsubscribe any time.
+            No spam.{" "}
+            <Link
+              href="/mailing/unsubscribe"
+              className={`underline underline-offset-2 ${inverted ? "text-white/80 hover:text-white" : "text-primary hover:text-secondary"}`}
+            >
+              Unsubscribe
+            </Link>{" "}
+            any time.
           </p>
         </form>
       )}

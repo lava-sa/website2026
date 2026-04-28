@@ -51,13 +51,6 @@ const companies = [
     href: "https://www.ttkfledgelings.co.za/home/",
     tooltip: "Award-winning South African restaurant choosing LAVA for precision food preparation.",
   },
-  {
-    name: "Hunt Expo",
-    category: "Consumer Exhibition",
-    logo: "/images/partners/huntex-logo-dark-a.webp",
-    href: "https://huntex.net/",
-    tooltip: "Southern Africa's premier hunting and outdoor exhibition — powered by LAVA vacuum sealing.",
-  },
 ];
 
 const IndustryLeadersSection = () => {

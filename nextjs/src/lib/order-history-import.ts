@@ -64,6 +64,44 @@ function parseItemsJson(s: string): unknown {
   }
 }
 
+/** WooCommerce exports often use `processing` instead of `wc-processing` — dashboard stats expect wc-* */
+function normalizeWooOrderStatus(raw: string): string {
+  const s = raw.trim().toLowerCase();
+  if (!s) return "wc-completed";
+  if (s.startsWith("wc-")) return s;
+  const map: Record<string, string> = {
+    processing: "wc-processing",
+    completed: "wc-completed",
+    "on-hold": "wc-on-hold",
+    pending: "wc-pending",
+    cancelled: "wc-cancelled",
+    canceled: "wc-cancelled",
+    refunded: "wc-refunded",
+    failed: "wc-failed",
+    trash: "wc-cancelled",
+  };
+  return map[s] ?? `wc-${s.replace(/\s+/g, "-")}`;
+}
+
+/**
+ * WP All Export / Woo wide CSVs: columns like "Product Item 1 Name", "Product Item 1 Quantity", "Product Item 1 Total".
+ */
+function buildItemsFromWooProductColumns(row: Record<string, string>): Array<Record<string, unknown>> {
+  const map = new Map(Object.entries(row).map(([k, v]) => [normHeader(k), (v ?? "").trim()]));
+  const out: Array<Record<string, unknown>> = [];
+  for (let i = 1; i <= 40; i++) {
+    const name = map.get(`product item ${i} name`) ?? "";
+    if (!name) continue;
+    const qtyRaw = map.get(`product item ${i} quantity`) ?? "1";
+    const totalRaw =
+      map.get(`product item ${i} total`) ?? map.get(`product item ${i} subtotal`) ?? "0";
+    const quantity = Math.max(1, parseIntSafe(qtyRaw, 1));
+    const line_total = parseMoney(totalRaw) || 0;
+    out.push({ name, quantity, line_total });
+  }
+  return out;
+}
+
 export type BuildRowResult =
   | { ok: true; row: OrderHistoryInsert }
   | { ok: false; rowNumber: number; message: string };
@@ -108,7 +146,8 @@ export function buildOrderHistoryRow(
     return { ok: false, rowNumber, message: `Invalid order date: "${dateRaw}"` };
   }
 
-  const status = pick(row, ["status", "order_status", "Order Status", "post_status"]) || "wc-completed";
+  const statusRaw = pick(row, ["status", "order_status", "Order Status", "post_status"]) || "wc-completed";
+  const status = normalizeWooOrderStatus(statusRaw);
 
   const email = pick(row, [
     "customer_email",
@@ -125,15 +164,27 @@ export function buildOrderHistoryRow(
   const orderNumber =
     pick(row, ["wp_order_number", "order_number", "Order Number", "order key"]) || null;
 
-  const subtotal = parseMoney(pick(row, ["subtotal", "Subtotal", "cart_subtotal"]) || "0") || 0;
-  const taxTotal = parseMoney(pick(row, ["tax_total", "Tax Total", "total_tax"]) || "0") || 0;
-  const shippingTotal = parseMoney(pick(row, ["shipping_total", "Shipping Total", "shipping"]) || "0") || 0;
-
-  const numItemsRaw = pick(row, ["num_items", "line_item_count", "Item Count"]);
-  const numItems = numItemsRaw ? parseIntSafe(numItemsRaw, 0) : 0;
+  const subtotal =
+    parseMoney(
+      pick(row, ["subtotal", "order_subtotal", "Subtotal", "cart_subtotal", "Order Subtotal"]) || "0"
+    ) || 0;
+  const taxTotal = parseMoney(pick(row, ["tax_total", "Tax Total", "total_tax", "Order Tax"]) || "0") || 0;
+  const shippingTotal =
+    parseMoney(pick(row, ["shipping_total", "Shipping Total", "shipping", "Order Shipping"]) || "0") || 0;
 
   const itemsRaw = pick(row, ["items", "line_items", "Line Items JSON"]);
-  const items = itemsRaw ? parseItemsJson(itemsRaw) : [];
+  let items: unknown = itemsRaw ? parseItemsJson(itemsRaw) : [];
+  if (!Array.isArray(items) || items.length === 0) {
+    const fromCols = buildItemsFromWooProductColumns(row);
+    if (fromCols.length) items = fromCols;
+  }
+
+  const numItemsRaw = pick(row, ["num_items", "line_item_count", "Item Count"]);
+  const numItems = numItemsRaw
+    ? parseIntSafe(numItemsRaw, 0)
+    : Array.isArray(items)
+      ? items.length
+      : 0;
 
   return {
     ok: true,

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
-import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
   title: "ES-Line Stainless Steel Vacuum Containers",
@@ -93,7 +92,6 @@ export default async function StainlessSteelContainersPage() {
         </div>
       </section>
 
-      <HuntexBanner variant="section" />
     </main>
   );
 }

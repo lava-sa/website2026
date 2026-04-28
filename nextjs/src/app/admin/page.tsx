@@ -10,6 +10,7 @@ import {
   Star,
   TrendingUp,
   AlertTriangle,
+  AlertCircle,
   Users,
   Wallet,
   Calendar,
@@ -22,8 +23,6 @@ import {
 } from "lucide-react";
 import { formatZAR, formatNumber, formatPercent } from "@/lib/format";
 import { getDashboardStats } from "@/lib/admin-dashboard-stats";
-
-export const revalidate = 60; // refresh dashboard every minute
 
 // ─── Small presentational helpers ─────────────────────────────────────────────
 interface KPIProps {
@@ -113,6 +112,56 @@ export default async function AdminDashboard() {
             <strong>On hold</strong> matches day-to-day shipped sales when orders are not marked completed.
           </p>
         </div>
+
+        {stats.loadErrors.length > 0 && (
+          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-950">
+            <p className="font-bold flex items-center gap-2">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              Supabase returned errors — figures below may be incomplete.
+            </p>
+            <ul className="mt-2 list-disc pl-5 space-y-1 text-xs text-red-900/90">
+              {stats.loadErrors.map((err) => (
+                <li key={err}>{err}</li>
+              ))}
+            </ul>
+            <p className="mt-2 text-xs text-red-800/80">
+              Check <code className="rounded bg-red-100 px-1">NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
+              <code className="rounded bg-red-100 px-1">SUPABASE_SERVICE_ROLE_KEY</code> in{" "}
+              <code className="rounded bg-red-100 px-1">.env.local</code> (local) or Vercel env (production).
+            </p>
+          </div>
+        )}
+
+        {stats.loadErrors.length === 0 && (
+          <div className="mb-6 flex flex-wrap items-baseline gap-x-6 gap-y-2 rounded-lg border border-gray-200 bg-white px-4 py-3 text-xs text-gray-600">
+            <span className="font-black uppercase tracking-wider text-gray-400">Data snapshot</span>
+            <span>
+              <strong className="text-gray-900 tabular-nums">{formatNumber(stats.allOrdersCount)}</strong>{" "}
+              order rows (live + history)
+            </span>
+            <span className="hidden sm:inline text-gray-200">·</span>
+            <span>
+              <strong className="text-gray-900 tabular-nums">{formatNumber(stats.revenueOrderCount)}</strong>{" "}
+              revenue-eligible
+            </span>
+            <span className="hidden sm:inline text-gray-200">·</span>
+            <span>
+              <strong className="text-gray-900 tabular-nums">{formatNumber(stats.customerCount)}</strong> customers
+            </span>
+          </div>
+        )}
+
+        {stats.loadErrors.length === 0 && stats.allOrdersCount === 0 && (
+          <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+            <p className="font-bold">No orders in the database yet</p>
+            <p className="mt-1 text-xs text-amber-900/90 leading-relaxed">
+              KPIs pull from Supabase tables <code className="rounded bg-amber-100/80 px-1">orders</code>,{" "}
+              <code className="rounded bg-amber-100/80 px-1">order_history</code>, and{" "}
+              <code className="rounded bg-amber-100/80 px-1">customers</code>. Use Import order history or your CSV
+              import scripts when you are ready.
+            </p>
+          </div>
+        )}
 
         {/* Row 1 — Primary KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">

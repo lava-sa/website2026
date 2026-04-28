@@ -62,6 +62,17 @@ export default function PrivacyPage() {
               <li>Complying with legal obligations</li>
             </ul>
             <p>We will never use your data in a way that is incompatible with the purpose for which it was collected.</p>
+            <p>
+              To stop marketing emails from our mailing list at any time, use our{" "}
+              <Link href="/mailing/unsubscribe" className="text-primary font-semibold hover:text-secondary transition-colors underline underline-offset-2">
+                unsubscribe page
+              </Link>{" "}
+              or email{" "}
+              <a href="mailto:info@lava-sa.co.za" className="text-primary font-semibold hover:text-secondary transition-colors">
+                info@lava-sa.co.za
+              </a>
+              .
+            </p>
           </Section>
 
           <Section id="sharing" title="4. Who We Share Your Information With">

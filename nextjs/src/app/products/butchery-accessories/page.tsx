@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import HuntexBanner from "@/components/home/HuntexBanner";
 
 export const metadata: Metadata = {
   title: "Professional Butchery Accessories & Equipment",
@@ -102,8 +101,6 @@ export default function ButcheryAccessoriesLandingPage() {
             <p className="mt-4 text-secondary text-xs font-bold uppercase tracking-widest">— Commercial Abattoir Manager, Free State</p>
          </div>
       </section>
-
-      <HuntexBanner variant="section" />
     </main>
   );
 }

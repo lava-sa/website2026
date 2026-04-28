@@ -3,7 +3,6 @@ import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
 import ComparisonTable from "@/components/shop/ComparisonTable";
-import HuntexBanner from "@/components/home/HuntexBanner";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
 
 export const metadata: Metadata = {
@@ -191,9 +190,6 @@ export default async function VacuumMachinesPage() {
       <div className="section-container pb-12">
         <OpenJanetButton />
       </div>
-
-      {/* ── Huntex Banner ─────────────────────────────────────────────── */}
-      <HuntexBanner variant="section" />
 
     </main>
   );

@@ -48,16 +48,6 @@ const slides = [
     cta: { label: "For Hunters & Game", href: "/applications/hunter-game" },
     ctaSecondary: { label: "Shop Machines", href: "/products/vacuum-machines" },
   },
-  {
-    id: 5,
-    image: "/images/headers/lava-sa-vacuum-sealers-header-pick-012.webp",
-    tag: "Huntex 2026 · Hall 4, Stand 465",
-    headline: "See Us at",
-    headlineAccent: "Huntex 2026.",
-    body: "24–27 April 2026. Visit us at Hall 4, Stand 465 — live demos, expert advice, and show-only specials you won't find online.",
-    cta: { label: "Get Directions", href: "/contact" },
-    ctaSecondary: { label: "Shop Online", href: "/products/vacuum-machines" },
-  },
 ];
 
 const SLIDE_DURATION = 6000; // ms
