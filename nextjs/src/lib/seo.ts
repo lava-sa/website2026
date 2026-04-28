@@ -5,7 +5,7 @@
 
 import type { Metadata } from "next";
 
-export const SITE_URL = "https://www.lava-sa.co.za";
+export const SITE_URL = "https://www.lava-sa.com";
 export const ORG_NAME = "Lava-SA";
 export const DEFAULT_OG_IMAGE = "/images/headers/lava-sa-vacuum-sealers-V300-header-pick-1250.jpg";
 

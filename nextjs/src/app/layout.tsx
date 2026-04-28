@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     },
     description:
         "South Africa's leading German vacuum sealer brand. Preserve game meat, fish, biltong and food with Lava's hospital-grade vacuum technology. Trusted by hunters, anglers, butchers and home cooks.",
-    metadataBase: new URL("https://www.lava-sa.co.za"),
+    metadataBase: new URL("https://www.lava-sa.com"),
     keywords: [
         "vacuum sealer South Africa",
         "vacuum sealer for hunters",
@@ -87,7 +87,7 @@ const localBusinessSchema = {
     "@type": ["LocalBusiness", "Store"],
     "name": "Lava-SA",
     "alternateName": "Lava-SA",
-    "url": "https://www.lava-sa.co.za",
+    "url": "https://www.lava-sa.com",
     "description":
         "South Africa's authorised distributor of German-engineered Lava vacuum sealers. Operating since 2007. Trusted by hunters, anglers, butchers, biltong makers and home cooks across South Africa.",
     "telephone": "+27721605556",

@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Only these hostnames should be indexed by Google
-const PRODUCTION_HOSTS = new Set(["lava-sa.co.za", "www.lava-sa.co.za"]);
+const PRODUCTION_HOSTS = new Set(["lava-sa.com", "www.lava-sa.com"]);
 
 function isPreviewHost(request: NextRequest): boolean {
   const host = request.headers.get("host") ?? "";

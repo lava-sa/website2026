@@ -6,7 +6,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 // Production domains that should be indexed by Google
-const PRODUCTION_DOMAINS = ["lava-sa.co.za", "www.lava-sa.co.za"];
+const PRODUCTION_DOMAINS = ["lava-sa.com", "www.lava-sa.com"];
 
 const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
@@ -64,23 +64,23 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // Canonical host policy: route all variants to https://www.lava-sa.co.za
+      // Canonical host policy: route all variants to https://www.lava-sa.com
       {
         source: "/:path*",
         has: [{ type: "host", value: "lava-sa.co.za" }],
-        destination: "https://www.lava-sa.co.za/:path*",
+        destination: "https://www.lava-sa.com/:path*",
         permanent: true,
       },
       {
         source: "/:path*",
         has: [{ type: "host", value: "lava-sa.com" }],
-        destination: "https://www.lava-sa.co.za/:path*",
+        destination: "https://www.lava-sa.com/:path*",
         permanent: true,
       },
       {
         source: "/:path*",
         has: [{ type: "host", value: "www.lava-sa.com" }],
-        destination: "https://www.lava-sa.co.za/:path*",
+        destination: "https://www.lava-sa.com/:path*",
         permanent: true,
       },
     ];
