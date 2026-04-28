@@ -62,23 +62,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async redirects() {
-    return [
-      // Canonical host policy: route all variants to https://www.lava-sa.com
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "lava-sa.co.za" }],
-        destination: "https://www.lava-sa.com/:path*",
-        permanent: true,
-      },
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "lava-sa.com" }],
-        destination: "https://www.lava-sa.com/:path*",
-        permanent: true,
-      },
-    ];
-  },
   async rewrites() {
     return [
       // WordPress-style admin login path — /lava-sa/ maps to internal /admin/*
