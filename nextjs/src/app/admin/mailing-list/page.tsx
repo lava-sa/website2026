@@ -9,6 +9,8 @@ type Subscriber = {
   email: string;
   first_name: string | null;
   source: string | null;
+  interest_category: string | null;
+  machine_industry: string | null;
   opted_in: boolean;
   opted_in_at: string;
   unsubscribed_at: string | null;
@@ -42,7 +44,7 @@ async function getSubscribers(): Promise<Subscriber[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("mailing_list_subscribers")
-    .select("id, email, first_name, source, opted_in, opted_in_at, unsubscribed_at, created_at")
+    .select("id, email, first_name, source, interest_category, machine_industry, opted_in, opted_in_at, unsubscribed_at, created_at")
     .order("opted_in_at", { ascending: false })
     .limit(5000);
 

@@ -12,6 +12,16 @@ interface Props {
   inverted?: boolean;
 }
 
+const INTEREST_OPTIONS = [
+  { value: "vacuum_machines", label: "Vacuum Machines" },
+  { value: "vacuum_bags_rolls", label: "Vacuum Bags & Rolls" },
+  { value: "containers_lids", label: "Containers & Lids" },
+  { value: "butchery_accessories", label: "Butchery Accessories" },
+  { value: "sous_vide", label: "Sous Vide" },
+] as const;
+
+type InterestValue = (typeof INTEREST_OPTIONS)[number]["value"];
+
 export default function MailingListSignup({
   source,
   title = "Join the LAVA Mailing List",
@@ -21,11 +31,14 @@ export default function MailingListSignup({
 }: Props) {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
+  const [interestCategory, setInterestCategory] = useState<InterestValue | "">("");
+  const [machineIndustry, setMachineIndustry] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!email.trim() || !interestCategory) return;
+    if (interestCategory === "vacuum_machines" && !machineIndustry.trim()) return;
     setStatus("sending");
 
     try {
@@ -36,12 +49,16 @@ export default function MailingListSignup({
           email,
           first_name: firstName,
           source,
+          interest_category: interestCategory,
+          machine_industry: interestCategory === "vacuum_machines" ? machineIndustry.trim() : null,
         }),
       });
       setStatus(res.ok ? "done" : "error");
       if (res.ok) {
         setEmail("");
         setFirstName("");
+        setInterestCategory("");
+        setMachineIndustry("");
       }
     } catch {
       setStatus("error");
@@ -83,6 +100,33 @@ export default function MailingListSignup({
               placeholder="you@example.com"
               className="sm:col-span-2 border border-border bg-white px-3 py-2.5 text-sm text-copy focus:outline-none focus:border-primary"
             />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <select
+              required
+              value={interestCategory}
+              onChange={(e) => setInterestCategory(e.target.value as InterestValue)}
+              className="sm:col-span-1 border border-border bg-white px-3 py-2.5 text-sm text-copy focus:outline-none focus:border-primary"
+            >
+              <option value="">Select interest category *</option>
+              {INTEREST_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            {interestCategory === "vacuum_machines" ? (
+              <input
+                type="text"
+                required
+                value={machineIndustry}
+                onChange={(e) => setMachineIndustry(e.target.value)}
+                placeholder="What industry are you in? *"
+                className="sm:col-span-2 border border-border bg-white px-3 py-2.5 text-sm text-copy focus:outline-none focus:border-primary"
+              />
+            ) : (
+              <div className="sm:col-span-2" />
+            )}
           </div>
           {status === "error" && (
             <p className="text-xs text-red-600">Could not subscribe right now. Please try again.</p>

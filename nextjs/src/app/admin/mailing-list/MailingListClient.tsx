@@ -9,6 +9,8 @@ interface Subscriber {
   email: string;
   first_name: string | null;
   source: string | null;
+  interest_category: string | null;
+  machine_industry: string | null;
   opted_in: boolean;
   opted_in_at: string;
   unsubscribed_at: string | null;
@@ -44,7 +46,7 @@ function fmtDate(d: string | null | undefined) {
 }
 
 function exportCsv(rows: Subscriber[], filename: string) {
-  const headers = ["Email", "First Name", "Source", "Opted In", "Opted In At", "Unsubscribed At", "Created At"];
+  const headers = ["Email", "First Name", "Source", "Interest Category", "Machine Industry", "Opted In", "Opted In At", "Unsubscribed At", "Created At"];
   const lines = [
     headers.join(","),
     ...rows.map((r) =>
@@ -52,6 +54,8 @@ function exportCsv(rows: Subscriber[], filename: string) {
         r.email,
         r.first_name ?? "",
         r.source ?? "",
+        r.interest_category ?? "",
+        r.machine_industry ?? "",
         r.opted_in ? "Yes" : "No",
         r.opted_in_at ?? "",
         r.unsubscribed_at ?? "",
@@ -456,7 +460,7 @@ export default function MailingListClient({
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
-                {["Email", "First Name", "Source", "Status", "Subscribed", "Unsubscribed", "Actions"].map((h) => (
+                {["Email", "First Name", "Source", "Interest", "Industry", "Status", "Subscribed", "Unsubscribed", "Actions"].map((h) => (
                   <th key={h} className="text-left px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">
                     {h}
                   </th>
@@ -469,6 +473,8 @@ export default function MailingListClient({
                   <td className="px-4 py-3 font-mono text-xs text-primary">{s.email}</td>
                   <td className="px-4 py-3 text-gray-700">{s.first_name ?? "—"}</td>
                   <td className="px-4 py-3 text-xs text-gray-500">{s.source ?? "unknown"}</td>
+                  <td className="px-4 py-3 text-xs text-gray-500">{s.interest_category ?? "—"}</td>
+                  <td className="px-4 py-3 text-xs text-gray-500">{s.machine_industry ?? "—"}</td>
                   <td className="px-4 py-3">
                     <span className={`text-[10px] font-bold uppercase px-2 py-0.5 ${s.opted_in ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-500"}`}>
                       {s.opted_in ? "active" : "unsubscribed"}
