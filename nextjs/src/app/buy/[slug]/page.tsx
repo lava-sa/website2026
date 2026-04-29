@@ -73,7 +73,7 @@ export default function FunnelPage() {
   const [loading, setLoading] = useState(true);
   const [funnel, setFunnel] = useState<FunnelResponse | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
-  const [selectedByStep, setSelectedByStep] = useState<Record<number, string | null>>({});
+  const [selectedByStep, setSelectedByStep] = useState<Record<number, string[]>>({});
   const [quantityByStep, setQuantityByStep] = useState<Record<number, 1 | 2 | 3>>({});
 
   const hasPrimaryInCart = useMemo(
@@ -111,10 +111,12 @@ export default function FunnelPage() {
   const step = funnel.steps[currentStep];
   if (!step) return null;
 
-  const selectedProduct = step.products.find((p) => p.id === selectedByStep[currentStep]);
-  const finalPrice = selectedProduct
-    ? applyFunnelDiscount(selectedProduct.regular_price, step.discountPercent)
-    : null;
+  const selectedProductIds = selectedByStep[currentStep] ?? [];
+  const selectedProducts = step.products.filter((p) => selectedProductIds.includes(p.id));
+  const finalPrice = selectedProducts.reduce(
+    (sum, product) => sum + applyFunnelDiscount(product.regular_price, step.discountPercent),
+    0
+  );
 
   function goNext() {
     const stepCount = funnel?.steps.length ?? 0;
@@ -127,17 +129,19 @@ export default function FunnelPage() {
   }
 
   function addSelectedAndContinue() {
-    if (!selectedProduct) return;
+    if (selectedProducts.length === 0) return;
     const qty = quantityByStep[currentStep] ?? 1;
-    for (let i = 0; i < qty; i += 1) {
-      addItem({
-        id: `${selectedProduct.id}__funnel_${slug}_step${currentStep + 1}`,
-        slug: selectedProduct.slug,
-        name: `${selectedProduct.name} (Funnel Offer -${step.discountPercent}%)`,
-        price: applyFunnelDiscount(selectedProduct.regular_price, step.discountPercent),
-        image: selectedProduct.primary_image_url,
-        sku: selectedProduct.sku,
-      });
+    for (const selectedProduct of selectedProducts) {
+      for (let i = 0; i < qty; i += 1) {
+        addItem({
+          id: `${selectedProduct.id}__funnel_${slug}_step${currentStep + 1}`,
+          slug: selectedProduct.slug,
+          name: `${selectedProduct.name} (Funnel Offer -${step.discountPercent}%)`,
+          price: applyFunnelDiscount(selectedProduct.regular_price, step.discountPercent),
+          image: selectedProduct.primary_image_url,
+          sku: selectedProduct.sku,
+        });
+      }
     }
     goNext();
   }
@@ -191,7 +195,7 @@ export default function FunnelPage() {
 
             <div className="mb-6">
               <label className="block text-xs font-bold uppercase tracking-wide text-copy-muted mb-2">
-                Quantity to add
+                Quantity per selected item
               </label>
               <div className="inline-flex items-center gap-2 bg-white border border-border p-2">
                 {[1, 2, 3].map((qty) => {
@@ -219,13 +223,21 @@ export default function FunnelPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {step.products.map((product) => {
-                const isSelected = selectedByStep[currentStep] === product.id;
+                const isSelected = selectedProductIds.includes(product.id);
                 const discounted = applyFunnelDiscount(product.regular_price, step.discountPercent);
                 return (
                   <button
                     key={product.id}
                     type="button"
-                    onClick={() => setSelectedByStep((prev) => ({ ...prev, [currentStep]: product.id }))}
+                    onClick={() =>
+                      setSelectedByStep((prev) => {
+                        const existing = prev[currentStep] ?? [];
+                        const next = existing.includes(product.id)
+                          ? existing.filter((id) => id !== product.id)
+                          : [...existing, product.id];
+                        return { ...prev, [currentStep]: next };
+                      })
+                    }
                     className={`relative text-left border-2 p-4 transition-all duration-200 ${isSelected ? "border-secondary bg-secondary/5 shadow-md" : "border-border bg-white hover:border-primary/40"}`}
                   >
                     <div className={`absolute top-3 right-3 h-5 w-5 flex items-center justify-center ${isSelected ? "bg-secondary" : "bg-gray-100 border border-gray-300"}`}>
@@ -251,13 +263,13 @@ export default function FunnelPage() {
             <div className="flex flex-col gap-3 pt-6">
               <button
                 onClick={addSelectedAndContinue}
-                disabled={!selectedProduct}
+                disabled={selectedProducts.length === 0}
                 className="w-full flex items-center justify-center gap-2 bg-secondary text-white font-black py-4 text-base hover:bg-secondary/90 transition-colors disabled:opacity-40"
               >
                 <ShoppingBag className="h-5 w-5" />
-                {selectedProduct && finalPrice
-                  ? `Add ${(quantityByStep[currentStep] ?? 1)} for ${fmt(finalPrice * (quantityByStep[currentStep] ?? 1))}`
-                  : "Select a product"}
+                {selectedProducts.length > 0
+                  ? `Add ${selectedProducts.length * (quantityByStep[currentStep] ?? 1)} item${selectedProducts.length * (quantityByStep[currentStep] ?? 1) > 1 ? "s" : ""} for ${fmt(finalPrice * (quantityByStep[currentStep] ?? 1))}`
+                  : "Select one or more products"}
                 <ChevronRight className="h-4 w-4" />
               </button>
               <button

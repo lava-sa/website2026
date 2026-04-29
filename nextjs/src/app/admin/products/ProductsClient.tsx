@@ -24,13 +24,20 @@ const STOCK_LABELS: Record<StockStatus, string> = {
 type ProductRow = {
   id: string; name: string; slug: string; sku: string | null;
   regular_price: number; sale_price: number | null;
-  stock_status: StockStatus; is_published: boolean; is_featured: boolean;
+  stock_status: StockStatus; stock_quantity: number | null; is_published: boolean; is_featured: boolean;
   sort_order: number; categories: { name: string } | null;
   primary_image_url: string | null;
 };
 
 function fmt(n: number) {
   return new Intl.NumberFormat("en-ZA", { style: "currency", currency: "ZAR", minimumFractionDigits: 0 }).format(n);
+}
+
+function getStockBadgeLabel(status: StockStatus, quantity: number | null) {
+  if (status === "in_stock" && typeof quantity === "number" && quantity >= 0) {
+    return `${quantity} in stock`;
+  }
+  return STOCK_LABELS[status];
 }
 
 export default function ProductsClient({
@@ -244,7 +251,7 @@ export default function ProductsClient({
                   </td>
                   <td className="px-5 py-4">
                     <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 block w-fit mb-1 ${STOCK_COLOURS[p.stock_status]}`}>
-                      {STOCK_LABELS[p.stock_status]}
+                      {getStockBadgeLabel(p.stock_status, p.stock_quantity)}
                     </span>
                     <StockToggle productId={p.id} current={p.stock_status} />
                   </td>

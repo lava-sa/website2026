@@ -205,8 +205,11 @@ export default async function ProductDetailPage({
             },
           ]
         : [];
-  const specs    = product.specs ?? {};
-  const hasSpecs = Object.keys(specs).length > 0;
+  const specs = product.specs ?? {};
+  const displaySpecs = Object.entries(specs).filter(([key, value]) => (
+    key !== "funnel_config" && value !== null && value !== undefined && String(value).trim() !== ""
+  ));
+  const hasSpecs = displaySpecs.length > 0;
   const isOnOrder = product.stock_status === "on_order";
   const price     = product.sale_price ?? product.regular_price;
   const isVacuumMachine = product.categories?.slug === "vacuum-machines";
@@ -535,7 +538,7 @@ export default async function ProductDetailPage({
               <h2 className="text-3xl font-bold text-primary mb-8">Specifications</h2>
               <table className="w-full text-sm border border-border">
                 <tbody>
-                  {Object.entries(specs).map(([key, value], i) => (
+                  {displaySpecs.map(([key, value], i) => (
                     <tr key={key} className={i % 2 === 0 ? "bg-surface" : "bg-white"}>
                       <td className="py-3 px-5 font-semibold text-primary w-1/2 border-b border-border">
                         {SPEC_LABELS[key] ?? key.replace(/_/g, " ")}
