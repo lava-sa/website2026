@@ -115,6 +115,19 @@ export async function getRelatedProducts(categorySlug: string, excludeSlug: stri
   return (data ?? []) as unknown as Product[];
 }
 
+/** Strip HTML tags + collapse whitespace — for meta tags, JSON-LD, card snippets. */
+export function stripHtml(input: string | null | undefined): string {
+  if (!input) return "";
+  return input
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 /** Format price as ZAR */
 export function formatPrice(price: number): string {
   return new Intl.NumberFormat("en-ZA", {

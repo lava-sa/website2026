@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Award } from "lucide-react";
-import { formatPrice } from "@/lib/products";
+import { formatPrice, stripHtml } from "@/lib/products";
 import ProductCatalogImage from "@/components/shop/ProductCatalogImage";
 import { calculatePointsEarned, calculatePointValue } from "@/lib/rewards-config";
 import type { Product, StockStatus } from "@/types/product";
@@ -65,10 +65,10 @@ export default function ProductCard({ product }: Props) {
           {product.name}
         </h3>
 
-        {/* Short description */}
+        {/* Short description (HTML stripped — card preview only) */}
         {product.short_description && (
           <p className="text-sm text-copy-muted leading-relaxed line-clamp-2 flex-1">
-            {product.short_description}
+            {stripHtml(product.short_description)}
           </p>
         )}
 

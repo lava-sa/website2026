@@ -3,7 +3,7 @@ import ProductCatalogImage from "@/components/shop/ProductCatalogImage";
 import { Award, CheckCircle2, Thermometer, Clock, ChefHat, Droplets } from "lucide-react";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
 import { calculatePointsEarned } from "@/lib/rewards-config";
-import { formatPrice } from "@/lib/products";
+import { formatPrice, stripHtml } from "@/lib/products";
 import JsonLd from "@/components/seo/JsonLd";
 import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
@@ -201,7 +201,7 @@ export default function SousVidePage() {
                       {product.name}
                     </h3>
                     <p className="text-sm text-copy-muted leading-relaxed line-clamp-2 flex-1">
-                      {product.short_description}
+                      {stripHtml(product.short_description)}
                     </p>
 
                     {/* Specs */}

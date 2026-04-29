@@ -14,6 +14,7 @@ import {
   getProductsByCategory,
   formatPrice,
   sortImages,
+  stripHtml,
   SUB_CATEGORY_MAP,
 } from "@/lib/products";
 import { calculatePointsEarned, REWARDS_CONFIG } from "@/lib/rewards-config";
@@ -63,7 +64,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     const description =
       product.seo_description ||
-      product.short_description ||
+      stripHtml(product.short_description) ||
       fallbackDescription;
 
     const ogTitle =
@@ -336,11 +337,12 @@ export default async function ProductDetailPage({
                 </span>
               </a>
 
-              {/* Short description — emotional, problem-solving */}
+              {/* Short description — emotional, problem-solving (renders inline HTML: strong/em/br) */}
               {product.short_description && (
-                <p className="text-base text-copy leading-relaxed border-l-4 border-secondary pl-4">
-                  {product.short_description}
-                </p>
+                <div
+                  className="prose prose-sm max-w-none text-base text-copy leading-relaxed border-l-4 border-secondary pl-4 [&>p]:mb-2 [&>p:last-child]:mb-0"
+                  dangerouslySetInnerHTML={{ __html: product.short_description }}
+                />
               )}
 
               {/* Price is now handled dynamically within the AddToCartButton or beneath this node */}

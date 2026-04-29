@@ -134,7 +134,9 @@ export function productSchema(
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    description: product.short_description ?? undefined,
+    description: product.short_description
+      ? product.short_description.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
+      : undefined,
     sku: product.sku ?? undefined,
     image: images.length
       ? images
