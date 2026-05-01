@@ -25,7 +25,7 @@ function buildSystemPrompt(urlPath: string, pageContext: string) {
   let instructions = `
 You are Janet — a warm, knowledgeable, and professional voice advisor for LAVA South Africa, a premium German vacuum sealing company.
 
-IMPORTANT — GREET FIRST: You must speak first as soon as the session opens. Do not wait for the visitor to speak. Greet them warmly and naturally, for example: "Hi! I'm Janet, your LAVA product advisor. How can I help you today?" Then wait for their response.
+IMPORTANT — GREET FIRST: You must speak first as soon as the session opens. Do not wait for the visitor to speak. Greet them warmly and naturally, then ask for their first name in the same opening. Example: "Hi! I'm Janet, your LAVA product advisor. May I get your first name?" Once they share it, use their first name naturally in later responses.
 
 IMPORTANT — LANGUAGE: Speak English by default. DO NOT switch to Afrikaans or Zulu unless the user explicitly asks you to speak in another language.
 
@@ -119,6 +119,8 @@ export const JanetAgent = () => {
   // Telemetry & State
   const [transcript, setTranscript] = useState<string[]>([]);
   const startedAtRef = useRef("");
+  const [inputDeviceLabel, setInputDeviceLabel] = useState("Not detected yet");
+  const [outputDeviceLabel, setOutputDeviceLabel] = useState("System default");
 
   const sessionRef   = useRef<Session | null>(null);
   const streamRef    = useRef<MediaStream | null>(null);
@@ -136,6 +138,25 @@ export const JanetAgent = () => {
     return () => {
       void teardown(false); // don't force save on silent backend unmount
     };
+  }, []);
+
+  useEffect(() => {
+    async function refreshAudioDevices() {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const input = devices.find((d) => d.kind === "audioinput");
+        const output = devices.find((d) => d.kind === "audiooutput");
+        setInputDeviceLabel(input?.label || "Unknown microphone (permission required)");
+        setOutputDeviceLabel(output?.label || "System default output");
+      } catch {
+        setInputDeviceLabel("Unknown microphone");
+        setOutputDeviceLabel("System default output");
+      }
+    }
+
+    void refreshAudioDevices();
+    navigator.mediaDevices.addEventListener("devicechange", refreshAudioDevices);
+    return () => navigator.mediaDevices.removeEventListener("devicechange", refreshAudioDevices);
   }, []);
 
   // Window event listener to trigger Janet remotely
@@ -211,6 +232,9 @@ export const JanetAgent = () => {
   const startMic = useCallback(async (activeSession: Session) => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
     streamRef.current = stream;
+    const activeTrack = stream.getAudioTracks()[0];
+    const activeInputLabel = activeTrack?.label?.trim();
+    if (activeInputLabel) setInputDeviceLabel(activeInputLabel);
 
     const ctx = new AudioContext();
     micCtxRef.current = ctx;
@@ -251,12 +275,19 @@ export const JanetAgent = () => {
     try {
       const res = await fetch("/api/gemini-token");
       if (!res.ok) throw new Error("Token fetch failed");
-      const { apiKey } = (await res.json()) as { apiKey: string };
+      const { apiKey, model, apiVersion } = (await res.json()) as {
+        apiKey: string;
+        model?: string;
+        apiVersion?: "v1alpha" | "v1beta";
+      };
 
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = new GoogleGenAI({
+        apiKey,
+        apiVersion: apiVersion ?? "v1alpha",
+      });
 
       const session = await ai.live.connect({
-        model: "gemini-2.5-flash-native-audio-preview-12-2025",
+        model: model ?? "gemini-2.5-flash-native-audio-preview-12-2025",
         config: {
           responseModalities: [Modality.AUDIO],
           systemInstruction: buildSystemPrompt(currentUrlPath, pageContext),
@@ -389,7 +420,7 @@ export const JanetAgent = () => {
   // RENDER PURE ORB UI
   // ────────────────────────────────────────────────────────────────────────────
   return (
-    <div className="fixed bottom-0 right-0 z-[200] flex flex-col items-end gap-3 font-sans">
+    <div className="fixed bottom-0 right-0 z-[1200] flex flex-col items-end gap-3 font-sans">
       {!isOpen ? (
         <div className="relative group flex flex-col items-end">
           {/* AI disclosure tooltip */}
@@ -467,6 +498,12 @@ export const JanetAgent = () => {
             <p className="mt-8 font-bold text-secondary text-center text-xs uppercase tracking-[0.2em]">
               {isConnecting ? "Connecting..." : status === "ended" ? "Call Ended." : status === "error" ? errorMsg : isActive && isMuted ? "Microphone Muted" : isActive ? "Janet is active..." : "Tap below to chat"}
             </p>
+
+            <div className="mt-3 w-full max-w-[300px] bg-white border border-border px-3 py-2 text-[10px] text-copy-muted leading-tight">
+              <p className="font-bold uppercase tracking-wide text-[9px] text-gray-500 mb-1">Audio devices</p>
+              <p className="truncate"><span className="font-semibold">Mic:</span> {inputDeviceLabel}</p>
+              <p className="truncate"><span className="font-semibold">Output:</span> {outputDeviceLabel}</p>
+            </div>
 
             <div className="mt-8 w-full max-w-[260px]">
               {!isRunning ? (
