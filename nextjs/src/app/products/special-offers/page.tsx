@@ -86,7 +86,7 @@ export default async function SpecialOffersPage() {
             Watch this page to stay informed of the latest LAVA South Africa promotion offers.
           </p>
           <a
-            href="mailto:info@lava-sa.co.za?subject=Please notify me of special offers"
+            href="mailto:info@lava-sa.com?subject=Please notify me of special offers"
             className="text-sm font-bold text-white underline underline-offset-2 hover:no-underline whitespace-nowrap"
           >
             Email me when offers go live →
@@ -117,7 +117,7 @@ export default async function SpecialOffersPage() {
                 send us an email and we&apos;ll let you know the moment an offer goes live.
               </p>
               <a
-                href="mailto:info@lava-sa.co.za?subject=Please notify me of special offers"
+                href="mailto:info@lava-sa.com?subject=Please notify me of special offers"
                 className="inline-block mt-6 bg-primary text-white font-bold px-6 py-3 hover:bg-primary/90 transition-colors"
               >
                 Notify Me
@@ -213,7 +213,7 @@ export default async function SpecialOffersPage() {
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a
-              href="mailto:info@lava-sa.co.za?subject=Please notify me of special offers"
+              href="mailto:info@lava-sa.com?subject=Please notify me of special offers"
               className="inline-block bg-secondary text-white font-bold px-8 py-3 hover:bg-secondary/90 transition-colors"
             >
               Email Us to Subscribe

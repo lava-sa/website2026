@@ -4,9 +4,17 @@ import { NextResponse, type NextRequest } from "next/server";
 // Only these hostnames should be indexed by Google
 const PRODUCTION_HOSTS = new Set(["lava-sa.com", "www.lava-sa.com"]);
 
+/** Old marketing / dev hosts → single canonical site */
+const LEGACY_REDIRECT_HOSTS = new Set([
+  "lava-sa.co.za",
+  "www.lava-sa.co.za",
+  "lava-sa.online",
+  "www.lava-sa.online",
+]);
+
 function isPreviewHost(request: NextRequest): boolean {
   const host = request.headers.get("host") ?? "";
-  const bare = host.split(":")[0]; // strip port
+  const bare = host.split(":")[0].toLowerCase(); // strip port
   return !PRODUCTION_HOSTS.has(bare);
 }
 
@@ -17,6 +25,21 @@ function withNoindex(response: NextResponse): NextResponse {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const bareHost = (request.headers.get("host") ?? "").split(":")[0].toLowerCase();
+  if (LEGACY_REDIRECT_HOSTS.has(bareHost)) {
+    const url = request.nextUrl.clone();
+    url.hostname = "www.lava-sa.com";
+    url.protocol = "https:";
+    return NextResponse.redirect(url, 308);
+  }
+
+  if (bareHost === "lava-sa.com") {
+    const url = request.nextUrl.clone();
+    url.hostname = "www.lava-sa.com";
+    url.protocol = "https:";
+    return NextResponse.redirect(url, 308);
+  }
+
   const preview = isPreviewHost(request);
 
   // ── Admin auth (existing cookie-based approach) ──────────────────────────

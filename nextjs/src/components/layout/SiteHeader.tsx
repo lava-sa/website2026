@@ -249,7 +249,7 @@ const SiteHeader = () => {
           {/* Right: Contact + email */}
           <div className="flex items-center gap-4">
             <span className="hidden sm:block text-[11px] text-white/50 font-medium tracking-wider">
-              info@lava-sa.co.za
+              info@lava-sa.com
             </span>
             <Link href="/contact" className="text-[11px] font-medium tracking-wider uppercase hover:text-secondary transition-colors">
               Contact

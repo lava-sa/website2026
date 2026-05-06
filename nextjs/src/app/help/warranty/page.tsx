@@ -102,7 +102,7 @@ export default function WarrantyPage() {
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How to Make a Warranty Claim</h2>
           <div className="space-y-3 mb-8">
             {[
-              { step: "1", title: "Contact us", detail: "Email info@lava-sa.co.za or call +27 72 160 5556 with your order number and a description of the fault. Photos or a short video are extremely helpful." },
+              { step: "1", title: "Contact us", detail: "Email info@lava-sa.com or call +27 72 160 5556 with your order number and a description of the fault. Photos or a short video are extremely helpful." },
               { step: "2", title: "Troubleshoot together", detail: "Many issues can be resolved over the phone or by email without needing to return the machine. We'll walk through the problem with you first — often it's something simple." },
               { step: "3", title: "We arrange collection", detail: "If the machine needs to come in, we arrange a courier to collect it at no cost to you. We'll give you a collection date and a reference number." },
               { step: "4", title: "Repair or replacement", detail: "Most machines are repaired and returned within 5–10 business days. If a repair isn't possible, we replace with the equivalent model. We keep you updated throughout." },
@@ -166,10 +166,10 @@ export default function WarrantyPage() {
                   <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
                 </div>
               </a>
-              <a href="mailto:info@lava-sa.co.za" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">
+              <a href="mailto:info@lava-sa.com" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">
                 <Mail className="h-5 w-5 text-secondary shrink-0" />
                 <div>
-                  <p className="font-bold text-primary text-sm">info@lava-sa.co.za</p>
+                  <p className="font-bold text-primary text-sm">info@lava-sa.com</p>
                   <p className="text-xs text-copy-muted">Reply within 1 business day</p>
                 </div>
               </a>

@@ -1,5 +1,6 @@
 import { getEmailConfig, getResendClient } from "@/lib/email-config";
 import { createServiceClient } from "@/lib/supabase";
+import { getPublicSiteUrl } from "@/lib/seo";
 
 export type SegmentType = "opted_in" | "purchasers" | "region";
 
@@ -35,7 +36,7 @@ function buildMarketingHtml(args: {
   firstName: string | null;
   broadcastName: string;
 }): string {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://lava-sa.online";
+  const siteUrl = getPublicSiteUrl();
   const firstName = args.firstName?.trim() || "there";
   const bodyWithName = args.htmlBody.replaceAll("{{first_name}}", escapeHtml(firstName));
   const unsubscribeUrl = `${siteUrl}/mailing/unsubscribe?email=${encodeURIComponent(args.email)}`;

@@ -91,7 +91,7 @@ const localBusinessSchema = {
     "description":
         "South Africa's authorised distributor of German-engineered Lava vacuum sealers. Operating since 2007. Trusted by hunters, anglers, butchers, biltong makers and home cooks across South Africa.",
     "telephone": "+27721605556",
-    "email": "info@lava-sa.co.za",
+    "email": "info@lava-sa.com",
     "priceRange": "R2,500–R70,000",
     "address": {
         "@type": "PostalAddress",

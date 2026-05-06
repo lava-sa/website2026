@@ -87,7 +87,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-white/10">
             {[
               { icon: Phone,  title: "Call",    value: "+27 72 160 5556",    sub: "Mon–Fri 9am–5pm", href: "tel:+27721605556" },
-              { icon: Mail,   title: "Email",   value: "info@lava-sa.co.za", sub: "Reply within 1 business day", href: "mailto:info@lava-sa.co.za" },
+              { icon: Mail,   title: "Email",   value: "info@lava-sa.com", sub: "Reply within 1 business day", href: "mailto:info@lava-sa.com" },
               { icon: MapPin, title: "Address", value: "5 Stirling Road",    sub: "Bryanston, Sandton 2191", href: null },
               { icon: Clock,  title: "Hours",   value: "Mon–Fri",            sub: "09:00 – 17:00", href: null },
             ].map(({ icon: Icon, title, value, sub, href }) => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { Search, Plus, Pencil, ImageOff, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import StockToggle from "@/components/admin/StockToggle";
@@ -46,6 +47,7 @@ export default function ProductsClient({
   products: ProductRow[];
   categories: string[];
 }) {
+  const router = useRouter();
   const [search,   setSearch]   = useState("");
   const [category, setCategory] = useState("all");
   const [stock,    setStock]    = useState("all");
@@ -53,6 +55,7 @@ export default function ProductsClient({
   const [featuredFilter, setFeaturedFilter] = useState("all");
   const [imageFilter, setImageFilter] = useState<"all"|"missing">("all");
   const [sortBy,   setSortBy]   = useState<"sort_order"|"name_asc"|"name_desc"|"price_asc"|"price_desc">("sort_order");
+  const [seoBusy, setSeoBusy] = useState(false);
 
   const missingImageCount = useMemo(
     () => products.filter((p) => !p.primary_image_url).length,
@@ -97,6 +100,23 @@ export default function ProductsClient({
     featuredFilter !== "all" ||
     imageFilter !== "all";
 
+  async function generateMissingSeo() {
+    if (seoBusy) return;
+    if (!window.confirm("Generate SEO for all products that are missing SEO title/description?")) return;
+    setSeoBusy(true);
+    try {
+      const res = await fetch("/api/admin/products/seo/generate", { method: "POST" });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || "Failed to generate SEO");
+      alert(`SEO generated for ${body.updated ?? 0} products.`);
+      router.refresh();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to generate SEO");
+    } finally {
+      setSeoBusy(false);
+    }
+  }
+
   return (
     <div className="max-w-6xl">
 
@@ -129,10 +149,19 @@ export default function ProductsClient({
             {filtered.length} of {products.length} products
           </p>
         </div>
-        <Link href="/admin/products/new"
-          className="flex items-center gap-2 bg-primary text-white text-sm font-bold px-5 py-2.5 hover:bg-primary/90 transition-colors">
-          <Plus className="h-4 w-4" /> Add Product
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={generateMissingSeo}
+            disabled={seoBusy}
+            className="border border-gray-300 bg-white text-gray-700 text-xs font-bold px-4 py-2.5 hover:border-primary hover:text-primary transition-colors disabled:opacity-60"
+          >
+            {seoBusy ? "Generating SEO..." : "Generate Missing SEO"}
+          </button>
+          <Link href="/admin/products/new"
+            className="flex items-center gap-2 bg-primary text-white text-sm font-bold px-5 py-2.5 hover:bg-primary/90 transition-colors">
+            <Plus className="h-4 w-4" /> Add Product
+          </Link>
+        </div>
       </div>
 
       {/* Filters */}

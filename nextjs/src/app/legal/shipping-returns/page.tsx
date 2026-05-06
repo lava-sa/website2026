@@ -109,7 +109,7 @@ export default function ShippingReturnsPage() {
             <ul>
               <li>For <strong>transit damage or wrong items</strong>: notify us within <strong className="text-primary">5 business days</strong> so we can engage the courier.</li>
               <li>For <strong>manufacturing or quality defects within 6 months</strong>: notify us as soon as the defect appears — the CPA gives you the full 6 months.</li>
-              <li>Email <a href="mailto:info@lava-sa.co.za" className="text-primary font-semibold">info@lava-sa.co.za</a> with your order number, a description and photographs where possible.</li>
+              <li>Email <a href="mailto:info@lava-sa.com" className="text-primary font-semibold">info@lava-sa.com</a> with your order number, a description and photographs where possible.</li>
               <li>Once confirmed, we arrange courier collection at <strong className="text-primary">our cost</strong>.</li>
               <li>For CPA §56 claims: you choose repair, replacement, or full refund. No restocking fee applies.</li>
             </ul>
@@ -182,12 +182,12 @@ export default function ShippingReturnsPage() {
                   <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
                 </div>
               </a>
-              <a href="mailto:info@lava-sa.co.za"
+              <a href="mailto:info@lava-sa.com"
                 className="flex items-center gap-3 border border-border bg-surface px-4 py-4 hover:border-primary hover:bg-white transition-all">
                 <Mail className="h-5 w-5 text-secondary shrink-0" />
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-copy-muted">Email</p>
-                  <p className="font-bold text-primary">info@lava-sa.co.za</p>
+                  <p className="font-bold text-primary">info@lava-sa.com</p>
                   <p className="text-xs text-copy-muted">Reply within 1 business day</p>
                 </div>
               </a>
@@ -231,7 +231,7 @@ function LegalFooter() {
     <div className="mt-16 pt-8 border-t border-border">
       <p className="text-xs text-copy-muted">
         Questions? Contact{" "}
-        <a href="mailto:info@lava-sa.co.za" className="text-primary font-semibold">info@lava-sa.co.za</a>
+        <a href="mailto:info@lava-sa.com" className="text-primary font-semibold">info@lava-sa.com</a>
         {" "}or call{" "}
         <a href="tel:+27721605556" className="text-primary font-semibold">+27 72 160 5556</a>.
       </p>

@@ -58,7 +58,7 @@ export default function ReturnsPage() {
           <div className="space-y-3 my-6">
             {[
               "For transit damage or wrong items: notify us within 5 business days. For manufacturing defects: notify us as soon as the defect appears — you have 6 months under the CPA.",
-              "Email info@lava-sa.co.za with your order number, a description and photographs where possible.",
+              "Email info@lava-sa.com with your order number, a description and photographs where possible.",
               "Once the defect is confirmed, we arrange courier collection at our cost.",
               "A replacement is dispatched prepaid, or a full refund is issued — your choice.",
               "We respond to all defective product reports within 1 business day.",
@@ -121,10 +121,10 @@ export default function ReturnsPage() {
                   <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
                 </div>
               </a>
-              <a href="mailto:info@lava-sa.co.za" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">
+              <a href="mailto:info@lava-sa.com" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">
                 <Mail className="h-5 w-5 text-secondary shrink-0" />
                 <div>
-                  <p className="font-bold text-primary text-sm">info@lava-sa.co.za</p>
+                  <p className="font-bold text-primary text-sm">info@lava-sa.com</p>
                   <p className="text-xs text-copy-muted">Reply within 1 business day</p>
                 </div>
               </a>

@@ -200,8 +200,8 @@ export default function V300PremiumXLandingPage() {
           <p className="text-white font-bold">Lava-SA — authorised distributor</p>
           <p>
             Questions?{" "}
-            <a href="mailto:info@lava-sa.co.za" className="text-secondary hover:underline font-semibold">
-              info@lava-sa.co.za
+            <a href="mailto:info@lava-sa.com" className="text-secondary hover:underline font-semibold">
+              info@lava-sa.com
             </a>
           </p>
           <p>

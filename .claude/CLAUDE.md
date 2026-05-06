@@ -4,8 +4,8 @@
 - **Client:** Lava Vide South Africa (Anneke & Wilco Uys)
 - **Project:** Full website rebuild + digital market expansion 2026–2030
 - **Dev start:** `cd nextjs && npm run dev` (port 3000)
-- **Staging URL:** https://lava-sa.online
-- **Live domain:** https://lava-sa.co.za (DNS switch after approval)
+- **Staging URL:** Vercel preview deployments (project dashboard)
+- **Live domain:** https://www.lava-sa.com (primary)
 - **Go-live deadline:** 20 April 2026 — 4 days before Huntex 2026
 
 ## Stack
@@ -13,7 +13,7 @@
 - **Backend:** Supabase (products, orders, customers, discounts)
 - **Payments:** PayFast (retain existing — no change)
 - **Email:** Resend
-- **Hosting:** Vercel → lava-sa.co.za DNS switch when approved
+- **Hosting:** Vercel (production → www.lava-sa.com)
 
 ## Key Paths
 | What | Path |
@@ -33,4 +33,4 @@
 For colours, tokens and component patterns, read `.claude/docs/design-system.md`.
 
 ## Current Phase
-**Phase 1 — Next.js build on lava-sa.online** (deadline 20 April 2026)
+**Phase 1 — Next.js on Vercel** (deadline 20 April 2026)

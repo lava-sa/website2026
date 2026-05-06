@@ -1,7 +1,8 @@
 import { Resend } from "resend";
 
-const DEFAULT_FROM_EMAIL = "Lava-SA Orders <noreply@lava-sa.online>";
-const DEFAULT_ADMIN_EMAILS = ["info@lava-sa.co.za"];
+/** Must match a domain verified in Resend (e.g. send.lava-sa.com). Override with EMAIL_FROM / ORDER_EMAIL_FROM. */
+const DEFAULT_FROM_EMAIL = "Lava-SA Orders <noreply@send.lava-sa.com>";
+const DEFAULT_ADMIN_EMAILS = ["info@lava-sa.com"];
 
 export interface EmailConfig {
   fromEmail: string;

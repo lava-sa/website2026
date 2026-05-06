@@ -39,6 +39,7 @@ type OrderRow = {
   created_at: string;
   status: string;
   email: string;
+  trashed_at?: string | null;
 };
 type HistoryRow = {
   total: number | string;
@@ -153,7 +154,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const yoyGrowthPct = getTargetYoYGrowth();
   const loadErrors: string[] = [];
 
-  const [products, reviews, lowStock, currentOrders, historyOrders, customers] = await Promise.all([
+  const [products, reviews, lowStock, historyOrders, customers] = await Promise.all([
     supabase.from("products").select("id", { count: "exact", head: true }).eq("is_published", true),
     supabase.from("reviews").select("id", { count: "exact", head: true }).eq("approved", false),
     supabase
@@ -162,10 +163,16 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       .eq("stock_status", "out_of_stock")
       .eq("is_published", true)
       .limit(20),
-    supabase.from("orders").select("id, total, created_at, status, email"),
     supabase.from("order_history").select("total, order_date, status, customer_email, items"),
     supabase.from("customers").select("id", { count: "exact", head: true }),
   ]);
+
+  let currentOrders = await supabase.from("orders").select("id, total, created_at, status, email, trashed_at");
+  let hasTrashedColumn = true;
+  if (currentOrders.error && (currentOrders.error as { code?: string }).code === "42703") {
+    hasTrashedColumn = false;
+    currentOrders = await supabase.from("orders").select("id, total, created_at, status, email");
+  }
 
   if (products.error) loadErrors.push(`products: ${products.error.message}`);
   if (reviews.error) loadErrors.push(`reviews: ${reviews.error.message}`);
@@ -179,7 +186,10 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const outOfStock = lowStock.error ? [] : (lowStock.data ?? []);
   const customerCount = customers.error ? 0 : customers.count ?? 0;
 
-  const currentRows: OrderRow[] = currentOrders.error ? [] : ((currentOrders.data ?? []) as OrderRow[]);
+  const currentRowsBase: OrderRow[] = currentOrders.error ? [] : ((currentOrders.data ?? []) as OrderRow[]);
+  const currentRows: OrderRow[] = hasTrashedColumn
+    ? currentRowsBase.filter((row) => !row.trashed_at)
+    : currentRowsBase;
   const historyRows: HistoryRow[] = historyOrders.error ? [] : ((historyOrders.data ?? []) as HistoryRow[]);
 
   const allOrdersCount = currentRows.length + historyRows.length;

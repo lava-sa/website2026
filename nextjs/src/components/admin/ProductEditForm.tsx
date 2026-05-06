@@ -42,6 +42,9 @@ export default function ProductEditForm({
     sort_order:        product.sort_order ?? 0,
     funnel_enabled:    initialFunnelConfig.enabled,
     funnel_steps:      initialFunnelConfig.steps,
+    ai_summary:        product.specs?.ai_summary ?? "",
+    ai_search_terms:   product.specs?.ai_search_terms ?? "",
+    ai_use_cases:      product.specs?.ai_use_cases ?? "",
   });
 
   const [saving, setSaving] = useState(false);
@@ -127,6 +130,18 @@ export default function ProductEditForm({
     };
   }
 
+  function autoFillSeo() {
+    const title = `${form.name} | Lava-SA`.slice(0, 60);
+    const source = (form.short_description || form.description || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    const description = (source || `Buy ${form.name} from Lava-SA in South Africa. German quality vacuum sealing products with nationwide delivery and local support.`).slice(0, 160);
+    setForm((prev) => ({
+      ...prev,
+      seo_title: title,
+      seo_description: description,
+    }));
+    setSaved(false);
+  }
+
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
@@ -146,6 +161,9 @@ export default function ProductEditForm({
           enabled: form.funnel_enabled,
           steps: form.funnel_steps,
         }),
+        ai_summary: form.ai_summary || null,
+        ai_search_terms: form.ai_search_terms || null,
+        ai_use_cases: form.ai_use_cases || null,
       },
     };
 
@@ -298,6 +316,15 @@ export default function ProductEditForm({
             <section className="bg-white border border-gray-200 p-6">
               <h2 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wide">SEO</h2>
               <div className="space-y-4">
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={autoFillSeo}
+                    className="text-xs font-bold border border-gray-200 px-3 py-1.5 text-gray-700 hover:border-primary hover:text-primary transition-colors"
+                  >
+                    Auto-fill SEO
+                  </button>
+                </div>
                 <div>
                   <label className={labelCls}>SEO Title <span className="text-gray-400 normal-case font-normal">(leave blank to use product name)</span></label>
                   <input type="text" value={form.seo_title} onChange={set("seo_title")}
@@ -311,6 +338,42 @@ export default function ProductEditForm({
                     placeholder="Short summary for Google search results (150–160 characters)"
                     className={`${inputCls} resize-none`} />
                   <p className="text-xs text-gray-400 mt-1">{form.seo_description.length}/160 characters</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-white border border-gray-200 p-6">
+              <h2 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wide">AI Discoverability</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className={labelCls}>AI Summary</label>
+                  <textarea
+                    value={form.ai_summary}
+                    onChange={set("ai_summary")}
+                    rows={3}
+                    placeholder="Plain-language summary of what this product is best for."
+                    className={`${inputCls} resize-none`}
+                  />
+                </div>
+                <div>
+                  <label className={labelCls}>AI Search Terms</label>
+                  <input
+                    type="text"
+                    value={form.ai_search_terms}
+                    onChange={set("ai_search_terms")}
+                    placeholder="e.g. vacuum sealer South Africa, biltong vacuum packaging"
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className={labelCls}>AI Use Cases</label>
+                  <textarea
+                    value={form.ai_use_cases}
+                    onChange={set("ai_use_cases")}
+                    rows={2}
+                    placeholder="Comma-separated use cases: hunting, meal prep, sous vide..."
+                    className={`${inputCls} resize-none`}
+                  />
                 </div>
               </div>
             </section>

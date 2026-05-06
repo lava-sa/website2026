@@ -55,10 +55,10 @@ The homepage currently shows points equal to the full rand price (so 14,500 pts 
 
 ### P0-E · Domain / noindex setup
 **Reviewers:** LM Arena  
-**Context:** Site is live on `website2026-delta.vercel.app` and `lava-sa.online`. Legal pages reference `lava-sa.co.za`. Google may index the Vercel preview URL.  
+**Context:** Site is live on `www.lava-sa.com` (Vercel). Google may still index legacy preview URLs until redirects/noindex are fully applied.  
 **Fix:**  
 1. Add `X-Robots-Tag: noindex` to the Vercel preview domain in `vercel.json` or via Vercel project settings → "Deployment Protection" or redirect rules.  
-2. DNS switch to `lava-sa.co.za` is already in the blockers list — prioritise after HuntEx.  
+2. ~~DNS switch to `.co.za`~~ — superseded; primary domain is `www.lava-sa.com`.  
 3. Once on production domain, submit sitemap to Google Search Console.
 
 ---
@@ -137,7 +137,7 @@ The homepage currently shows points equal to the full rand price (so 14,500 pts 
 **Fix:** Standardise across all pages:  
 - **Legal name:** "Lava Vide South Africa (Pty) Ltd" (or whatever the registered name is — 🤝 confirm)  
 - **Trading name:** "Lava-SA" or "Lava South Africa" — pick one  
-- **Contact email in legal pages:** `anneke@lava-sa.co.za` (operational) vs `info@lava-sa.co.za` (footer). Legal pages should use the official registered contact.  
+- **Contact email in legal pages:** Use `info@lava-sa.com` (and operational addresses in env) consistently with the live domain.  
 - Fix the double title bug: "Lava South Africa | Lava South Africa" in page metadata.
 
 ---
@@ -303,7 +303,7 @@ The homepage currently shows points equal to the full rand price (so 14,500 pts 
 
 ## Issues NOT raised that are already in the blockers list
 These are in the existing `project_state.md` blockers and do not need to be re-created:
-- DNS switch to lava-sa.co.za
+- Primary domain: www.lava-sa.com
 - Run Supabase SQL migration files
 - Bank details for EFT checkout
 - Sous vide product images

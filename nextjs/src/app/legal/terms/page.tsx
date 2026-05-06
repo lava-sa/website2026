@@ -20,7 +20,7 @@ export default function TermsPage() {
           </p>
           <p className="mt-4 text-copy-muted">
             These Terms and Conditions govern all orders placed through{" "}
-            <strong className="text-primary">lava-sa.co.za</strong> and apply to
+            <strong className="text-primary">www.lava-sa.com</strong> and apply to
             the purchase of products from Lava Vide SA (Pty) Ltd. By placing an
             order you confirm that you have read, understood and agreed to these terms.
           </p>
@@ -32,10 +32,10 @@ export default function TermsPage() {
           <Section id="company" title="1. Company Information">
             <Table rows={[
               ["Legal name",    "Lava Vide SA (Pty) Ltd"],
-              ["Trading as",    "Lava South Africa / lava-sa.co.za"],
+              ["Trading as",    "Lava South Africa / www.lava-sa.com"],
               ["Address",       "5 Stirling Road, Bryanston, Sandton 2191, South Africa"],
               ["Telephone",     "+27 (0)72 160 5556"],
-              ["Email",         "info@lava-sa.co.za"],
+              ["Email",         "info@lava-sa.com"],
               ["Business hours","Monday – Friday, 09:00 – 17:00 SAST"],
             ]} />
           </Section>
@@ -146,7 +146,7 @@ export default function TermsPage() {
             </p>
             <ul>
               <li>The product is in its original, unused condition with all original packaging intact.</li>
-              <li>You notify us in writing (email to info@lava-sa.co.za) within 30 days of delivery.</li>
+              <li>You notify us in writing (email to info@lava-sa.com) within 30 days of delivery.</li>
               <li>The product is not a customised or special-order item (V.400, V.500 commercial range).</li>
             </ul>
             <p>
@@ -229,7 +229,7 @@ function LegalFooter() {
     <div className="mt-16 pt-8 border-t border-border">
       <p className="text-xs text-copy-muted">
         Questions about these terms? Contact us at{" "}
-        <a href="mailto:info@lava-sa.co.za" className="text-primary font-semibold">info@lava-sa.co.za</a>
+        <a href="mailto:info@lava-sa.com" className="text-primary font-semibold">info@lava-sa.com</a>
         {" "}or call{" "}
         <a href="tel:+27721605556" className="text-primary font-semibold">+27 72 160 5556</a>.
       </p>

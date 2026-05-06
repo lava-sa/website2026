@@ -1,6 +1,7 @@
 import type { CartItem } from "@/lib/cart-context";
 import { getEftBankDetails } from "@/lib/bank-details";
 import { getEmailConfig, getResendClient } from "@/lib/email-config";
+import { getPublicSiteUrl } from "@/lib/seo";
 
 type PaymentMethod = "payfast" | "bank_transfer";
 
@@ -68,7 +69,7 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
 
   const fullName = `${args.customer.first_name} ${args.customer.last_name}`.trim();
   const methodLabel = args.paymentMethod === "bank_transfer" ? "EFT / Bank Transfer" : "PayFast";
-  const orderUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://lava-sa.online"}/checkout/success?order=${encodeURIComponent(args.orderNumber)}${args.paymentMethod === "bank_transfer" ? "&method=eft" : ""}`;
+  const orderUrl = `${getPublicSiteUrl()}/checkout/success?order=${encodeURIComponent(args.orderNumber)}${args.paymentMethod === "bank_transfer" ? "&method=eft" : ""}`;
   const rows = buildItemsHtml(args.cart);
 
   const customerSubject =
@@ -90,7 +91,7 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
           <tr><td style="padding:4px 8px 4px 0;color:#555;">Account type</td><td style="padding:4px 0;"><strong>${esc(bank.accountType)}</strong></td></tr>
           <tr><td style="padding:8px 8px 4px 0;color:#555;vertical-align:top;">Payment reference</td><td style="padding:8px 0;"><strong style="font-size:16px;color:#0d2b3e;">${esc(args.orderNumber)}</strong><br/><span style="font-size:12px;color:#666;">Use this exact reference so we can match your payment.</span></td></tr>
         </table>
-        <p style="margin:12px 0 0;font-size:12px;color:#92400e;">Please email proof of payment to <a href="mailto:info@lava-sa.co.za">info@lava-sa.co.za</a> to speed up processing.</p>
+        <p style="margin:12px 0 0;font-size:12px;color:#92400e;">Please email proof of payment to <a href="mailto:info@lava-sa.com">info@lava-sa.com</a> to speed up processing.</p>
       </div>`
       : "";
 

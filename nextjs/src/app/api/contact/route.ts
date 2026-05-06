@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
           <h3 style="color:#0d2b3e">Message</h3>
           <div style="background:#f5f5f5;padding:16px;border-left:4px solid #b8973a;white-space:pre-wrap">${message}</div>
           <p style="color:#999;font-size:12px;margin-top:24px">
-            Sent via lava-sa.online contact form · ${new Date().toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg" })}
+            Sent via www.lava-sa.com contact form · ${new Date().toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg" })}
           </p>
         </div>
       `,

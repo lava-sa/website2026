@@ -6,6 +6,13 @@
 import type { Metadata } from "next";
 
 export const SITE_URL = "https://www.lava-sa.com";
+
+/** Base URL for PayFast return URLs, emails, etc. when `NEXT_PUBLIC_SITE_URL` is unset. */
+export function getPublicSiteUrl(): string {
+  const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  return fromEnv || SITE_URL;
+}
+
 export const ORG_NAME = "Lava-SA";
 export const DEFAULT_OG_IMAGE = "/images/headers/lava-sa-vacuum-sealers-V300-header-pick-1250.jpg";
 

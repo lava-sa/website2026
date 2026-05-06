@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Conditions of Use",
-  description: "Conditions of use for lava-sa.co.za — pricing, returns, defective products and your rights as a customer.",
+  description: "Conditions of use for www.lava-sa.com — pricing, returns, defective products and your rights as a customer.",
 };
 
 export default function ConditionsPage() {
@@ -18,7 +18,7 @@ export default function ConditionsPage() {
             Last updated: April 2026 · Lava Vide SA (Pty) Ltd
           </p>
           <p className="mt-4 text-copy-muted">
-            By accessing and using <strong className="text-primary">lava-sa.co.za</strong> and
+            By accessing and using <strong className="text-primary">www.lava-sa.com</strong> and
             placing an order, you agree to the following conditions of use. Please read these
             carefully before purchasing.
           </p>
@@ -28,7 +28,7 @@ export default function ConditionsPage() {
 
           <Section id="pricing" title="1. Pricing">
             <ul>
-              <li>All prices displayed on lava-sa.co.za are in South African Rand (ZAR) and include 15% VAT.</li>
+              <li>All prices displayed on www.lava-sa.com are in South African Rand (ZAR) and include 15% VAT.</li>
               <li>Prices are subject to change without prior notice due to currency fluctuations, manufacturer price adjustments or stock changes.</li>
               <li>If a price changes between your order and dispatch, we will notify you before processing the order.</li>
               <li>Pricing errors may occur. We reserve the right to cancel orders affected by pricing errors and will issue a full refund immediately.</li>
@@ -82,7 +82,7 @@ export default function ConditionsPage() {
               so we can engage the courier and resolve the issue promptly. Contact us at:
             </p>
             <Table rows={[
-              ["Email",   "info@lava-sa.co.za"],
+              ["Email",   "info@lava-sa.com"],
               ["Phone",   "+27 (0)72 160 5556"],
               ["Hours",   "Monday – Friday, 09:00 – 17:00"],
             ]} />
@@ -209,7 +209,7 @@ function LegalFooter() {
     <div className="mt-16 pt-8 border-t border-border">
       <p className="text-xs text-copy-muted">
         Questions? Contact{" "}
-        <a href="mailto:info@lava-sa.co.za" className="text-primary font-semibold">info@lava-sa.co.za</a>
+        <a href="mailto:info@lava-sa.com" className="text-primary font-semibold">info@lava-sa.com</a>
         {" "}or call{" "}
         <a href="tel:+27721605556" className="text-primary font-semibold">+27 72 160 5556</a>.
       </p>

@@ -9,6 +9,27 @@ async function isAuthed(): Promise<boolean> {
   return store.get("admin_session")?.value === "authenticated";
 }
 
+function stripHtml(input: string): string {
+  return input.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function truncate(input: string, max: number): string {
+  return input.length <= max ? input : `${input.slice(0, max - 1).trim()}…`;
+}
+
+function autoSeoTitle(name: string): string {
+  return truncate(`${name} | Lava-SA`, 60);
+}
+
+function autoSeoDescription(name: string, shortDescription?: string | null, description?: string | null): string {
+  const base = stripHtml(shortDescription || description || "").trim();
+  if (base) return truncate(base, 160);
+  return truncate(
+    `Buy ${name} from Lava-SA in South Africa. German quality vacuum sealing products with nationwide delivery and local support.`,
+    160
+  );
+}
+
 function generateSlug(name: string): string {
   return name
     .toLowerCase()
@@ -23,7 +44,7 @@ export async function POST(request: NextRequest) {
   if (!(await isAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  const { name, sku, category_id, regular_price, stock_status, is_published, short_description, description } = body;
+  const { name, sku, category_id, regular_price, stock_status, is_published, short_description, description, seo_title, seo_description } = body;
 
   if (!name || regular_price === undefined || regular_price === null) {
     return NextResponse.json({ error: "Name and price are required" }, { status: 400 });
@@ -55,6 +76,8 @@ export async function POST(request: NextRequest) {
       is_featured:       false,
       short_description: short_description || null,
       description:       description || null,
+      seo_title:         (seo_title?.trim?.() || autoSeoTitle(name)),
+      seo_description:   (seo_description?.trim?.() || autoSeoDescription(name, short_description, description)),
       updated_at:        new Date().toISOString(),
     })
     .select()

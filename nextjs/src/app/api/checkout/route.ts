@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
 import { generateSignature, getPayFastUrl } from "@/lib/payfast";
 import { sendOrderPlacedEmails } from "@/lib/order-email";
+import { getPublicSiteUrl } from "@/lib/seo";
 import type { CartItem } from "@/lib/cart-context";
 
 const FREE_SHIPPING_THRESHOLD = 2500;
@@ -12,9 +13,25 @@ function getShipping(subtotal: number): number {
   return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
 }
 
-function generateOrderNumber(): string {
-  // e.g. ORD-LK3M9F2P
-  return "ORD-" + Date.now().toString(36).toUpperCase().slice(-8);
+async function generateOrderNumber(supabase: ReturnType<typeof createServiceClient>): Promise<string> {
+  const { data, error } = await supabase
+    .from("orders")
+    .select("order_number")
+    .order("created_at", { ascending: false })
+    .limit(500);
+
+  if (error) throw new Error(`Failed to generate order number: ${error.message}`);
+
+  let maxNumeric = 6129;
+  for (const row of data ?? []) {
+    const raw = String(row.order_number ?? "").trim();
+    const m = raw.match(/^(?:ORD-)?(\d+)$/i);
+    if (!m) continue;
+    const parsed = parseInt(m[1], 10);
+    if (Number.isFinite(parsed)) maxNumeric = Math.max(maxNumeric, parsed);
+  }
+
+  return `ORD-${maxNumeric + 1}`;
 }
 
 function truncate(str: string, max: number): string {
@@ -57,34 +74,47 @@ export async function POST(req: NextRequest) {
   const total    = subtotal + shipping;
 
   // ── 3. Save order to Supabase ──────────────────────────────────────────────
-  const supabase    = createServiceClient();
-  const orderNumber = generateOrderNumber();
+  const supabase = createServiceClient();
 
-  // Insert order — status always "pending" (valid in CHECK constraint).
-  // Bank-transfer orders are manually marked "paid" by admin once payment clears.
-  const { data: order, error: orderErr } = await supabase
-    .from("orders")
-    .insert({
-      order_number: orderNumber,
-      first_name:   customer.first_name,
-      last_name:    customer.last_name,
-      email:        customer.email,
-      phone:        customer.phone,
-      address:      customer.address,
-      city:         customer.city,
-      province:     customer.province,
-      postal_code:  customer.postal_code,
-      notes:        customer.notes ?? null,
-      subtotal,
-      shipping,
-      total,
-      status: "pending",
-    })
-    .select("id")
-    .single();
+  let orderNumber = "";
+  let order: { id: string } | null = null;
+  let orderErr: { message: string; code?: string } | null = null;
 
-  if (orderErr) {
-    console.error("Order insert error:", orderErr.message);
+  for (let attempt = 0; attempt < 5; attempt++) {
+    orderNumber = await generateOrderNumber(supabase);
+    const insert = await supabase
+      .from("orders")
+      .insert({
+        order_number: orderNumber,
+        first_name: customer.first_name,
+        last_name: customer.last_name,
+        email: customer.email,
+        phone: customer.phone,
+        address: customer.address,
+        city: customer.city,
+        province: customer.province,
+        postal_code: customer.postal_code,
+        notes: customer.notes ?? null,
+        subtotal,
+        shipping,
+        total,
+        status: "pending",
+      })
+      .select("id")
+      .single();
+
+    if (!insert.error) {
+      order = insert.data;
+      orderErr = null;
+      break;
+    }
+
+    orderErr = { message: insert.error.message, code: (insert.error as { code?: string }).code };
+    if (orderErr.code !== "23505") break;
+  }
+
+  if (orderErr || !order) {
+    console.error("Order insert error:", orderErr?.message ?? "Unknown insert error");
     return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
   }
 
@@ -127,7 +157,7 @@ export async function POST(req: NextRequest) {
   }
 
   // ── 6. Build PayFast params (ORDER MATTERS for signature) ──────────────────
-  const siteUrl   = process.env.NEXT_PUBLIC_SITE_URL ?? "https://lava-sa.online";
+  const siteUrl = getPublicSiteUrl();
   const merchantId  = process.env.NEXT_PUBLIC_PAYFAST_MERCHANT_ID || "";
   const merchantKey = process.env.NEXT_PUBLIC_PAYFAST_MERCHANT_KEY || "";
   const passphrase  = process.env.PAYFAST_PASSPHRASE || "";

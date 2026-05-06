@@ -233,8 +233,8 @@ export default async function SparePartsPage() {
               +27 72 160 5556
             </a>{" "}
             or email{" "}
-            <a href="mailto:info@lava-sa.co.za" className="font-semibold text-primary hover:text-secondary transition-colors">
-              info@lava-sa.co.za
+            <a href="mailto:info@lava-sa.com" className="font-semibold text-primary hover:text-secondary transition-colors">
+              info@lava-sa.com
             </a>
             .
           </p>

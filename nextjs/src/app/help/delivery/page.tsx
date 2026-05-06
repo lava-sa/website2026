@@ -145,11 +145,11 @@ export default function DeliveryPage() {
                 <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
               </div>
             </a>
-            <a href="mailto:info@lava-sa.co.za" className="flex items-center gap-3 border border-border bg-surface px-4 py-4 hover:border-primary transition-all">
+            <a href="mailto:info@lava-sa.com" className="flex items-center gap-3 border border-border bg-surface px-4 py-4 hover:border-primary transition-all">
               <Mail className="h-5 w-5 text-secondary shrink-0" />
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-copy-muted">Email</p>
-                <p className="font-bold text-primary">info@lava-sa.co.za</p>
+                <p className="font-bold text-primary">info@lava-sa.com</p>
                 <p className="text-xs text-copy-muted">Reply within 1 business day</p>
               </div>
             </a>

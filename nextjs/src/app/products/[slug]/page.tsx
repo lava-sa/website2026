@@ -216,6 +216,9 @@ export default async function ProductDetailPage({
   const isVacuumMachine = product.categories?.slug === "vacuum-machines";
   const isSousVide = product.categories?.slug === "sous-vide";
   const funnelConfig = parseFunnelConfig(product.specs?.funnel_config);
+  const aiSummary = String(product.specs?.ai_summary ?? "").trim();
+  const aiSearchTerms = String(product.specs?.ai_search_terms ?? "").trim();
+  const aiUseCases = String(product.specs?.ai_use_cases ?? "").trim();
 
   // ── Consumables (bags + rolls) — only loaded on machine pages ───────────────
   let compatibleBags: Awaited<ReturnType<typeof getProductsByCategory>> = [];
@@ -525,6 +528,17 @@ export default async function ProductDetailPage({
               className="prose prose-lg max-w-none text-copy"
               dangerouslySetInnerHTML={{ __html: product.description }}
             />
+          </div>
+        </section>
+      )}
+
+      {(aiSummary || aiSearchTerms || aiUseCases) && (
+        <section className="py-10 border-b border-border">
+          <div className="section-container max-w-3xl mx-auto">
+            <h2 className="text-xl font-bold text-primary mb-3">Product At a Glance</h2>
+            {aiSummary && <p className="text-copy mb-2">{aiSummary}</p>}
+            {aiUseCases && <p className="text-sm text-copy-muted mb-2"><strong>Best for:</strong> {aiUseCases}</p>}
+            {aiSearchTerms && <p className="text-xs text-copy-muted"><strong>Related searches:</strong> {aiSearchTerms}</p>}
           </div>
         </section>
       )}

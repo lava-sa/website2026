@@ -99,9 +99,9 @@ const SiteFooter = () => {
                 </Link>
               </li>
               <li>
-                <Link href="mailto:info@lava-sa.co.za" className="flex items-center gap-3 text-white/70 hover:text-white transition-colors">
+                <Link href="mailto:info@lava-sa.com" className="flex items-center gap-3 text-white/70 hover:text-white transition-colors">
                   <Mail className="h-5 w-5 shrink-0 text-secondary" />
-                  <span>info@lava-sa.co.za</span>
+                  <span>info@lava-sa.com</span>
                 </Link>
               </li>
             </ul>

@@ -35,7 +35,7 @@ import { createClient } from "@supabase/supabase-js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PROTECT_EMAILS = new Set(
-  ["info@lava-sa.co.za", "anneke@lava-sa.co.za", "ignatius@crmsolutions.app"].map((e) => e.toLowerCase())
+  ["info@lava-sa.com", "anneke@lava-sa.com", "ignatius@crmsolutions.app"].map((e) => e.toLowerCase())
 );
 
 /** Never treat as spam (system / partner domains) */

@@ -307,13 +307,13 @@ export default function AboutPage() {
                   </div>
                 </a>
                 <a
-                  href="mailto:info@lava-sa.co.za"
+                  href="mailto:info@lava-sa.com"
                   className="flex items-center gap-3 border border-border bg-surface px-4 py-3.5 hover:border-primary hover:bg-white transition-all group"
                 >
                   <Mail className="h-4 w-4 text-secondary shrink-0" />
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-copy-muted">Email Us</p>
-                    <p className="text-sm font-semibold text-primary group-hover:text-secondary transition-colors">info@lava-sa.co.za</p>
+                    <p className="text-sm font-semibold text-primary group-hover:text-secondary transition-colors">info@lava-sa.com</p>
                   </div>
                 </a>
               </div>
@@ -533,9 +533,9 @@ export default function AboutPage() {
               {
                 icon: Mail,
                 title: "Email Us",
-                detail: "info@lava-sa.co.za",
+                detail: "info@lava-sa.com",
                 sub: "Reply within 1 business day",
-                href: "mailto:info@lava-sa.co.za",
+                href: "mailto:info@lava-sa.com",
               },
               {
                 icon: MapPin,

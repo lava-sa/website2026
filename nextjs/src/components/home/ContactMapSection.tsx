@@ -63,7 +63,7 @@ const ContactMapSection = () => {
                 </div>
                 <div>
                   <h3 className="text-xs font-black uppercase tracking-widest text-secondary mb-1">Email Address</h3>
-                  <a href="mailto:info@lava-sa.co.za" className="text-sm text-primary hover:text-secondary transition-colors font-semibold">info@lava-sa.co.za</a>
+                  <a href="mailto:info@lava-sa.com" className="text-sm text-primary hover:text-secondary transition-colors font-semibold">info@lava-sa.com</a>
                 </div>
               </div>
             </div>

@@ -91,7 +91,7 @@ export default async function SuccessPage({
                 <ul className="text-xs text-amber-700 space-y-1">
                   <li>• Use your order number <strong>{order}</strong> as the payment reference — no other reference</li>
                   <li>• Payment must reflect within <strong>3 business days</strong> or the order will be cancelled</li>
-                  <li>• Send your proof of payment to <strong>info@lava-sa.co.za</strong> to speed up processing</li>
+                  <li>• Send your proof of payment to <strong>info@lava-sa.com</strong> to speed up processing</li>
                 </ul>
               </div>
             </div>
@@ -102,7 +102,7 @@ export default async function SuccessPage({
               <ol className="space-y-3">
                 {[
                   { step: "1", text: "Make your EFT payment using the details above" },
-                  { step: "2", text: `Email your proof of payment to info@lava-sa.co.za with reference ${order ?? "your order number"}` },
+                  { step: "2", text: `Email your proof of payment to info@lava-sa.com with reference ${order ?? "your order number"}` },
                   { step: "3", text: "We verify payment and dispatch your order within 1–2 business days" },
                   { step: "4", text: "You receive a shipping confirmation with tracking details" },
                 ].map(({ step, text }) => (
@@ -144,9 +144,9 @@ export default async function SuccessPage({
               className="flex items-center gap-2 text-sm text-copy-muted hover:text-primary transition-colors">
               <Phone className="h-4 w-4" /> +27 72 160 5556
             </a>
-            <a href="mailto:info@lava-sa.co.za"
+            <a href="mailto:info@lava-sa.com"
               className="flex items-center gap-2 text-sm text-copy-muted hover:text-primary transition-colors">
-              <Mail className="h-4 w-4" /> info@lava-sa.co.za
+              <Mail className="h-4 w-4" /> info@lava-sa.com
             </a>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
