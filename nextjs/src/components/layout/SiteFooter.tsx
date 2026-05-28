@@ -49,10 +49,10 @@ const SiteFooter = () => {
               Distributing premium German vacuum sealers and food preservation technology in South Africa since 2007.
             </p>
             <div className="flex items-center gap-4">
-              <Link href="https://facebook.com/lavasouthafrica" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-secondary transition-colors">
+              <Link href="https://facebook.com/lavavidesa" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-secondary transition-colors">
                 <Facebook className="h-4 w-4" />
               </Link>
-              <Link href="https://instagram.com/lavasouthafrica" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-secondary transition-colors">
+              <Link href="https://instagram.com/lava_vide_sa" className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-secondary transition-colors">
                 <Instagram className="h-4 w-4" />
               </Link>
             </div>
@@ -116,6 +116,7 @@ const SiteFooter = () => {
             <Link href="/legal/terms" className="hover:text-white transition-colors">Terms & Conditions</Link>
             <Link href="/legal/conditions" className="hover:text-white transition-colors">Conditions of Use</Link>
             <Link href="/legal/shipping-returns" className="hover:text-white transition-colors">Shipping & Returns</Link>
+            <Link href="/site-info" className="hover:text-white transition-colors">Site Info</Link>
             <button
               onClick={() => { clearConsent(); window.location.reload(); }}
               className="flex items-center gap-1.5 hover:text-white transition-colors"
