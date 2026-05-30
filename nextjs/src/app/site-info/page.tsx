@@ -57,7 +57,7 @@ const TODO = [
   "Test PayFast in sandbox mode before DNS cutover (NEXT_PUBLIC_PAYFAST_SANDBOX=true)",
   "Newsletter launch to 1,285 migrated customers (export CSV → Brevo)",
   "Fix homepage title tag (89 chars → 60 chars max)",
-  "Fix blog page H1 ("Lava Blog" → keyword-containing heading)",
+  'Fix blog page H1 ("Lava Blog" → keyword-containing heading)',
 ];
 
 const DONE = [

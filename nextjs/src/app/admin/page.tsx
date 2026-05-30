@@ -20,6 +20,7 @@ import {
   Target,
   Sparkles,
   CircleDollarSign,
+  Video,
 } from "lucide-react";
 import { formatZAR, formatNumber, formatPercent } from "@/lib/format";
 import { getDashboardStats } from "@/lib/admin-dashboard-stats";
@@ -94,6 +95,13 @@ export default async function AdminDashboard() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/site-review"
+              className="inline-flex items-center gap-2 bg-secondary text-primary text-xs font-bold px-4 py-2.5 hover:bg-secondary/90 transition-colors"
+            >
+              <Video className="h-3.5 w-3.5" />
+              Site review
+            </Link>
             <Link
               href="/admin/import"
               className="inline-flex items-center gap-2 bg-primary text-white text-xs font-bold px-4 py-2.5 hover:bg-primary/90 transition-colors"

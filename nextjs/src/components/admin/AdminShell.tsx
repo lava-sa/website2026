@@ -18,11 +18,15 @@ import {
   ExternalLink,
   Upload,
   History,
+  MessagesSquare,
+  PhoneForwarded,
+  Video,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/admin",             label: "Dashboard",     icon: LayoutDashboard, exact: true  },
+  { href: "/admin/site-review", label: "Site review",   icon: Video,           exact: false },
   { href: "/admin/products",    label: "Products",      icon: Package,         exact: false },
   { href: "/admin/orders",      label: "Orders",        icon: ShoppingCart,    exact: false },
   { href: "/admin/order-history", label: "Order history", icon: History,      exact: false },
@@ -30,6 +34,8 @@ const NAV = [
   { href: "/admin/mailing-list", label: "Mailing list", icon: Mail,            exact: false },
   { href: "/admin/customers",   label: "Customers",     icon: Users,           exact: false },
   { href: "/admin/reviews",     label: "Reviews",       icon: Star,            exact: false },
+  { href: "/admin/janet-chats", label: "Janet support chats", icon: MessagesSquare, exact: false },
+  { href: "/admin/janet-calls", label: "Janet calls", icon: PhoneForwarded, exact: false },
 ];
 
 function NavItem({ href, label, icon: Icon, exact }: typeof NAV[0]) {
@@ -87,6 +93,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
       {/* Footer */}
       <div className="border-t border-white/10 p-4 space-y-2">
+        <Link
+          href="/admin/site-review"
+          className="flex items-center gap-2 text-xs font-semibold text-secondary hover:text-white transition-colors"
+        >
+          <Video className="h-3.5 w-3.5" />
+          Site review rooms
+        </Link>
         <Link
           href="/"
           target="_blank"
