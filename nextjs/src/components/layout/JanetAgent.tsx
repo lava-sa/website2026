@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { X, MessageCircle, Mic, MicOff, Loader2 } from "lucide-react";
 import { GoogleGenAI, Modality } from "@google/genai";
 import type { Session } from "@google/genai";
-import { useCart } from "@/lib/cart-context"; // LAVA Cart Hook
+import { useCart } from "@/lib/cart-context";
+import { buildJanetKnowledgePromptBlock } from "@/lib/janet-knowledge";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types & Prompts
@@ -22,52 +23,57 @@ const MACHINE_SPECS = [
 ];
 
 function buildSystemPrompt(urlPath: string, pageContext: string) {
-  let instructions = `
+  return `
 You are Janet — a warm, knowledgeable, and professional voice advisor for LAVA South Africa, a premium German vacuum sealing company.
 
-IMPORTANT — GREET FIRST: You must speak first as soon as the session opens. Do not wait for the visitor to speak. Greet them warmly and naturally, then ask for their first name in the same opening. Example: "Hi! I'm Janet, your LAVA product advisor. May I get your first name?" Once they share it, use their first name naturally in later responses.
+IMPORTANT — GREET FIRST: Speak first as soon as the session opens. Do not wait for the visitor. Greet warmly, then ask ONLY for their first name (not surname, phone, or email yet). Example: "Hi! I'm Janet, your LAVA product advisor. What's your first name?" Use their first name naturally afterward.
 
-IMPORTANT — LANGUAGE: Speak English by default. DO NOT switch to Afrikaans or Zulu unless the user explicitly asks you to speak in another language.
+IMPORTANT — LANGUAGE: Speak English by default. Do not switch to Afrikaans or Zulu unless the user explicitly asks.
 
 YOUR ROLE
-- Advise customers on high-end LAVA vacuum sealers, bags, and butchery accessories. 
-- Answer questions honestly, cleanly, and naturally, using the Screen Text below to become an instant expert on whatever product they are viewing.
+- Advise on LAVA vacuum sealers, embossed channel bags, rolls, and butchery accessories.
+- Use the screen text below for prices and product names on the current page.
 
 PRICES
-- Always say the number first, then the word "Rand". For example, R 6999 is spoken as "6999 Rand".
+- Say the number first, then "Rand" (e.g. R 6999 → "6999 Rand").
 
-PAGE AWARENESS & SCREEN CONTEXT
-- You know that the user is currently looking at this website path: ${urlPath}
-- Below is the EXACT text scraped from the page they are looking at right now, containing all features, product names, sizes, and prices.
+PAGE AWARENESS
+- Current path: ${urlPath}
+- Screen text from the page they are viewing:
 ---
 ${pageContext}
 ---
-- Use this exact screen text to answer their questions. 
-- You must NEVER downgrade a customer. If they are looking at a premium V300 or V400 machine, help them buy THAT machine. Do not push a cheaper V100 unless they specifically ask for a budget option.
-- Casually acknowledge what they are looking at during your greeting based on the page text.
+- Never downgrade: if they view a V.300 or V.400, help them buy that machine unless they ask for budget options.
+
+${buildJanetKnowledgePromptBlock()}
 
 GLOBAL MACHINE CATALOG
-- Here is your internal global knowledge of all our core Vacuum Sealing Machines so you never get stuck comparing them:
 ${JSON.stringify(MACHINE_SPECS, null, 2)}
-- Use this grid to compare machines flawlessly, even if the user is not on the comparison page.
 
-SALES & TOOLS
-- First, thoroughly chat with the customer and answer their questions. DO NOT rush the sale.
-- When they are ready to buy, ask them if they would like to add the product to their cart.
-- CRITICAL TOOL RULE: If the user says "Yes please" or "Add it", YOU MUST STOP SPEAKING AND IMMEDIATELY EXECUTE the 'add_to_cart' tool function! Do NOT just say you will do it. You MUST physically trigger the tool.
-- Do not verbally promise to add it until AFTER you have successfully called the tool. Once you call the tool, conclude the sale explicitly and smoothly: "Fantastic! I've placed the [Product Name] into your cart. To complete your order, just click on your cart in the top right of the screen and follow the checkout steps. Thank you, and have a wonderful day!"
+SALES & add_to_cart TOOL
+- Answer questions first; do not rush the sale.
+- When they agree to buy, call add_to_cart immediately with productId = the website slug from screen text, productName, and numeric price. Do not promise it is in the cart until the tool succeeds.
+- After success: tell them to open the cart (top right) and complete checkout — name, phone, and email are collected there.
 
-CONTACT CAPTURE & FOLLOW-UP (CONDITIONAL)
-- IF the visitor successfully asked you to add an item to their cart, DO NOT ask for their contact details at the end. Checkout will capture it automatically. Just say goodbye normally.
-- IF they DID NOT place an item in their cart (they just chatted), ask: "Would you like Anneke to give you a call?"
-- If they say yes, then politely ask for their Name, Phone Number, and Email so she can reach out. Repeat the details back to confirm accuracy.
+CONTACT CAPTURE — TWO PHASES (critical)
+PHASE 1 — START OF CALL: First name only. Do not ask for phone or email at the start.
+
+PHASE 2 — END OF CALL (only if add_to_cart was NOT used this session):
+- Before ending, you MUST offer: "Would you like Anneke from our team to give you a quick call back?"
+- If yes:
+  1) Ask for MOBILE NUMBER first: "What's the best mobile number for Anneke to reach you?" Read digits back once to confirm.
+  2) Then ask for EMAIL only if they want email too: "If you'd like a quote by email as well, what's your email? Say it slowly — for example name at lavasa dot co dot za." Do NOT ask them to spell every letter unless a part is unclear. Say "at" and "dot", not symbols.
+  3) Do NOT ask for first name again if you already have it.
+  4) After you have phone (and email if given), call save_lead with firstName, phone, email.
+- If add_to_cart WAS used: do NOT ask for phone or email. Checkout captures everything. Say goodbye briefly.
+
+save_lead TOOL
+- Call when you have their callback mobile number (required). Include firstName from the start of the call and email if they gave it.
 
 RULES
-- Keep responses conversational, punchy, and UNDER 3 sentences per response.
-- Be patient. Actively listen and have a conversational flow. Answer questions properly before pitching.
-- Never read lists out entirely, speak naturally like a human on a phone call.
+- Under 3 sentences per turn when possible. Sound like a phone call, not a brochure.
+- Never invent bag sizes or nicknames (no "small", "jumbo", etc.).
   `;
-  return instructions;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -119,6 +125,9 @@ export const JanetAgent = () => {
   // Telemetry & State
   const [transcript, setTranscript] = useState<string[]>([]);
   const startedAtRef = useRef("");
+  const sessionIdRef = useRef("");
+  const cartAddedRef = useRef(false);
+  const leadRef = useRef<{ firstName?: string; phone?: string; email?: string }>({});
   const [inputDeviceLabel, setInputDeviceLabel] = useState("Not detected yet");
   const [outputDeviceLabel, setOutputDeviceLabel] = useState("System default");
 
@@ -183,21 +192,25 @@ export const JanetAgent = () => {
     playCtxRef.current = null;
     nextPlayTime.current = 0;
 
-    if (saveSession && startedAtRef.current) {
+    if (saveSession && startedAtRef.current && sessionIdRef.current) {
       try {
         await fetch("/api/janet-session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            sessionId: crypto.randomUUID(),
+            sessionId: sessionIdRef.current,
             pageUrl: window.location.pathname,
             transcript: transcript.join("\n"),
             durationSeconds: Math.round((Date.now() - new Date(startedAtRef.current).getTime()) / 1000),
             startedAt: startedAtRef.current,
+            firstName: leadRef.current.firstName,
+            phone: leadRef.current.phone,
+            email: leadRef.current.email,
+            cartAdded: cartAddedRef.current,
           }),
         });
       } catch (err) {
-        console.error("Janet Telemetry saved failed:", err);
+        console.error("Janet telemetry save failed:", err);
       }
     }
   }, [transcript]);
@@ -267,6 +280,9 @@ export const JanetAgent = () => {
     setStatus("connecting");
     setErrorMsg("");
     setTranscript([]);
+    sessionIdRef.current = crypto.randomUUID();
+    cartAddedRef.current = false;
+    leadRef.current = {};
     startedAtRef.current = new Date().toISOString();
 
     const currentUrlPath = window.location.pathname;
@@ -302,19 +318,32 @@ export const JanetAgent = () => {
             functionDeclarations: [
               {
                 name: "add_to_cart",
-                description: "CRITICAL: You MUST call this function the EXACT moment the user agrees to buy a product or asks you to add it to their cart. Do not speak instead of calling this.",
+                description: "Call the moment the user agrees to buy. Use the real product slug from the page.",
                 parameters: {
                   type: "OBJECT",
                   properties: {
-                    productId: { type: "STRING", description: "A simple ID slug. e.g. 'v300' or 'bags_25x30'" },
-                    productName: { type: "STRING", description: "The full readable name of the product you read from the screen" },
-                    price: { type: "NUMBER", description: "The numerical price of the item from the screen (no currency symbols)" }
+                    productId: { type: "STRING", description: "Website product slug from screen text" },
+                    productName: { type: "STRING", description: "Full product name from the page" },
+                    price: { type: "NUMBER", description: "Numeric price without currency symbols" },
                   },
-                  required: ["productId", "productName", "price"]
-                }
-              }
-            ]
-          }]
+                  required: ["productId", "productName", "price"],
+                },
+              },
+              {
+                name: "save_lead",
+                description: "Save callback details when the customer wants Anneke to call back and you have their mobile number.",
+                parameters: {
+                  type: "OBJECT",
+                  properties: {
+                    firstName: { type: "STRING", description: "First name from start of call" },
+                    phone: { type: "STRING", description: "Mobile number for callback (required)" },
+                    email: { type: "STRING", description: "Email if they provided it (optional)" },
+                  },
+                  required: ["phone"],
+                },
+              },
+            ],
+          }],
         },
         callbacks: {
           onopen: () => {
@@ -339,22 +368,47 @@ export const JanetAgent = () => {
             if (toolCall) {
               const responses = toolCall.functionCalls.map((call) => {
                 if (call.name === "add_to_cart") {
-                  const args = call.args as any;
-                  
-                  if (args.productId?.includes("bags")) {
-                     addItem({ id: "bags-25x30", slug: "vacuum-bags-25x30", name: "Vacuum Sealing Bags 25x30 (50 Pack) - 20% OFF", price: 279, sku: "BAG-2530", image: null });
-                  } else {
-                     const numPrice = Number(String(args.price).replace(/[^0-9.]/g, '')) || 0;
-                     addItem({ 
-                        id: args.productId || "unknown", 
-                        slug: args.productId || "unknown", 
-                        name: args.productName || "Lava Product", 
-                        price: numPrice, 
-                        sku: args.productId?.toUpperCase() || "SKU-UNKNOWN", 
-                        image: null 
-                     });
-                  }
-                  return { id: call.id, name: call.name, response: { result: { success: true, message: "Added successfully to UI cart." } } };
+                  const args = call.args as {
+                    productId?: string;
+                    productName?: string;
+                    price?: number | string;
+                  };
+                  const slug = String(args.productId || "unknown").trim();
+                  const numPrice = Number(String(args.price).replace(/[^0-9.]/g, "")) || 0;
+                  addItem({
+                    id: slug,
+                    slug,
+                    name: args.productName || "LAVA product",
+                    price: numPrice,
+                    sku: slug.slice(0, 32).toUpperCase(),
+                    image: null,
+                  });
+                  cartAddedRef.current = true;
+                  return {
+                    id: call.id,
+                    name: call.name,
+                    response: {
+                      result: {
+                        success: true,
+                        message: "Added to cart. Do not ask for phone or email — checkout collects them.",
+                      },
+                    },
+                  };
+                }
+                if (call.name === "save_lead") {
+                  const args = call.args as {
+                    firstName?: string;
+                    phone?: string;
+                    email?: string;
+                  };
+                  if (args.firstName) leadRef.current.firstName = args.firstName.trim();
+                  if (args.phone) leadRef.current.phone = args.phone.trim();
+                  if (args.email) leadRef.current.email = args.email.trim();
+                  return {
+                    id: call.id,
+                    name: call.name,
+                    response: { result: { success: true, message: "Lead saved for Anneke." } },
+                  };
                 }
                 return { id: call.id, name: call.name, response: { result: { error: "Unknown tool" } } };
               });

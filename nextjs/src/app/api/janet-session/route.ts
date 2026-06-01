@@ -3,68 +3,128 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getEmailConfig, getResendClient } from "@/lib/email-config";
 
+function getServiceSupabase() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !supabaseKey) return null;
+  return createClient(supabaseUrl, supabaseKey);
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { sessionId, pageUrl, transcript, durationSeconds, startedAt } = body;
+    const {
+      sessionId,
+      pageUrl,
+      transcript,
+      durationSeconds,
+      startedAt,
+      firstName,
+      phone,
+      email,
+      cartAdded,
+    } = body as {
+      sessionId?: string;
+      pageUrl?: string;
+      transcript?: string;
+      durationSeconds?: number;
+      startedAt?: string;
+      firstName?: string;
+      phone?: string;
+      email?: string;
+      cartAdded?: boolean;
+    };
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
+    const supabase = getServiceSupabase();
     let dbSuccess = false;
-    if (supabaseUrl && supabaseKey) {
-      const supabase = createClient(supabaseUrl, supabaseKey);
-      
-      const { error } = await supabase
-        .from("voice_sessions")
-        .insert([{
+
+    if (supabase && sessionId) {
+      const row = {
+        session_id: sessionId,
+        page_url: pageUrl ?? null,
+        source: "voice" as const,
+        transcript: transcript ?? null,
+        first_name: firstName?.trim() || null,
+        phone: phone?.trim() || null,
+        email: email?.trim() || null,
+        updated_at: new Date().toISOString(),
+        action_taken:
+          cartAdded === true
+            ? "Added to cart — checkout will capture full details"
+            : phone || email
+              ? "Anneke callback requested"
+              : "Voice session — no cart, no contact captured",
+      };
+
+      const { data: existing } = await supabase
+        .from("janet_support_chats")
+        .select("id")
+        .eq("session_id", sessionId)
+        .maybeSingle();
+
+      if (existing?.id) {
+        const { error } = await supabase
+          .from("janet_support_chats")
+          .update(row)
+          .eq("id", existing.id);
+        if (!error) dbSuccess = true;
+        else console.warn("janet_support_chats update:", error.message);
+      } else {
+        const { error } = await supabase.from("janet_support_chats").insert([row]);
+        if (!error) dbSuccess = true;
+        else console.warn("janet_support_chats insert:", error.message);
+      }
+
+      // Legacy table (optional)
+      await supabase.from("voice_sessions").insert([
+        {
           session_id: sessionId,
           page_url: pageUrl,
           transcript,
           duration_seconds: durationSeconds,
-          started_at: startedAt
-        }]);
-
-      if (error) {
-        console.warn("Could not write to Supabase. Make sure table 'voice_sessions' exists:", error);
-      } else {
-        dbSuccess = true;
-      }
+          started_at: startedAt,
+        },
+      ]);
     }
 
-    // Attempt Resend Email
-    let emailSuccess = false;
     const resend = getResendClient();
+    let emailSuccess = false;
     if (resend) {
       const { fromEmail, adminEmails, replyToEmail } = getEmailConfig();
+      const contactBlock =
+        firstName || phone || email
+          ? `<p><strong>First name:</strong> ${firstName || "—"}</p>
+             <p><strong>Phone:</strong> ${phone || "—"}</p>
+             <p><strong>Email:</strong> ${email || "—"}</p>
+             <p><strong>Added to cart:</strong> ${cartAdded ? "Yes" : "No"}</p>`
+          : `<p><em>No structured contact captured — see transcript.</em></p>`;
+
       const emailRes = await resend.emails.send({
         from: fromEmail,
         to: adminEmails,
         ...(replyToEmail ? { replyTo: replyToEmail } : {}),
-        subject: `New Lead from Janet Voice Agent - ${durationSeconds}s`,
+        subject: `Janet voice session — ${durationSeconds ?? 0}s${cartAdded ? " (cart)" : phone ? " (callback)" : ""}`,
         html: `
-          <h3>New Janet Voice Session</h3>
-          <p><strong>Page:</strong> ${pageUrl}</p>
-          <p><strong>Duration:</strong> ${durationSeconds}s</p>
+          <h3>Janet voice session</h3>
+          <p><strong>Page:</strong> ${pageUrl ?? "—"}</p>
+          <p><strong>Duration:</strong> ${durationSeconds ?? 0}s</p>
+          <p><strong>Session:</strong> ${sessionId ?? "—"}</p>
           <hr />
-          <h4>Transcript:</h4>
-          <pre style="white-space: pre-wrap; font-family: monospace;">${transcript}</pre>
-        `
+          ${contactBlock}
+          <hr />
+          <h4>Transcript</h4>
+          <pre style="white-space: pre-wrap; font-family: monospace;">${transcript ?? ""}</pre>
+        `,
       });
 
-      if (!emailRes.error) {
-         emailSuccess = true;
-      } else {
-         console.error("Resend Email error: ", emailRes.error);
-      }
-    } else {
-      console.warn("RESEND_API_KEY missing - skipping email dispatch.");
+      if (!emailRes.error) emailSuccess = true;
+      else console.error("Resend email error:", emailRes.error);
     }
 
     return NextResponse.json({ success: true, dbSuccess, emailSuccess });
-
   } catch (error) {
-    console.error("Janet Session Telemetry Error:", error);
+    console.error("Janet session telemetry error:", error);
     return NextResponse.json({ error: "Telemetry processing failed" }, { status: 500 });
   }
 }

@@ -1,8 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { GoogleGenAI, Modality } from "@google/genai";
-
-const JANET_LIVE_MODEL = "gemini-2.5-flash-native-audio-preview-12-2025";
+import { JANET_LIVE_MODEL } from "@/lib/janet-live-model";
 
 export async function GET() {
   const apiKey = process.env.GEMINI_API_KEY;

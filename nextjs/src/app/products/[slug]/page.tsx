@@ -33,6 +33,8 @@ import MachineTests from "@/components/products/machine/MachineTests";
 import MachineDownloads from "@/components/products/machine/MachineDownloads";
 import MachineVideos from "@/components/products/machine/MachineVideos";
 import MachineFAQ from "@/components/products/machine/MachineFAQ";
+import ProductHighlights from "@/components/products/ProductHighlights";
+import { getProductHighlights } from "@/lib/product-highlights";
 
 // ── Static params ────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
@@ -248,12 +250,23 @@ export default async function ProductDetailPage({
   const waMessage = encodeURIComponent(`Hi, I'm interested in the ${product.name}. Can you help me?`);
   const waUrl     = `https://wa.me/${WA_NUMBER}?text=${waMessage}`;
 
-  // Get specific reviews or use fallback
-  const productReviews = (reviewsData as any)[product.slug] || {
-    average_rating: 5.0,
-    total_reviews: FALLBACK_REVIEWS.length,
-    reviews: FALLBACK_REVIEWS
-  };
+  // Real reviews from reviews.json, or machine-only fallback — never fake sealer quotes on knives/bags
+  const slugReviews = (reviewsData as Record<string, { average_rating: number; total_reviews: number; reviews: typeof FALLBACK_REVIEWS }>)[product.slug];
+  const productReviews =
+    slugReviews ??
+    (isVacuumMachine
+      ? {
+          average_rating: 5.0,
+          total_reviews: FALLBACK_REVIEWS.length,
+          reviews: FALLBACK_REVIEWS,
+        }
+      : null);
+  const productHighlights = productReviews ? null : getProductHighlights(product);
+  const relatedHeading = isVacuumMachine
+    ? "Related Machines"
+    : product.categories?.name
+      ? `More in ${product.categories.name}`
+      : "Related Products";
 
   const prodLd = productSchema(product, productReviews);
   const crumbLd = breadcrumbSchema([
@@ -336,18 +349,32 @@ export default async function ProductDetailPage({
                 {product.name}
               </h1>
 
-              {/* Star rating row */}
-              <a href="#reviews" className="flex items-center gap-2 w-fit">
-                <div className="flex gap-0.5">
-                  {[1,2,3,4,5].map((i) => (
-                    <Star key={i} className={`h-4 w-4 ${i <= Math.round(productReviews.average_rating) ? "fill-secondary text-secondary" : "text-border"}`} />
-                  ))}
-                </div>
-                <span className="text-sm font-semibold text-primary">{productReviews.average_rating.toFixed(1)}</span>
-                <span className="text-sm text-copy-muted underline hover:text-primary transition-colors">
-                  ({productReviews.total_reviews} reviews)
-                </span>
-              </a>
+              {/* Star rating or link to features */}
+              {productReviews ? (
+                <a href="#reviews" className="flex items-center gap-2 w-fit">
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star
+                        key={i}
+                        className={`h-4 w-4 ${i <= Math.round(productReviews.average_rating) ? "fill-secondary text-secondary" : "text-border"}`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm font-semibold text-primary">
+                    {productReviews.average_rating.toFixed(1)}
+                  </span>
+                  <span className="text-sm text-copy-muted underline hover:text-primary transition-colors">
+                    ({productReviews.total_reviews} reviews)
+                  </span>
+                </a>
+              ) : (
+                <a
+                  href="#highlights"
+                  className="text-sm font-semibold text-secondary hover:text-primary transition-colors"
+                >
+                  Key uses &amp; features →
+                </a>
+              )}
 
               {/* Short description — emotional, problem-solving (renders inline HTML: strong/em/br) */}
               {product.short_description && (
@@ -700,61 +727,91 @@ export default async function ProductDetailPage({
       )}
 
       {/* ═══════════════════════════════════════════════════════════════
-          SECTION 6 — Reviews
+          SECTION 6 — Reviews (machines + items in reviews.json) or features
       ════════════════════════════════════════════════════════════════ */}
-      <section id="reviews" className="py-20">
-        <div className="section-container">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-            <div>
-              <p className="overline mb-2">Verified customers</p>
-              <h2 className="text-3xl font-bold text-primary">What Customers Say</h2>
-              
-              {/* German Site Accreditation */}
-              {(reviewsData as any)[product.slug] && (
-                <p className="text-[10px] sm:text-xs text-copy-muted mt-2 font-medium">
-                  Translated from <a href="https://www.la-va.com" target="_blank" rel="noopener noreferrer" className="text-secondary hover:underline">www.la-va.com</a>
-                </p>
-              )}
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex gap-0.5">
-                {[1,2,3,4,5].map((i) => (
-                  <Star key={i} className={`h-5 w-5 ${i <= Math.round(productReviews.average_rating) ? "fill-secondary text-secondary" : "text-border"}`} />
-                ))}
-              </div>
+      {productReviews ? (
+        <section id="reviews" className="py-20">
+          <div className="section-container">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
               <div>
-                <p className="font-black text-primary text-lg leading-none">{productReviews.average_rating.toFixed(1)} / 5.0</p>
-                <p className="text-xs text-copy-muted">{productReviews.total_reviews} reviews</p>
-              </div>
-            </div>
-          </div>
+                <p className="overline mb-2">Verified customers</p>
+                <h2 className="text-3xl font-bold text-primary">What Customers Say</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-8">
-            {productReviews.reviews.slice(0, 6).map((review: any) => (
-              <div key={review.name + review.date} className="bg-white border border-border p-6 flex flex-col gap-4">
+                {slugReviews && (
+                  <p className="text-[10px] sm:text-xs text-copy-muted mt-2 font-medium">
+                    Translated from{" "}
+                    <a
+                      href="https://www.la-va.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-secondary hover:underline"
+                    >
+                      www.la-va.com
+                    </a>
+                  </p>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
                 <div className="flex gap-0.5">
-                  {[1,2,3,4,5].map((i) => (
-                    <Star key={i} className={`h-3.5 w-3.5 ${i <= review.rating ? "fill-secondary text-secondary" : "text-border"}`} />
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star
+                      key={i}
+                      className={`h-5 w-5 ${i <= Math.round(productReviews.average_rating) ? "fill-secondary text-secondary" : "text-border"}`}
+                    />
                   ))}
                 </div>
-                {review.title && <p className="text-sm font-black text-primary">{review.title}</p>}
-                <p className="text-sm text-copy leading-relaxed flex-1 italic">&ldquo;{review.text}&rdquo;</p>
-                <div className="border-t border-border pt-4 flex items-center justify-between text-xs">
-                  <span className="font-bold text-primary">{review.name}</span>
-                  <span className="text-copy-muted">{review.location || "Verified Buyer"} · {review.date}</span>
+                <div>
+                  <p className="font-black text-primary text-lg leading-none">
+                    {productReviews.average_rating.toFixed(1)} / 5.0
+                  </p>
+                  <p className="text-xs text-copy-muted">{productReviews.total_reviews} reviews</p>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
 
-          <div className="text-center">
-            <Link href="/submit-review"
-              className="inline-flex items-center gap-2 border-2 border-primary text-primary font-bold px-8 py-3 hover:bg-primary hover:text-white transition-colors">
-              <Star className="h-4 w-4" /> Leave Your Review
-            </Link>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-8">
+              {productReviews.reviews.slice(0, 6).map((review) => (
+                <div
+                  key={review.name + review.date}
+                  className="bg-white border border-border p-6 flex flex-col gap-4"
+                >
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star
+                        key={i}
+                        className={`h-3.5 w-3.5 ${i <= review.rating ? "fill-secondary text-secondary" : "text-border"}`}
+                      />
+                    ))}
+                  </div>
+                  {"title" in review && review.title && (
+                    <p className="text-sm font-black text-primary">{review.title}</p>
+                  )}
+                  <p className="text-sm text-copy leading-relaxed flex-1 italic">
+                    &ldquo;{review.text}&rdquo;
+                  </p>
+                  <div className="border-t border-border pt-4 flex items-center justify-between text-xs">
+                    <span className="font-bold text-primary">{review.name}</span>
+                    <span className="text-copy-muted">
+                      {review.location || "Verified Buyer"} · {review.date}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Link
+                href="/submit-review"
+                className="inline-flex items-center gap-2 border-2 border-primary text-primary font-bold px-8 py-3 hover:bg-primary hover:text-white transition-colors"
+              >
+                <Star className="h-4 w-4" /> Leave Your Review
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        productHighlights && <ProductHighlights items={productHighlights} />
+      )}
 
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 7 — Related Machines
@@ -764,7 +821,7 @@ export default async function ProductDetailPage({
           <div className="section-container">
             <div className="mb-8">
               <p className="overline mb-2">Also consider</p>
-              <h2 className="text-3xl font-bold text-primary">Related Machines</h2>
+              <h2 className="text-3xl font-bold text-primary">{relatedHeading}</h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {related.map((p) => <ProductCard key={p.id} product={p} />)}
