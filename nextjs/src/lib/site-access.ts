@@ -1,8 +1,11 @@
-import { createHmac, timingSafeEqual } from "crypto";
+/**
+ * Site preview gate — works in Edge middleware and Node API routes (Web Crypto).
+ */
 
 export const SITE_ACCESS_COOKIE = "site_access";
 
 const ACCESS_TOKEN = "granted";
+const DERIVE_KEY = "lava-site-access-v1";
 
 /** True when SITE_ACCESS_PASSWORD is set and SITE_ACCESS_ENABLED is not "false". */
 export function isSiteAccessEnabled(): boolean {
@@ -10,40 +13,52 @@ export function isSiteAccessEnabled(): boolean {
   return Boolean(process.env.SITE_ACCESS_PASSWORD?.trim());
 }
 
-function getSigningSecret(): string | null {
+async function hmacSha256Hex(key: string, message: string): Promise<string> {
+  const enc = new TextEncoder();
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(key),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const sig = await crypto.subtle.sign("HMAC", cryptoKey, enc.encode(message));
+  return Array.from(new Uint8Array(sig))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function timingSafeEqualStr(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+async function getSigningSecret(): Promise<string | null> {
   const explicit = process.env.SITE_ACCESS_SECRET?.trim();
   if (explicit) return explicit;
   const password = process.env.SITE_ACCESS_PASSWORD?.trim();
   if (!password) return null;
-  return createHmac("sha256", "lava-site-access-v1").update(password).digest("hex");
+  return hmacSha256Hex(DERIVE_KEY, password);
 }
 
-export function signSiteAccessCookie(): string | null {
-  const secret = getSigningSecret();
+export async function signSiteAccessCookie(): Promise<string | null> {
+  const secret = await getSigningSecret();
   if (!secret) return null;
-  return createHmac("sha256", secret).update(ACCESS_TOKEN).digest("hex");
+  return hmacSha256Hex(secret, ACCESS_TOKEN);
 }
 
-export function verifySiteAccessCookie(cookieValue: string | undefined): boolean {
-  const expected = signSiteAccessCookie();
+export async function verifySiteAccessCookie(cookieValue: string | undefined): Promise<boolean> {
+  const expected = await signSiteAccessCookie();
   if (!expected || !cookieValue) return false;
-  try {
-    const a = Buffer.from(cookieValue, "utf8");
-    const b = Buffer.from(expected, "utf8");
-    if (a.length !== b.length) return false;
-    return timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
+  return timingSafeEqualStr(cookieValue, expected);
 }
 
 export function verifySiteAccessPassword(password: string): boolean {
   const expected = process.env.SITE_ACCESS_PASSWORD?.trim();
   if (!expected) return false;
-  const a = Buffer.from(password, "utf8");
-  const b = Buffer.from(expected, "utf8");
-  if (a.length !== b.length) return false;
-  return timingSafeEqual(a, b);
+  return timingSafeEqualStr(password, expected);
 }
 
 /** Paths that must work without the site-access cookie (webhooks, gate, admin). */

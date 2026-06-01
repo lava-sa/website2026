@@ -35,10 +35,9 @@ type PaymentMethod = "payfast" | "bank_transfer";
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, total, count, clearCart, isHydrated } = useCart();
+  const [form,          setForm]          = useState<FormState>(EMPTY_FORM);
   const shipping   = getShipping(total, form.province);
   const orderTotal = total + shipping;
-
-  const [form,          setForm]          = useState<FormState>(EMPTY_FORM);
   const [errors,        setErrors]        = useState<Partial<FormState>>({});
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("payfast");
   const [submitting,    setSubmitting]    = useState(false);

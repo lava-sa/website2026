@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
   // ── Site-wide preview password (public site + APIs except webhooks/admin) ─
   if (isSiteAccessEnabled() && !isSiteAccessExemptPath(pathname)) {
     const accessCookie = request.cookies.get(SITE_ACCESS_COOKIE)?.value;
-    if (!verifySiteAccessCookie(accessCookie)) {
+    if (!(await verifySiteAccessCookie(accessCookie))) {
       if (pathname.startsWith("/api/")) {
         return NextResponse.json({ error: "Site access required" }, { status: 401 });
       }

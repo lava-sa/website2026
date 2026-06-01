@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Incorrect password" }, { status: 401 });
   }
 
-  const token = signSiteAccessCookie();
+  const token = await signSiteAccessCookie();
   if (!token) {
     return NextResponse.json({ error: "Site access not configured" }, { status: 500 });
   }
