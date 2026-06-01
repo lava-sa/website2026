@@ -1,8 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
+import AuthLogo from "@/components/ui/AuthLogo";
+import PasswordInput from "@/components/ui/PasswordInput";
 
 function SiteAccessForm() {
   const router = useRouter();
@@ -41,16 +42,7 @@ function SiteAccessForm() {
   return (
     <main className="flex-1 flex items-center justify-center px-4 py-16">
       <div className="w-full max-w-md border border-white/15 bg-petrol-800/80 p-8 sm:p-10 shadow-2xl">
-        <div className="flex justify-center mb-8">
-          <Image
-            src="/images/logo/lava-sa-logo.png"
-            alt="Lava-SA"
-            width={160}
-            height={48}
-            className="h-12 w-auto brightness-0 invert"
-            priority
-          />
-        </div>
+        <AuthLogo variant="dark" />
 
         <h1 className="text-center text-xl font-black uppercase tracking-wide text-white">
           Preview access
@@ -65,15 +57,15 @@ function SiteAccessForm() {
             <label htmlFor="site-password" className="sr-only">
               Access password
             </label>
-            <input
+            <PasswordInput
               id="site-password"
-              type="password"
+              variant="dark"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Access password"
               autoComplete="current-password"
               required
-              className="w-full border border-white/20 bg-petrol-900 px-4 py-3 text-white placeholder:text-white/40 focus:border-secondary focus:outline-none focus:ring-1 focus:ring-secondary"
+              disabled={loading}
             />
           </div>
 

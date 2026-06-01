@@ -2,8 +2,9 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
-import { Lock, Loader2, Eye, EyeOff, User } from "lucide-react";
+import { Loader2, Lock, User } from "lucide-react";
+import AuthLogo from "@/components/ui/AuthLogo";
+import PasswordInput from "@/components/ui/PasswordInput";
 
 function LoginForm() {
   const router = useRouter();
@@ -17,7 +18,6 @@ function LoginForm() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [show, setShow] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -47,19 +47,10 @@ function LoginForm() {
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
 
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Image
-            src="/images/logo/lava-sa-logo-petrol.webp"
-            alt="Lava-SA logo"
-            width={160}
-            height={45}
-            className="h-11 w-auto object-contain mx-auto"
-          />
-          <p className="mt-3 text-xs font-bold uppercase tracking-[0.2em] text-copy-muted">
-            Admin Dashboard
-          </p>
-        </div>
+        <AuthLogo />
+        <p className="-mt-4 mb-8 text-center text-xs font-bold uppercase tracking-[0.2em] text-copy-muted">
+          Admin Dashboard
+        </p>
 
         <div className="bg-white border border-border p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
@@ -99,25 +90,20 @@ function LoginForm() {
               <label className="block text-xs font-bold text-primary mb-1.5 uppercase tracking-wide">
                 Password
               </label>
-              <div className="relative">
-                <input
-                  type={show ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onAnimationStart={(e) => { if ((e.animationName || "").includes("autofill")) setPassword((e.target as HTMLInputElement).value); }}
-                  placeholder="Enter admin password"
-                  autoComplete="current-password"
-                  required
-                  className="w-full border border-border bg-white px-4 py-3 pr-10 text-sm focus:outline-none focus:border-primary transition-colors"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShow(!show)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-copy-muted hover:text-primary transition-colors"
-                >
-                  {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
+              <PasswordInput
+                id="admin-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onAnimationStart={(e) => {
+                  if ((e.animationName || "").includes("autofill")) {
+                    setPassword((e.target as HTMLInputElement).value);
+                  }
+                }}
+                placeholder="Enter admin password"
+                autoComplete="current-password"
+                required
+                disabled={loading}
+              />
             </div>
 
             {error && (

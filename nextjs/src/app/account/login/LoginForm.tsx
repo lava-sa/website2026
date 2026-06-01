@@ -2,9 +2,10 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
-import { Mail, Lock, Loader2, Eye, EyeOff, LogIn } from "lucide-react";
+import { Mail, Loader2, LogIn } from "lucide-react";
+import AuthLogo from "@/components/ui/AuthLogo";
+import PasswordInput from "@/components/ui/PasswordInput";
 import { createClient } from "@/utils/supabase/client";
 
 type Mode = "login" | "forgot";
@@ -17,7 +18,6 @@ function LoginFormInner() {
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -67,21 +67,10 @@ function LoginFormInner() {
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
 
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/">
-            <Image
-              src="/images/logo/lava-sa-logo-petrol.webp"
-              alt="Lava-SA logo"
-              width={160}
-              height={45}
-              className="h-11 w-auto object-contain mx-auto"
-            />
-          </Link>
-          <p className="mt-3 text-xs font-bold uppercase tracking-[0.2em] text-copy-muted">
-            My Account
-          </p>
-        </div>
+        <AuthLogo href="/" />
+        <p className="-mt-4 mb-8 text-center text-xs font-bold uppercase tracking-[0.2em] text-copy-muted">
+          My Account
+        </p>
 
         <div className="bg-white border border-border p-8 shadow-sm">
           {/* Header */}
@@ -136,25 +125,16 @@ function LoginFormInner() {
                   <label className="block text-xs font-bold text-primary mb-1.5 uppercase tracking-wide">
                     Password
                   </label>
-                  <div className="relative">
-                    <input
-                      type={showPw ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter your password"
-                      autoComplete="current-password"
-                      required
-                      className="w-full border border-border bg-white px-4 py-3 pl-10 pr-10 text-sm focus:outline-none focus:border-primary transition-colors"
-                    />
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-copy-muted" />
-                    <button
-                      type="button"
-                      onClick={() => setShowPw(!showPw)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-copy-muted hover:text-primary transition-colors"
-                    >
-                      {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
+                  <PasswordInput
+                    id="account-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    autoComplete="current-password"
+                    required
+                    leadingIcon
+                    disabled={loading}
+                  />
                 </div>
               )}
 
