@@ -57,7 +57,7 @@ function CartSummary({ items, total }: { items: CartItem[]; total: number }) {
         </div>
       </div>
       <div className="mt-4 space-y-1.5 text-xs text-copy-muted">
-        <div className="flex items-center gap-2"><Truck className="h-3.5 w-3.5 text-secondary" /> Free delivery over R2,500</div>
+        <div className="flex items-center gap-2"><Truck className="h-3.5 w-3.5 text-secondary" /> Courier: R190 excl. VAT (Gauteng) · R250 elsewhere</div>
         <div className="flex items-center gap-2"><Shield className="h-3.5 w-3.5 text-secondary" /> SSL secure checkout</div>
       </div>
     </div>
@@ -68,7 +68,7 @@ export default function FunnelPage() {
   const params = useParams();
   const router = useRouter();
   const slug = params.slug as string;
-  const { addItem, items, total } = useCart();
+  const { addItem, items, total, isHydrated } = useCart();
 
   const [loading, setLoading] = useState(true);
   const [funnel, setFunnel] = useState<FunnelResponse | null>(null);
@@ -101,15 +101,25 @@ export default function FunnelPage() {
   }, [router, slug]);
 
   useEffect(() => {
-    if (!hasPrimaryInCart && !loading) {
+    if (!isHydrated || loading) return;
+    if (!hasPrimaryInCart) {
       router.replace(`/products/${slug}`);
     }
-  }, [hasPrimaryInCart, loading, router, slug]);
+  }, [hasPrimaryInCart, isHydrated, loading, router, slug]);
 
-  if (loading || !funnel) return null;
+  if (!isHydrated || loading || !funnel) {
+    return (
+      <div className="min-h-screen bg-surface flex items-center justify-center">
+        <p className="text-sm text-copy-muted">Loading your order…</p>
+      </div>
+    );
+  }
 
   const step = funnel.steps[currentStep];
-  if (!step) return null;
+  if (!step) {
+    router.replace("/cart");
+    return null;
+  }
 
   const selectedProductIds = selectedByStep[currentStep] ?? [];
   const selectedProducts = step.products.filter((p) => selectedProductIds.includes(p.id));
@@ -119,9 +129,11 @@ export default function FunnelPage() {
   );
 
   function goNext() {
-    const stepCount = funnel?.steps.length ?? 0;
-    if (currentStep < stepCount - 1) {
-      setCurrentStep((s) => s + 1);
+    const stepCount = funnel.steps.length;
+    const nextIndex = currentStep + 1;
+    if (nextIndex < stepCount && funnel.steps[nextIndex]) {
+      setCurrentStep(nextIndex);
+      setSelectedByStep((prev) => ({ ...prev, [nextIndex]: prev[nextIndex] ?? [] }));
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -172,7 +184,7 @@ export default function FunnelPage() {
 
       <div className="max-w-5xl mx-auto px-4 py-10">
         <div className="grid grid-cols-1 gap-8">
-          <div>
+          <div key={currentStep}>
             <div className="mb-8">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary mb-2">
                 Step {currentStep + 1} of {funnel.steps.length}

@@ -5,7 +5,7 @@
 
 import type { Metadata } from "next";
 
-export const SITE_URL = "https://www.lava-sa.com";
+export const SITE_URL = "https://lava-sa.com";
 
 /** Base URL for PayFast return URLs, emails, etc. when `NEXT_PUBLIC_SITE_URL` is unset. */
 export function getPublicSiteUrl(): string {

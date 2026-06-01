@@ -101,7 +101,7 @@ export default function V300InstantCheckout({ placement = "top" }: { placement?:
               {formatRands(PRODUCT.price)}
             </p>
             <p className="text-xs text-copy-muted mt-1">
-              Free shipping on orders over R2,500 — this machine qualifies.
+              Courier delivery from R190 excl. VAT (Gauteng) · R250 elsewhere — charged at checkout.
             </p>
 
             <ul className="mt-5 space-y-1.5">

@@ -39,7 +39,7 @@ const HeritageSection = () => {
               44 years of precision.
             </h2>
             <p className="mt-1.5 text-lg font-semibold text-primary">
-              Now in South Africa.
+              In South Africa since 2007.
             </p>
 
             {/* Quote */}

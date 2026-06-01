@@ -65,8 +65,10 @@ export default function TermsPage() {
           <Section id="pricing" title="4. Pricing and VAT">
             <ul>
               <li>All prices displayed are in South African Rand (ZAR) and include 15% VAT.</li>
-              <li>Delivery fees are calculated at checkout based on order weight and destination.</li>
-              <li>Orders over R2,500 qualify for free standard courier delivery within South Africa.</li>
+              <li>
+                Courier delivery is charged at checkout by province: R190 excluding VAT in Gauteng,
+                R250 excluding VAT in all other provinces (15% VAT added at checkout).
+              </li>
               <li>We reserve the right to correct any pricing errors prior to dispatch.</li>
             </ul>
           </Section>

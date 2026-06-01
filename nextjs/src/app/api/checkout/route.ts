@@ -5,13 +5,7 @@ import { generateSignature, getPayFastUrl } from "@/lib/payfast";
 import { sendOrderPlacedEmails } from "@/lib/order-email";
 import { getPublicSiteUrl } from "@/lib/seo";
 import type { CartItem } from "@/lib/cart-context";
-
-const FREE_SHIPPING_THRESHOLD = 2500;
-const SHIPPING_FEE = 150;
-
-function getShipping(subtotal: number): number {
-  return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
-}
+import { getShipping } from "@/lib/shipping";
 
 async function generateOrderNumber(supabase: ReturnType<typeof createServiceClient>): Promise<string> {
   const { data, error } = await supabase
@@ -70,7 +64,7 @@ export async function POST(req: NextRequest) {
 
   // ── 2. Calculate totals ────────────────────────────────────────────────────
   const subtotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const shipping = getShipping(subtotal);
+  const shipping = getShipping(subtotal, customer.province);
   const total    = subtotal + shipping;
 
   // ── 3. Save order to Supabase ──────────────────────────────────────────────

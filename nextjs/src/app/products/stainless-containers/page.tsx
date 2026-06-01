@@ -47,7 +47,7 @@ export default async function StainlessSteelContainersPage() {
           <span>✓ Dishwasher Safe</span>
           <span>✓ Fits All LAVA Machines</span>
           <span>✓ Professional Grade</span>
-          <span>✓ Free Delivery over R2,500</span>
+          <span>✓ Courier — R190 excl. VAT (Gauteng) · R250 elsewhere</span>
         </div>
       </div>
 

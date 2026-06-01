@@ -51,7 +51,7 @@ export default async function GlassContainersPage() {
           <span>✓ Borosilicate Glass</span>
           <span>✓ Fits All LAVA Machines</span>
           <span>✓ 100% Odour Resistant</span>
-          <span>✓ Free Delivery over R2,500</span>
+          <span>✓ Courier — R190 excl. VAT (Gauteng) · R250 elsewhere</span>
         </div>
       </div>
 

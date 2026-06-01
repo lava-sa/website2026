@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Truck, Clock, MapPin, Phone, Mail, AlertTriangle, CheckCircle, Package } from "lucide-react";
+import {
+  SHIPPING_GAUTENG_EX_VAT,
+  SHIPPING_INCL_GAUTENG,
+  SHIPPING_INCL_OTHER,
+  SHIPPING_OTHER_EX_VAT,
+} from "@/lib/shipping";
 
 export const metadata: Metadata = {
   title: "Delivery & Shipping — How We Get Your LAVA to You",
   description:
-    "Free delivery on orders over R2,500. Same-day dispatch before 15:00. Tracked courier to your door anywhere in South Africa. Full delivery information and rates.",
+    "Courier delivery across South Africa: R190 excl. VAT in Gauteng, R250 excl. VAT elsewhere. Same-day dispatch before 15:00. Tracked courier to your door.",
 };
 
 export default function DeliveryPage() {
@@ -19,13 +25,13 @@ export default function DeliveryPage() {
           <p className="mt-4 text-lg text-copy-muted leading-relaxed">
             We want your LAVA machine to arrive quickly, safely and exactly as expected.
             Here&apos;s everything you need to know about how we ship across South Africa.
+            Delivery is charged at checkout based on your province — there is no free shipping threshold.
           </p>
         </div>
 
-        {/* Quick stat cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
           {[
-            { icon: Truck, title: "Free Delivery", sub: "On orders over R2,500" },
+            { icon: Truck, title: "Flat courier rate", sub: `R${SHIPPING_GAUTENG_EX_VAT} / R${SHIPPING_OTHER_EX_VAT} excl. VAT` },
             { icon: Clock, title: "Same Day", sub: "Dispatch before 15:00 weekdays" },
             { icon: MapPin, title: "Nationwide", sub: "All 9 provinces" },
             { icon: Package, title: "Fully Tracked", sub: "Email + SMS updates" },
@@ -43,22 +49,28 @@ export default function DeliveryPage() {
         <div className="prose-lava">
 
           <h2 className="text-2xl font-bold text-primary mb-4">Delivery Rates</h2>
+          <p className="text-sm text-copy-muted mb-4">
+            All prices below are <strong>excluding VAT</strong>. VAT (15%) is added at checkout. Product
+            prices on the website are shown <strong>including VAT</strong>.
+          </p>
           <table className="w-full text-sm border border-border mb-8">
             <thead>
               <tr className="bg-primary text-white">
-                <th className="text-left py-3 px-4 font-bold">Order Value</th>
-                <th className="text-left py-3 px-4 font-bold">Delivery Cost</th>
+                <th className="text-left py-3 px-4 font-bold">Destination</th>
+                <th className="text-left py-3 px-4 font-bold">Excl. VAT</th>
+                <th className="text-left py-3 px-4 font-bold">Incl. VAT (at checkout)</th>
               </tr>
             </thead>
             <tbody>
               {[
-                ["Orders over R2,500", "FREE standard tracked courier"],
-                ["Orders under R2,500", "R150 flat rate (most destinations)"],
-                ["Outlying / remote areas", "Quoted at checkout — may differ"],
-              ].map(([order, cost]) => (
-                <tr key={order} className="border-b border-border odd:bg-surface">
-                  <td className="py-3 px-4 font-semibold text-primary">{order}</td>
-                  <td className="py-3 px-4 font-semibold text-secondary">{cost}</td>
+                ["Gauteng", `R ${SHIPPING_GAUTENG_EX_VAT}`, `R ${SHIPPING_INCL_GAUTENG}`],
+                ["All other provinces in South Africa", `R ${SHIPPING_OTHER_EX_VAT}`, `R ${SHIPPING_INCL_OTHER}`],
+                ["Outlying / remote areas", "As per province rate", "May require depot collection — contact us first"],
+              ].map(([dest, ex, inc]) => (
+                <tr key={dest} className="border-b border-border odd:bg-surface">
+                  <td className="py-3 px-4 font-semibold text-primary">{dest}</td>
+                  <td className="py-3 px-4 font-semibold text-secondary">{ex}</td>
+                  <td className="py-3 px-4 text-copy">{inc}</td>
                 </tr>
               ))}
             </tbody>

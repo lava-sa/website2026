@@ -45,7 +45,7 @@ export default async function ButcheryProtectivePage() {
           <span>✓ Waterproof PVC</span>
           <span>✓ Easy to Sanitize</span>
           <span>✓ Comfortable Fit</span>
-          <span>✓ Free Delivery over R2,500</span>
+          <span>✓ Courier — R190 excl. VAT (Gauteng) · R250 elsewhere</span>
         </div>
       </div>
 

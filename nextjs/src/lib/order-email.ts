@@ -1,6 +1,19 @@
 import type { CartItem } from "@/lib/cart-context";
 import { getEftBankDetails } from "@/lib/bank-details";
 import { getEmailConfig, getResendClient } from "@/lib/email-config";
+import {
+  EMAIL_BRAND,
+  emailAlertBox,
+  emailButton,
+  emailDetailGrid,
+  emailHighlightTotal,
+  emailOrderItemsTable,
+  emailSectionTitle,
+  emailTwoColumns,
+  escEmail,
+  formatEmailPrice,
+  wrapEmailLayout,
+} from "@/lib/email-template";
 import { getPublicSiteUrl } from "@/lib/seo";
 
 type PaymentMethod = "payfast" | "bank_transfer";
@@ -13,6 +26,11 @@ interface SendOrderPlacedEmailArgs {
     last_name: string;
     email: string;
     phone: string;
+    address?: string;
+    city?: string;
+    province?: string;
+    postal_code?: string;
+    notes?: string;
   };
   cart: CartItem[];
   subtotal: number;
@@ -30,34 +48,42 @@ interface SendPaymentReceivedEmailArgs {
   total: number;
 }
 
-function formatPrice(amount: number): string {
-  return new Intl.NumberFormat("en-ZA", {
-    style: "currency",
-    currency: "ZAR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
+interface SendReviewRequestEmailArgs {
+  orderNumber: string;
+  customer: {
+    first_name: string;
+    email: string;
+  };
+  itemName?: string;
 }
 
-function esc(input: string): string {
-  return input
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
+function formatShippingLines(customer: SendOrderPlacedEmailArgs["customer"]): string {
+  const lines = [
+    customer.address?.trim(),
+    [customer.city?.trim(), customer.province?.trim()].filter(Boolean).join(", "),
+    customer.postal_code?.trim(),
+  ].filter((line) => line && line.length > 0);
+  return lines.length > 0 ? lines.map(escEmail).join("<br/>") : "—";
 }
 
-function buildItemsHtml(cart: CartItem[]): string {
+function buildShippingBlockHtml(customer: SendOrderPlacedEmailArgs["customer"]): string {
+  const address = formatShippingLines(customer);
+  const notes = customer.notes?.trim();
+  const notesPart = notes
+    ? `<p style="margin:12px 0 0;padding-top:12px;border-top:1px solid ${EMAIL_BRAND.border};font-size:13px;"><strong style="color:${EMAIL_BRAND.primary};">Delivery notes</strong><br/>${escEmail(notes)}</p>`
+    : "";
+  return `${address}${notesPart}`;
+}
+
+function buildOrderItemRows(cart: CartItem[]): string {
   return cart
     .map(
-      (item) => `
-        <tr>
-          <td style="padding:8px;border-bottom:1px solid #eee;">${esc(item.name)}</td>
-          <td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${item.quantity}</td>
-          <td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">${formatPrice(item.price * item.quantity)}</td>
-        </tr>
-      `
+      (item, i) => `
+        <tr style="background:${i % 2 === 0 ? "#ffffff" : "#f9fafb"};">
+          <td style="padding:12px 14px;border-bottom:1px solid ${EMAIL_BRAND.border};font-size:14px;color:${EMAIL_BRAND.text};">${escEmail(item.name)}</td>
+          <td style="padding:12px 10px;border-bottom:1px solid ${EMAIL_BRAND.border};text-align:center;font-size:14px;">${item.quantity}</td>
+          <td style="padding:12px 14px;border-bottom:1px solid ${EMAIL_BRAND.border};text-align:right;font-size:14px;font-weight:600;">${formatEmailPrice(item.price * item.quantity)}</td>
+        </tr>`
     )
     .join("");
 }
@@ -70,7 +96,15 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
   const fullName = `${args.customer.first_name} ${args.customer.last_name}`.trim();
   const methodLabel = args.paymentMethod === "bank_transfer" ? "EFT / Bank Transfer" : "PayFast";
   const orderUrl = `${getPublicSiteUrl()}/checkout/success?order=${encodeURIComponent(args.orderNumber)}${args.paymentMethod === "bank_transfer" ? "&method=eft" : ""}`;
-  const rows = buildItemsHtml(args.cart);
+  const adminOrdersUrl = `${getPublicSiteUrl()}/admin/orders`;
+  const itemRows = buildOrderItemRows(args.cart);
+  const shippingLabel = formatEmailPrice(args.shipping);
+  const itemsTable = emailOrderItemsTable(
+    itemRows,
+    formatEmailPrice(args.subtotal),
+    shippingLabel,
+    formatEmailPrice(args.total)
+  );
 
   const customerSubject =
     args.paymentMethod === "bank_transfer"
@@ -80,78 +114,75 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
   const bank = getEftBankDetails();
   const eftBankBlock =
     args.paymentMethod === "bank_transfer"
-      ? `
-      <div style="margin:20px 0;padding:16px;border:2px solid #b8973a;background:#fffef8;border-radius:4px;">
-        <h3 style="margin:0 0 12px;font-size:16px;">Pay by EFT — use these details</h3>
-        <table style="width:100%;border-collapse:collapse;font-size:14px;">
-          <tr><td style="padding:4px 8px 4px 0;color:#555;">Bank</td><td style="padding:4px 0;"><strong>${esc(bank.bank)}</strong></td></tr>
-          <tr><td style="padding:4px 8px 4px 0;color:#555;">Account name</td><td style="padding:4px 0;"><strong>${esc(bank.accountName)}</strong></td></tr>
-          <tr><td style="padding:4px 8px 4px 0;color:#555;">Account number</td><td style="padding:4px 0;"><strong>${esc(bank.accountNo)}</strong></td></tr>
-          <tr><td style="padding:4px 8px 4px 0;color:#555;">Branch code</td><td style="padding:4px 0;"><strong>${esc(bank.branchCode)}</strong></td></tr>
-          <tr><td style="padding:4px 8px 4px 0;color:#555;">Account type</td><td style="padding:4px 0;"><strong>${esc(bank.accountType)}</strong></td></tr>
-          <tr><td style="padding:8px 8px 4px 0;color:#555;vertical-align:top;">Payment reference</td><td style="padding:8px 0;"><strong style="font-size:16px;color:#0d2b3e;">${esc(args.orderNumber)}</strong><br/><span style="font-size:12px;color:#666;">Use this exact reference so we can match your payment.</span></td></tr>
-        </table>
-        <p style="margin:12px 0 0;font-size:12px;color:#92400e;">Please email proof of payment to <a href="mailto:info@lava-sa.com">info@lava-sa.com</a> to speed up processing.</p>
-      </div>`
+      ? emailAlertBox(
+          `<p style="margin:0 0 12px;font-size:16px;font-weight:700;color:${EMAIL_BRAND.primary};">Pay by EFT</p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+            <tr><td style="padding:4px 8px 4px 0;color:${EMAIL_BRAND.muted};">Bank</td><td><strong>${escEmail(bank.bank)}</strong></td></tr>
+            <tr><td style="padding:4px 8px 4px 0;color:${EMAIL_BRAND.muted};">Account name</td><td><strong>${escEmail(bank.accountName)}</strong></td></tr>
+            <tr><td style="padding:4px 8px 4px 0;color:${EMAIL_BRAND.muted};">Account number</td><td><strong>${escEmail(bank.accountNo)}</strong></td></tr>
+            <tr><td style="padding:4px 8px 4px 0;color:${EMAIL_BRAND.muted};">Branch code</td><td><strong>${escEmail(bank.branchCode)}</strong></td></tr>
+            <tr><td style="padding:4px 8px 4px 0;color:${EMAIL_BRAND.muted};">Account type</td><td><strong>${escEmail(bank.accountType)}</strong></td></tr>
+            <tr><td style="padding:10px 8px 4px 0;color:${EMAIL_BRAND.muted};vertical-align:top;">Reference</td><td><strong style="font-size:17px;color:${EMAIL_BRAND.primary};">${escEmail(args.orderNumber)}</strong><br/><span style="font-size:12px;color:${EMAIL_BRAND.muted};">Use this exact reference.</span></td></tr>
+          </table>
+          <p style="margin:14px 0 0;font-size:13px;">Email proof of payment to <a href="mailto:info@lava-sa.com" style="color:${EMAIL_BRAND.teal};">info@lava-sa.com</a>.</p>`
+        )
       : "";
 
-  const customerHtml = `
-    <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;color:#0d2b3e">
-      <h2 style="margin:0 0 12px;">Thank you for your order, ${esc(args.customer.first_name)}.</h2>
-      <p style="margin:0 0 16px;">Order number: <strong>${esc(args.orderNumber)}</strong></p>
-      <p style="margin:0 0 16px;">Payment method: <strong>${methodLabel}</strong></p>
-      ${eftBankBlock}
-      <table style="width:100%;border-collapse:collapse;margin:16px 0;">
-        <thead>
-          <tr style="background:#f7f7f7">
-            <th style="padding:8px;text-align:left;">Item</th>
-            <th style="padding:8px;text-align:center;">Qty</th>
-            <th style="padding:8px;text-align:right;">Total</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-      <p style="margin:6px 0;">Subtotal: <strong>${formatPrice(args.subtotal)}</strong></p>
-      <p style="margin:6px 0;">Delivery: <strong>${args.shipping === 0 ? "FREE" : formatPrice(args.shipping)}</strong></p>
-      <p style="margin:10px 0 18px;font-size:18px;">Order total: <strong>${formatPrice(args.total)}</strong></p>
-      <p style="margin:0 0 10px;">
-        ${args.paymentMethod === "bank_transfer"
-          ? "Your order is reserved. Please complete EFT payment using your order number as reference."
-          : "We are processing your order. You will receive further updates once payment is confirmed."}
-      </p>
-      <p style="margin:0 0 20px;"><a href="${orderUrl}">View order confirmation page</a></p>
-      <p style="font-size:12px;color:#666;">Need help? Reply to this email or call +27 72 160 5556.</p>
+  const customerBody = `
+    <p style="margin:0 0 16px;font-size:16px;">Hi <strong>${escEmail(args.customer.first_name)}</strong>, thank you for choosing LAVA. We have received your order and will keep you updated.</p>
+    ${emailDetailGrid([
+      { label: "Order number", value: `<strong>${escEmail(args.orderNumber)}</strong>` },
+      { label: "Payment", value: escEmail(methodLabel) },
+    ])}
+    ${eftBankBlock}
+    ${itemsTable}
+    ${emailSectionTitle("Delivery address")}
+    <div style="margin:0 0 20px;padding:14px;background:#f9fafb;border:1px solid ${EMAIL_BRAND.border};border-radius:6px;line-height:1.5;">
+      ${buildShippingBlockHtml(args.customer)}
     </div>
-  `;
+    <p style="margin:0 0 8px;font-size:14px;color:${EMAIL_BRAND.muted};">
+      ${
+        args.paymentMethod === "bank_transfer"
+          ? "Your order is reserved. Please complete EFT payment using your order number as reference."
+          : "We are processing your order. You will receive a confirmation once payment is verified."
+      }
+    </p>
+    ${emailButton(orderUrl, "View order confirmation")}`;
+
+  const customerHtml = wrapEmailLayout({
+    headline: "Thank you for your order",
+    subheadline: `Order ${escEmail(args.orderNumber)}`,
+    badge: methodLabel,
+    bodyHtml: customerBody,
+  });
 
   const adminEftNote =
     args.paymentMethod === "bank_transfer"
-      ? `<p style="margin:0 0 12px;padding:12px;background:#fffef8;border:1px solid #b8973a;"><strong>EFT:</strong> Customer needs to pay ${formatPrice(args.total)} to ${esc(bank.bank)} / ${esc(bank.accountNo)} with reference <strong>${esc(args.orderNumber)}</strong>.</p>`
+      ? emailAlertBox(
+          `<strong>EFT pending:</strong> Customer must pay <strong>${formatEmailPrice(args.total)}</strong> to ${escEmail(bank.bank)} / ${escEmail(bank.accountNo)} with reference <strong>${escEmail(args.orderNumber)}</strong>.`,
+          "gold"
+        )
       : "";
 
-  const adminHtml = `
-    <div style="font-family:Arial,sans-serif;max-width:700px;margin:0 auto;color:#0d2b3e">
-      <h2 style="margin:0 0 12px;">New order received: ${esc(args.orderNumber)}</h2>
-      <p style="margin:0 0 6px;"><strong>Customer:</strong> ${esc(fullName)}</p>
-      <p style="margin:0 0 6px;"><strong>Email:</strong> <a href="mailto:${esc(args.customer.email)}">${esc(args.customer.email)}</a></p>
-      <p style="margin:0 0 6px;"><strong>Phone:</strong> ${esc(args.customer.phone || "—")}</p>
-      <p style="margin:0 0 16px;"><strong>Payment method:</strong> ${methodLabel}</p>
-      ${adminEftNote}
-      <table style="width:100%;border-collapse:collapse;margin:12px 0;">
-        <thead>
-          <tr style="background:#f7f7f7">
-            <th style="padding:8px;text-align:left;">Item</th>
-            <th style="padding:8px;text-align:center;">Qty</th>
-            <th style="padding:8px;text-align:right;">Total</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-      <p style="margin:6px 0;"><strong>Subtotal:</strong> ${formatPrice(args.subtotal)}</p>
-      <p style="margin:6px 0;"><strong>Delivery:</strong> ${args.shipping === 0 ? "FREE" : formatPrice(args.shipping)}</p>
-      <p style="margin:10px 0;"><strong>Order total:</strong> ${formatPrice(args.total)}</p>
-    </div>
-  `;
+  const customerCol = `
+    <p style="margin:0 0 8px;font-weight:700;font-size:15px;color:${EMAIL_BRAND.primary};">${escEmail(fullName)}</p>
+    <p style="margin:0 0 4px;"><a href="mailto:${escEmail(args.customer.email)}" style="color:${EMAIL_BRAND.teal};text-decoration:none;">${escEmail(args.customer.email)}</a></p>
+    <p style="margin:0;">${escEmail(args.customer.phone || "—")}</p>`;
+
+  const adminBody = `
+    <p style="margin:0 0 20px;font-size:15px;color:${EMAIL_BRAND.muted};">A new order was placed on the website. Process dispatch when payment is confirmed.</p>
+    ${emailHighlightTotal("Order total", formatEmailPrice(args.total))}
+    ${emailTwoColumns("Customer", customerCol, "Shipping address", buildShippingBlockHtml(args.customer))}
+    ${adminEftNote}
+    ${itemsTable}`;
+
+  const adminHtml = wrapEmailLayout({
+    headline: "New order received",
+    subheadline: `<strong>${escEmail(args.orderNumber)}</strong>`,
+    badge: methodLabel,
+    bodyHtml: adminBody,
+    prefooterHtml: emailButton(adminOrdersUrl, "Open in admin"),
+  });
 
   try {
     const [customerRes, adminRes] = await Promise.all([
@@ -184,6 +215,55 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
   }
 }
 
+export async function sendReviewRequestEmail(args: SendReviewRequestEmailArgs): Promise<void> {
+  const placeId = process.env.NEXT_PUBLIC_GBP_PLACE_ID?.trim();
+  if (!placeId) {
+    console.info("Review-request email skipped: NEXT_PUBLIC_GBP_PLACE_ID not set");
+    return;
+  }
+
+  const resend = getResendClient();
+  if (!resend) return;
+  const { fromEmail, replyToEmail } = getEmailConfig();
+
+  const reviewUrl = `https://search.google.com/local/writereview?placeid=${encodeURIComponent(placeId)}`;
+  const subject = args.itemName
+    ? `How is your ${args.itemName} treating you?`
+    : `A quick favour, ${args.customer.first_name}?`;
+
+  const itemLine = args.itemName
+    ? `<p style="margin:0 0 14px;">We hope your <strong>${escEmail(args.itemName)}</strong> is working well and earning its place in your kitchen.</p>`
+    : `<p style="margin:0 0 14px;">We hope your recent order is working out well for you.</p>`;
+
+  const customerHtml = wrapEmailLayout({
+    headline: `Hi ${escEmail(args.customer.first_name)}`,
+    subheadline: "We would love your feedback",
+    bodyHtml: `
+      ${itemLine}
+      <p style="margin:0 0 14px;">We are a small family-run team and Google reviews genuinely help us reach more South Africans who would benefit from proper German vacuum sealing.</p>
+      ${emailButton(reviewUrl, "Leave a Google review")}
+      <p style="margin:16px 0 0;font-size:14px;color:${EMAIL_BRAND.muted};">If something is not right with order <strong>${escEmail(args.orderNumber)}</strong>, please reply to this email first — we would much rather fix it for you.</p>
+      <p style="margin:20px 0 0;">Thank you,<br/><strong>Anneke &amp; Wilco Uys</strong></p>`,
+  });
+
+  try {
+    const res = await resend.emails.send({
+      from: fromEmail,
+      to: [args.customer.email],
+      ...(replyToEmail ? { replyTo: replyToEmail } : {}),
+      subject,
+      html: customerHtml,
+    });
+    if (res.error) {
+      console.error("Review-request email failed:", JSON.stringify(res.error));
+    } else {
+      console.info(`Review-request email queued OK for ${args.orderNumber} → ${args.customer.email}`);
+    }
+  } catch (err) {
+    console.error("Review-request email failed:", err);
+  }
+}
+
 export async function sendPaymentReceivedEmails(args: SendPaymentReceivedEmailArgs): Promise<void> {
   const resend = getResendClient();
   if (!resend) return;
@@ -191,24 +271,32 @@ export async function sendPaymentReceivedEmails(args: SendPaymentReceivedEmailAr
 
   const fullName = `${args.customer.first_name} ${args.customer.last_name}`.trim();
 
-  const customerHtml = `
-    <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;color:#0d2b3e">
-      <h2 style="margin:0 0 12px;">Payment received for order ${esc(args.orderNumber)}</h2>
-      <p style="margin:0 0 10px;">Hi ${esc(args.customer.first_name)},</p>
-      <p style="margin:0 0 10px;">We have received your payment of <strong>${formatPrice(args.total)}</strong>.</p>
-      <p style="margin:0 0 10px;">Your order is now being prepared for dispatch.</p>
-      <p style="font-size:12px;color:#666;">Thank you for choosing Lava-SA.</p>
-    </div>
-  `;
+  const customerHtml = wrapEmailLayout({
+    headline: "Payment received",
+    subheadline: `Order ${escEmail(args.orderNumber)}`,
+    badge: "Confirmed",
+    bodyHtml: `
+      <p style="margin:0 0 16px;">Hi <strong>${escEmail(args.customer.first_name)}</strong>,</p>
+      <p style="margin:0 0 16px;">We have received your payment of <strong>${formatEmailPrice(args.total)}</strong>. Your order is now being prepared for dispatch.</p>
+      <p style="margin:0;font-size:14px;color:${EMAIL_BRAND.muted};">Thank you for choosing LAVA-SA.</p>`,
+  });
 
-  const adminHtml = `
-    <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;color:#0d2b3e">
-      <h2 style="margin:0 0 12px;">Payment confirmed: ${esc(args.orderNumber)}</h2>
-      <p style="margin:0 0 8px;"><strong>Customer:</strong> ${esc(fullName)}</p>
-      <p style="margin:0 0 8px;"><strong>Email:</strong> <a href="mailto:${esc(args.customer.email)}">${esc(args.customer.email)}</a></p>
-      <p style="margin:0 0 8px;"><strong>Amount:</strong> ${formatPrice(args.total)}</p>
-    </div>
-  `;
+  const adminHtml = wrapEmailLayout({
+    headline: "Payment confirmed",
+    subheadline: `<strong>${escEmail(args.orderNumber)}</strong>`,
+    badge: "PayFast",
+    bodyHtml: `
+      ${emailHighlightTotal("Amount received", formatEmailPrice(args.total))}
+      ${emailDetailGrid([
+        { label: "Customer", value: escEmail(fullName) },
+        {
+          label: "Email",
+          value: `<a href="mailto:${escEmail(args.customer.email)}" style="color:${EMAIL_BRAND.teal};">${escEmail(args.customer.email)}</a>`,
+        },
+      ])}
+      <p style="margin:16px 0 0;font-size:14px;color:${EMAIL_BRAND.muted};">You can mark the order as processing in admin and arrange dispatch.</p>`,
+    prefooterHtml: emailButton(`${getPublicSiteUrl()}/admin/orders`, "Open in admin"),
+  });
 
   try {
     const [customerRes, adminRes] = await Promise.all([

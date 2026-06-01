@@ -231,10 +231,10 @@ const SiteHeader = () => {
         <div className="section-container flex items-center justify-between py-2">
           {/* Left: Social media */}
           <div className="flex items-center gap-3">
-            <Link href="https://facebook.com/lavasouthafrica" aria-label="Facebook" className="text-white/60 hover:text-secondary transition-colors">
+            <Link href="https://facebook.com/lavavidesa" aria-label="Facebook" className="text-white/60 hover:text-secondary transition-colors">
               <Facebook className="h-3.5 w-3.5" />
             </Link>
-            <Link href="https://instagram.com/lavasouthafrica" aria-label="Instagram" className="text-white/60 hover:text-secondary transition-colors">
+            <Link href="https://instagram.com/lava_vide_sa" aria-label="Instagram" className="text-white/60 hover:text-secondary transition-colors">
               <Instagram className="h-3.5 w-3.5" />
             </Link>
           </div>

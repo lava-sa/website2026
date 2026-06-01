@@ -8,6 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { getShipping, getShippingCartEstimate, SHIPPING_INCL_OTHER } from "@/lib/shipping";
 
 export interface CartItem {
   id: string;
@@ -37,12 +38,8 @@ interface CartContextValue {
 const CartContext = createContext<CartContextValue | null>(null);
 
 const STORAGE_KEY = "lava-sa-cart";
-const FREE_SHIPPING_THRESHOLD = 2500;
-export const SHIPPING_FEE = 150;
 
-export function getShipping(subtotal: number): number {
-  return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
-}
+export { getShipping, getShippingCartEstimate, SHIPPING_INCL_OTHER as SHIPPING_FEE };
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<{ items: CartItem[]; isHydrated: boolean }>({
@@ -53,7 +50,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [drawerOpenReason, setDrawerOpenReason] = useState<"manual" | "add">("manual");
 
-  // Hydrate from localStorage after mount (prevents SSR mismatch)
   useEffect(() => {
     let hydratedItems: CartItem[] = [];
     try {
@@ -63,14 +59,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       // corrupted storage — start fresh
     }
     setState((prev) => {
-      // If user added items before hydration finished, keep those runtime items.
       const safeItems = prev.items.length > 0 ? prev.items : hydratedItems;
       return { items: safeItems, isHydrated: true };
     });
   }, []);
 
-  // Persist to localStorage only after initial hydration.
-  // This prevents briefly writing an empty cart before stored data is restored.
   useEffect(() => {
     if (!isHydrated) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
@@ -78,15 +71,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = useCallback((item: Omit<CartItem, "quantity">) => {
     setState((prev) => {
-      const currentItems = prev.items;
-      const existing = currentItems.find((i) => i.id === item.id);
+      const existing = prev.items.find((i) => i.id === item.id);
       const nextItems = existing
-        ? currentItems.map((i) =>
+        ? prev.items.map((i) =>
             i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
           )
-        : [...currentItems, { ...item, quantity: 1 }];
+        : [...prev.items, { ...item, quantity: 1 }];
       return { ...prev, items: nextItems };
     });
+    setDrawerOpenReason("add");
+    setIsDrawerOpen(true);
   }, []);
 
   const removeItem = useCallback((id: string) => {
@@ -104,17 +98,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
-  const clearCart = useCallback(
-    () => setState((prev) => ({ ...prev, items: [] })),
-    []
-  );
+  const clearCart = useCallback(() => {
+    setState((prev) => ({ ...prev, items: [] }));
+  }, []);
+
   const openDrawer = useCallback((reason: "manual" | "add" = "manual") => {
     setDrawerOpenReason(reason);
     setIsDrawerOpen(true);
   }, []);
+
   const closeDrawer = useCallback(() => {
     setIsDrawerOpen(false);
-    setDrawerOpenReason("manual");
   }, []);
 
   const count = items.reduce((sum, i) => sum + i.quantity, 0);
@@ -142,8 +136,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useCart(): CartContextValue {
+export function useCart() {
   const ctx = useContext(CartContext);
-  if (!ctx) throw new Error("useCart must be used inside <CartProvider>");
+  if (!ctx) throw new Error("useCart must be used within CartProvider");
   return ctx;
 }

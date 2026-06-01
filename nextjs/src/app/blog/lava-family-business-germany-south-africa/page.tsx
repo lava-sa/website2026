@@ -6,14 +6,14 @@ import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "A Family Business from Baden-Württemberg — 40 Years of Precision",
+  title: "A Family Business from Baden-Württemberg — 44 Years of Precision",
   description:
     "The Landig family have been building vacuum sealers in southern Germany since 1982. Here's how their obsession with quality found a home in South Africa.",
 };
 
 export default function PostFamilyBusiness() {
   const articleLd = articleSchema({
-    title: "A Family Business from Baden-Württemberg — 40 Years of Precision",
+    title: "A Family Business from Baden-Württemberg — 44 Years of Precision",
     description:
       "The Landig family have been building vacuum sealers in southern Germany since 1982. Here's how their obsession with quality found a home in South Africa.",
     url: "/blog/lava-family-business-germany-south-africa",
@@ -32,7 +32,7 @@ export default function PostFamilyBusiness() {
           <span className="bg-secondary text-white text-[9px] font-black uppercase tracking-wider px-2.5 py-1 inline-block mb-4">Our Story</span>
           <h1 className="text-4xl font-black text-primary leading-tight mb-4">
             A Family Business from Baden-Württemberg —<br />
-            40 Years of Precision. Now in South Africa.
+            44 Years of Precision. In South Africa since 2007.
           </h1>
           <p className="text-copy-muted text-sm">1 April 2026 · 5 min read</p>
         </div>

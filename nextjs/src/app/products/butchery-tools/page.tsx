@@ -45,7 +45,7 @@ export default async function ButcheryToolsPage() {
           <span>✓ Precision Impact</span>
           <span>✓ Durable Construction</span>
           <span>✓ Professional Standard</span>
-          <span>✓ Free Delivery over R2,500</span>
+          <span>✓ Courier — R190 excl. VAT (Gauteng) · R250 elsewhere</span>
         </div>
       </div>
 

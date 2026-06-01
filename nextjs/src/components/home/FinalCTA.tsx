@@ -56,7 +56,7 @@ const FinalCTA = () => {
             </div>
 
             <p className="mt-6 text-xs text-petrol-800">
-              ✓ Free shipping over R2,500 · 2-year machine warranty · Johannesburg-based
+              ✓ Courier delivery nationwide · 2-year machine warranty · Johannesburg-based
             </p>
           </div>
 

@@ -112,7 +112,7 @@ const BUILT = [
       "Account dashboard: order history, Lava Points balance",
       "Submit a review page + admin moderation queue",
       "Mailing list with newsletter subscriber CSV export (Brevo-ready)",
-      "Free shipping R2,000+ / R150 flat rate below",
+      "Courier delivery: R190 excl. VAT (Gauteng) · R250 excl. VAT (other provinces) at checkout",
     ],
   },
   {

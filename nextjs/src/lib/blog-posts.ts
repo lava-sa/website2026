@@ -16,7 +16,7 @@ export const blogPosts: BlogPost[] = [
   // ── Brand & Story ──────────────────────────────────────────────────────────
   {
     slug: "lava-family-business-germany-south-africa",
-    title: "A Family Business from Baden-Württemberg — 40 Years of Precision, Now in South Africa",
+    title: "A Family Business from Baden-Württemberg — 44 Years of Precision, In South Africa since 2007",
     excerpt: "The Landig family have been building vacuum sealers in southern Germany since 1982. Here's how their obsession with quality found a home in South Africa.",
     category: "Our Story",
     date: "2026-04-01",

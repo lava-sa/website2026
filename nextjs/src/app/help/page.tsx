@@ -12,7 +12,7 @@ const HELP_LINKS = [
   {
     icon: Truck,
     title: "Delivery & Shipping",
-    description: "Delivery times, free shipping threshold, and what to expect after you order.",
+    description: "Courier rates by province, delivery times, and what to expect after you order.",
     href: "/help/delivery",
     cta: "View delivery info",
   },

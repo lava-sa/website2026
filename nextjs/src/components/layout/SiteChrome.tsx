@@ -10,7 +10,7 @@ import CartDrawer from "@/components/shop/CartDrawer";
 
 /**
  * Conditionally renders the site chrome (header, breadcrumbs, footer, Janet).
- * Hidden on /admin/*, /lava-sa/* (admin login), /buy/* funnels, /lp/*, and /site-review/* rooms.
+ * Hidden on /admin/*, /lava-sa/* (admin login), /buy/* funnels, /lp/*, /site-access, and /site-review/*.
  */
 export default function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -19,7 +19,8 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
     pathname.startsWith("/lava-sa") ||
     pathname.startsWith("/buy") ||
     pathname.startsWith("/lp") ||
-    pathname.startsWith("/site-review");
+    pathname.startsWith("/site-review") ||
+    pathname.startsWith("/site-access");
 
   if (isAdmin) {
     return <>{children}</>;

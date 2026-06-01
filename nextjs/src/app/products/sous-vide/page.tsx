@@ -149,7 +149,7 @@ export default function SousVidePage() {
         <div className="section-container flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-[11px] font-bold uppercase tracking-widest text-on-dark-muted">
           <span>✓ ±0.1°C Precision</span>
           <span>✓ Works with LAVA Vacuum Bags</span>
-          <span>✓ Free Delivery over R2,500</span>
+          <span>✓ Courier — R190 excl. VAT (Gauteng) · R250 elsewhere</span>
           <span>✓ German Engineering</span>
         </div>
       </div>

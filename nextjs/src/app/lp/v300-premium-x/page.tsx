@@ -10,7 +10,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "V.300 Premium X — Buy the Machine South Africa Trusts | Lava-SA",
   description:
-    "German-engineered LAVA V.300 Premium X — direct add-to-cart, 2-year warranty, free shipping over R2,500. For hunters, anglers, and serious kitchens.",
+    "German-engineered LAVA V.300 Premium X — direct add-to-cart, 2-year warranty, nationwide courier delivery. For hunters, anglers, and serious kitchens.",
   path: "/lp/v300-premium-x",
   titleAbsolute: true,
   noIndex: true,
@@ -29,7 +29,7 @@ export default function V300PremiumXLandingPage() {
     <main className="min-h-screen bg-white">
       {/* Top trust strip */}
       <div className="bg-white border-b-2 border-primary text-center py-2.5 px-3 text-[11px] sm:text-xs font-bold uppercase tracking-[0.12em] text-primary">
-        <span className="inline-block">Free shipping over R2,500</span>
+        <span className="inline-block">Courier from R190 excl. VAT (Gauteng)</span>
         <span className="mx-2 text-copy-muted font-normal hidden sm:inline">|</span>
         <span className="inline-block">2-year warranty</span>
         <span className="mx-2 text-copy-muted font-normal hidden sm:inline">|</span>

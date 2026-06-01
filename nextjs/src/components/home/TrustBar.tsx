@@ -18,8 +18,8 @@ const badges = [
   },
   {
     icon: Truck,
-    label: "Free Delivery",
-    sub: "On orders over R2,500",
+    label: "Courier Delivery",
+    sub: "R190 / R250 excl. VAT",
   },
   {
     icon: Wrench,

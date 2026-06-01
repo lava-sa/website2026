@@ -46,7 +46,7 @@ export default async function AcrylicLidsPage() {
           <span>✓ Dishwasher Safe</span>
           <span>✓ Fits All LAVA Machines</span>
           <span>✓ Universal Fitment</span>
-          <span>✓ Free Delivery over R2,500</span>
+          <span>✓ Courier — R190 excl. VAT (Gauteng) · R250 elsewhere</span>
         </div>
       </div>
 

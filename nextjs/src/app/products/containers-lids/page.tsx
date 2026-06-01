@@ -78,7 +78,7 @@ export default async function ContainersLidsPage() {
           <span>✓ Dishwasher Safe</span>
           <span>✓ Fits All LAVA Machines</span>
           <span>✓ Marinate 3× Faster</span>
-          <span>✓ Free Delivery over R2,500</span>
+          <span>✓ Courier — R190 excl. VAT (Gauteng) · R250 elsewhere</span>
         </div>
       </div>
 

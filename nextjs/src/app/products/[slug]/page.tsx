@@ -25,6 +25,14 @@ import StockBadge from "@/components/shop/StockBadge";
 import AddToCartButton from "@/components/shop/AddToCartButton";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
 import { parseFunnelConfig } from "@/lib/funnel";
+import { getMachineContent } from "@/lib/machine-content";
+import MachineFunctions from "@/components/products/machine/MachineFunctions";
+import MachineDelivery from "@/components/products/machine/MachineDelivery";
+import MachineBenefitsShowcase from "@/components/products/machine/MachineBenefitsShowcase";
+import MachineTests from "@/components/products/machine/MachineTests";
+import MachineDownloads from "@/components/products/machine/MachineDownloads";
+import MachineVideos from "@/components/products/machine/MachineVideos";
+import MachineFAQ from "@/components/products/machine/MachineFAQ";
 
 // ── Static params ────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
@@ -59,7 +67,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         : product.name;
 
     const fallbackDescription = isMachine
-      ? `Buy the LAVA ${product.name.replace(/^LAVA\s+/i, "")} vacuum sealer in South Africa. German engineering, 2-year warranty, free shipping over R2,500. Trusted since 2007.`
+      ? `Buy the LAVA ${product.name.replace(/^LAVA\s+/i, "")} vacuum sealer in South Africa. German engineering, 2-year warranty, nationwide courier delivery. Trusted since 2007.`
       : `Buy ${product.name} from Lava-SA — German quality, 2-year warranty, nationwide South African delivery. Trusted distributor since 2007.`;
 
     const description =
@@ -215,6 +223,7 @@ export default async function ProductDetailPage({
   const price     = product.sale_price ?? product.regular_price;
   const isVacuumMachine = product.categories?.slug === "vacuum-machines";
   const isSousVide = product.categories?.slug === "sous-vide";
+  const machineContent = isVacuumMachine ? getMachineContent(slug) : null;
   const funnelConfig = parseFunnelConfig(product.specs?.funnel_config);
   const aiSummary = String(product.specs?.ai_summary ?? "").trim();
   const aiSearchTerms = String(product.specs?.ai_search_terms ?? "").trim();
@@ -455,8 +464,8 @@ export default async function ProductDetailPage({
                   className="flex items-center gap-2.5 border border-border bg-surface px-3 py-3 hover:border-primary transition-colors group">
                   <Truck className="h-5 w-5 text-secondary shrink-0" />
                   <div>
-                    <p className="text-xs font-bold text-primary leading-none">Free Delivery</p>
-                    <p className="text-[9px] text-copy-muted mt-0.5">Orders over R2,500</p>
+                    <p className="text-xs font-bold text-primary leading-none">Courier Delivery</p>
+                    <p className="text-[9px] text-copy-muted mt-0.5">R190 / R250 excl. VAT by province</p>
                   </div>
                 </Link>
                 <Link href="/help/returns"
@@ -544,6 +553,11 @@ export default async function ProductDetailPage({
       )}
 
       {/* ═══════════════════════════════════════════════════════════════
+          NEW — Machine Functions (from machine-content.ts)
+      ════════════════════════════════════════════════════════════════ */}
+      {machineContent && <MachineFunctions functions={machineContent.functions} />}
+
+      {/* ═══════════════════════════════════════════════════════════════
           SECTION 3 — Specifications
       ════════════════════════════════════════════════════════════════ */}
       {hasSpecs && (
@@ -568,6 +582,16 @@ export default async function ProductDetailPage({
           </div>
         </section>
       )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          NEW — Delivery contents (what's in the box)
+      ════════════════════════════════════════════════════════════════ */}
+      {machineContent && <MachineDelivery items={machineContent.deliveryContents} />}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          NEW — Brand benefit showcase (5 reusable blocks, every machine)
+      ════════════════════════════════════════════════════════════════ */}
+      {isVacuumMachine && <MachineBenefitsShowcase />}
 
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 4 — Industries
@@ -661,6 +685,18 @@ export default async function ProductDetailPage({
             </p>
           </div>
         </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          NEW — Videos / Tests / Downloads / FAQ
+      ════════════════════════════════════════════════════════════════ */}
+      {machineContent && (
+        <>
+          <MachineVideos videos={machineContent.videos} />
+          <MachineTests tests={machineContent.tests} />
+          <MachineDownloads downloads={machineContent.downloads} />
+          <MachineFAQ items={machineContent.faq} />
+        </>
       )}
 
       {/* ═══════════════════════════════════════════════════════════════

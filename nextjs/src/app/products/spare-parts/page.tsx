@@ -109,7 +109,7 @@ export default async function SparePartsPage() {
           <span>✓ Genuine LAVA Parts</span>
           <span>✓ Made in Germany</span>
           <span>✓ In Stock — Ships Fast</span>
-          <span>✓ Free Delivery over R2,500</span>
+          <span>✓ Courier — R190 excl. VAT (Gauteng) · R250 elsewhere</span>
         </div>
       </div>
 

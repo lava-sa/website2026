@@ -13,7 +13,7 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
   "/blog": [{ label: "Blog" }],
   "/blog/lava-family-business-germany-south-africa": [
     { label: "Blog", href: "/blog" },
-    { label: "A Family Business from Baden-Württemberg — 40 Years of Precision. Now in South Africa." },
+    { label: "A Family Business from Baden-Württemberg — 44 Years of Precision. In South Africa since 2007." },
   ],
   "/blog/you-can-rely-on-our-quality": [
     { label: "Blog", href: "/blog" },

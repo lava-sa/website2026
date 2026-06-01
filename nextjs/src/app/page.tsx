@@ -9,7 +9,7 @@ export const metadata: Metadata = {
       "LAVA Vacuum Sealers South Africa | Premium German Food Preservation Since 2007 | Lava-SA",
   },
   description:
-    "LAVA vacuum sealers South Africa — German-engineered V.300 Premium X, bags, rolls & accessories. 2-year warranty, free shipping over R2,500. Since 2007.",
+    "LAVA vacuum sealers South Africa — German-engineered V.300 Premium X, bags, rolls & accessories. 2-year warranty, nationwide courier delivery. Since 2007.",
   alternates: { canonical: "/" },
   openGraph: {
     title:
@@ -43,8 +43,9 @@ const orgSchema = {
   logo: `${SITE_URL}/images/logo/lava-sa-logo.png`,
   image: `${SITE_URL}${DEFAULT_OG_IMAGE}`,
   sameAs: [
-    "https://www.facebook.com/lavasouthafrica",
-    "https://www.instagram.com/lavasouthafrica",
+    "https://www.facebook.com/lavavidesa",
+    "https://www.instagram.com/lava_vide_sa",
+    "https://la-va.com",
   ],
 };
 

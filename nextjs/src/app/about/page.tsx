@@ -601,7 +601,7 @@ export default function AboutPage() {
           </h2>
           <p className="text-on-dark-muted max-w-lg mx-auto mb-10 text-lg leading-relaxed">
             Browse the full range of LAVA vacuum sealers, bags and accessories —
-            with free delivery on orders over R2,500.
+            with flat-rate courier delivery across South Africa (R190 excl. VAT in Gauteng, R250 elsewhere).
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link

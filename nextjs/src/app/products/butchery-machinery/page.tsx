@@ -76,7 +76,7 @@ export default async function ButcheryMachineryPage() {
           <span>✓ Precision Engineering</span>
           <span>✓ High-Capacity Processing</span>
           <span>✓ Easy Maintenance</span>
-          <span>✓ Free Delivery over R2,500</span>
+          <span>✓ Courier — R190 excl. VAT (Gauteng) · R250 elsewhere</span>
         </div>
       </div>
 

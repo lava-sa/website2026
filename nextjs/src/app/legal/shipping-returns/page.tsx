@@ -28,7 +28,7 @@ export default function ShippingReturnsPage() {
         {/* Quick summary cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
           {[
-            { icon: Truck,       title: "Free Delivery",   sub: "On orders over R2,500" },
+            { icon: Truck,       title: "Courier delivery", sub: "R190 / R250 excl. VAT by province" },
             { icon: Clock,       title: "2–4 Days",        sub: "After payment clears" },
             { icon: RefreshCw,   title: "30-Day Returns",  sub: "Unused, original packaging" },
             { icon: ShieldCheck, title: "2-Year Warranty", sub: "All LAVA machines" },
@@ -68,9 +68,9 @@ export default function ShippingReturnsPage() {
 
             <h3 className="font-bold text-primary mt-6">Delivery Rates</h3>
             <Table rows={[
-              ["Orders over R2,500",    "FREE standard courier delivery"],
-              ["Orders under R2,500",   "R150 flat rate (most orders)"],
-              ["Outlying / remote areas", "Quoted at checkout — may differ"],
+              ["Gauteng", "R190 excl. VAT (R219 incl. VAT at checkout)"],
+              ["All other provinces", "R250 excl. VAT (R288 incl. VAT at checkout)"],
+              ["Outlying / remote areas", "Same rates — depot collection may apply"],
             ]} />
 
             <h3 className="font-bold text-primary mt-6">Delivery Requirements</h3>

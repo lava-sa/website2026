@@ -45,7 +45,7 @@ export default async function ButcheryBoardsPage() {
           <span>✓ Easy to Clean</span>
           <span>✓ Professional Standard</span>
           <span>✓ Durable Surface</span>
-          <span>✓ Free Delivery over R2,500</span>
+          <span>✓ Courier — R190 excl. VAT (Gauteng) · R250 elsewhere</span>
         </div>
       </div>
 

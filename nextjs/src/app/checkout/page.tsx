@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ShieldCheck, Lock, Loader2, CreditCard, Building2, Check } from "lucide-react";
-import { useCart, getShipping, SHIPPING_FEE } from "@/lib/cart-context";
+import { useCart } from "@/lib/cart-context";
+import { formatShippingExVat, formatShippingInclVat, getShipping } from "@/lib/shipping";
 
 const SA_PROVINCES = [
   "Eastern Cape", "Free State", "Gauteng", "KwaZulu-Natal",
@@ -34,7 +35,7 @@ type PaymentMethod = "payfast" | "bank_transfer";
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, total, count, clearCart, isHydrated } = useCart();
-  const shipping   = getShipping(total);
+  const shipping   = getShipping(total, form.province);
   const orderTotal = total + shipping;
 
   const [form,          setForm]          = useState<FormState>(EMPTY_FORM);
@@ -305,13 +306,18 @@ export default function CheckoutPage() {
                     <span className="font-semibold">{formatPrice(total)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-copy-muted">Delivery</span>
-                    <span className="font-semibold">
-                      {shipping === 0
-                        ? <span className="text-emerald-600">FREE</span>
-                        : formatPrice(SHIPPING_FEE)}
+                    <span className="text-copy-muted">Delivery ({form.province})</span>
+                    <span className="font-semibold text-right">
+                      {formatPrice(shipping)}
+                      <span className="block text-[10px] font-normal text-copy-muted">
+                        {formatShippingExVat(form.province)} excl. VAT
+                      </span>
                     </span>
                   </div>
+                  <p className="text-[10px] text-copy-muted -mt-1">
+                    Gauteng {formatShippingInclVat("Gauteng")} incl. VAT · Other provinces{" "}
+                    {formatShippingInclVat("Western Cape")} incl. VAT
+                  </p>
                   <div className="flex justify-between pt-2 border-t border-border">
                     <span className="font-bold text-primary">Total</span>
                     <span className="font-bold text-primary text-lg">{formatPrice(orderTotal)}</span>

@@ -1,5 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  SITE_ACCESS_COOKIE,
+  isSiteAccessEnabled,
+  isSiteAccessExemptPath,
+  verifySiteAccessCookie,
+} from "@/lib/site-access";
 
 // Only these hostnames should be indexed by Google
 const PRODUCTION_HOSTS = new Set(["lava-sa.com", "www.lava-sa.com"]);
@@ -28,19 +34,27 @@ export async function middleware(request: NextRequest) {
   const bareHost = (request.headers.get("host") ?? "").split(":")[0].toLowerCase();
   if (LEGACY_REDIRECT_HOSTS.has(bareHost)) {
     const url = request.nextUrl.clone();
-    url.hostname = "www.lava-sa.com";
-    url.protocol = "https:";
-    return NextResponse.redirect(url, 308);
-  }
-
-  if (bareHost === "lava-sa.com") {
-    const url = request.nextUrl.clone();
-    url.hostname = "www.lava-sa.com";
+    url.hostname = "lava-sa.com";
     url.protocol = "https:";
     return NextResponse.redirect(url, 308);
   }
 
   const preview = isPreviewHost(request);
+
+  // ── Site-wide preview password (public site + APIs except webhooks/admin) ─
+  if (isSiteAccessEnabled() && !isSiteAccessExemptPath(pathname)) {
+    const accessCookie = request.cookies.get(SITE_ACCESS_COOKIE)?.value;
+    if (!verifySiteAccessCookie(accessCookie)) {
+      if (pathname.startsWith("/api/")) {
+        return NextResponse.json({ error: "Site access required" }, { status: 401 });
+      }
+      const gateUrl = new URL("/site-access", request.url);
+      if (pathname !== "/") {
+        gateUrl.searchParams.set("from", pathname);
+      }
+      return NextResponse.redirect(gateUrl);
+    }
+  }
 
   // ── Admin auth (existing cookie-based approach) ──────────────────────────
   if (

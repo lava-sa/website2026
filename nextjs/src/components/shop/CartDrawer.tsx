@@ -4,7 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { X, ShoppingBag, Trash2 } from "lucide-react";
-import { getShipping, SHIPPING_FEE, useCart } from "@/lib/cart-context";
+import { useCart } from "@/lib/cart-context";
+import { getShippingCartEstimate, SHIPPING_INCL_GAUTENG, SHIPPING_INCL_OTHER } from "@/lib/shipping";
 
 function formatPrice(amount: number): string {
   return new Intl.NumberFormat("en-ZA", {
@@ -17,7 +18,7 @@ function formatPrice(amount: number): string {
 
 export default function CartDrawer() {
   const { items, total, count, isDrawerOpen, drawerOpenReason, closeDrawer, removeItem } = useCart();
-  const shipping = getShipping(total);
+  const shipping = getShippingCartEstimate();
   const orderTotal = total + shipping;
   const [showToast, setShowToast] = useState(false);
 
@@ -118,9 +119,12 @@ export default function CartDrawer() {
             <span className="font-semibold text-primary">{formatPrice(total)}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-copy-muted">Delivery</span>
-            <span className="font-semibold text-primary">
-              {shipping === 0 ? "FREE" : formatPrice(SHIPPING_FEE)}
+            <span className="text-copy-muted">Delivery (est.)</span>
+            <span className="font-semibold text-primary text-right">
+              {formatPrice(shipping)}
+              <span className="block text-[10px] font-normal text-copy-muted">
+                R{SHIPPING_INCL_GAUTENG}–{SHIPPING_INCL_OTHER} incl. VAT at checkout
+              </span>
             </span>
           </div>
           <div className="flex justify-between text-base border-t border-border pt-2">

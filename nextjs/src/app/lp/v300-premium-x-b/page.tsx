@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Lava V.300 Premium X — Vacuum Like a Professional | Lava-SA",
   description:
-    "The German-engineered vacuum sealer trusted by hunters, chefs and butchers across South Africa. 500W double pump. -0.94 bar. 2-year warranty. Free shipping over R3,500.",
+    "The German-engineered vacuum sealer trusted by hunters, chefs and butchers across South Africa. 500W double pump. -0.94 bar. 2-year warranty. Nationwide courier delivery.",
   robots: { index: false, follow: false }, // landing page — paid traffic only
   openGraph: {
     title: "Lava V.300 Premium X — Vacuum Like a Professional",
@@ -394,7 +394,7 @@ export default function V300PremiumXLandingPage() {
         <div className="mx-auto grid max-w-7xl gap-8 px-4 text-center sm:grid-cols-3 sm:px-6 lg:px-8">
           {[
             ["2-Year Warranty", "Direct from the SA distributor."],
-            ["Free Shipping", "On orders over R3,500 nationwide."],
+            ["Courier Delivery", "R190 excl. VAT (Gauteng) · R250 elsewhere."],
             ["Real Humans", "Anneke answers every product enquiry personally."],
           ].map(([t, b]) => (
             <div key={t}>
@@ -418,8 +418,8 @@ export default function V300PremiumXLandingPage() {
             <em className="not-italic text-secondary">Buy the last one.</em>
           </h2>
           <p className="mt-6 text-lg text-on-dark-muted">
-            44 years of German engineering. Two-year warranty. Free shipping
-            over R3,500. Built for the way you actually cook, hunt, fish and
+            44 years of German engineering. Two-year warranty. Courier delivery
+            from R190 excl. VAT (Gauteng). Built for the way you actually cook, hunt, fish and
             preserve.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">

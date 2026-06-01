@@ -97,7 +97,7 @@ export default async function BagsRollsPage() {
           <span>✓ BPA-Free & Food Safe</span>
           <span>✓ Freezer & Sous-Vide Safe</span>
           <span>✓ Fits All LAVA Machines</span>
-          <span>✓ Free Delivery over R2,500</span>
+          <span>✓ Courier — R190 excl. VAT (Gauteng) · R250 elsewhere</span>
         </div>
       </div>
 

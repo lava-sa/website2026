@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     },
     description:
         "South Africa's leading German vacuum sealer brand. Preserve game meat, fish, biltong and food with Lava's hospital-grade vacuum technology. Trusted by hunters, anglers, butchers and home cooks.",
-    metadataBase: new URL("https://www.lava-sa.com"),
+    metadataBase: new URL("https://lava-sa.com"),
     keywords: [
         "vacuum sealer South Africa",
         "vacuum sealer for hunters",
@@ -82,17 +82,26 @@ export const metadata: Metadata = {
         },
 };
 
+// Place ID + GBP URL are filled in once the Google Business Profile is verified.
+// Set NEXT_PUBLIC_GBP_URL in Vercel env to add it to `sameAs` / `hasMap` without a code change.
+const GBP_URL = process.env.NEXT_PUBLIC_GBP_URL?.trim() || "";
+
 const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "Store"],
-    "name": "Lava-SA",
-    "alternateName": "Lava-SA",
+    "name": "Lava South Africa",
+    "alternateName": ["Lava-SA", "La.va South Africa", "Lava Vide SA"],
+    "legalName": "Lava Vide SA (Pty) Ltd",
     "url": "https://www.lava-sa.com",
+    "logo": "https://www.lava-sa.com/images/logo/lava-sa-logo.png",
+    "image": "https://www.lava-sa.com/images/headers/lava-sa-vacuum-sealers-V300-header-pick-1250.jpg",
     "description":
-        "South Africa's authorised distributor of German-engineered Lava vacuum sealers. Operating since 2007. Trusted by hunters, anglers, butchers, biltong makers and home cooks across South Africa.",
+        "Lava South Africa is the official local distributor of German-engineered la.va vacuum sealers since 2007. Chamber & external machines, bags, rolls, containers, sous-vide and spare parts for home cooks, hunters, butchers and food industry.",
     "telephone": "+27721605556",
     "email": "info@lava-sa.com",
     "priceRange": "R2,500–R70,000",
+    "currenciesAccepted": "ZAR",
+    "paymentAccepted": "Credit Card, EFT, Bank Transfer",
     "address": {
         "@type": "PostalAddress",
         "streetAddress": "5 Stirling Road",
@@ -101,10 +110,27 @@ const localBusinessSchema = {
         "addressRegion": "Gauteng",
         "addressCountry": "ZA",
     },
+    "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -26.069000,
+        "longitude": 28.006942,
+    },
+    "areaServed": [
+        { "@type": "Country", "name": "South Africa" },
+        { "@type": "AdministrativeArea", "name": "Gauteng" },
+    ],
     "foundingDate": "2007",
+    "parentOrganization": {
+        "@type": "Organization",
+        "name": "Lava Vacuum Packaging GmbH",
+        "url": "https://la-va.com",
+    },
+    ...(GBP_URL ? { "hasMap": GBP_URL } : {}),
     "sameAs": [
-        "https://www.facebook.com/lavasouthafrica",
-        "https://www.instagram.com/lavasouthafrica",
+        "https://www.facebook.com/lavavidesa",
+        "https://www.instagram.com/lava_vide_sa",
+        "https://la-va.com",
+        ...(GBP_URL ? [GBP_URL] : []),
     ],
 };
 

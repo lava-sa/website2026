@@ -3,7 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
-import { useCart, getShipping, SHIPPING_FEE } from "@/lib/cart-context";
+import { useCart } from "@/lib/cart-context";
+import { getShippingCartEstimate, SHIPPING_INCL_GAUTENG, SHIPPING_INCL_OTHER } from "@/lib/shipping";
 
 function formatPrice(amount: number): string {
   return new Intl.NumberFormat("en-ZA", {
@@ -16,7 +17,7 @@ function formatPrice(amount: number): string {
 
 export default function CartPage() {
   const { items, total, removeItem, updateQty, count, isHydrated } = useCart();
-  const shipping = getShipping(total);
+  const shipping = getShippingCartEstimate();
   const orderTotal = total + shipping;
 
   if (!isHydrated) return null;
@@ -150,20 +151,16 @@ export default function CartPage() {
                 <span className="font-semibold">{formatPrice(total)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-copy-muted">Delivery</span>
-                <span className="font-semibold">
-                  {shipping === 0 ? (
-                    <span className="text-emerald-600">FREE</span>
-                  ) : (
-                    formatPrice(SHIPPING_FEE)
-                  )}
+                <span className="text-copy-muted">Delivery (est.)</span>
+                <span className="font-semibold text-right">
+                  {formatPrice(shipping)}
                 </span>
               </div>
-              {shipping > 0 && (
-                <p className="text-xs text-copy-muted bg-surface p-2.5 border border-border">
-                  Add {formatPrice(2500 - total)} more for free delivery
-                </p>
-              )}
+              <p className="text-xs text-copy-muted bg-surface p-2.5 border border-border">
+                Final delivery at checkout: {formatPrice(SHIPPING_INCL_GAUTENG)} incl. VAT (Gauteng)
+                or {formatPrice(SHIPPING_INCL_OTHER)} incl. VAT (other provinces). Rates are R190 / R250
+                excl. VAT.
+              </p>
               <div className="border-t border-border pt-3 flex justify-between text-base">
                 <span className="font-bold text-primary">Total</span>
                 <span className="font-bold text-primary text-xl">{formatPrice(orderTotal)}</span>
