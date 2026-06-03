@@ -23,6 +23,8 @@ export async function POST(req: Request) {
       firstName,
       lastName,
       phone,
+      email,
+      industry,
       cartAdded,
     } = body as {
       sessionId?: string;
@@ -33,6 +35,8 @@ export async function POST(req: Request) {
       firstName?: string;
       lastName?: string;
       phone?: string;
+      email?: string;
+      industry?: string;
       cartAdded?: boolean;
     };
 
@@ -48,11 +52,13 @@ export async function POST(req: Request) {
         first_name: firstName?.trim() || null,
         last_name: lastName?.trim() || null,
         phone: phone?.trim() || null,
+        email: email?.trim() || null,
+        industry: industry?.trim() || null,
         updated_at: new Date().toISOString(),
         action_taken:
           cartAdded === true
             ? "Added to cart — checkout will capture full details"
-            : phone
+            : phone || email
               ? "Anneke callback requested (voice fallback)"
               : "Voice session — no cart, no contact captured",
       };

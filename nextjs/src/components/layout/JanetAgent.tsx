@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { X, MessageCircle, Mic, MicOff, Loader2 } from "lucide-react";
 import { GoogleGenAI, Modality } from "@google/genai";
 import type { Session } from "@google/genai";
@@ -24,55 +25,62 @@ const MACHINE_SPECS = [
 
 function buildSystemPrompt(urlPath: string, pageContext: string) {
   return `
-You are Janet — a warm, knowledgeable, and professional voice advisor for LAVA South Africa, a premium German vacuum sealing company.
+You are Janet — a warm, knowledgeable voice sales assistant for LAVA South Africa, a premium German vacuum sealing company. You behave like a friendly in-store assistant who can actually move around the website for the visitor.
 
-IMPORTANT — GREET FIRST: Speak first as soon as the session opens. Do not wait for the visitor. Greet warmly, then ask ONLY for their first name (not surname, phone, or email yet). Example: "Hi! I'm Janet, your LAVA product advisor. What's your first name?" Use their first name naturally afterward.
+GREET FIRST: Speak first the moment the session opens — do not wait. Greet warmly, introduce yourself, then ask for their first name. Example: "Hi, I'm Janet, your LAVA product advisor — what's your first name?" The instant they tell you their name, call capture_contact with firstName so we never lose it. Use their first name naturally afterwards.
 
-IMPORTANT — LANGUAGE: Speak English by default. Do not switch to Afrikaans or Zulu unless the user explicitly asks.
+LANGUAGE: Speak English by default. Only switch to Afrikaans or Zulu if the visitor explicitly asks.
 
-YOUR ROLE
-- Advise on LAVA vacuum sealers, embossed channel bags, rolls, and butchery accessories.
-- Use the screen text below for prices and product names on the current page.
+DISCOVER THEIR NEED (important — do this early):
+- Ask what they want to use vacuum sealing for. Listen for the use-case and classify it, then call capture_contact with the "industry" field set to the best match:
+  • "home" — home kitchen / household use
+  • "home_industry" — small home-based food business (e.g. baking rusks, biltong from home, home bakery, cottage food, selling at markets). If they mention making/selling food FROM HOME, this is home_industry, NOT professional.
+  • "hunting" — hunters / game / venison
+  • "fishing" — anglers / fishing
+  • "butchery" — butcheries
+  • "restaurant" — restaurants / catering / commercial kitchens
+  • "retail" — shops / resellers
+- Never assume "professional/commercial" unless they clearly run a commercial operation. When unsure, ask a short clarifying question.
 
-PRICES
-- Say the number first, then "Rand" (e.g. R 6999 → "6999 Rand").
+CONTROLLING THE WEBSITE (this is what makes you special — use it proactively):
+- You can move the page for the visitor. When it helps, offer and then do it.
+- scroll_to_section: scroll the current page to a part they care about (e.g. "products", "sizes", "specs", "reviews", "faq"). Say something like "I can scroll down to the machines for you" then call it.
+- navigate_to: take them to another page. Use real site paths. Useful ones:
+  • /products/vacuum-machines (all machines) • /products/bags-rolls • /products/sous-vide
+  • /products/<slug> for a specific product (use the slug from the screen text)
+  • /contact (book a call / leave details) • /rewards • /help/faq
+- After you navigate or scroll, briefly tell them what you did ("Done — you're on the machines page now").
+
+PRICES: Say the number first, then "Rand" (e.g. R 6999 → "6999 Rand").
 
 PAGE AWARENESS
 - Current path: ${urlPath}
-- Screen text from the page they are viewing:
+- Visible content on the page they are viewing right now:
 ---
 ${pageContext}
 ---
-- Never downgrade: if they view a V.300 or V.400, help them buy that machine unless they ask for budget options.
+- Refer to the product they are looking at by name. Never downgrade: if they're viewing a V.300 or V.400, help them with that machine unless they ask for cheaper options.
 
 ${buildJanetKnowledgePromptBlock()}
 
 GLOBAL MACHINE CATALOG
 ${JSON.stringify(MACHINE_SPECS, null, 2)}
 
-SALES & add_to_cart TOOL
-- Answer questions first; do not rush the sale.
-- When they agree to buy, call add_to_cart immediately with productId = the website slug from screen text, productName, and numeric price. Do not promise it is in the cart until the tool succeeds.
-- After success: tell them to open the cart (top right) and complete checkout — name, phone, and email are collected there.
+SELLING & add_to_cart
+- Answer questions first; advise honestly (compare machines when asked). Don't rush the sale.
+- When they agree to buy, call add_to_cart with productId = the website slug from the screen text, productName, and numeric price. Don't claim it's in the cart until the tool succeeds.
+- After success: tell them to open the cart (top right) to check out — full name, phone and email are collected there.
 
-CONTACT CAPTURE — TWO PHASES (critical)
-PHASE 1 — START OF CALL: First name only. Do not ask for surname, phone, or email at the start.
+LEAD CAPTURE — NATURAL, NOT ROBOTIC
+- Capture details as they come up in conversation using capture_contact (all fields optional, send whatever you just learned): firstName, lastName, phone, email, industry.
+- If they are interested but not buying today, offer a callback naturally: "Would you like Anneke to give you a call? I can take a few details, or pop you over to our contact page." 
+  • If they want to leave details by voice: ask for their phone number (and surname if natural), confirm once, then call capture_contact with those fields.
+  • If they'd rather fill it in themselves: use navigate_to with /contact and tell them the form is right there.
+- If they already added to cart, don't collect phone/email — checkout handles it. Just confirm the next step warmly.
 
-PHASE 2 — END OF CALL (only if add_to_cart was NOT used this session):
-- Before ending, you MUST offer booking first: "Would you like to book a call with Anneke? I can guide you to our booking page."
-- Preferred handoff: direct them to /contact to submit their details themselves.
-- If yes:
-  1) First tell them where to book: "Please open lava-sa.com/contact and complete the callback form."
-  2) If they cannot book right now, collect callback details manually: ask SURNAME and MOBILE NUMBER only (no email capture on voice).
-  3) Confirm surname and phone once, then call save_lead with firstName, lastName, phone.
-- If add_to_cart WAS used: do NOT ask for surname/phone/email. Checkout captures everything. Say goodbye briefly.
-
-save_lead TOOL
-- Call when you have callback details from voice fallback. Include firstName (from start), lastName, and phone.
-
-RULES
-- Under 3 sentences per turn when possible. Sound like a phone call, not a brochure.
-- Never invent bag sizes or nicknames (no "small", "jumbo", etc.).
+STYLE
+- Keep turns short — usually 1–3 sentences. Sound like a real phone call, not a brochure.
+- Never invent bag sizes or nicknames (no "small", "jumbo", etc.) — use the centimetre sizes above.
   `;
 }
 
@@ -113,9 +121,55 @@ function base64Pcm16ToFloat32(b64: string): Float32Array {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Page scraping & UI control helpers (let Janet "see" and move the page)
+// ─────────────────────────────────────────────────────────────────────────────
+function scrapePageContext(): string {
+  if (typeof document === "undefined") return "";
+  const main = document.querySelector("main");
+  const text = (main as HTMLElement | null)?.innerText || document.body.innerText || "";
+  return text.replace(/\s+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim().substring(0, 4000);
+}
+
+/** Scroll the page to the most relevant section for a free-text query. Returns true if it found a target. */
+function scrollToQuery(query: string): boolean {
+  if (typeof document === "undefined") return false;
+  const q = query.trim().toLowerCase();
+  if (!q) return false;
+
+  // 1) direct id / anchor match
+  const byId = document.getElementById(q) || document.querySelector(`[id="${q}"]`);
+  if (byId) {
+    byId.scrollIntoView({ behavior: "smooth", block: "start" });
+    return true;
+  }
+
+  // 2) heading / section text contains the query
+  const candidates = Array.from(
+    document.querySelectorAll<HTMLElement>("h1, h2, h3, section[id], [data-section]")
+  );
+  const match = candidates.find((el) => (el.textContent || "").toLowerCase().includes(q));
+  if (match) {
+    match.scrollIntoView({ behavior: "smooth", block: "start" });
+    return true;
+  }
+
+  // 3) common intents → coarse scroll
+  if (/(bottom|contact|footer|book|review|faq)/.test(q)) {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    return true;
+  }
+  if (/(top|start|hero)/.test(q)) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return true;
+  }
+  return false;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Janet Agent Component
 // ─────────────────────────────────────────────────────────────────────────────
 export const JanetAgent = () => {
+  const router                  = useRouter();
   const [isOpen, setIsOpen]     = useState(false);
   const [status, setStatus]     = useState<SessionStatus>("idle");
   const [isMuted, setIsMuted]   = useState(false);
@@ -123,11 +177,18 @@ export const JanetAgent = () => {
   const { addItem }             = useCart(); // LAVA Tool access
 
   // Telemetry & State
-  const [transcript, setTranscript] = useState<string[]>([]);
+  const transcriptRef = useRef<string[]>([]); // source of truth for saving (avoids stale state)
   const startedAtRef = useRef("");
   const sessionIdRef = useRef("");
   const cartAddedRef = useRef(false);
-  const leadRef = useRef<{ firstName?: string; lastName?: string; phone?: string }>({});
+  const savedRef = useRef(false); // guards against double-save (End Call + onclose)
+  const leadRef = useRef<{
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    email?: string;
+    industry?: string;
+  }>({});
   const [inputDeviceLabel, setInputDeviceLabel] = useState("Not detected yet");
   const [outputDeviceLabel, setOutputDeviceLabel] = useState("System default");
 
@@ -192,7 +253,8 @@ export const JanetAgent = () => {
     playCtxRef.current = null;
     nextPlayTime.current = 0;
 
-    if (saveSession && startedAtRef.current && sessionIdRef.current) {
+    if (saveSession && !savedRef.current && startedAtRef.current && sessionIdRef.current) {
+      savedRef.current = true;
       try {
         await fetch("/api/janet-session", {
           method: "POST",
@@ -200,12 +262,14 @@ export const JanetAgent = () => {
           body: JSON.stringify({
             sessionId: sessionIdRef.current,
             pageUrl: window.location.pathname,
-            transcript: transcript.join("\n"),
+            transcript: transcriptRef.current.join("\n"),
             durationSeconds: Math.round((Date.now() - new Date(startedAtRef.current).getTime()) / 1000),
             startedAt: startedAtRef.current,
             firstName: leadRef.current.firstName,
             lastName: leadRef.current.lastName,
             phone: leadRef.current.phone,
+            email: leadRef.current.email,
+            industry: leadRef.current.industry,
             cartAdded: cartAddedRef.current,
           }),
         });
@@ -213,7 +277,7 @@ export const JanetAgent = () => {
         console.error("Janet telemetry save failed:", err);
       }
     }
-  }, [transcript]);
+  }, []);
 
   // ── Audio Playback ──────────────────────────────────────────────────────────
   const playAudio = useCallback((b64: string) => {
@@ -279,14 +343,15 @@ export const JanetAgent = () => {
   const startSession = useCallback(async () => {
     setStatus("connecting");
     setErrorMsg("");
-    setTranscript([]);
+    transcriptRef.current = [];
     sessionIdRef.current = crypto.randomUUID();
     cartAddedRef.current = false;
+    savedRef.current = false;
     leadRef.current = {};
     startedAtRef.current = new Date().toISOString();
 
     const currentUrlPath = window.location.pathname;
-    const pageContext = document.body.innerText.substring(0, 3000); // Scrape up to 3000 chars of the page content
+    const pageContext = scrapePageContext(); // main-content text Janet can "see"
 
     try {
       const res = await fetch("/api/gemini-token");
@@ -330,16 +395,46 @@ export const JanetAgent = () => {
                 },
               },
               {
-                name: "save_lead",
-                description: "Save callback details for Anneke when the customer could not complete the contact booking form.",
+                name: "navigate_to",
+                description:
+                  "Take the visitor to another page on the LAVA website (client-side, keeps the voice call alive). Use real site paths like /products/vacuum-machines, /products/bags-rolls, /products/sous-vide, /products/<slug>, /contact, /rewards, /help/faq.",
                 parameters: {
                   type: "OBJECT",
                   properties: {
-                    firstName: { type: "STRING", description: "First name from start of call" },
-                    lastName: { type: "STRING", description: "Surname captured at end of call" },
-                    phone: { type: "STRING", description: "Mobile number for callback (required)" },
+                    path: { type: "STRING", description: "Site-relative path starting with / (e.g. /contact)" },
                   },
-                  required: ["phone"],
+                  required: ["path"],
+                },
+              },
+              {
+                name: "scroll_to_section",
+                description:
+                  "Scroll the CURRENT page to a relevant section for the visitor. Pass a short keyword such as 'products', 'sizes', 'specs', 'reviews', 'faq', 'contact', 'top' or 'bottom'.",
+                parameters: {
+                  type: "OBJECT",
+                  properties: {
+                    target: { type: "STRING", description: "Section keyword or heading text to scroll to" },
+                  },
+                  required: ["target"],
+                },
+              },
+              {
+                name: "capture_contact",
+                description:
+                  "Record contact / qualification details the moment you learn them in conversation. Call it whenever you hear a first name, surname, phone, email, or figure out their use-case. Send only the fields you just learned — all are optional.",
+                parameters: {
+                  type: "OBJECT",
+                  properties: {
+                    firstName: { type: "STRING", description: "First name" },
+                    lastName: { type: "STRING", description: "Surname" },
+                    phone: { type: "STRING", description: "Mobile / phone number" },
+                    email: { type: "STRING", description: "Email address" },
+                    industry: {
+                      type: "STRING",
+                      description:
+                        "Use-case: home, home_industry, hunting, fishing, butchery, restaurant, or retail",
+                    },
+                  },
                 },
               },
             ],
@@ -353,14 +448,14 @@ export const JanetAgent = () => {
             // Audio Playback
             if (msg.data) playAudio(msg.data);
 
-            // Transcripts for Telemetry Saving
+            // Transcripts for Telemetry Saving (ref = source of truth, state = optional UI)
             const aiText = msg.serverContent?.outputTranscription?.text;
             if (aiText) {
-               setTranscript(prev => [...prev, `Janet: ${aiText}`]);
+               transcriptRef.current.push(`Janet: ${aiText}`);
             }
             const userText = msg.serverContent?.inputTranscription?.text;
             if (userText) {
-               setTranscript(prev => [...prev, `Customer: ${userText}`]);
+               transcriptRef.current.push(`Customer: ${userText}`);
             }
 
             // TOOL CALL HANDLING
@@ -395,19 +490,77 @@ export const JanetAgent = () => {
                     },
                   };
                 }
-                if (call.name === "save_lead") {
+                if (call.name === "capture_contact") {
                   const args = call.args as {
                     firstName?: string;
                     lastName?: string;
                     phone?: string;
+                    email?: string;
+                    industry?: string;
                   };
                   if (args.firstName) leadRef.current.firstName = args.firstName.trim();
                   if (args.lastName) leadRef.current.lastName = args.lastName.trim();
                   if (args.phone) leadRef.current.phone = args.phone.trim();
+                  if (args.email) leadRef.current.email = args.email.trim();
+                  if (args.industry) leadRef.current.industry = args.industry.trim();
                   return {
                     id: call.id,
                     name: call.name,
-                    response: { result: { success: true, message: "Lead saved for Anneke." } },
+                    response: { result: { success: true, message: "Saved." } },
+                  };
+                }
+                if (call.name === "navigate_to") {
+                  const args = call.args as { path?: string };
+                  let path = String(args.path || "").trim();
+                  if (path && !path.startsWith("/")) path = `/${path}`;
+                  let ok = false;
+                  if (path) {
+                    try {
+                      router.push(path);
+                      ok = true;
+                      // Give the new page a moment, then feed Janet the fresh page content
+                      setTimeout(() => {
+                        const fresh = scrapePageContext();
+                        try {
+                          sessionRef.current?.sendClientContent({
+                            turns: [
+                              {
+                                role: "user",
+                                parts: [
+                                  {
+                                    text: `SYSTEM: The visitor is now on ${path}. Visible content:\n${fresh}`,
+                                  },
+                                ],
+                              },
+                            ],
+                            turnComplete: false,
+                          });
+                        } catch {}
+                      }, 1200);
+                    } catch {}
+                  }
+                  return {
+                    id: call.id,
+                    name: call.name,
+                    response: {
+                      result: ok
+                        ? { success: true, message: `Navigated to ${path}.` }
+                        : { success: false, message: "Could not navigate." },
+                    },
+                  };
+                }
+                if (call.name === "scroll_to_section") {
+                  const args = call.args as { target?: string };
+                  const found = scrollToQuery(String(args.target || ""));
+                  return {
+                    id: call.id,
+                    name: call.name,
+                    response: {
+                      result: {
+                        success: found,
+                        message: found ? "Scrolled." : "Section not found on this page.",
+                      },
+                    },
                   };
                 }
                 return { id: call.id, name: call.name, response: { result: { error: "Unknown tool" } } };
@@ -429,6 +582,7 @@ export const JanetAgent = () => {
           },
           onclose: () => {
             setStatus("ended");
+            void teardown(true); // ensure the session is logged even if the socket closes on its own
           },
         },
       });
@@ -441,7 +595,12 @@ export const JanetAgent = () => {
         if (sessionRef.current) {
           try {
             sessionRef.current.sendClientContent({
-              turns: [{ role: "user", parts: [{ text: "Hello website visitor arriving" }] }],
+              turns: [{
+                role: "user",
+                parts: [{
+                  text: "SYSTEM: A visitor just opened the chat. Greet them now, introduce yourself as Janet, and ask for their first name.",
+                }],
+              }],
               turnComplete: true,
             });
           } catch {}
@@ -459,7 +618,7 @@ export const JanetAgent = () => {
       setErrorMsg("Janet is currently offline. Please try again later.");
       setStatus("error");
     }
-  }, [playAudio, startMic, addItem]);
+  }, [playAudio, startMic, addItem, router, teardown]);
 
   // ── UI Handlers ─────────────────────────────────────────────────────────────
   const openChat = () => { setIsOpen(true); setStatus("idle"); setErrorMsg(""); };

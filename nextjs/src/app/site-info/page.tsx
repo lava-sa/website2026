@@ -47,10 +47,6 @@ const CRITICAL = [
 
 const TODO = [
   "Run 4 Supabase SQL migrations (customers schema, order history schema, customers_import, order_history_import)",
-  "Run: ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_method",
-  "Run: nextjs/supabase/005_storage_bucket.sql (product-images bucket)",
-  "Fill in EFT bank details in checkout/success/page.tsx (Wilco to supply)",
-  "Sous vide product images: lava-sa-lx20-sous-vide-stick.webp + lava-sa-lx33-sous-vide-set.webp",
   "Add YouTube channel URL to sameAs in layout.tsx + page.tsx (orgSchema)",
   "Remove fabricated AggregateRating fallback from product pages (policy violation risk)",
   "Set NEXT_PUBLIC_GBP_URL + NEXT_PUBLIC_GBP_PLACE_ID in Vercel env vars once GBP verified",
@@ -73,6 +69,10 @@ const DONE = [
   "Admin panel: products, orders, customers, reviews, mailing list, Janet logs",
   "Multi-tier schema: LocalBusiness, Product, BlogPosting, FAQPage, BreadcrumbList, WebSite",
   "Cart, checkout (PayFast + EFT), order confirmation emails (Resend)",
+  "EFT / Direct Bank Transfer details live at checkout + confirmation (Nedbank · LAVA VIDE SA (PTY) LTD)",
+  "Sous vide product images live: LX 20 Sous Vide Stick + Sous Vide Set XXL",
+  "Supabase product-images storage bucket live (thumbnails in cart + confirmation)",
+  "orders.payment_method column added (tracks PayFast vs bank transfer)",
   "Account dashboard with Lava Points balance + order history",
   "308 permanent redirect from lava-sa.online → lava-sa.com (middleware)",
 ];
