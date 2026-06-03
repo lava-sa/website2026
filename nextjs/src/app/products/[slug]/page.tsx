@@ -25,7 +25,7 @@ import StockBadge from "@/components/shop/StockBadge";
 import AddToCartButton from "@/components/shop/AddToCartButton";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
 import { parseFunnelConfig } from "@/lib/funnel";
-import { getMachineContent } from "@/lib/machine-content";
+import { getMachineContent, type MachineFaqItem } from "@/lib/machine-content";
 import MachineFunctions from "@/components/products/machine/MachineFunctions";
 import MachineDelivery from "@/components/products/machine/MachineDelivery";
 import MachineBenefitsShowcase from "@/components/products/machine/MachineBenefitsShowcase";
@@ -180,6 +180,11 @@ function getConsumableWidthCm(name: string): number {
   return 0; // unknown — include by default
 }
 
+function formatCm(widthCm: number): string {
+  if (Number.isInteger(widthCm)) return `${widthCm} cm`;
+  return `${widthCm.toFixed(1)} cm`;
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default async function ProductDetailPage({
   params,
@@ -234,6 +239,9 @@ export default async function ProductDetailPage({
   // ── Consumables (bags + rolls) — only loaded on machine pages ───────────────
   let compatibleBags: Awaited<ReturnType<typeof getProductsByCategory>> = [];
   let compatibleRolls: Awaited<ReturnType<typeof getProductsByCategory>> = [];
+  let allCompatibleBags: Awaited<ReturnType<typeof getProductsByCategory>> = [];
+  let allCompatibleRolls: Awaited<ReturnType<typeof getProductsByCategory>> = [];
+  let machineMaxWidthCm = 999;
 
   if (isVacuumMachine) {
     try {
@@ -241,11 +249,59 @@ export default async function ProductDetailPage({
         getProductsByCategory("vacuum-bags"),
         getProductsByCategory("vacuum-rolls"),
       ]);
-      const maxWidth = getMachineMaxWidthCm(specs.seal_width as string | undefined);
-      compatibleBags  = allBags.filter(b => getConsumableWidthCm(b.name) <= maxWidth).slice(0, 4);
-      compatibleRolls = allRolls.filter(r => getConsumableWidthCm(r.name) <= maxWidth).slice(0, 4);
+      machineMaxWidthCm = getMachineMaxWidthCm(specs.seal_width as string | undefined);
+      allCompatibleBags = allBags
+        .filter((b) => getConsumableWidthCm(b.name) <= machineMaxWidthCm)
+        .sort((a, b) => getConsumableWidthCm(a.name) - getConsumableWidthCm(b.name));
+      allCompatibleRolls = allRolls
+        .filter((r) => getConsumableWidthCm(r.name) <= machineMaxWidthCm)
+        .sort((a, b) => getConsumableWidthCm(a.name) - getConsumableWidthCm(b.name));
+
+      compatibleBags = allCompatibleBags.slice(0, 4);
+      compatibleRolls = allCompatibleRolls.slice(0, 4);
     } catch { /* DB not ready — section simply won't render */ }
   }
+
+  const bagWidths = Array.from(
+    new Set(allCompatibleBags.map((p) => getConsumableWidthCm(p.name)).filter((n) => n > 0)),
+  );
+  const rollWidths = Array.from(
+    new Set(allCompatibleRolls.map((p) => getConsumableWidthCm(p.name)).filter((n) => n > 0)),
+  );
+  const bagWidthsText =
+    bagWidths.length > 0
+      ? bagWidths.map(formatCm).join(", ")
+      : `up to ${formatCm(machineMaxWidthCm)}`;
+  const rollWidthsText =
+    rollWidths.length > 0
+      ? rollWidths.map(formatCm).join(", ")
+      : `up to ${formatCm(machineMaxWidthCm)}`;
+  const compatibilityFaq: MachineFaqItem[] = isVacuumMachine
+    ? [
+        {
+          question: `What bag widths fit the ${product.name}?`,
+          answer:
+            bagWidths.length > 0
+              ? `Short answer: ${product.name} seals up to ${formatCm(machineMaxWidthCm)} wide, so use embossed bags in ${bagWidthsText}.`
+              : `Short answer: ${product.name} seals up to ${formatCm(machineMaxWidthCm)} wide, so use embossed channel bags at or below this width.`,
+        },
+        {
+          question: `What roll widths fit the ${product.name}?`,
+          answer:
+            rollWidths.length > 0
+              ? `Short answer: compatible embossed roll widths are ${rollWidthsText}. ${rollWidths.includes(20) ? "For most homes, 20 cm is the best all-round size." : "Choose narrower rolls for small items and wider rolls for large cuts."}`
+              : `Short answer: use embossed vacuum rolls up to ${formatCm(machineMaxWidthCm)} wide.`,
+        },
+        {
+          question: "Will smooth flat bags work with this machine?",
+          answer:
+            "Short answer: no. This machine needs embossed (textured/channel) bags or embossed rolls. Smooth flat bags are not compatible.",
+        },
+      ]
+    : [];
+  const machineFaqItems = machineContent
+    ? [...machineContent.faq, ...compatibilityFaq]
+    : compatibilityFaq;
 
   const waMessage = encodeURIComponent(`Hi, I'm interested in the ${product.name}. Can you help me?`);
   const waUrl     = `https://wa.me/${WA_NUMBER}?text=${waMessage}`;
@@ -558,7 +614,7 @@ export default async function ProductDetailPage({
           <div className="section-container max-w-3xl mx-auto">
             <p className="overline mb-3">Everything you need to know</p>
             <h2 className="text-3xl font-bold text-primary mb-8">
-              {isSousVide ? "About This Product" : "About This Machine"}
+              About this Product
             </h2>
             <div
               className="prose prose-lg max-w-none text-copy"
@@ -618,7 +674,12 @@ export default async function ProductDetailPage({
       {/* ═══════════════════════════════════════════════════════════════
           NEW — Brand benefit showcase (5 reusable blocks, every machine)
       ════════════════════════════════════════════════════════════════ */}
-      {isVacuumMachine && <MachineBenefitsShowcase />}
+      {isVacuumMachine && (
+        <MachineBenefitsShowcase
+          machineImageSrc={images[0]?.url ?? product.primary_image_url}
+          machineName={product.name}
+        />
+      )}
 
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 4 — Industries
@@ -715,6 +776,62 @@ export default async function ProductDetailPage({
       )}
 
       {/* ═══════════════════════════════════════════════════════════════
+          SECTION — Bag & Roll Compatibility Table (machines only)
+      ════════════════════════════════════════════════════════════════ */}
+      {isVacuumMachine && (
+        <section className="py-16 border-b border-border">
+          <div className="section-container max-w-4xl mx-auto">
+            <p className="overline mb-2">Machine-specific compatibility</p>
+            <h2 className="text-3xl font-black text-primary mb-3">
+              Vacuum Bag & Roll Compatibility
+            </h2>
+            <p className="text-copy mb-8">
+              Janet quick answer: <strong>{product.name} seals up to {formatCm(machineMaxWidthCm)} wide.</strong> Compatible consumables must be this width or narrower.
+            </p>
+
+            <div className="overflow-x-auto border border-border bg-white">
+              <table className="w-full text-sm">
+                <thead className="bg-surface text-left">
+                  <tr>
+                    <th className="py-3 px-4 font-black text-primary border-b border-border">Consumable</th>
+                    <th className="py-3 px-4 font-black text-primary border-b border-border">Compatible widths</th>
+                    <th className="py-3 px-4 font-black text-primary border-b border-border">Shop</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="py-3 px-4 font-semibold text-primary border-b border-border">Embossed vacuum bags</td>
+                    <td className="py-3 px-4 text-copy border-b border-border">
+                      {bagWidths.length > 0 ? bagWidthsText : `Up to ${formatCm(machineMaxWidthCm)}`}
+                    </td>
+                    <td className="py-3 px-4 border-b border-border">
+                      <Link href="/products/vacuum-bags" className="font-bold text-secondary hover:underline">
+                        View vacuum bags
+                      </Link>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 font-semibold text-primary">Embossed vacuum rolls</td>
+                    <td className="py-3 px-4 text-copy">
+                      {rollWidths.length > 0 ? rollWidthsText : `Up to ${formatCm(machineMaxWidthCm)}`}
+                    </td>
+                    <td className="py-3 px-4">
+                      <Link href="/products/vacuum-rolls" className="font-bold text-secondary hover:underline">
+                        View vacuum rolls
+                      </Link>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-copy-muted mt-4">
+              Voice script: "Use embossed bags or rolls only, and stay at or below the machine's sealing width."
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
           NEW — Videos / Tests / Downloads / FAQ
       ════════════════════════════════════════════════════════════════ */}
       {machineContent && (
@@ -722,7 +839,7 @@ export default async function ProductDetailPage({
           <MachineVideos videos={machineContent.videos} />
           <MachineTests tests={machineContent.tests} />
           <MachineDownloads downloads={machineContent.downloads} />
-          <MachineFAQ items={machineContent.faq} />
+          <MachineFAQ items={machineFaqItems} />
         </>
       )}
 

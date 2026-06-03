@@ -18,10 +18,17 @@ const ENQUIRY_TYPES = [
   "Something else",
 ];
 
+const CALLBACK_TIME_OPTIONS = [
+  "Any time (Mon-Fri 09:00-17:00)",
+  "Morning (09:00-12:00)",
+  "Midday (12:00-14:00)",
+  "Afternoon (14:00-17:00)",
+];
+
 export default function ContactPage() {
   const [form, setForm] = useState({
     name: "", email: "", phone: "", province: "Gauteng",
-    enquiry_type: "Product enquiry", message: "",
+    enquiry_type: "Product enquiry", callback_time: CALLBACK_TIME_OPTIONS[0], message: "",
   });
   const [errors, setErrors]   = useState<Record<string, string>>({});
   const [status, setStatus]   = useState<"idle" | "sending" | "done" | "error">("idle");
@@ -155,6 +162,11 @@ export default function ContactPage() {
                   <Field label="Enquiry Type" className="sm:col-span-2">
                     <select value={form.enquiry_type} onChange={set("enquiry_type")} className={inputCls()}>
                       {ENQUIRY_TYPES.map(t => <option key={t}>{t}</option>)}
+                    </select>
+                  </Field>
+                  <Field label="Best Time for a Call Back" className="sm:col-span-2">
+                    <select value={form.callback_time} onChange={set("callback_time")} className={inputCls()}>
+                      {CALLBACK_TIME_OPTIONS.map((t) => <option key={t}>{t}</option>)}
                     </select>
                   </Field>
                 </div>

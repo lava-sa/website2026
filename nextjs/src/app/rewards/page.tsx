@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Gift, TrendingUp, Zap, Award, ArrowRight } from "lucide-react";
+import { Gift, TrendingUp, Zap, Award, ArrowRight, UserRound, ShoppingBag, ReceiptText } from "lucide-react";
 import { calculatePointValue, getRedemptionExamples } from "@/lib/rewards-config";
 import RewardsCalculator from "./RewardsCalculator";
 
@@ -169,35 +169,74 @@ export default function RewardsPage() {
         </div>
       </section>
 
-      {/* ── Signup Section ──────────────────────────────────────────────────── */}
+      {/* ── Member Signup Section ───────────────────────────────────────────── */}
       <section id="signup" className="bg-primary text-white py-16 sm:py-20">
         <div className="section-container max-w-2xl">
           <h2 className="font-heading text-3xl sm:text-4xl font-bold mb-4">
-            Start Earning Today
+            Join as a Member
           </h2>
           <p className="text-lg text-white/80 mb-8">
-            Your Lava Points account is created automatically with your first purchase or signup. Start earning points with every rand you spend.
+            Rewards membership is your Lava account. Set up your member login once, then track points and order history in your dashboard.
           </p>
 
           <div className="space-y-3 sm:flex gap-4">
             <Link
-              href="/products/vacuum-machines"
+              href="/account/login?mode=setup&from=/account/dashboard"
               className="flex-1 inline-block bg-secondary text-white font-bold py-4 px-8 text-center hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
             >
-              <span>Shop Now</span>
+              <span>Set Up Member Account</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/contact"
+              href="/products/vacuum-machines"
               className="flex-1 inline-block border-2 border-white text-white font-bold py-4 px-8 text-center hover:bg-white/10 transition-colors"
             >
-              Questions? Contact Us
+              Shop & Earn Points
             </Link>
           </div>
 
           <p className="text-sm text-white/60 mt-6">
-            Already a member? <Link href="/account/dashboard" className="text-secondary hover:underline font-bold">Check your balance →</Link>
+            Already a member?{" "}
+            <Link href="/account/dashboard" className="text-secondary hover:underline font-bold">
+              Open your dashboard →
+            </Link>
           </p>
+        </div>
+      </section>
+
+      {/* ── Member Dashboard Preview ───────────────────────────────────────── */}
+      <section className="py-16 sm:py-20">
+        <div className="section-container">
+          <h2 className="font-heading text-3xl font-bold text-primary mb-4 text-center">
+            What Members Can See
+          </h2>
+          <p className="text-copy-muted mb-10 max-w-2xl mx-auto text-center">
+            Your member profile page is live and includes real purchase and points data.
+          </p>
+
+          <div className="grid sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-surface/40 border border-border p-6">
+              <UserRound className="h-6 w-6 text-secondary mb-3" />
+              <h3 className="font-bold text-primary mb-2">Member Summary</h3>
+              <p className="text-sm text-copy-muted">
+                Points balance, points value in Rand, membership status, and member-since date.
+              </p>
+            </div>
+            <div className="bg-surface/40 border border-border p-6">
+              <ShoppingBag className="h-6 w-6 text-secondary mb-3" />
+              <h3 className="font-bold text-primary mb-2">Order History</h3>
+              <p className="text-sm text-copy-muted">
+                Recent orders with date, amount, status, and the products ordered.
+              </p>
+            </div>
+            <div className="bg-surface/40 border border-border p-6">
+              <ReceiptText className="h-6 w-6 text-secondary mb-3" />
+              <h3 className="font-bold text-primary mb-2">Points Activity</h3>
+              <p className="text-sm text-copy-muted">
+                Earned and redeemed transactions so members can verify every points movement.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -212,7 +251,7 @@ export default function RewardsPage() {
             {[
               {
                 q: "How do I sign up for Lava Points?",
-                a: "Your account is created automatically when you make your first purchase. You can also sign up on this page to start earning immediately.",
+                a: "Click 'Set Up Member Account' on this page. We'll email you a secure setup link, and your rewards profile is then active.",
               },
               {
                 q: "When are my points credited?",

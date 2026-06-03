@@ -40,7 +40,18 @@ function BenefitImage({
  * Reusable benefit callouts shown on every vacuum-machine product page.
  * Mirrors the la-va.com pattern of 5 alternating blocks.
  */
-export default function MachineBenefitsShowcase() {
+export default function MachineBenefitsShowcase({
+  machineImageSrc,
+  machineName,
+}: {
+  machineImageSrc?: string | null;
+  machineName?: string;
+}) {
+  const heroImage = machineImageSrc || BENEFIT_IMAGES.welding;
+  const heroAlt = machineName
+    ? `${machineName} vacuum sealer`
+    : "Welding at the touch of a button on a LAVA vacuum sealer";
+
   return (
     <section className="bg-white">
       {/* ── 1 — Welding at the Touch of a Button ───────────────────────── */}
@@ -66,8 +77,8 @@ export default function MachineBenefitsShowcase() {
               </p>
             </div>
             <BenefitImage
-              src={BENEFIT_IMAGES.welding}
-              alt="Welding at the touch of a button on a LAVA vacuum sealer"
+              src={heroImage}
+              alt={heroAlt}
             />
           </div>
         </div>

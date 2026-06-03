@@ -14,8 +14,9 @@ function LoginFormInner() {
   const router = useRouter();
   const params = useSearchParams();
   const from = params.get("from") || "/account/dashboard";
+  const requestedMode = params.get("mode");
 
-  const [mode, setMode] = useState<Mode>("login");
+  const [mode, setMode] = useState<Mode>(requestedMode === "setup" ? "forgot" : "login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -58,7 +59,9 @@ function LoginFormInner() {
       setError(error.message);
     } else {
       setSuccess(
-        `Password reset email sent to ${email}. Check your inbox — use the link to set your password and log in.`
+        mode === "forgot"
+          ? `Account setup link sent to ${email}. Check your inbox and create your password to activate your member profile.`
+          : `Password reset email sent to ${email}. Check your inbox — use the link to set your password and log in.`
       );
     }
   }
@@ -80,12 +83,12 @@ function LoginFormInner() {
             </div>
             <div>
               <p className="font-bold text-primary text-sm">
-                {mode === "login" ? "Sign In" : "Reset Password"}
+                {mode === "login" ? "Sign In" : "Set Up Your Member Account"}
               </p>
               <p className="text-xs text-copy-muted">
                 {mode === "login"
                   ? "Access your Lava Points & orders"
-                  : "We'll email you a reset link"}
+                  : "We'll email your secure account setup link"}
               </p>
             </div>
           </div>
@@ -152,7 +155,7 @@ function LoginFormInner() {
                 {loading ? (
                   <><Loader2 className="h-4 w-4 animate-spin" /> {mode === "login" ? "Signing in…" : "Sending…"}</>
                 ) : (
-                  mode === "login" ? "Sign In →" : "Send Reset Link →"
+                  mode === "login" ? "Sign In →" : "Send Setup Link →"
                 )}
               </button>
             </form>
@@ -163,12 +166,12 @@ function LoginFormInner() {
             {mode === "login" ? (
               <>
                 <p>
-                  Returning customer? If you have never logged in here before,{" "}
+                  First time on the new member area?{" "}
                   <button
                     onClick={() => { setMode("forgot"); setError(""); }}
                     className="text-primary font-bold hover:underline"
                   >
-                    set up your account
+                    set up your member account
                   </button>
                   .
                 </p>

@@ -21,8 +21,8 @@ export async function POST(req: Request) {
       durationSeconds,
       startedAt,
       firstName,
+      lastName,
       phone,
-      email,
       cartAdded,
     } = body as {
       sessionId?: string;
@@ -31,8 +31,8 @@ export async function POST(req: Request) {
       durationSeconds?: number;
       startedAt?: string;
       firstName?: string;
+      lastName?: string;
       phone?: string;
-      email?: string;
       cartAdded?: boolean;
     };
 
@@ -46,14 +46,14 @@ export async function POST(req: Request) {
         source: "voice" as const,
         transcript: transcript ?? null,
         first_name: firstName?.trim() || null,
+        last_name: lastName?.trim() || null,
         phone: phone?.trim() || null,
-        email: email?.trim() || null,
         updated_at: new Date().toISOString(),
         action_taken:
           cartAdded === true
             ? "Added to cart — checkout will capture full details"
-            : phone || email
-              ? "Anneke callback requested"
+            : phone
+              ? "Anneke callback requested (voice fallback)"
               : "Voice session — no cart, no contact captured",
       };
 
@@ -93,10 +93,10 @@ export async function POST(req: Request) {
     if (resend) {
       const { fromEmail, adminEmails, replyToEmail } = getEmailConfig();
       const contactBlock =
-        firstName || phone || email
+        firstName || lastName || phone
           ? `<p><strong>First name:</strong> ${firstName || "—"}</p>
+             <p><strong>Surname:</strong> ${lastName || "—"}</p>
              <p><strong>Phone:</strong> ${phone || "—"}</p>
-             <p><strong>Email:</strong> ${email || "—"}</p>
              <p><strong>Added to cart:</strong> ${cartAdded ? "Yes" : "No"}</p>`
           : `<p><em>No structured contact captured — see transcript.</em></p>`;
 

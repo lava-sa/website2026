@@ -56,19 +56,19 @@ SALES & add_to_cart TOOL
 - After success: tell them to open the cart (top right) and complete checkout — name, phone, and email are collected there.
 
 CONTACT CAPTURE — TWO PHASES (critical)
-PHASE 1 — START OF CALL: First name only. Do not ask for phone or email at the start.
+PHASE 1 — START OF CALL: First name only. Do not ask for surname, phone, or email at the start.
 
 PHASE 2 — END OF CALL (only if add_to_cart was NOT used this session):
-- Before ending, you MUST offer: "Would you like Anneke from our team to give you a quick call back?"
+- Before ending, you MUST offer booking first: "Would you like to book a call with Anneke? I can guide you to our booking page."
+- Preferred handoff: direct them to /contact to submit their details themselves.
 - If yes:
-  1) Ask for MOBILE NUMBER first: "What's the best mobile number for Anneke to reach you?" Read digits back once to confirm.
-  2) Then ask for EMAIL only if they want email too: "If you'd like a quote by email as well, what's your email? Say it slowly — for example name at lavasa dot co dot za." Do NOT ask them to spell every letter unless a part is unclear. Say "at" and "dot", not symbols.
-  3) Do NOT ask for first name again if you already have it.
-  4) After you have phone (and email if given), call save_lead with firstName, phone, email.
-- If add_to_cart WAS used: do NOT ask for phone or email. Checkout captures everything. Say goodbye briefly.
+  1) First tell them where to book: "Please open lava-sa.com/contact and complete the callback form."
+  2) If they cannot book right now, collect callback details manually: ask SURNAME and MOBILE NUMBER only (no email capture on voice).
+  3) Confirm surname and phone once, then call save_lead with firstName, lastName, phone.
+- If add_to_cart WAS used: do NOT ask for surname/phone/email. Checkout captures everything. Say goodbye briefly.
 
 save_lead TOOL
-- Call when you have their callback mobile number (required). Include firstName from the start of the call and email if they gave it.
+- Call when you have callback details from voice fallback. Include firstName (from start), lastName, and phone.
 
 RULES
 - Under 3 sentences per turn when possible. Sound like a phone call, not a brochure.
@@ -127,7 +127,7 @@ export const JanetAgent = () => {
   const startedAtRef = useRef("");
   const sessionIdRef = useRef("");
   const cartAddedRef = useRef(false);
-  const leadRef = useRef<{ firstName?: string; phone?: string; email?: string }>({});
+  const leadRef = useRef<{ firstName?: string; lastName?: string; phone?: string }>({});
   const [inputDeviceLabel, setInputDeviceLabel] = useState("Not detected yet");
   const [outputDeviceLabel, setOutputDeviceLabel] = useState("System default");
 
@@ -204,8 +204,8 @@ export const JanetAgent = () => {
             durationSeconds: Math.round((Date.now() - new Date(startedAtRef.current).getTime()) / 1000),
             startedAt: startedAtRef.current,
             firstName: leadRef.current.firstName,
+            lastName: leadRef.current.lastName,
             phone: leadRef.current.phone,
-            email: leadRef.current.email,
             cartAdded: cartAddedRef.current,
           }),
         });
@@ -331,13 +331,13 @@ export const JanetAgent = () => {
               },
               {
                 name: "save_lead",
-                description: "Save callback details when the customer wants Anneke to call back and you have their mobile number.",
+                description: "Save callback details for Anneke when the customer could not complete the contact booking form.",
                 parameters: {
                   type: "OBJECT",
                   properties: {
                     firstName: { type: "STRING", description: "First name from start of call" },
+                    lastName: { type: "STRING", description: "Surname captured at end of call" },
                     phone: { type: "STRING", description: "Mobile number for callback (required)" },
-                    email: { type: "STRING", description: "Email if they provided it (optional)" },
                   },
                   required: ["phone"],
                 },
@@ -398,12 +398,12 @@ export const JanetAgent = () => {
                 if (call.name === "save_lead") {
                   const args = call.args as {
                     firstName?: string;
+                    lastName?: string;
                     phone?: string;
-                    email?: string;
                   };
                   if (args.firstName) leadRef.current.firstName = args.firstName.trim();
+                  if (args.lastName) leadRef.current.lastName = args.lastName.trim();
                   if (args.phone) leadRef.current.phone = args.phone.trim();
-                  if (args.email) leadRef.current.email = args.email.trim();
                   return {
                     id: call.id,
                     name: call.name,

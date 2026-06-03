@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, phone, province, enquiry_type, message } = await req.json();
+    const { name, email, phone, province, enquiry_type, callback_time, message } = await req.json();
 
     if (!name || !email || !message) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
             <tr><td style="padding:8px;font-weight:bold;color:#666">Phone</td><td style="padding:8px">${phone || "—"}</td></tr>
             <tr style="background:#f9f9f9"><td style="padding:8px;font-weight:bold;color:#666">Province</td><td style="padding:8px">${province || "—"}</td></tr>
             <tr><td style="padding:8px;font-weight:bold;color:#666">Enquiry type</td><td style="padding:8px">${enquiry_type || "—"}</td></tr>
+            <tr style="background:#f9f9f9"><td style="padding:8px;font-weight:bold;color:#666">Best callback time</td><td style="padding:8px">${callback_time || "—"}</td></tr>
           </table>
           <h3 style="color:#0d2b3e">Message</h3>
           <div style="background:#f5f5f5;padding:16px;border-left:4px solid #b8973a;white-space:pre-wrap">${message}</div>
