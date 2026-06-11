@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
+import { generateSlug } from "@/lib/slug";
 
 async function isAuthed(): Promise<boolean> {
   const store = await cookies();
@@ -28,16 +29,6 @@ function autoSeoDescription(name: string, shortDescription?: string | null, desc
     `Buy ${name} from Lava-SA in South Africa. German quality vacuum sealing products with nationwide delivery and local support.`,
     160
   );
-}
-
-function generateSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[àáâãäå]/g, "a").replace(/[èéêë]/g, "e")
-    .replace(/[ìíîï]/g, "i").replace(/[òóôõö]/g, "o")
-    .replace(/[ùúûü]/g, "u")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }
 
 export async function POST(request: NextRequest) {

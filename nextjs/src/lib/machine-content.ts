@@ -234,7 +234,51 @@ export const MACHINE_CONTENT: Record<string, MachineRichContent> = {
   "v100-premium-x": v100PremiumX,
 };
 
-/** Returns rich content for a machine slug, or null if not yet authored. */
-export function getMachineContent(slug: string): MachineRichContent | null {
-  return MACHINE_CONTENT[slug] ?? null;
+function hasItems<T>(arr: T[] | undefined): arr is T[] {
+  return Array.isArray(arr) && arr.length > 0;
+}
+
+function parseMachineContentFromSpecs(
+  specs: Record<string, unknown> | null | undefined
+): Partial<MachineRichContent> | null {
+  const raw = specs?.machine_content;
+  if (!raw || typeof raw !== "object") return null;
+  return raw as Partial<MachineRichContent>;
+}
+
+/** Static file content merged with admin-edited specs.machine_content (DB wins when set). */
+export function getMachineContent(
+  slug: string,
+  specs?: Record<string, unknown> | null
+): MachineRichContent | null {
+  const staticContent = MACHINE_CONTENT[slug];
+  const fromDb = parseMachineContentFromSpecs(specs);
+
+  if (!staticContent && !fromDb) return null;
+
+  const merged: MachineRichContent = {
+    heroClaims: fromDb?.heroClaims ?? staticContent?.heroClaims,
+    functions: hasItems(fromDb?.functions)
+      ? fromDb.functions
+      : staticContent?.functions ?? [],
+    deliveryContents: hasItems(fromDb?.deliveryContents)
+      ? fromDb.deliveryContents
+      : staticContent?.deliveryContents ?? [],
+    tests: hasItems(fromDb?.tests) ? fromDb.tests : staticContent?.tests ?? [],
+    downloads: hasItems(fromDb?.downloads)
+      ? fromDb.downloads
+      : staticContent?.downloads ?? [],
+    videos: hasItems(fromDb?.videos) ? fromDb.videos : staticContent?.videos ?? [],
+    faq: hasItems(fromDb?.faq) ? fromDb.faq : staticContent?.faq ?? [],
+  };
+
+  const hasAny =
+    merged.functions.length > 0 ||
+    merged.deliveryContents.length > 0 ||
+    merged.tests.length > 0 ||
+    merged.downloads.length > 0 ||
+    merged.videos.length > 0 ||
+    merged.faq.length > 0;
+
+  return hasAny ? merged : null;
 }

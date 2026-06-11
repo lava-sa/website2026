@@ -6,7 +6,15 @@ import Link from "next/link";
 import { Save, Loader2, CheckCircle, ArrowLeft, ExternalLink, Trash2, Monitor, Smartphone } from "lucide-react";
 import type { StockStatus } from "@/types/product";
 import ImageUploader from "@/components/admin/ImageUploader";
+import HtmlEditor from "@/components/admin/HtmlEditor";
+import MachineContentEditor from "@/components/admin/MachineContentEditor";
 import { parseFunnelConfig, type FunnelStepConfig } from "@/lib/funnel";
+import { generateSlug } from "@/lib/slug";
+import {
+  machineContentFromSpecs,
+  machineContentToSpecs,
+  type MachineContentForm,
+} from "@/lib/machine-content-admin";
 
 type Category = { id: string; name: string; slug: string };
 type ProductChoice = { id: string; name: string; slug: string; categories?: { name?: string } | null };
@@ -23,9 +31,14 @@ export default function ProductEditForm({
 }) {
   const router = useRouter();
   const initialFunnelConfig = parseFunnelConfig(product.specs?.funnel_config);
+  const categorySlug =
+    categories.find((c) => c.id === product.category_id)?.slug ??
+    product.categories?.slug;
+  const isVacuumMachineInitial = categorySlug === "vacuum-machines";
 
   const [form, setForm] = useState({
     name:              product.name ?? "",
+    slug:              product.slug ?? "",
     sku:               product.sku ?? "",
     short_description: product.short_description ?? "",
     description:       product.description ?? "",
@@ -54,6 +67,9 @@ export default function ProductEditForm({
   const [funnelPreviewMobile, setFunnelPreviewMobile] = useState<Record<number, boolean>>({});
   /** Per funnel step: search query for product selector */
   const [funnelProductSearch, setFunnelProductSearch] = useState<Record<number, string>>({});
+  const [machineContent, setMachineContent] = useState<MachineContentForm>(() =>
+    machineContentFromSpecs(product.specs ?? {})
+  );
 
   function applyMarkdown(percent: 10 | 15 | 20 | 25) {
     const regular = Number(form.regular_price);
@@ -147,6 +163,8 @@ export default function ProductEditForm({
     setSaving(true);
     setError("");
 
+    const baseSpecs = machineContentToSpecs(product.specs ?? {}, machineContent);
+
     const payload = {
       ...form,
       regular_price: Number(form.regular_price),
@@ -155,8 +173,9 @@ export default function ProductEditForm({
       weight_kg:     form.weight_kg === "" ? null : Number(form.weight_kg),
       sort_order:    Number(form.sort_order),
       category_id:   form.category_id || null,
+      slug:          form.slug.trim(),
       specs: {
-        ...(product.specs ?? {}),
+        ...baseSpecs,
         funnel_config: JSON.stringify({
           enabled: form.funnel_enabled,
           steps: form.funnel_steps,
@@ -240,6 +259,32 @@ export default function ProductEditForm({
                   <label className={labelCls}>Product Name *</label>
                   <input type="text" value={form.name} onChange={set("name")} required className={inputCls} />
                 </div>
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <label className={labelCls + " mb-0"}>URL Slug</label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const next = generateSlug(form.name);
+                        if (next) setForm((p) => ({ ...p, slug: next }));
+                        setSaved(false);
+                      }}
+                      className="text-[10px] font-bold text-primary hover:underline"
+                    >
+                      Generate from title
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    value={form.slug}
+                    onChange={set("slug")}
+                    className={inputCls}
+                    placeholder="product-url-slug"
+                  />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Changing the slug creates a <strong>301 redirect</strong> from the old URL so existing links keep working.
+                  </p>
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className={labelCls}>SKU</label>
@@ -257,18 +302,50 @@ export default function ProductEditForm({
                 </div>
                 <div>
                   <label className={labelCls}>Short Description</label>
-                  <textarea value={form.short_description} onChange={set("short_description")} rows={2}
-                    placeholder="One-sentence summary shown in product cards"
-                    className={`${inputCls} resize-none`} />
+                  <p className="text-xs text-gray-400 mb-2">Shown under the product title. Use Bold for emphasis.</p>
+                  <HtmlEditor
+                    mode="basic"
+                    rows={3}
+                    value={form.short_description}
+                    onChange={(short_description) => {
+                      setForm((p) => ({ ...p, short_description }));
+                      setSaved(false);
+                    }}
+                    placeholder="One-sentence summary with optional <strong>bold</strong>"
+                  />
                 </div>
                 <div>
                   <label className={labelCls}>Full Description</label>
-                  <textarea value={form.description} onChange={set("description")} rows={8}
-                    placeholder="Full product description (supports plain text)"
-                    className={`${inputCls} resize-y`} />
+                  <p className="text-xs text-gray-400 mb-2">&quot;About this Product&quot; section — supports headings, lists and links.</p>
+                  <HtmlEditor
+                    mode="full"
+                    rows={12}
+                    value={form.description}
+                    onChange={(description) => {
+                      setForm((p) => ({ ...p, description }));
+                      setSaved(false);
+                    }}
+                    placeholder="Full product description (HTML)"
+                  />
                 </div>
               </div>
             </section>
+
+            {(categories.find((c) => c.id === form.category_id)?.slug === "vacuum-machines" ||
+              isVacuumMachineInitial) && (
+              <section className="bg-white border border-gray-200 p-6">
+                <h2 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wide">
+                  Machine Page Content
+                </h2>
+                <MachineContentEditor
+                  value={machineContent}
+                  onChange={(value) => {
+                    setMachineContent(value);
+                    setSaved(false);
+                  }}
+                />
+              </section>
+            )}
 
             {/* Pricing */}
             <section className="bg-white border border-gray-200 p-6">

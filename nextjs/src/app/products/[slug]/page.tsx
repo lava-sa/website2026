@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -37,6 +37,8 @@ import ProductHighlights from "@/components/products/ProductHighlights";
 import { getProductHighlights } from "@/lib/product-highlights";
 import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
+import ProductBottomPurchase from "@/components/shop/ProductBottomPurchase";
+import { resolveProductSlugRedirect } from "@/lib/product-redirects";
 
 // ── Static params ────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
@@ -197,6 +199,10 @@ export default async function ProductDetailPage({
 
   try {
     product = await getProductBySlug(slug);
+    if (!product) {
+      const redirected = await resolveProductSlugRedirect(slug);
+      if (redirected) permanentRedirect(`/products/${redirected}`);
+    }
     if (product?.categories) {
       related = await getRelatedProducts(product.categories.slug, slug, 3);
     }
@@ -221,15 +227,26 @@ export default async function ProductDetailPage({
           ]
         : [];
   const specs = product.specs ?? {};
+  const HIDDEN_SPEC_KEYS = new Set([
+    "funnel_config",
+    "machine_content",
+    "ai_summary",
+    "ai_search_terms",
+    "ai_use_cases",
+  ]);
   const displaySpecs = Object.entries(specs).filter(([key, value]) => (
-    key !== "funnel_config" && value !== null && value !== undefined && String(value).trim() !== ""
+    !HIDDEN_SPEC_KEYS.has(key) &&
+    typeof value !== "object" &&
+    value !== null &&
+    value !== undefined &&
+    String(value).trim() !== ""
   ));
   const hasSpecs = displaySpecs.length > 0;
   const isOnOrder = product.stock_status === "on_order";
   const price     = product.sale_price ?? product.regular_price;
   const isVacuumMachine = product.categories?.slug === "vacuum-machines";
   const isSousVide = product.categories?.slug === "sous-vide";
-  const machineContent = isVacuumMachine ? getMachineContent(slug) : null;
+  const machineContent = isVacuumMachine ? getMachineContent(slug, specs) : null;
   const funnelConfig = parseFunnelConfig(product.specs?.funnel_config);
   const aiSummary = String(product.specs?.ai_summary ?? "").trim();
   const aiSearchTerms = String(product.specs?.ai_search_terms ?? "").trim();
@@ -929,6 +946,19 @@ export default async function ProductDetailPage({
         </section>
       ) : (
         productHighlights && <ProductHighlights items={productHighlights} />
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          Bottom purchase bar (Star Aesthetic style)
+      ════════════════════════════════════════════════════════════════ */}
+      {!isOnOrder && (
+        <ProductBottomPurchase
+          product={product}
+          price={price}
+          image={images[0]?.url ?? product.primary_image_url}
+          waUrl={waUrl}
+          funnelSlug={funnelConfig.enabled ? product.slug : undefined}
+        />
       )}
 
       {/* ═══════════════════════════════════════════════════════════════
