@@ -3,7 +3,8 @@ import Link from "next/link";
 import { Zap, Layers, Package, Sparkles, Award, ArrowRight } from "lucide-react";
 import type { BenefitBlockId, MachineBenefitsConfig } from "@/lib/machine-benefits";
 import {
-  BENEFIT_BLOCK_ORDER,
+  getGalleryUrls,
+  getVisibleBenefitBlocks,
   parseMachineBenefitsFromSpecs,
   resolveBenefitImageUrl,
 } from "@/lib/machine-benefits";
@@ -12,16 +13,15 @@ const BLOCK_META: Record<
   BenefitBlockId,
   {
     icon: typeof Zap;
-    imageLeft: boolean;
     dark: boolean;
     imageAlt: string;
   }
 > = {
-  welding: { icon: Zap, imageLeft: false, dark: false, imageAlt: "Welding at the touch of a button" },
-  double_seal: { icon: Layers, imageLeft: true, dark: false, imageAlt: "Double sealing with LAVA vacuum machines" },
-  containers: { icon: Package, imageLeft: false, dark: false, imageAlt: "Vacuum sealing containers and jars" },
-  variety: { icon: Sparkles, imageLeft: true, dark: false, imageAlt: "Limitless variety with LAVA vacuum sealing" },
-  germany: { icon: Award, imageLeft: false, dark: true, imageAlt: "LAVA vacuum sealers — made in Germany" },
+  welding: { icon: Zap, dark: false, imageAlt: "Welding at the touch of a button" },
+  double_seal: { icon: Layers, dark: false, imageAlt: "Double sealing with LAVA vacuum machines" },
+  containers: { icon: Package, dark: false, imageAlt: "Vacuum sealing containers and jars" },
+  variety: { icon: Sparkles, dark: false, imageAlt: "Limitless variety with LAVA vacuum sealing" },
+  germany: { icon: Award, dark: true, imageAlt: "LAVA vacuum sealers — made in Germany" },
 };
 
 function BenefitImage({
@@ -125,43 +125,47 @@ function BenefitText({
 
 /**
  * Per-machine benefit callouts on vacuum-machine product pages.
- * Content and images come from specs.machine_benefits (editable in admin).
+ * Visible blocks only — image left/right alternates by visible index (not block id).
  */
 export default function MachineBenefitsShowcase({
-  productSlug,
   primaryImageUrl,
   machineName,
   specs,
+  galleryImageUrls,
 }: {
-  productSlug: string;
   primaryImageUrl?: string | null;
   machineName?: string;
   specs?: Record<string, unknown> | null;
+  galleryImageUrls?: string[];
 }) {
   const benefits = parseMachineBenefitsFromSpecs(specs ?? undefined);
+  const galleryUrls = galleryImageUrls ?? [];
+  const visibleBlocks = getVisibleBenefitBlocks(benefits);
 
   return (
     <section className="bg-white">
-      {BENEFIT_BLOCK_ORDER.map((blockId, index) => {
+      {visibleBlocks.map((blockId, visibleIndex) => {
         const block = benefits[blockId];
         const meta = BLOCK_META[blockId];
         const imageSrc = resolveBenefitImageUrl(
           blockId,
-          productSlug,
-          primaryImageUrl,
-          blockId === "welding" ? "primary" : block.imageChoice
+          block,
+          galleryUrls,
+          primaryImageUrl
         );
         const imageAlt =
           blockId === "welding" && machineName
             ? `${machineName} vacuum sealer`
             : meta.imageAlt;
 
-        const isSurface = index % 2 === 1 && !meta.dark;
+        /** Alternating layout: even = text left / image right, odd = image left / text right */
+        const imageLeft = visibleIndex % 2 === 1;
+        const isSurface = visibleIndex % 2 === 1 && !meta.dark;
         const wrapperCls = meta.dark
           ? "bg-primary text-white border-b border-border"
           : isSurface
             ? "bg-surface border-b border-border"
-            : index === 0
+            : visibleIndex === 0
               ? "border-y border-border"
               : "border-b border-border";
 
@@ -169,7 +173,7 @@ export default function MachineBenefitsShowcase({
           <div key={blockId} className={wrapperCls}>
             <div className="section-container py-20">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                {meta.imageLeft ? (
+                {imageLeft ? (
                   <>
                     <BenefitImage
                       src={imageSrc}

@@ -372,8 +372,9 @@ export default function ProductEditForm({
                 </h2>
                 <MachineBenefitsEditor
                   value={machineBenefits}
-                  productSlug={form.slug.trim() || product.slug}
+                  productId={product.id}
                   primaryImageUrl={primaryImageUrl}
+                  galleryImages={product.product_images ?? []}
                   onChange={(value) => {
                     setMachineBenefits(value);
                     setSaved(false);

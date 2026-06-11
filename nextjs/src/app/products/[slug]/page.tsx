@@ -230,6 +230,7 @@ export default async function ProductDetailPage({
   const HIDDEN_SPEC_KEYS = new Set([
     "funnel_config",
     "machine_content",
+    "machine_benefits",
     "ai_summary",
     "ai_search_terms",
     "ai_use_cases",
@@ -694,10 +695,10 @@ export default async function ProductDetailPage({
       ════════════════════════════════════════════════════════════════ */}
       {isVacuumMachine && (
         <MachineBenefitsShowcase
-          productSlug={product.slug}
           primaryImageUrl={images[0]?.url ?? product.primary_image_url}
           machineName={product.name}
           specs={product.specs}
+          galleryImageUrls={images.map((img) => img.url)}
         />
       )}
 
