@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PhoneNumbers from "@/components/layout/PhoneNumbers";
+import { PHONES_DISPLAY_LONG } from "@/lib/contact";
 import { Truck, RefreshCw, ShieldCheck, HelpCircle } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -52,9 +54,7 @@ export default function HelpPage() {
           <p className="mt-4 text-on-dark-muted text-lg max-w-xl">
             Everything you need to know about ordering, delivery, returns, and warranty —
             or call us directly on{" "}
-            <a href="tel:+27721605556" className="text-secondary font-bold hover:underline">
-              +27 72 160 5556
-            </a>
+            <PhoneNumbers layout="inline" linkClassName="text-secondary font-bold hover:underline" />
             .
           </p>
         </div>
@@ -90,9 +90,10 @@ export default function HelpPage() {
             Anneke answers personally — call, WhatsApp, or email and you&apos;ll hear back the same day.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="tel:+27721605556" className="inline-block bg-primary text-white font-bold px-6 py-3 hover:bg-primary/90 transition-colors">
-              Call +27 72 160 5556
-            </a>
+            <div className="inline-block bg-primary text-white font-bold px-6 py-3">
+              <span className="block text-xs uppercase tracking-wider opacity-80 mb-1">Call us</span>
+              <PhoneNumbers layout="stacked" linkClassName="text-white font-bold hover:text-secondary" />
+            </div>
             <Link href="/contact" className="inline-block border border-border text-copy font-semibold px-6 py-3 hover:border-primary hover:text-primary transition-colors">
               Contact Us
             </Link>

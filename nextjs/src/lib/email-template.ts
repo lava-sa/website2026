@@ -1,3 +1,4 @@
+import { PHONES_DISPLAY_LONG } from "@/lib/contact";
 import { getPublicSiteUrl } from "@/lib/seo";
 
 /** LAVA brand tokens for HTML email (inline styles only). */
@@ -88,7 +89,7 @@ export function wrapEmailLayout(args: WrapEmailArgs): string {
       </p>
       <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.65);">
         <a href="${siteUrl}" style="color:#d4b87a;text-decoration:none;">lava-sa.com</a>
-        &nbsp;&middot;&nbsp; +27 72 160 5556
+        &nbsp;&middot;&nbsp; ${PHONES_DISPLAY_LONG}
         &nbsp;&middot;&nbsp;
         <a href="mailto:info@lava-sa.com" style="color:#d4b87a;text-decoration:none;">info@lava-sa.com</a>
       </p>

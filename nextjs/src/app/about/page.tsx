@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import PhoneNumbers from "@/components/layout/PhoneNumbers";
+import { PHONES_DISPLAY_LONG } from "@/lib/contact";
 import {
   ShieldCheck,
   Leaf,
@@ -296,16 +298,13 @@ export default function AboutPage() {
 
               {/* Contact cards */}
               <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <a
-                  href="tel:+27721605556"
-                  className="flex items-center gap-3 border border-border bg-surface px-4 py-3.5 hover:border-primary hover:bg-white transition-all group"
-                >
+                <div className="flex items-center gap-3 border border-border bg-surface px-4 py-3.5">
                   <Phone className="h-4 w-4 text-secondary shrink-0" />
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-copy-muted">Call Us</p>
-                    <p className="text-sm font-semibold text-primary group-hover:text-secondary transition-colors">+27 72 160 5556</p>
+                    <PhoneNumbers layout="stacked" linkClassName="text-sm font-semibold text-primary hover:text-secondary" />
                   </div>
-                </a>
+                </div>
                 <a
                   href="mailto:info@lava-sa.com"
                   className="flex items-center gap-3 border border-border bg-surface px-4 py-3.5 hover:border-primary hover:bg-white transition-all group"
@@ -526,9 +525,9 @@ export default function AboutPage() {
               {
                 icon: Phone,
                 title: "Call Us",
-                detail: "+27 72 160 5556",
+                detail: PHONES_DISPLAY_LONG,
                 sub: "Mon–Fri 8am–5pm",
-                href: "tel:+27721605556",
+                href: null,
               },
               {
                 icon: Mail,

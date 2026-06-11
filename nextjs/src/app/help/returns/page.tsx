@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { RefreshCw, Phone, Mail, CheckCircle, X, AlertTriangle } from "lucide-react";
+import PhoneNumbers from "@/components/layout/PhoneNumbers";
 
 export const metadata: Metadata = {
   title: "Returns & Exchanges",
@@ -114,13 +115,13 @@ export default function ReturnsPage() {
           <div className="bg-surface border border-border p-6">
             <p className="font-bold text-primary mb-4">Contact Anneke directly — she handles all returns personally.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <a href="tel:+27721605556" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">
+              <div className="flex items-center gap-3 border border-border bg-white px-4 py-3">
                 <Phone className="h-5 w-5 text-secondary shrink-0" />
                 <div>
-                  <p className="font-bold text-primary text-sm">+27 72 160 5556</p>
+                  <PhoneNumbers layout="stacked" linkClassName="font-bold text-primary text-sm hover:text-secondary" />
                   <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
                 </div>
-              </a>
+              </div>
               <a href="mailto:info@lava-sa.com" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">
                 <Mail className="h-5 w-5 text-secondary shrink-0" />
                 <div>

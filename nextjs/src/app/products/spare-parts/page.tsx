@@ -2,6 +2,7 @@ import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
 import JsonLd from "@/components/seo/JsonLd";
+import { PHONES_DISPLAY_LONG } from "@/lib/contact";
 import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -228,10 +229,7 @@ export default async function SparePartsPage() {
           </div>
 
           <p className="mt-6 text-sm text-copy-muted">
-            Not sure? Call us on{" "}
-            <a href="tel:+27721605556" className="font-semibold text-primary hover:text-secondary transition-colors">
-              +27 72 160 5556
-            </a>{" "}
+            Not sure? Call us on {PHONES_DISPLAY_LONG}{" "}
             or email{" "}
             <a href="mailto:info@lava-sa.com" className="font-semibold text-primary hover:text-secondary transition-colors">
               info@lava-sa.com

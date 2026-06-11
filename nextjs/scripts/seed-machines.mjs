@@ -36,6 +36,57 @@ const INDUSTRIES = {
 // ─── 3. Product data ─────────────────────────────────────────────────────────
 const machines = [
   {
+    sku:           "VL0100P",
+    name:          "LAVA V.100 Premium",
+    slug:          "v100-premium",
+    short_description: "Discontinued model — limited stock remaining. Entry-level domestic vacuum sealer with manual operation, double seal and German engineering. Ideal for home users who don't need to vacuum pack large quantities.",
+    description:   `<p>The <strong>LAVA V.100 Premium</strong> is the perfect entry-level vacuum sealer for home users looking for quality food preservation without needing to vacuum pack large quantities. <strong>Made in Germany</strong> with a <strong>2-year warranty</strong>, this reliable machine offers excellent value for everyday kitchen use.</p>
+<p>Key features include:</p>
+<ul>
+<li><strong>Manual operation</strong> — simple, intuitive controls for ease of use</li>
+<li><strong>Double seal system</strong> — each seal strip 5mm wide for reliable food preservation</li>
+<li><strong>Magnetic lid system</strong> — minimal pressure required during operation</li>
+<li><strong>Compatible with bags and rolls</strong> — accommodates materials up to 30cm wide</li>
+<li><strong>Fast performance</strong> — removes air from medium bags in approximately 10 seconds</li>
+<li><strong>Visual indicator</strong> — shows when full vacuum is reached for proper sealing</li>
+<li><strong>Container capability</strong> — includes vacuum pump attachment for acrylic containers</li>
+</ul>
+<p><em>Note: This model has been discontinued. Remaining stock is limited.</em></p>`,
+    regular_price: 6495,
+    stock_status:  "in_stock",
+    stock_quantity: 6,
+    weight_kg:     3.95,
+    length_cm:     41.0,
+    width_cm:      21.0,
+    height_cm:     9.8,
+    is_featured:   true,
+    sort_order:    0,
+    industries:    ["kitchen", "hunting", "fishing", "biltong", "outdoor"],
+    tags:          ["entry-level", "home", "compact", "manual", "V100", "discontinued", "limited-stock"],
+    specs: {
+      pumps:          "1",
+      suction_power:  "35 ltr/min",
+      max_vacuum:     "-0.80 bar",
+      gauge:          "LED indicator",
+      seal_width:     "300 mm",
+      double_seal:    "Yes",
+      manual_seal:    "Yes",
+      auto_seal:      "No",
+      fluid_extract:  "Yes",
+      colour:         "White & Blue",
+      voltage:        "230 V",
+      power:          "400 W",
+      dimensions:     "410 × 210 × 98 mm",
+      weight:         "3.95 kg",
+      warranty:       "2 years",
+      made_in:        "Germany",
+    },
+    primary_image_url: "/images/products/machines/lava-vacuum-sealer-v100-premium.webp",
+    images: [
+      { url: "/images/products/machines/lava-vacuum-sealer-v100-premium.webp", alt: "LAVA V.100 Premium vacuum sealer", is_primary: true },
+    ],
+  },
+  {
     sku:           "VL0100PX",
     name:          "LAVA V.100 Premium X",
     slug:          "v100-premium-x",

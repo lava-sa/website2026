@@ -21,10 +21,16 @@ export default async function GlassJarSealerPage() {
     // Supabase unavailable
   }
 
-  const sealerProducts = products.filter((p) => 
-    p.tags?.includes("jar-sealer") || 
-    p.name.toLowerCase().includes("jar") ||
-    p.slug.includes("jar")
+  const JAR_SEALER_SLUGS = new Set([
+    "lava-flex-sealer-for-jars",
+    "vacuum-sealer-attachment-for-glass-jars-8-9-cm-diameter",
+  ]);
+
+  const sealerProducts = products.filter(
+    (p) =>
+      JAR_SEALER_SLUGS.has(p.slug) ||
+      p.tags?.includes("jar-sealer") ||
+      p.slug.includes("flex-sealer")
   );
 
   return (
@@ -73,8 +79,9 @@ export default async function GlassJarSealerPage() {
             <div className="py-20 bg-gray-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-center px-6">
               <h3 className="text-xl font-bold text-primary mb-2">Inventory Loading...</h3>
               <p className="text-sm text-copy-muted max-w-xs">
-                We are currently importing the latest jar-sealing attachments into the new system. 
-                Please check back in a few moments.
+                Run{" "}
+                <code className="text-xs bg-surface px-1">023_lava_flex_sealer_for_jars.sql</code>{" "}
+                in Supabase if you have not already, then refresh this page.
               </p>
             </div>
           )}

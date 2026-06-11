@@ -205,7 +205,7 @@ const HeroSlideshow = () => {
       <div className="absolute bottom-0 left-0 right-0 z-20">
         {/* Trust pills — desktop only */}
         <div className="section-container hidden lg:flex items-center gap-3 mb-5">
-          {["2-Year Warranty", "Nationwide Courier Delivery", "German Engineering"].map((t) => (
+          {["Nationwide Courier Delivery", "German Engineering", "Johannesburg Support"].map((t) => (
             <div
               key={t}
               className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-2"

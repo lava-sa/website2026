@@ -122,7 +122,7 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
   "/products/containers-lids": [{ label: "Containers & Lids" }],
   "/products/glass-containers": [
     { label: "Containers & Lids", href: "/products/containers-lids" },
-    { label: "Glass Vacuum Containers" },
+    { label: "Vacuum Glass Containers" },
   ],
   "/products/stainless-containers": [
     { label: "Containers & Lids", href: "/products/containers-lids" },

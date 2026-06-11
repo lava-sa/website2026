@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Phone } from "lucide-react";
+import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
 
 const FinalCTA = () => {
   return (
@@ -47,16 +48,23 @@ const FinalCTA = () => {
                 </svg>
               </Link>
               <Link
-                href="tel:+27721605556"
+                href={`tel:${MAIN_PHONE.tel}`}
                 className="inline-flex items-center justify-center gap-2.5 border border-primary px-8 py-4 text-sm font-semibold text-primary transition-all hover:bg-primary hover:text-white hover:-translate-y-0.5"
               >
                 <Phone size={16} />
-                Call Anneke
+                {MAIN_PHONE.displayLocal}
+              </Link>
+              <Link
+                href={`tel:${ANNEKE_PHONE.tel}`}
+                className="inline-flex items-center justify-center gap-2.5 border border-primary px-8 py-4 text-sm font-semibold text-primary transition-all hover:bg-primary hover:text-white hover:-translate-y-0.5"
+              >
+                <Phone size={16} />
+                {ANNEKE_PHONE.displayLocal} (Anneke)
               </Link>
             </div>
 
             <p className="mt-6 text-xs text-petrol-800">
-              ✓ Courier delivery nationwide · 2-year machine warranty · Johannesburg-based
+              ✓ Courier delivery nationwide · Johannesburg-based support
             </p>
           </div>
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Truck, RefreshCw, ShieldCheck, Clock, Phone, Mail } from "lucide-react";
+import PhoneNumbers from "@/components/layout/PhoneNumbers";
 
 export const metadata: Metadata = {
   title: "Shipping & Returns",
@@ -173,15 +174,14 @@ export default function ShippingReturnsPage() {
               directly. We respond to all enquiries within 1 business day.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-              <a href="tel:+27721605556"
-                className="flex items-center gap-3 border border-border bg-surface px-4 py-4 hover:border-primary hover:bg-white transition-all">
+              <div className="flex items-center gap-3 border border-border bg-surface px-4 py-4">
                 <Phone className="h-5 w-5 text-secondary shrink-0" />
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-copy-muted">Call</p>
-                  <p className="font-bold text-primary">+27 72 160 5556</p>
-                  <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
+                  <PhoneNumbers layout="stacked" linkClassName="font-bold text-primary hover:text-secondary" />
+                  <p className="text-xs text-copy-muted mt-1">Mon–Fri 09:00–17:00</p>
                 </div>
-              </a>
+              </div>
               <a href="mailto:info@lava-sa.com"
                 className="flex items-center gap-3 border border-border bg-surface px-4 py-4 hover:border-primary hover:bg-white transition-all">
                 <Mail className="h-5 w-5 text-secondary shrink-0" />
@@ -233,7 +233,9 @@ function LegalFooter() {
         Questions? Contact{" "}
         <a href="mailto:info@lava-sa.com" className="text-primary font-semibold">info@lava-sa.com</a>
         {" "}or call{" "}
-        <a href="tel:+27721605556" className="text-primary font-semibold">+27 72 160 5556</a>.
+        <a href="tel:+27721605556" className="text-primary font-semibold">+27 (0)72 160 5556</a>
+        {" "}or{" "}
+        <a href="tel:+27795126771" className="text-primary font-semibold">+27 (0)79 512 6771 (Anneke)</a>.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
         {[

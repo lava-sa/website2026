@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PhoneNumbers from "@/components/layout/PhoneNumbers";
 import { CheckCircle, Clock, Phone, Mail, Building2 } from "lucide-react";
 import { getEftBankDetails } from "@/lib/bank-details";
 
@@ -140,10 +141,10 @@ export default async function SuccessPage({
         <div className="bg-white border border-border p-6 mt-6">
           <p className="text-sm font-semibold text-primary mb-4 text-center">Questions? Contact Anneke directly:</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-            <a href="tel:+27721605556"
-              className="flex items-center gap-2 text-sm text-copy-muted hover:text-primary transition-colors">
-              <Phone className="h-4 w-4" /> +27 72 160 5556
-            </a>
+            <div className="flex items-center gap-2 text-sm text-copy-muted">
+              <Phone className="h-4 w-4 shrink-0" />
+              <PhoneNumbers layout="stacked" linkClassName="hover:text-primary transition-colors" />
+            </div>
             <a href="mailto:info@lava-sa.com"
               className="flex items-center gap-2 text-sm text-copy-muted hover:text-primary transition-colors">
               <Mail className="h-4 w-4" /> info@lava-sa.com

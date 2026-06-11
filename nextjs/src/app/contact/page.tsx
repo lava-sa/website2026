@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Phone, Mail, MapPin, Clock, Send, Loader2, CheckCircle } from "lucide-react";
+import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
+import PhoneNumbers from "@/components/layout/PhoneNumbers";
 
 const SA_PROVINCES = [
   "Eastern Cape","Free State","Gauteng","KwaZulu-Natal","Limpopo",
@@ -92,8 +94,20 @@ export default function ContactPage() {
       <div className="bg-on-dark-subtle border-b border-on-dark-border">
         <div className="section-container py-0">
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-white/10">
+            <div className="flex items-center gap-4 py-5 px-4 lg:px-6">
+              <div className="h-10 w-10 bg-white/10 flex items-center justify-center shrink-0">
+                <Phone className="h-5 w-5 text-secondary" />
+              </div>
+              <div>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-on-dark-muted mb-1">Call</p>
+                <PhoneNumbers
+                  layout="stacked"
+                  linkClassName="text-sm font-bold text-white leading-snug hover:text-secondary"
+                />
+                <p className="text-[11px] text-on-dark-muted mt-1">Mon–Fri 9am–5pm</p>
+              </div>
+            </div>
             {[
-              { icon: Phone,  title: "Call",    value: "+27 72 160 5556",    sub: "Mon–Fri 9am–5pm", href: "tel:+27721605556" },
               { icon: Mail,   title: "Email",   value: "info@lava-sa.com", sub: "Reply within 1 business day", href: "mailto:info@lava-sa.com" },
               { icon: MapPin, title: "Address", value: "5 Stirling Road",    sub: "Bryanston, Sandton 2191", href: null },
               { icon: Clock,  title: "Hours",   value: "Mon–Fri",            sub: "09:00 – 17:00", href: null },
@@ -177,7 +191,7 @@ export default function ContactPage() {
                 </Field>
                 {status === "error" && (
                   <p className="text-sm text-red-600 bg-red-50 border border-red-200 px-4 py-3">
-                    Something went wrong. Please try again or WhatsApp Anneke at +27 72 160 5556.
+                    Something went wrong. Please try again or call {MAIN_PHONE.displayLocal} or {ANNEKE_PHONE.displayLocal} (Anneke).
                   </p>
                 )}
                 <button type="submit" disabled={status === "sending"}
@@ -215,10 +229,10 @@ export default function ContactPage() {
                   which machine is right for you, call us — it&apos;s the quickest way to
                   get the right answer.&rdquo;
                 </p>
-                <a href="tel:+27721605556"
+                <a href={`tel:${ANNEKE_PHONE.tel}`}
                   className="mt-4 btn-primary flex items-center justify-center gap-2 py-3 text-sm">
                   <Phone className="h-4 w-4" />
-                  +27 72 160 5556
+                  {ANNEKE_PHONE.display}
                 </a>
               </div>
             </div>

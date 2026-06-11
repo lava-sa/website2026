@@ -35,6 +35,7 @@ export default function TermsPage() {
               ["Trading as",    "Lava South Africa / www.lava-sa.com"],
               ["Address",       "5 Stirling Road, Bryanston, Sandton 2191, South Africa"],
               ["Telephone",     "+27 (0)72 160 5556"],
+              ["Anneke",        "+27 (0)79 512 6771"],
               ["Email",         "info@lava-sa.com"],
               ["Business hours","Monday – Friday, 09:00 – 17:00 SAST"],
             ]} />
@@ -233,7 +234,8 @@ function LegalFooter() {
         Questions about these terms? Contact us at{" "}
         <a href="mailto:info@lava-sa.com" className="text-primary font-semibold">info@lava-sa.com</a>
         {" "}or call{" "}
-        <a href="tel:+27721605556" className="text-primary font-semibold">+27 72 160 5556</a>.
+        <a href="tel:+27721605556" className="text-primary font-semibold">+27 (0)72 160 5556</a> or{" "}
+        <a href="tel:+27795126771" className="text-primary font-semibold">+27 (0)79 512 6771 (Anneke)</a>.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
         {[

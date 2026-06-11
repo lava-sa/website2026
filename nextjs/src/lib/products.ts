@@ -37,6 +37,33 @@ export async function getProductsByCategory(categorySlug: string): Promise<Produ
   return (data ?? []) as Product[];
 }
 
+/** Published products on clearance — tagged clearance/discontinued/limited-stock or on sale */
+export async function getClearanceProducts(): Promise<Product[]> {
+  const supabase = getClient();
+
+  const { data, error } = await supabase
+    .from("products")
+    .select(`
+      *,
+      categories ( id, name, slug ),
+      product_images ( id, url, alt, is_primary, sort_order )
+    `)
+    .eq("is_published", true)
+    .or(
+      "tags.cs.{clearance},tags.cs.{discontinued},tags.cs.{limited-stock},and(sale_price.not.is.null,sale_price.gt.0)"
+    )
+    .order("sort_order", { ascending: true });
+
+  if (error) throw new Error(`getClearanceProducts: ${error.message}`);
+  return (data ?? []) as Product[];
+}
+
+/** Discount percentage when sale_price is set (0 if not on sale) */
+export function getDiscountPercent(product: Pick<Product, "regular_price" | "sale_price">): number {
+  if (!product.sale_price || product.sale_price >= product.regular_price) return 0;
+  return Math.round((1 - product.sale_price / product.regular_price) * 100);
+}
+
 /** All featured products for homepage/marketing sections */
 export async function getFeaturedProducts(): Promise<Product[]> {
   const supabase = getClient();

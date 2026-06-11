@@ -1,9 +1,11 @@
 import Link from "next/link";
 import ProductCatalogImage from "@/components/shop/ProductCatalogImage";
+import ProductCard from "@/components/shop/ProductCard";
 import { Award, CheckCircle2, Thermometer, Clock, ChefHat, Droplets } from "lucide-react";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
 import { calculatePointsEarned } from "@/lib/rewards-config";
-import { formatPrice, stripHtml } from "@/lib/products";
+import { formatPrice, getProductsByCategory, stripHtml } from "@/lib/products";
+import type { Product } from "@/types/product";
 import JsonLd from "@/components/seo/JsonLd";
 import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
@@ -16,9 +18,13 @@ export const metadata = pageMetadata({
 
 export const revalidate = 3600;
 
-// ── Static product data (move to Supabase once images are ready) ─────────────
+function isCirculator(p: Product) {
+  return p.tags?.includes("circulator") || p.slug.startsWith("lx");
+}
 
-const SOUS_VIDE_PRODUCTS = [
+// ── Fallback circulators when Supabase unavailable ───────────────────────────
+
+const FALLBACK_CIRCULATORS = [
   {
     id: "sv-lx0020",
     sku: "LX0020",
@@ -98,7 +104,38 @@ const HOW_IT_WORKS = [
   { step: "4", title: "Finish & Serve", body: "Remove from the bag. Give it a quick sear in a hot pan for colour and crust. Serve." },
 ];
 
-export default function SousVidePage() {
+export default async function SousVidePage() {
+  let dbProducts: Product[] = [];
+  try {
+    dbProducts = await getProductsByCategory("sous-vide");
+  } catch {
+    // fall back to static circulators only
+  }
+
+  const circulatorsFromDb = dbProducts.filter(isCirculator);
+  const circulators =
+    circulatorsFromDb.length > 0
+      ? circulatorsFromDb
+      : FALLBACK_CIRCULATORS.map((p) => ({
+          ...p,
+          tags: ["sous-vide", "circulator"],
+          description: null,
+          sale_price: null,
+          stock_quantity: null,
+          weight_kg: null,
+          length_cm: null,
+          width_cm: null,
+          height_cm: null,
+          category_id: null,
+          is_published: true,
+          sort_order: 0,
+          seo_title: null,
+          seo_description: null,
+          industries: [],
+          created_at: "",
+          updated_at: "",
+        })) as unknown as Product[];
+
   const collectionLd = collectionPageSchema({
     name: "LAVA Sous Vide Machines",
     description: "LAVA sous vide precision cookers South Africa. Restaurant-quality steak, fish & vegetables at home — vacuum sealed and slow-cooked to perfection. German build.",
@@ -127,18 +164,30 @@ export default function SousVidePage() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             {[
-              ["View Products", "#products"],
+              ["Circulators", "#circulators"],
+              ["G-Line Glass & Pump", "/products/glass-containers"],
               ["How It Works", "#how-it-works"],
               ["What is Sous Vide?", "#what-is-sous-vide"],
             ].map(([label, href]) => (
-              <a
-                key={href}
-                href={href}
-                className="text-sm font-semibold border border-white/30 text-white/80
-                           px-4 py-2 hover:bg-white/10 hover:text-white transition-colors"
-              >
-                {label}
-              </a>
+              href.startsWith("/") ? (
+                <Link
+                  key={href}
+                  href={href}
+                  className="text-sm font-semibold border border-white/30 text-white/80
+                             px-4 py-2 hover:bg-white/10 hover:text-white transition-colors"
+                >
+                  {label}
+                </Link>
+              ) : (
+                <a
+                  key={href}
+                  href={href}
+                  className="text-sm font-semibold border border-white/30 text-white/80
+                             px-4 py-2 hover:bg-white/10 hover:text-white transition-colors"
+                >
+                  {label}
+                </a>
+              )
             ))}
           </div>
         </div>
@@ -154,37 +203,46 @@ export default function SousVidePage() {
         </div>
       </div>
 
-      {/* ── Products ─────────────────────────────────────────────────── */}
-      <section id="products" className="py-20">
+      {/* ── Circulators ──────────────────────────────────────────────── */}
+      <section id="circulators" className="py-20 scroll-mt-24">
         <div className="section-container">
           <div className="mb-10">
-            <p className="overline mb-2">Sous Vide Range</p>
-            <h2 className="text-3xl font-bold text-primary">Choose Your Set-Up</h2>
+            <p className="overline mb-2">Precision cookers</p>
+            <h2 className="text-3xl font-bold text-primary">Sous Vide Circulators</h2>
             <p className="mt-3 text-copy-muted max-w-lg">
               Start with the stick on its own, or get everything you need in one complete set.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
-            {SOUS_VIDE_PRODUCTS.map((product) => {
+            {circulators.map((product) => {
+              const fallback = FALLBACK_CIRCULATORS.find((f) => f.slug === product.slug);
+              const specEntries = fallback
+                ? Object.entries(fallback.specs)
+                : Object.entries(product.specs ?? {}).slice(0, 3);
               const points = calculatePointsEarned(product.sale_price ?? product.regular_price);
+              const badge = fallback?.badge;
+
               return (
                 <div
                   key={product.id}
                   className="group relative flex flex-col hover:shadow-lg transition-all duration-300 overflow-hidden"
                   style={{ backgroundColor: "#FAFAFA" }}
                 >
-                  {/* Full-card link */}
                   <Link
                     href={`/products/${product.slug}`}
                     aria-label={product.name}
                     className="absolute inset-0 z-10"
                   />
 
-                  <ProductCatalogImage src={product.primary_image_url} alt={product.name} title={product.name}>
-                    {product.badge && (
+                  <ProductCatalogImage
+                    src={product.primary_image_url ?? ""}
+                    alt={product.name}
+                    title={product.name}
+                  >
+                    {badge && (
                       <span className="pointer-events-none absolute top-3 left-3 z-10 bg-secondary text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1">
-                        {product.badge}
+                        {badge}
                       </span>
                     )}
                     <div className="card-hover-overlay pointer-events-none z-[5]" aria-hidden="true">
@@ -192,7 +250,6 @@ export default function SousVidePage() {
                     </div>
                   </ProductCatalogImage>
 
-                  {/* Content */}
                   <div className="flex flex-col flex-1 p-5 gap-3">
                     <span className="self-start text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 border bg-emerald-50 text-emerald-700 border-emerald-200">
                       In Stock
@@ -204,17 +261,17 @@ export default function SousVidePage() {
                       {stripHtml(product.short_description)}
                     </p>
 
-                    {/* Specs */}
-                    <ul className="text-xs text-copy-muted space-y-1">
-                      {Object.entries(product.specs).slice(0, 3).map(([k, v]) => (
-                        <li key={k} className="flex gap-2">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-secondary shrink-0 mt-0.5" />
-                          <span><strong>{k}:</strong> {v}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    {specEntries.length > 0 && (
+                      <ul className="text-xs text-copy-muted space-y-1">
+                        {specEntries.slice(0, 3).map(([k, v]) => (
+                          <li key={k} className="flex gap-2">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-secondary shrink-0 mt-0.5" />
+                            <span><strong>{k}:</strong> {v}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
 
-                    {/* Price */}
                     <div className="pt-2 mt-auto border-t border-border">
                       <span className="text-xl font-bold text-primary">
                         {formatPrice(product.regular_price)}
@@ -222,7 +279,6 @@ export default function SousVidePage() {
                       <span className="ml-2 text-xs text-copy-muted">incl. VAT</span>
                     </div>
 
-                    {/* Lava Points */}
                     <Link
                       href="/rewards"
                       className="relative z-20 mt-1 flex items-center justify-between gap-2 border border-secondary/30 bg-secondary/5 hover:bg-secondary/10 px-3 py-2 transition-colors"

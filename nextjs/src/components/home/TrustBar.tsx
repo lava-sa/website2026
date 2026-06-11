@@ -1,15 +1,10 @@
-import { Shield, Award, Globe, Truck, Wrench } from "lucide-react";
+import { Award, Globe, Truck, Wrench } from "lucide-react";
 
 const badges = [
   {
     icon: Award,
     label: "Made in Germany",
     sub: "Since 1982 · Landig family",
-  },
-  {
-    icon: Shield,
-    label: "2-Year Warranty",
-    sub: "On all vacuum machines",
   },
   {
     icon: Globe,

@@ -31,6 +31,7 @@ const STATIC_ROUTES = [
   "/products/containers-lids",
   "/products/acrylic-lids",
   "/products/butchery-accessories",
+  "/products/special-offers",
   "/products/knives",
   "/products/scales",
   "/products/hooks-gambrels",

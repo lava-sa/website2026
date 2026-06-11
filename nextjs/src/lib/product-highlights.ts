@@ -44,9 +44,9 @@ const CATEGORY_HIGHLIGHTS: Record<string, ProductHighlight[]> = {
     { title: "Replacement lids", description: "Lost a lid? Add a vacuum-capable acrylic lid instead." },
   ],
   "glass-jar-sealer": [
-    { title: "Dry goods & preserves", description: "Vacuum-seal jars of coffee, spices, nuts and dry ingredients." },
-    { title: "Extends shelf life", description: "Keep pantry items fresh after opening the original pack." },
-    { title: "Works with standard jars", description: "Uses your LAVA machine's external vacuum function." },
+    { title: "Almost any jar shape", description: "Flex sealer fits round, oval, square or conical twist-off and mason jars up to 106 mm." },
+    { title: "Dry goods & preserves", description: "Vacuum-seal jams, pickles, coffee, spices, nuts and dry ingredients." },
+    { title: "Machine or Easy Pump", description: "Works with all LAVA vacuum sealers in container mode, or the rechargeable Easy Pump." },
   ],
   "sous-vide": [
     { title: "Precise temperature", description: "Restaurant-style low-temperature cooking at home or in a small kitchen." },

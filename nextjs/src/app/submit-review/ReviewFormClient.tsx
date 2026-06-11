@@ -361,7 +361,7 @@ function VideoReviewForm() {
 
       {/* ── WhatsApp option — always visible, zero tech ── */}
       <a
-        href="https://wa.me/27721605556?text=Hi%20Anneke%2C%20ek%20wil%20graag%20'n%20video%20getuienis%20oor%20my%20LAVA%20stuur!"
+        href="https://wa.me/27795126771?text=Hi%20Anneke%2C%20ek%20wil%20graag%20'n%20video%20getuienis%20oor%20my%20LAVA%20stuur!"
         target="_blank" rel="noopener noreferrer"
         className="flex items-center gap-4 bg-[#25D366]/10 border border-[#25D366]/40 px-5 py-4 hover:bg-[#25D366]/20 transition-colors"
       >
@@ -370,7 +370,7 @@ function VideoReviewForm() {
         </svg>
         <div>
           <p className="font-bold text-sm text-primary">Easiest: WhatsApp your video to Anneke</p>
-          <p className="text-xs text-copy-muted mt-0.5">Record with your phone camera → send to +27 72 160 5556</p>
+          <p className="text-xs text-copy-muted mt-0.5">Record with your phone camera → WhatsApp Anneke on +27 79 512 6771 (or office +27 72 160 5556)</p>
         </div>
         <span className="ml-auto text-[#25D366] font-bold text-sm shrink-0">Open →</span>
       </a>

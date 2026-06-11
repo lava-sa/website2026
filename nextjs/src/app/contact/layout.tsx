@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Contact Lava-SA — Speak to Anneke",
   description:
-    "Contact Lava-SA directly. Phone +27 72 160 5556, email info@lava-sa.com, or visit us at 5 Stirling Road, Bryanston, Johannesburg.",
+    "Contact Lava-SA directly. Phone +27 72 160 5556 or +27 79 512 6771 (Anneke), email info@lava-sa.com, or visit us at 5 Stirling Road, Bryanston, Johannesburg.",
   alternates: { canonical: "/contact" },
 };
 

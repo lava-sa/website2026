@@ -9,7 +9,7 @@ export const metadata: Metadata = {
       "LAVA Vacuum Sealers South Africa | Premium German Food Preservation Since 2007 | Lava-SA",
   },
   description:
-    "LAVA vacuum sealers South Africa — German-engineered V.300 Premium X, bags, rolls & accessories. 2-year warranty, nationwide courier delivery. Since 2007.",
+    "LAVA vacuum sealers South Africa — German-engineered V.300 Premium X, bags, rolls & accessories. Nationwide courier delivery. Since 2007.",
   alternates: { canonical: "/" },
   openGraph: {
     title:

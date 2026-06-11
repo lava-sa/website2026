@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import PhoneNumbers from "@/components/layout/PhoneNumbers";
 import Image from "next/image";
 import {
   Phone,
@@ -212,6 +213,7 @@ const SiteHeader = () => {
 
   // Expanded Vacuum Machines list based on User Request
   const VACUUM_MACHINES: [string, string][] = [
+    ["V.100® Premium (Limited Stock)", "/products/v100-premium"],
     ["V.100® Premium X", "/products/v100-premium-x"],
     ["V.300® Premium X", "/products/v300-premium-x"],
     ["V.300® White (Limited Edition)", "/products/v300-white"],
@@ -238,14 +240,13 @@ const SiteHeader = () => {
               <Instagram className="h-3.5 w-3.5" />
             </Link>
           </div>
-          {/* Centre: Phone */}
-          <Link
-            href="tel:+27721605556"
-            className="flex items-center gap-1.5 text-[11px] font-medium tracking-wider hover:text-secondary transition-colors"
-          >
-            <Phone className="h-3 w-3 shrink-0" />
-            <span>+27 (0)72 160 5556</span>
-          </Link>
+          {/* Centre: Phones */}
+          <PhoneNumbers
+            layout="inline"
+            showIcon
+            className="text-[11px] font-medium tracking-wider"
+            linkClassName="text-[11px] font-medium tracking-wider"
+          />
           {/* Right: Contact + email */}
           <div className="flex items-center gap-4">
             <span className="hidden sm:block text-[11px] text-white/50 font-medium tracking-wider">
@@ -392,10 +393,10 @@ const SiteHeader = () => {
             <li className="text-white/15">|</li>
 
             <li>
-              <CategoryDropdown label="Containers & Lids" href="/products/containers-lids" width="w-72">
+              <CategoryDropdown label="Containers & Lids" href="/products/containers-lids" width="w-80">
                 <DropdownLinks
                   links={[
-                    ["Glass Vacuum Containers", "/products/glass-containers"],
+                    ["Vacuum Glass Containers", "/products/glass-containers"],
                     ["Vacuum sealer for Glass Jar", "/products/glass-jar-sealer"],
                     ["Vacuum Acrylic Lids", "/products/acrylic-lids"],
                     ["Stainless Steel Vacuum Containers", "/products/stainless-containers"],
@@ -424,14 +425,12 @@ const SiteHeader = () => {
             <li className="text-white/15">|</li>
 
             <li>
-              <CategoryDropdown label="Sous Vide" href="/products/sous-vide" width="w-64">
-                <DropdownLinks
-                  links={[
-                    ["Sous Vide Circulators", "/products/sous-vide#circulators"],
-                    ["Sous Vide Containers", "/products/sous-vide#containers"],
-                  ]}
-                />
-              </CategoryDropdown>
+              <Link
+                href="/products/sous-vide"
+                className="flex items-center text-[10px] font-bold tracking-[0.12em] uppercase py-3 text-white hover:text-secondary transition-colors"
+              >
+                Sous Vide
+              </Link>
             </li>
             <li className="text-white/15">|</li>
 

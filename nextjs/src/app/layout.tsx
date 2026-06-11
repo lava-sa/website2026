@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Outfit } from "next/font/google";
 import "./globals.css";
+import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
 
 const montserrat = Montserrat({
     variable: "--font-montserrat",
@@ -97,7 +98,7 @@ const localBusinessSchema = {
     "image": "https://www.lava-sa.com/images/headers/lava-sa-vacuum-sealers-V300-header-pick-1250.jpg",
     "description":
         "Lava South Africa is the official local distributor of German-engineered la.va vacuum sealers since 2007. Chamber & external machines, bags, rolls, containers, sous-vide and spare parts for home cooks, hunters, butchers and food industry.",
-    "telephone": "+27721605556",
+    "telephone": [MAIN_PHONE.tel, ANNEKE_PHONE.tel],
     "email": "info@lava-sa.com",
     "priceRange": "R2,500–R70,000",
     "currenciesAccepted": "ZAR",

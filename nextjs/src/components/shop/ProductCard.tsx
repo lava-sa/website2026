@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Award } from "lucide-react";
-import { formatPrice, stripHtml } from "@/lib/products";
+import { formatPrice, getDiscountPercent, stripHtml } from "@/lib/products";
 import ProductCatalogImage from "@/components/shop/ProductCatalogImage";
-import { calculatePointsEarned, calculatePointValue } from "@/lib/rewards-config";
+import { calculatePointsEarned } from "@/lib/rewards-config";
 import type { Product, StockStatus } from "@/types/product";
 
 const STOCK_LABELS: Record<StockStatus, { label: string; className: string }> = {
@@ -16,11 +16,21 @@ interface Props {
   product: Product;
 }
 
+function getPromoBadge(product: Product): { label: string; className: string } | null {
+  const tags = product.tags ?? [];
+  if (tags.includes("clearance") || tags.includes("discontinued") || tags.includes("limited-stock")) {
+    return { label: "Clearance", className: "bg-amber-500 text-white" };
+  }
+  const pct = getDiscountPercent(product);
+  if (pct > 0) return { label: `${pct}% off`, className: "bg-secondary text-white" };
+  return null;
+}
+
 export default function ProductCard({ product }: Props) {
   const stock = STOCK_LABELS[product.stock_status] ?? STOCK_LABELS.on_order;
   const href = `/products/${product.slug}`;
   const points = calculatePointsEarned(product.sale_price || product.regular_price);
-  const pointsRandValue = calculatePointValue(points);
+  const promoBadge = getPromoBadge(product);
 
   return (
     <div
@@ -40,6 +50,11 @@ export default function ProductCard({ product }: Props) {
           {product.is_featured && (
             <span className="pointer-events-none absolute top-3 left-3 z-10 bg-secondary text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1">
               Most Popular
+            </span>
+          )}
+          {promoBadge && (
+            <span className={`pointer-events-none absolute top-3 right-3 z-10 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 ${promoBadge.className}`}>
+              {promoBadge.label}
             </span>
           )}
           <div className="card-hover-overlay pointer-events-none z-[5]" aria-hidden="true">

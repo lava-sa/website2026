@@ -1,7 +1,6 @@
 const stats = [
   { value: "40+",       label: "Years of German Engineering" },
   { value: "350k+",     label: "Customers Worldwide" },
-  { value: "2-Year",    label: "Machine Warranty" },
   { value: "Since '07", label: "Exclusive SA Distributor" },
 ];
 

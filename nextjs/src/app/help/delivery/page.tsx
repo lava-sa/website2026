@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Truck, Clock, MapPin, Phone, Mail, AlertTriangle, CheckCircle, Package } from "lucide-react";
+import PhoneNumbers from "@/components/layout/PhoneNumbers";
 import {
   SHIPPING_GAUTENG_EX_VAT,
   SHIPPING_INCL_GAUTENG,
@@ -149,14 +150,14 @@ export default function DeliveryPage() {
 
           <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Contact Us About a Delivery</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <a href="tel:+27721605556" className="flex items-center gap-3 border border-border bg-surface px-4 py-4 hover:border-primary transition-all">
+            <div className="flex items-center gap-3 border border-border bg-surface px-4 py-4">
               <Phone className="h-5 w-5 text-secondary shrink-0" />
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-copy-muted">Call</p>
-                <p className="font-bold text-primary">+27 72 160 5556</p>
-                <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
+                <PhoneNumbers layout="stacked" linkClassName="font-bold text-primary hover:text-secondary" />
+                <p className="text-xs text-copy-muted mt-1">Mon–Fri 09:00–17:00</p>
               </div>
-            </a>
+            </div>
             <a href="mailto:info@lava-sa.com" className="flex items-center gap-3 border border-border bg-surface px-4 py-4 hover:border-primary transition-all">
               <Mail className="h-5 w-5 text-secondary shrink-0" />
               <div>

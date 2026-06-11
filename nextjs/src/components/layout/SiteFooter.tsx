@@ -13,6 +13,7 @@ import {
   Cookie,
 } from "lucide-react";
 import { clearConsent } from "@/lib/cookie-consent";
+import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
 import MailingListSignup from "@/components/common/MailingListSignup";
 
 const SiteFooter = () => {
@@ -93,9 +94,15 @@ const SiteFooter = () => {
                 <span className="text-white/70">5 Stirling Road, Bryanston,<br />Johannesburg, 2191</span>
               </li>
               <li>
-                <Link href="tel:+27721605556" className="flex items-center gap-3 text-white/70 hover:text-white transition-colors">
+                <Link href={`tel:${MAIN_PHONE.tel}`} className="flex items-center gap-3 text-white/70 hover:text-white transition-colors">
                   <Phone className="h-5 w-5 shrink-0 text-secondary" />
-                  <span>+27 (0)72 160 5556</span>
+                  <span>{MAIN_PHONE.displayLocal}</span>
+                </Link>
+              </li>
+              <li>
+                <Link href={`tel:${ANNEKE_PHONE.tel}`} className="flex items-center gap-3 text-white/70 hover:text-white transition-colors">
+                  <Phone className="h-5 w-5 shrink-0 text-secondary" />
+                  <span>{ANNEKE_PHONE.displayLocal} (Anneke)</span>
                 </Link>
               </li>
               <li>

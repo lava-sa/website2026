@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getProductsByCategory } from "@/lib/products";
+import { getClearanceProducts, getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Special Offers & Promotions",
   description:
-    "Watch this page for the latest LAVA South Africa promotions. We regularly run special offers to coincide with trade shows, hunting season, and local events.",
-};
+    "LAVA South Africa special offers and clearance — discounted butchery accessories, limited-stock machines and seasonal promotions. One product, one price, nationwide delivery.",
+  path: "/products/special-offers",
+});
 
 export const revalidate = 3600;
 
@@ -32,8 +33,12 @@ const UPCOMING_EVENTS = [
 
 export default async function SpecialOffersPage() {
   let products: Product[] = [];
+  let clearance: Product[] = [];
   try {
-    products = await getProductsByCategory("special-offers");
+    [products, clearance] = await Promise.all([
+      getProductsByCategory("special-offers"),
+      getClearanceProducts(),
+    ]);
   } catch {
     // Supabase unavailable — show content without products
   }
@@ -63,6 +68,14 @@ export default async function SpecialOffersPage() {
             check back often — you won&apos;t want to miss out.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
+            {clearance.length > 0 && (
+              <a
+                href="#clearance"
+                className="inline-block bg-secondary text-white font-bold px-6 py-3 hover:bg-secondary/90 transition-colors"
+              >
+                View Clearance
+              </a>
+            )}
             <a
               href="#current-offers"
               className="inline-block bg-secondary text-white font-bold px-6 py-3 hover:bg-secondary/90 transition-colors"
@@ -94,8 +107,43 @@ export default async function SpecialOffersPage() {
         </div>
       </div>
 
+      {/* ── Clearance (tagged or on-sale products — same PDP URLs as main catalog) ─ */}
+      <section id="clearance" className="py-20 bg-surface border-b border-border scroll-mt-24">
+        <div className="section-container">
+          <div className="mb-10">
+            <p className="overline mb-2">Limited stock &amp; reduced prices</p>
+            <h2 className="text-3xl font-bold text-primary">Clearance</h2>
+            <p className="mt-3 text-copy-muted max-w-2xl">
+              Discounted butchery accessories, discontinued models and other reduced items.
+              Each product links to its main product page — no duplicate listings.
+            </p>
+          </div>
+
+          {clearance.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {clearance.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          ) : (
+            <div className="border border-dashed border-border rounded-none p-12 text-center bg-white">
+              <p className="font-bold text-primary text-lg mb-2">No clearance items right now</p>
+              <p className="text-copy-muted max-w-md mx-auto">
+                Check back soon — or browse our full butchery range while promotions are being updated.
+              </p>
+              <Link
+                href="/products/butchery-accessories"
+                className="inline-block mt-6 bg-primary text-white font-bold px-6 py-3 hover:bg-primary/90 transition-colors"
+              >
+                Browse Butchery Accessories
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* ── Current offers / products ─────────────────────────────────────────── */}
-      <section id="current-offers" className="py-20">
+      <section id="current-offers" className="py-20 scroll-mt-24">
         <div className="section-container">
           <div className="mb-10">
             <p className="overline mb-2">On sale now</p>

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
+import PhoneNumbers from "@/components/layout/PhoneNumbers";
 
 const ContactMapSection = () => {
   return (
@@ -52,8 +53,8 @@ const ContactMapSection = () => {
                   <Phone className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-black uppercase tracking-widest text-secondary mb-1">Phone Number</h3>
-                  <a href="tel:+27721605556" className="text-sm text-primary hover:text-secondary transition-colors font-semibold">+27 72 160 5556</a>
+                  <h3 className="text-xs font-black uppercase tracking-widest text-secondary mb-1">Phone Numbers</h3>
+                  <PhoneNumbers layout="stacked" linkClassName="text-sm text-primary hover:text-secondary font-semibold" />
                 </div>
               </div>
 

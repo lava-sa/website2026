@@ -7,6 +7,7 @@ import { GoogleGenAI, Modality } from "@google/genai";
 import type { Session } from "@google/genai";
 import { useCart } from "@/lib/cart-context";
 import { buildJanetKnowledgePromptBlock } from "@/lib/janet-knowledge";
+import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types & Prompts
@@ -14,6 +15,7 @@ import { buildJanetKnowledgePromptBlock } from "@/lib/janet-knowledge";
 type SessionStatus = "idle" | "connecting" | "active" | "ended" | "error";
 
 const MACHINE_SPECS = [
+  { name: "V.100 Premium", price: "R6,495", suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "No", bestFor: "Budget home use (limited stock — discontinued model)" },
   { name: "V.100 Premium X", price: "R11,000", suction: "35 ltr/min", maxVacuum: "-0.94 bar", width: "340 mm", seal: "Double", auto: "No", bestFor: "Occasional home use" },
   { name: "V.300 Premium X", price: "R13,500", suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "Yes", bestFor: "Regular home / hunting" },
   { name: "V.300 Black",     price: "R14,200", suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "Yes", bestFor: "Style-conscious users" },
@@ -73,7 +75,7 @@ SELLING & add_to_cart
 
 LEAD CAPTURE — NATURAL, NOT ROBOTIC
 - Capture details as they come up in conversation using capture_contact (all fields optional, send whatever you just learned): firstName, lastName, phone, email, industry.
-- If they are interested but not buying today, offer a callback naturally: "Would you like Anneke to give you a call? I can take a few details, or pop you over to our contact page." 
+- If they are interested but not buying today, offer a callback naturally: "Would you like Anneke to give you a call? I can take a few details, or pop you over to our contact page." Office: ${MAIN_PHONE.display}. Anneke direct: ${ANNEKE_PHONE.display}. 
   • If they want to leave details by voice: ask for their phone number (and surname if natural), confirm once, then call capture_contact with those fields.
   • If they'd rather fill it in themselves: use navigate_to with /contact and tell them the form is right there.
 - If they already added to cart, don't collect phone/email — checkout handles it. Just confirm the next step warmly.

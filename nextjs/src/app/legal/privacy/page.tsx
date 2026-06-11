@@ -34,6 +34,7 @@ export default function PrivacyPage() {
               ["Address",       "5 Stirling Road, Bryanston, Sandton 2191"],
               ["Email",         "info@lava-sa.com"],
               ["Telephone",     "+27 (0)72 160 5556"],
+              ["Anneke",        "+27 (0)79 512 6771"],
               ["Website",       "www.lava-sa.com"],
             ]} />
           </Section>
@@ -197,7 +198,8 @@ function LegalFooter() {
         Privacy questions? Contact{" "}
         <a href="mailto:info@lava-sa.com" className="text-primary font-semibold">info@lava-sa.com</a>
         {" "}or call{" "}
-        <a href="tel:+27721605556" className="text-primary font-semibold">+27 72 160 5556</a>.
+        <a href="tel:+27721605556" className="text-primary font-semibold">+27 (0)72 160 5556</a> or{" "}
+        <a href="tel:+27795126771" className="text-primary font-semibold">+27 (0)79 512 6771 (Anneke)</a>.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
         {[

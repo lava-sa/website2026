@@ -63,7 +63,7 @@ const StaticHero = () => {
             {[
               { value: "40+",    label: "Years German Engineering" },
               { value: "350k+",  label: "Customers Worldwide" },
-              { value: "2-Year", label: "Machine Warranty" },
+              { value: "Since '07", label: "Exclusive SA Distributor" },
             ].map((s) => (
               <div key={s.label}>
                 <p className="font-heading text-2xl font-bold text-on-dark-muted">{s.value}</p>

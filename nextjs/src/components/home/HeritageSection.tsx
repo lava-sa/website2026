@@ -63,7 +63,6 @@ const HeritageSection = () => {
               {[
                 "Made in Germany · Since 1982",
                 "Exclusive SA Distributor · 2007",
-                "2-Year Machine Warranty",
                 "350,000+ Customers Worldwide",
               ].map((c) => (
                 <div
