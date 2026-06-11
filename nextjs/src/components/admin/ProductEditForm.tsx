@@ -8,6 +8,7 @@ import type { StockStatus } from "@/types/product";
 import ImageUploader from "@/components/admin/ImageUploader";
 import HtmlEditor from "@/components/admin/HtmlEditor";
 import MachineContentEditor from "@/components/admin/MachineContentEditor";
+import MachineBenefitsEditor from "@/components/admin/MachineBenefitsEditor";
 import { parseFunnelConfig, type FunnelStepConfig } from "@/lib/funnel";
 import { generateSlug } from "@/lib/slug";
 import {
@@ -15,6 +16,11 @@ import {
   machineContentToSpecs,
   type MachineContentForm,
 } from "@/lib/machine-content-admin";
+import {
+  parseMachineBenefitsFromSpecs,
+  machineBenefitsToSpecs,
+  type MachineBenefitsConfig,
+} from "@/lib/machine-benefits";
 
 type Category = { id: string; name: string; slug: string };
 type ProductChoice = { id: string; name: string; slug: string; categories?: { name?: string } | null };
@@ -70,6 +76,14 @@ export default function ProductEditForm({
   const [machineContent, setMachineContent] = useState<MachineContentForm>(() =>
     machineContentFromSpecs(product.specs ?? {})
   );
+  const [machineBenefits, setMachineBenefits] = useState<MachineBenefitsConfig>(() =>
+    parseMachineBenefitsFromSpecs(product.specs ?? {})
+  );
+  const primaryImageUrl =
+    product.primary_image_url ??
+    product.product_images?.find((img: { is_primary?: boolean }) => img.is_primary)?.url ??
+    product.product_images?.[0]?.url ??
+    null;
 
   function applyMarkdown(percent: 10 | 15 | 20 | 25) {
     const regular = Number(form.regular_price);
@@ -163,7 +177,10 @@ export default function ProductEditForm({
     setSaving(true);
     setError("");
 
-    const baseSpecs = machineContentToSpecs(product.specs ?? {}, machineContent);
+    const baseSpecs = machineBenefitsToSpecs(
+      machineContentToSpecs(product.specs ?? {}, machineContent),
+      machineBenefits
+    );
 
     const payload = {
       ...form,
@@ -341,6 +358,24 @@ export default function ProductEditForm({
                   value={machineContent}
                   onChange={(value) => {
                     setMachineContent(value);
+                    setSaved(false);
+                  }}
+                />
+              </section>
+            )}
+
+            {(categories.find((c) => c.id === form.category_id)?.slug === "vacuum-machines" ||
+              isVacuumMachineInitial) && (
+              <section className="bg-white border border-gray-200 p-6">
+                <h2 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wide">
+                  Benefit Showcase Sections
+                </h2>
+                <MachineBenefitsEditor
+                  value={machineBenefits}
+                  productSlug={form.slug.trim() || product.slug}
+                  primaryImageUrl={primaryImageUrl}
+                  onChange={(value) => {
+                    setMachineBenefits(value);
                     setSaved(false);
                   }}
                 />

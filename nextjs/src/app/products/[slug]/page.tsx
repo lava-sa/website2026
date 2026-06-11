@@ -694,8 +694,10 @@ export default async function ProductDetailPage({
       ════════════════════════════════════════════════════════════════ */}
       {isVacuumMachine && (
         <MachineBenefitsShowcase
-          machineImageSrc={images[0]?.url ?? product.primary_image_url}
+          productSlug={product.slug}
+          primaryImageUrl={images[0]?.url ?? product.primary_image_url}
           machineName={product.name}
+          specs={product.specs}
         />
       )}
 
