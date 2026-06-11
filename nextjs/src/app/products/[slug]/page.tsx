@@ -951,19 +951,6 @@ export default async function ProductDetailPage({
       )}
 
       {/* ═══════════════════════════════════════════════════════════════
-          Bottom purchase bar (Star Aesthetic style)
-      ════════════════════════════════════════════════════════════════ */}
-      {!isOnOrder && (
-        <ProductBottomPurchase
-          product={product}
-          price={price}
-          image={images[0]?.url ?? product.primary_image_url}
-          waUrl={waUrl}
-          funnelSlug={funnelConfig.enabled ? product.slug : undefined}
-        />
-      )}
-
-      {/* ═══════════════════════════════════════════════════════════════
           SECTION 7 — Related Machines
       ════════════════════════════════════════════════════════════════ */}
       {related.length > 0 && (
@@ -978,6 +965,26 @@ export default async function ProductDetailPage({
             </div>
           </div>
         </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          Bottom purchase bar — gold mini-cart (Star Aesthetic style)
+      ════════════════════════════════════════════════════════════════ */}
+      {!isOnOrder && (
+        <ProductBottomPurchase
+          product={product}
+          price={price}
+          image={images[0]?.url ?? product.primary_image_url}
+          funnelSlug={funnelConfig.enabled ? product.slug : undefined}
+          reviews={
+            productReviews
+              ? {
+                  average_rating: productReviews.average_rating,
+                  total_reviews: productReviews.total_reviews,
+                }
+              : null
+          }
+        />
       )}
 
     </main>
