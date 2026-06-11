@@ -121,17 +121,33 @@ export async function getAllProductSlugs(): Promise<string[]> {
   return (data ?? []).map((p) => p.slug);
 }
 
+/** Commercial / industrial tier — curated related-machine pool (show 3 of 4, excluding current) */
+export const INDUSTRIAL_RELATED_SLUGS = [
+  "v300-premium-x",
+  "v400-premium",
+  "v500-premium",
+  "v500-premium-xxl",
+] as const;
+
+export type IndustrialRelatedSlug = (typeof INDUSTRIAL_RELATED_SLUGS)[number];
+
+export function isIndustrialRelatedMachine(slug: string): slug is IndustrialRelatedSlug {
+  return (INDUSTRIAL_RELATED_SLUGS as readonly string[]).includes(slug);
+}
+
+const RELATED_PRODUCT_SELECT = `
+  id, name, slug, short_description, regular_price, sale_price,
+  stock_status, primary_image_url, is_featured, sort_order,
+  categories!inner ( slug )
+`;
+
 /** Related products — same category, excluding current slug */
 export async function getRelatedProducts(categorySlug: string, excludeSlug: string, limit = 3): Promise<Product[]> {
   const supabase = getClient();
 
   const { data, error } = await supabase
     .from("products")
-    .select(`
-      id, name, slug, short_description, regular_price, sale_price,
-      stock_status, primary_image_url, is_featured, sort_order,
-      categories!inner ( slug )
-    `)
+    .select(RELATED_PRODUCT_SELECT)
     .eq("categories.slug", categorySlug)
     .eq("is_published", true)
     .neq("slug", excludeSlug)
@@ -140,6 +156,29 @@ export async function getRelatedProducts(categorySlug: string, excludeSlug: stri
 
   if (error) throw new Error(`getRelatedProducts: ${error.message}`);
   return (data ?? []) as unknown as Product[];
+}
+
+/** Industrial machine PDPs — other machines from the curated pool only */
+export async function getIndustrialRelatedProducts(
+  excludeSlug: string,
+  limit = 3
+): Promise<Product[]> {
+  const slugs = INDUSTRIAL_RELATED_SLUGS.filter((s) => s !== excludeSlug).slice(0, limit);
+  if (slugs.length === 0) return [];
+
+  const supabase = getClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select(RELATED_PRODUCT_SELECT)
+    .in("slug", [...slugs])
+    .eq("is_published", true);
+
+  if (error) throw new Error(`getIndustrialRelatedProducts: ${error.message}`);
+
+  const bySlug = new Map((data ?? []).map((p) => [p.slug as string, p]));
+  return slugs
+    .map((s) => bySlug.get(s))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p)) as unknown as Product[];
 }
 
 /** Strip HTML tags + collapse whitespace — for meta tags, JSON-LD, card snippets. */

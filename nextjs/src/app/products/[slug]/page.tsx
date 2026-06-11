@@ -10,6 +10,8 @@ import {
 import {
   getProductBySlug,
   getRelatedProducts,
+  getIndustrialRelatedProducts,
+  isIndustrialRelatedMachine,
   getAllProductSlugs,
   getProductsByCategory,
   formatPrice,
@@ -204,7 +206,9 @@ export default async function ProductDetailPage({
       if (redirected) permanentRedirect(`/products/${redirected}`);
     }
     if (product?.categories) {
-      related = await getRelatedProducts(product.categories.slug, slug, 3);
+      related = isIndustrialRelatedMachine(slug)
+        ? await getIndustrialRelatedProducts(slug, 3)
+        : await getRelatedProducts(product.categories.slug, slug, 3);
     }
   } catch { /* DB not ready */ }
 
@@ -335,11 +339,13 @@ export default async function ProductDetailPage({
         }
       : null);
   const productHighlights = productReviews ? null : getProductHighlights(product);
-  const relatedHeading = isVacuumMachine
-    ? "Related Machines"
-    : product.categories?.name
-      ? `More in ${product.categories.name}`
-      : "Related Products";
+  const relatedHeading = isIndustrialRelatedMachine(slug)
+    ? "Related Industrial Machines"
+    : isVacuumMachine
+      ? "Related Machines"
+      : product.categories?.name
+        ? `More in ${product.categories.name}`
+        : "Related Products";
 
   const prodLd = productSchema(product, productReviews);
   const crumbLd = breadcrumbSchema([
