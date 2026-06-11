@@ -14,6 +14,7 @@ import {
   isIndustrialRelatedMachine,
   getAllProductSlugs,
   getProductsByCategory,
+  excludeOutOfStock,
   formatPrice,
   sortImages,
   stripHtml,
@@ -271,10 +272,10 @@ export default async function ProductDetailPage({
         getProductsByCategory("vacuum-rolls"),
       ]);
       machineMaxWidthCm = getMachineMaxWidthCm(specs.seal_width as string | undefined);
-      allCompatibleBags = allBags
+      allCompatibleBags = excludeOutOfStock(allBags)
         .filter((b) => getConsumableWidthCm(b.name) <= machineMaxWidthCm)
         .sort((a, b) => getConsumableWidthCm(a.name) - getConsumableWidthCm(b.name));
-      allCompatibleRolls = allRolls
+      allCompatibleRolls = excludeOutOfStock(allRolls)
         .filter((r) => getConsumableWidthCm(r.name) <= machineMaxWidthCm)
         .sort((a, b) => getConsumableWidthCm(a.name) - getConsumableWidthCm(b.name));
 

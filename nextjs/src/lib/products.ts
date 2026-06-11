@@ -18,7 +18,7 @@ function getClient() {
   });
 }
 
-/** All published products in a category slug, with images */
+/** All published products in a category slug, with images (includes out-of-stock for category browse) */
 export async function getProductsByCategory(categorySlug: string): Promise<Product[]> {
   const supabase = getClient();
 
@@ -64,6 +64,22 @@ export function getDiscountPercent(product: Pick<Product, "regular_price" | "sal
   return Math.round((1 - product.sale_price / product.regular_price) * 100);
 }
 
+/**
+ * Out-of-stock items are hidden from curated listings (homepage, related products,
+ * machine cross-sells). Category browse pages still show all published products.
+ */
+export function isAvailableForCuratedListing(
+  product: Pick<Product, "stock_status">
+): boolean {
+  return product.stock_status !== "out_of_stock";
+}
+
+export function excludeOutOfStock<T extends Pick<Product, "stock_status">>(
+  products: T[]
+): T[] {
+  return products.filter(isAvailableForCuratedListing);
+}
+
 /** All featured products for homepage/marketing sections */
 export async function getFeaturedProducts(): Promise<Product[]> {
   const supabase = getClient();
@@ -80,6 +96,7 @@ export async function getFeaturedProducts(): Promise<Product[]> {
     `)
     .eq("is_published", true)
     .eq("is_featured", true)
+    .neq("stock_status", "out_of_stock")
     .order("sort_order", { ascending: true })
     .order("updated_at", { ascending: false });
 
@@ -141,7 +158,7 @@ const RELATED_PRODUCT_SELECT = `
   categories!inner ( slug )
 `;
 
-/** Related products — same category, excluding current slug */
+/** Related products — same category, excluding current slug and out-of-stock */
 export async function getRelatedProducts(categorySlug: string, excludeSlug: string, limit = 3): Promise<Product[]> {
   const supabase = getClient();
 
@@ -150,6 +167,7 @@ export async function getRelatedProducts(categorySlug: string, excludeSlug: stri
     .select(RELATED_PRODUCT_SELECT)
     .eq("categories.slug", categorySlug)
     .eq("is_published", true)
+    .neq("stock_status", "out_of_stock")
     .neq("slug", excludeSlug)
     .order("sort_order", { ascending: true })
     .limit(limit);
@@ -171,14 +189,16 @@ export async function getIndustrialRelatedProducts(
     .from("products")
     .select(RELATED_PRODUCT_SELECT)
     .in("slug", [...slugs])
-    .eq("is_published", true);
+    .eq("is_published", true)
+    .neq("stock_status", "out_of_stock");
 
   if (error) throw new Error(`getIndustrialRelatedProducts: ${error.message}`);
 
   const bySlug = new Map((data ?? []).map((p) => [p.slug as string, p]));
   return slugs
     .map((s) => bySlug.get(s))
-    .filter((p): p is NonNullable<typeof p> => Boolean(p)) as unknown as Product[];
+    .filter((p): p is NonNullable<typeof p> => Boolean(p))
+    .slice(0, limit) as unknown as Product[];
 }
 
 /** Strip HTML tags + collapse whitespace — for meta tags, JSON-LD, card snippets. */
