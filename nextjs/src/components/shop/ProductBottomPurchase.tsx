@@ -31,6 +31,8 @@ type Props = {
   image: string | null;
   funnelSlug?: string;
   reviews?: ReviewsSummary | null;
+  /** mid = after industries; bottom = end of page (default) */
+  placement?: "mid" | "bottom";
 };
 
 export default function ProductBottomPurchase({
@@ -39,6 +41,7 @@ export default function ProductBottomPurchase({
   image,
   funnelSlug,
   reviews,
+  placement = "bottom",
 }: Props) {
   const { addItem, isHydrated } = useCart();
   const router = useRouter();
@@ -69,23 +72,21 @@ export default function ProductBottomPurchase({
 
   const roundedRating = reviews ? Math.round(reviews.average_rating) : 0;
   const hasSale = product.sale_price != null && product.sale_price < product.regular_price;
+  const sectionId = placement === "mid" ? "buy-now-mid" : "buy-now";
+  const headingId = placement === "mid" ? "mid-purchase-heading" : "bottom-purchase-heading";
 
   return (
     <section
-      id="buy-now"
-      className="relative py-12 sm:py-14 bg-gold-light/50 border-t-2 border-secondary"
-      aria-labelledby="bottom-purchase-heading"
+      id={sectionId}
+      className="relative py-12 sm:py-14 bg-gold-light/50"
+      aria-labelledby={headingId}
     >
-      <div className="absolute inset-x-0 top-0 h-px bg-secondary/40" />
-
       <div className="section-container">
         <p className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-primary mb-5">
           Ready to order?
         </p>
 
         <div className="max-w-5xl mx-auto bg-white border border-secondary/30 shadow-[0_12px_48px_rgba(0,0,0,0.1)] overflow-hidden">
-          <div className="h-1 bg-secondary w-full" />
-
           <div className="p-5 sm:p-6 lg:p-7">
             <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-8">
               {/* Thumbnail */}
@@ -109,7 +110,7 @@ export default function ProductBottomPurchase({
                   </p>
                 )}
                 <h2
-                  id="bottom-purchase-heading"
+                  id={headingId}
                   className="text-xl sm:text-2xl font-black text-primary leading-tight"
                 >
                   {product.name}
@@ -230,6 +231,8 @@ export default function ProductBottomPurchase({
               </div>
             </div>
           </div>
+
+          <div className="h-0.5 bg-secondary w-full" />
         </div>
 
         <p className="text-center mt-4 text-xs text-copy-muted">

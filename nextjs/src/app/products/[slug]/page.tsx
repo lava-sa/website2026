@@ -714,6 +714,24 @@ export default async function ProductDetailPage({
       ════════════════════════════════════════════════════════════════ */}
       <IndustriesSection industryKeys={product.industries ?? []} />
 
+      {!isOnOrder && (
+        <ProductBottomPurchase
+          placement="mid"
+          product={product}
+          price={price}
+          image={images[0]?.url ?? product.primary_image_url}
+          funnelSlug={funnelConfig.enabled ? product.slug : undefined}
+          reviews={
+            productReviews
+              ? {
+                  average_rating: productReviews.average_rating,
+                  total_reviews: productReviews.total_reviews,
+                }
+              : null
+          }
+        />
+      )}
+
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 5 — Compatible Bags & Rolls (machines only)
       ════════════════════════════════════════════════════════════════ */}
@@ -980,6 +998,7 @@ export default async function ProductDetailPage({
       ════════════════════════════════════════════════════════════════ */}
       {!isOnOrder && (
         <ProductBottomPurchase
+          placement="bottom"
           product={product}
           price={price}
           image={images[0]?.url ?? product.primary_image_url}
