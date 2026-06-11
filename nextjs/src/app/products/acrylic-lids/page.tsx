@@ -11,6 +11,17 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
+/** All five universal lid sizes — smallest to largest */
+const LID_SLUG_ORDER = [
+  "acrylic-container-lid-47-112mm",
+  "acrylic-container-lid-76-143mm",
+  "acrylic-container-lid-160-203mm",
+  "acrylic-container-lid-204-237mm",
+  "acrylic-container-lid-238-280mm",
+] as const;
+
+const LID_SLUGS = new Set<string>(LID_SLUG_ORDER);
+
 export default async function AcrylicLidsPage() {
   let products: Product[] = [];
 
@@ -21,7 +32,17 @@ export default async function AcrylicLidsPage() {
     // Supabase unavailable
   }
 
-  const acrylicLids = products.filter((p) => p.tags?.includes("lid") && (p.tags?.includes("acrylic") || p.name.includes("Acrylic")));
+  const acrylicLids = products
+    .filter(
+      (p) =>
+        LID_SLUGS.has(p.slug) ||
+        (p.tags?.includes("lid") && (p.tags?.includes("acrylic") || p.name.includes("Acrylic")))
+    )
+    .sort((a, b) => {
+      const ai = LID_SLUG_ORDER.indexOf(a.slug as (typeof LID_SLUG_ORDER)[number]);
+      const bi = LID_SLUG_ORDER.indexOf(b.slug as (typeof LID_SLUG_ORDER)[number]);
+      return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+    });
 
   return (
     <main className="min-h-screen bg-white">
@@ -56,8 +77,8 @@ export default async function AcrylicLidsPage() {
             <p className="overline mb-2">Replacement & Universal</p>
             <h2 className="text-3xl font-bold text-primary text-balance">Acrylic Vacuum Lids</h2>
             <p className="mt-3 text-copy-muted max-w-lg">
-              Lost or damaged a lid? Or simply want to vacuum-seal your favorite kitchenware. 
-              These premium lids include the integrated LAVA vacuum valve.
+              Five sizes from small jars to large bowls — seal almost any container with a smooth,
+              flat rim. Each lid includes the integrated LAVA vacuum valve.
             </p>
           </div>
 
@@ -67,7 +88,9 @@ export default async function AcrylicLidsPage() {
             </div>
           ) : (
             <p className="text-copy-muted py-12 text-center bg-gray-50 border border-dashed">
-              Universal lids are being updated — please check back shortly.
+              Run{" "}
+              <code className="text-xs bg-surface px-1">024_universal_lids_small_sizes.sql</code>{" "}
+              in Supabase if you have not already, then refresh this page.
             </p>
           )}
         </div>

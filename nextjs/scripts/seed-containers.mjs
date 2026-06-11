@@ -140,7 +140,29 @@ const products = [
       { url: `${C}/lava-3-piece-es-line-stainless-steel-vacuum-container-set-complete-professional-storage-system-vl0078-a.webp`, alt: "LAVA ES-Line Set — detail" },
     ],
   },
-  // ── Lids ────────────────────────────────────────────────────────────────────
+  // ── Lids (5 universal sizes — SA prices: R850 ÷ €27.95 ≈ 30.41, rounded to R10) ──
+  {
+    sku: "VL0180", slug: "acrylic-container-lid-47-112mm",
+    name: "LAVA Universal Vacuum Lid 47–112mm",
+    short_description: "Small universal vacuum lid for jars, cans and bowls 47–112 mm diameter. Includes vacuum valve.",
+    description: `<p>Universal vacuum lid for containers with a rim diameter of <strong>47–112 mm</strong>. Ideal for small jars, cans and bowls.</p>
+<ul><li><strong>Fits:</strong> 47–112 mm diameter</li><li>BPA-free polycarbonate</li><li>Integrated vacuum valve</li><li>Works with all LAVA machines and Easy Pump</li></ul>`,
+    regular_price: 240, stock_status: "in_stock", stock_quantity: 20,
+    is_featured: false, sort_order: 9, tags: ["lid", "acrylic", "universal", "replacement", "47-112mm"],
+    primary_image: `${L}/lava-sa-vacuum-container-acrylic-lid-47-112mm-vl0180.webp`,
+    images: [{ url: `${L}/lava-sa-vacuum-container-acrylic-lid-47-112mm-vl0180.webp`, alt: "LAVA Universal Lid 47-112mm", is_primary: true }],
+  },
+  {
+    sku: "VL0181", slug: "acrylic-container-lid-76-143mm",
+    name: "LAVA Universal Vacuum Lid 76–143mm",
+    short_description: "Medium universal vacuum lid for bowls and preserving jars 76–143 mm diameter. Includes vacuum valve.",
+    description: `<p>Universal vacuum lid for containers with a rim diameter of <strong>76–143 mm</strong>. Ideal for medium bowls and preserving jars.</p>
+<ul><li><strong>Fits:</strong> 76–143 mm diameter</li><li>BPA-free polycarbonate</li><li>Integrated vacuum valve</li><li>Works with all LAVA machines and Easy Pump</li></ul>`,
+    regular_price: 330, stock_status: "in_stock", stock_quantity: 20,
+    is_featured: false, sort_order: 10, tags: ["lid", "acrylic", "universal", "replacement", "76-143mm"],
+    primary_image: `${L}/lava-sa-vacuum-container-acrylic-lid-76-143mm-vl0181.webp`,
+    images: [{ url: `${L}/lava-sa-vacuum-container-acrylic-lid-76-143mm-vl0181.webp`, alt: "LAVA Universal Lid 76-143mm", is_primary: true }],
+  },
   {
     sku: "VL0083", slug: "acrylic-container-lid-160-203mm",
     name: "LAVA Acrylic Container Lid 160–203mm",

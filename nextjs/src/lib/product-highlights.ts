@@ -39,9 +39,9 @@ const CATEGORY_HIGHLIGHTS: Record<string, ProductHighlight[]> = {
     { title: "Long service life", description: "Built to withstand daily use in food production environments." },
   ],
   "acrylic-lids": [
-    { title: "Universal fit", description: "Turn existing bowls and containers into vacuum storage." },
-    { title: "Integrated valve", description: "Seals with the same LAVA hose kit as bags and jars." },
-    { title: "Replacement lids", description: "Lost a lid? Add a vacuum-capable acrylic lid instead." },
+    { title: "Five sizes", description: "From small jars (47 mm) to large bowls (280 mm) — pick the lid that matches your container rim." },
+    { title: "Universal fit", description: "Seal bowls, pots, pans, jars and cans with a smooth flat rim." },
+    { title: "Machine or Easy Pump", description: "Integrated valve works with all LAVA sealers and the rechargeable Easy Pump." },
   ],
   "glass-jar-sealer": [
     { title: "Almost any jar shape", description: "Flex sealer fits round, oval, square or conical twist-off and mason jars up to 106 mm." },
