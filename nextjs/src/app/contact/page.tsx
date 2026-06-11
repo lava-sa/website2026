@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Phone, Mail, MapPin, Clock, Send, Loader2, CheckCircle } from "lucide-react";
 import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
+import { HoneypotField } from "@/components/security/HoneypotField";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 
 const SA_PROVINCES = [
   "Eastern Cape","Free State","Gauteng","KwaZulu-Natal","Limpopo",
@@ -31,9 +33,12 @@ export default function ContactPage() {
   const [form, setForm] = useState({
     name: "", email: "", phone: "", province: "Gauteng",
     enquiry_type: "Product enquiry", callback_time: CALLBACK_TIME_OPTIONS[0], message: "",
+    website: "",
   });
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [errors, setErrors]   = useState<Record<string, string>>({});
   const [status, setStatus]   = useState<"idle" | "sending" | "done" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const set = (field: string) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -50,17 +55,36 @@ export default function ContactPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setErrorMessage("");
     if (!validate()) return;
+
+    const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+    if (siteKey && !turnstileToken) {
+      setErrorMessage("Please complete the security check below.");
+      setStatus("error");
+      return;
+    }
+
     setStatus("sending");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          turnstileToken: turnstileToken || undefined,
+        }),
       });
-      setStatus(res.ok ? "done" : "error");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatus("error");
+        setErrorMessage(data.error ?? "Something went wrong. Please try again.");
+        return;
+      }
+      setStatus("done");
     } catch {
       setStatus("error");
+      setErrorMessage("Something went wrong. Please try again.");
     }
   }
 
@@ -154,7 +178,11 @@ export default function ContactPage() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} noValidate className="space-y-5">
+              <form onSubmit={handleSubmit} noValidate className="relative space-y-5">
+                <HoneypotField
+                  value={form.website}
+                  onChange={(website) => setForm((p) => ({ ...p, website }))}
+                />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <Field label="Your Name" error={errors.name} required>
                     <input type="text" value={form.name} onChange={set("name")}
@@ -189,9 +217,17 @@ export default function ContactPage() {
                     placeholder="Tell us what you need — machine recommendation, order question, warranty claim, etc."
                     className={`${inputCls(errors.message)} resize-none`} />
                 </Field>
-                {status === "error" && (
+                <TurnstileWidget
+                  onToken={setTurnstileToken}
+                  onExpire={() => setTurnstileToken("")}
+                  className="flex justify-start"
+                />
+                {status === "error" && errorMessage && (
                   <p className="text-sm text-red-600 bg-red-50 border border-red-200 px-4 py-3">
-                    Something went wrong. Please try again or call {MAIN_PHONE.displayLocal} or {ANNEKE_PHONE.displayLocal} (Anneke).
+                    {errorMessage}
+                    {!errorMessage.includes("security check") && (
+                      <> Or call {MAIN_PHONE.displayLocal} or {ANNEKE_PHONE.displayLocal} (Anneke).</>
+                    )}
                   </p>
                 )}
                 <button type="submit" disabled={status === "sending"}

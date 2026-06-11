@@ -1,9 +1,25 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
+import {
+  guardFailureResponse,
+  verifyPublicFormSubmission,
+} from "@/lib/security/public-form-guard";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
+
+  const guard = await verifyPublicFormSubmission(request, {
+    turnstileToken: body.turnstileToken,
+    website: body.website,
+    email: body.email,
+    name: body.name,
+  });
+  if (!guard.ok) {
+    const fail = guardFailureResponse(guard);
+    return NextResponse.json(fail.body, { status: fail.status });
+  }
+
   const {
     name,
     email,

@@ -6,6 +6,7 @@ import {
   isSiteAccessExemptPath,
   verifySiteAccessCookie,
 } from "@/lib/site-access";
+import { isGatedWriteApi } from "@/lib/security/public-form-guard";
 
 // Only these hostnames should be indexed by Google
 const PRODUCTION_HOSTS = new Set(["lava-sa.com", "www.lava-sa.com"]);
@@ -40,6 +41,18 @@ export async function middleware(request: NextRequest) {
   }
 
   const preview = isPreviewHost(request);
+
+  // ── Block public write APIs during preview (bots bypass the HTML gate) ───
+  if (
+    isSiteAccessEnabled() &&
+    request.method === "POST" &&
+    isGatedWriteApi(pathname)
+  ) {
+    const accessCookie = request.cookies.get(SITE_ACCESS_COOKIE)?.value;
+    if (!(await verifySiteAccessCookie(accessCookie))) {
+      return NextResponse.json({ error: "Site access required" }, { status: 403 });
+    }
+  }
 
   // ── Site-wide preview password (public site + APIs except webhooks/admin) ─
   if (isSiteAccessEnabled() && !isSiteAccessExemptPath(pathname)) {

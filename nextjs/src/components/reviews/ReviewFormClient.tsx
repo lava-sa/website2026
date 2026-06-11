@@ -13,6 +13,8 @@ import {
   getReviewFormConfig,
   reviewProductField,
 } from "@/lib/review-forms";
+import { HoneypotField } from "@/components/security/HoneypotField";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 
 function StarRating({ value, onChange }: { value: number; onChange: (n: number) => void }) {
   const [hover, setHover] = useState(0);
@@ -61,6 +63,8 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
     answers: emptyAnswers(config.questions),
     permission: false,
   });
+  const [website, setWebsite] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
 
@@ -101,6 +105,13 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
+
+    const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+    if (siteKey && !turnstileToken) {
+      setErrors({ headline: "Please complete the security check below." });
+      return;
+    }
+
     setStatus("sending");
 
     const reviewBody = compileStructuredReview(config.questions, form.answers);
@@ -118,10 +129,17 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
         review: reviewBody,
         reviewCategory: config.variant,
         permission: form.permission,
+        turnstileToken: turnstileToken || undefined,
+        website,
       }),
     });
-    setStatus(res.ok ? "done" : "idle");
-    if (!res.ok) setErrors({ headline: "Something went wrong. Please try again." });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setStatus("idle");
+      setErrors({ headline: data.error ?? "Something went wrong. Please try again." });
+      return;
+    }
+    setStatus("done");
   }
 
   if (status === "done") {
@@ -146,7 +164,8 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-6">
+    <form onSubmit={handleSubmit} noValidate className="relative space-y-6">
+      <HoneypotField value={website} onChange={setWebsite} />
       <div className="bg-primary/5 border-l-4 border-secondary p-4 text-sm text-copy-muted leading-relaxed">
         <p className="font-bold text-primary mb-1">Write for real people — and for search</p>
         <p>
@@ -302,6 +321,12 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
         </label>
         {errors.permission && <p className="text-xs text-red-600 mt-1 ml-7">{errors.permission}</p>}
       </div>
+
+      <TurnstileWidget
+        onToken={setTurnstileToken}
+        onExpire={() => setTurnstileToken("")}
+        className="flex justify-start"
+      />
 
       <button
         type="submit"

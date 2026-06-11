@@ -1,11 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getEmailConfig, getResendClient } from "@/lib/email-config";
+import {
+  guardFailureResponse,
+  verifyPublicFormSubmission,
+} from "@/lib/security/public-form-guard";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, phone, province, enquiry_type, callback_time, message } = await req.json();
+    const body = await req.json();
+    const guard = await verifyPublicFormSubmission(req, {
+      turnstileToken: body.turnstileToken,
+      website: body.website,
+      email: body.email,
+      name: body.name,
+    });
+    if (!guard.ok) {
+      const fail = guardFailureResponse(guard);
+      return NextResponse.json(fail.body, { status: fail.status });
+    }
+
+    const { name, email, phone, province, enquiry_type, callback_time, message } = body;
 
     if (!name || !email || !message) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });

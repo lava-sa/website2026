@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, Loader2, Mail } from "lucide-react";
+import { HoneypotField } from "@/components/security/HoneypotField";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 
 interface Props {
   source: string;
@@ -33,12 +35,24 @@ export default function MailingListSignup({
   const [firstName, setFirstName] = useState("");
   const [interestCategory, setInterestCategory] = useState<InterestValue | "">("");
   const [machineIndustry, setMachineIndustry] = useState("");
+  const [website, setWebsite] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setErrorMessage("");
     if (!email.trim() || !interestCategory) return;
     if (interestCategory === "vacuum_machines" && !machineIndustry.trim()) return;
+
+    const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+    if (siteKey && !turnstileToken) {
+      setErrorMessage("Please complete the security check below.");
+      setStatus("error");
+      return;
+    }
+
     setStatus("sending");
 
     try {
@@ -51,9 +65,17 @@ export default function MailingListSignup({
           source,
           interest_category: interestCategory,
           machine_industry: interestCategory === "vacuum_machines" ? machineIndustry.trim() : null,
+          turnstileToken: turnstileToken || undefined,
+          website,
         }),
       });
-      setStatus(res.ok ? "done" : "error");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatus("error");
+        setErrorMessage(data.error ?? "Could not subscribe right now. Please try again.");
+        return;
+      }
+      setStatus("done");
       if (res.ok) {
         setEmail("");
         setFirstName("");
@@ -83,7 +105,8 @@ export default function MailingListSignup({
           You are on the list. Welcome to LAVA updates.
         </p>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="relative space-y-3">
+          <HoneypotField value={website} onChange={setWebsite} />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <input
               type="text"
@@ -128,8 +151,13 @@ export default function MailingListSignup({
               <div className="sm:col-span-2" />
             )}
           </div>
-          {status === "error" && (
-            <p className="text-xs text-red-600">Could not subscribe right now. Please try again.</p>
+          <TurnstileWidget
+            onToken={setTurnstileToken}
+            onExpire={() => setTurnstileToken("")}
+            className="flex justify-start"
+          />
+          {status === "error" && errorMessage && (
+            <p className="text-xs text-red-600">{errorMessage}</p>
           )}
           <button
             type="submit"
