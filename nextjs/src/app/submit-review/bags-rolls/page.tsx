@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ReviewFormShell from "@/components/reviews/ReviewFormShell";
 import { getReviewFormConfig } from "@/lib/review-forms";
 
-const config = getReviewFormConfig("machines");
+const config = getReviewFormConfig("bags-rolls");
 
 export const metadata: Metadata = {
   title: `${config.pageTitle} — Lava-SA`,
@@ -13,9 +13,9 @@ interface Props {
   searchParams: Promise<{ tab?: string }>;
 }
 
-export default async function SubmitMachineReviewPage({ searchParams }: Props) {
+export default async function SubmitBagsRollsReviewPage({ searchParams }: Props) {
   const params = await searchParams;
   const initialTab: "write" | "video" = params.tab === "video" ? "video" : "write";
 
-  return <ReviewFormShell variant="machines" initialTab={initialTab} />;
+  return <ReviewFormShell variant="bags-rolls" initialTab={initialTab} />;
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
+import CategoryReviewBanner from "@/components/reviews/CategoryReviewBanner";
 
 export const metadata: Metadata = {
   title: "Vacuum Sealer for Glass Jars",
@@ -87,6 +88,8 @@ export default async function GlassJarSealerPage() {
           )}
         </div>
       </section>
+
+      <CategoryReviewBanner categorySlug="containers-lids" />
 
     </main>
   );

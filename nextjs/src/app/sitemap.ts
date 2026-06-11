@@ -44,6 +44,8 @@ const STATIC_ROUTES = [
   "/products/accessories",
   "/rewards",
   "/submit-review",
+  "/submit-review/bags-rolls",
+  "/submit-review/containers",
   "/help/faq",
   "/help/delivery",
   "/help/returns",

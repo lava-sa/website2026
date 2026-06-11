@@ -4,6 +4,7 @@ import ProductCard from "@/components/shop/ProductCard";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
+import CategoryReviewBanner from "@/components/reviews/CategoryReviewBanner";
 import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -128,6 +129,8 @@ export default async function VacuumBagsPage() {
           </div>
         </div>
       </section>
+
+      <CategoryReviewBanner categorySlug="vacuum-bags" />
 
     </main>
   );

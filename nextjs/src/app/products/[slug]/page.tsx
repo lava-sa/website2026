@@ -42,6 +42,7 @@ import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
 import ProductBottomPurchase from "@/components/shop/ProductBottomPurchase";
 import { resolveProductSlugRedirect } from "@/lib/product-redirects";
+import { reviewFormHrefForCategory } from "@/lib/review-forms";
 
 // ── Static params ────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
@@ -964,7 +965,7 @@ export default async function ProductDetailPage({
 
             <div className="text-center">
               <Link
-                href="/submit-review"
+                href={reviewFormHrefForCategory(product.categories?.slug)}
                 className="inline-flex items-center gap-2 border-2 border-primary text-primary font-bold px-8 py-3 hover:bg-primary hover:text-white transition-colors"
               >
                 <Star className="h-4 w-4" /> Leave Your Review

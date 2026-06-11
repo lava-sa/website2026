@@ -7,6 +7,7 @@ import { calculatePointsEarned } from "@/lib/rewards-config";
 import { formatPrice, getProductsByCategory, stripHtml } from "@/lib/products";
 import type { Product } from "@/types/product";
 import JsonLd from "@/components/seo/JsonLd";
+import CategoryReviewBanner from "@/components/reviews/CategoryReviewBanner";
 import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -414,6 +415,12 @@ export default async function SousVidePage() {
           </div>
         </div>
       </section>
+
+      <CategoryReviewBanner
+        categorySlug="sous-vide"
+        title="Using LAVA sous vide gear? Share your experience"
+        description="Tell us how the circulator or accessories perform in your kitchen — detailed reviews help other home cooks and chefs."
+      />
 
     </main>
   );

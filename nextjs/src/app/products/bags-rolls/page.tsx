@@ -2,6 +2,7 @@ import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
 import JsonLd from "@/components/seo/JsonLd";
+import CategoryReviewBanner from "@/components/reviews/CategoryReviewBanner";
 import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -242,6 +243,8 @@ export default async function BagsRollsPage() {
           </div>
         </div>
       </section>
+
+      <CategoryReviewBanner categorySlug="vacuum-bags" />
 
     </main>
   );

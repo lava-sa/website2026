@@ -1,6 +1,7 @@
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
+import CategoryReviewBanner from "@/components/reviews/CategoryReviewBanner";
 import JsonLd from "@/components/seo/JsonLd";
 import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
 
@@ -208,6 +209,8 @@ export default async function ContainersLidsPage() {
           </div>
         </div>
       </section>
+
+      <CategoryReviewBanner categorySlug="containers-lids" />
 
     </main>
   );
