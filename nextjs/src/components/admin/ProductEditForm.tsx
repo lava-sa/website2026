@@ -21,6 +21,7 @@ import {
   machineBenefitsToSpecs,
   type MachineBenefitsConfig,
 } from "@/lib/machine-benefits";
+import { generateProductAiDiscoverability } from "@/lib/product-ai-discoverability";
 
 type Category = { id: string; name: string; slug: string };
 type ProductChoice = { id: string; name: string; slug: string; categories?: { name?: string } | null };
@@ -456,7 +457,36 @@ export default function ProductEditForm({
             </section>
 
             <section className="bg-white border border-gray-200 p-6">
-              <h2 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wide">AI Discoverability</h2>
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <h2 className="font-bold text-gray-900 text-sm uppercase tracking-wide">AI Discoverability</h2>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const generated = generateProductAiDiscoverability({
+                      name: form.name,
+                      slug: form.slug,
+                      short_description: form.short_description,
+                      categorySlug: categorySlug ?? "",
+                      specs: product.specs ?? {},
+                      tags: product.tags,
+                      industries: product.industries,
+                    });
+                    setForm((prev) => ({
+                      ...prev,
+                      ai_summary: generated.ai_summary,
+                      ai_search_terms: generated.ai_search_terms,
+                      ai_use_cases: generated.ai_use_cases,
+                    }));
+                    setSaved(false);
+                  }}
+                  className="text-xs font-bold text-secondary hover:text-primary border border-secondary/40 px-3 py-1.5"
+                >
+                  Auto-fill from product data
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mb-4">
+                Plain-language copy for the &ldquo;Product At a Glance&rdquo; section, highlight cards, and AI search citations. Save after auto-fill.
+              </p>
               <div className="space-y-4">
                 <div>
                   <label className={labelCls}>AI Summary</label>

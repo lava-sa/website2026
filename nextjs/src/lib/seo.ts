@@ -141,9 +141,15 @@ export function productSchema(
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    description: product.short_description
-      ? product.short_description.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
-      : undefined,
+    description: (() => {
+      const fromShort = product.short_description
+        ? product.short_description.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
+        : "";
+      const fromAi = String(
+        (product as { specs?: Record<string, unknown> }).specs?.ai_summary ?? ""
+      ).trim();
+      return fromShort || fromAi || undefined;
+    })(),
     sku: product.sku ?? undefined,
     image: images.length
       ? images

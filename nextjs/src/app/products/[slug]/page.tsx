@@ -44,6 +44,7 @@ import ProductBottomPurchase from "@/components/shop/ProductBottomPurchase";
 import { resolveProductSlugRedirect } from "@/lib/product-redirects";
 import { reviewFormHrefForCategory } from "@/lib/review-forms";
 import { getMachinePdpHeadings } from "@/lib/machine-pdp-headings";
+import { resolveProductAiDiscoverability } from "@/lib/product-ai-discoverability";
 
 // ── Static params ────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
@@ -257,9 +258,18 @@ export default async function ProductDetailPage({
   const isSousVide = product.categories?.slug === "sous-vide";
   const machineContent = isVacuumMachine ? getMachineContent(slug, specs) : null;
   const funnelConfig = parseFunnelConfig(product.specs?.funnel_config);
-  const aiSummary = String(product.specs?.ai_summary ?? "").trim();
-  const aiSearchTerms = String(product.specs?.ai_search_terms ?? "").trim();
-  const aiUseCases = String(product.specs?.ai_use_cases ?? "").trim();
+  const aiFields = resolveProductAiDiscoverability({
+    name: product.name,
+    slug: product.slug,
+    short_description: product.short_description,
+    categorySlug: product.categories?.slug,
+    specs: product.specs,
+    tags: product.tags,
+    industries: product.industries,
+  });
+  const aiSummary = aiFields.ai_summary;
+  const aiSearchTerms = aiFields.ai_search_terms;
+  const aiUseCases = aiFields.ai_use_cases;
 
   // ── Consumables (bags + rolls) — only loaded on machine pages ───────────────
   let compatibleBags: Awaited<ReturnType<typeof getProductsByCategory>> = [];

@@ -1,4 +1,5 @@
 import { stripHtml } from "@/lib/products";
+import { resolveProductAiDiscoverability } from "@/lib/product-ai-discoverability";
 import type { Product } from "@/types/product";
 
 export interface ProductHighlight {
@@ -108,7 +109,16 @@ function highlightsFromDescription(html: string | null | undefined): ProductHigh
 
 /** Three feature / use-case cards for products without verified reviews. */
 export function getProductHighlights(product: Product): ProductHighlight[] {
-  const fromAi = parseAiUseCases(String(product.specs?.ai_use_cases ?? ""));
+  const resolved = resolveProductAiDiscoverability({
+    name: product.name,
+    slug: product.slug,
+    short_description: product.short_description,
+    categorySlug: product.categories?.slug,
+    specs: product.specs,
+    tags: product.tags,
+    industries: product.industries,
+  });
+  const fromAi = parseAiUseCases(resolved.ai_use_cases);
   if (fromAi.length >= 3) return fromAi;
 
   const fromShort = highlightsFromDescription(product.short_description);
