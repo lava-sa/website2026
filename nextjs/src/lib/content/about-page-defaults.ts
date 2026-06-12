@@ -3,7 +3,7 @@ import type { AboutPageContent } from "@/lib/content/site-pages-types";
 /** Full About page structure — editable in /admin/pages/about/edit */
 export const DEFAULT_ABOUT_PAGE: AboutPageContent = {
   heroImage: {
-    src: "/images/homepage/lava-sa-vacuum-sealers-header-pick-001.jpg",
+    src: "/images/headers/lava-sa-vacuum-sealers-header-pick-001.jpg",
     alt: "LAVA South Africa — German vacuum sealers",
   },
   origin: {

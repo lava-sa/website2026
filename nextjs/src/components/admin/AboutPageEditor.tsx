@@ -51,9 +51,8 @@ export default function AboutPageEditor({ content, onChange }: Props) {
   return (
     <div className="space-y-8">
       <div className="border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-        All About page sections are editable here — including images. Use paths under{" "}
-        <strong>public/images/</strong>. Upload new files via FTP or your host file manager, then paste
-        the path below.
+        All About page sections are editable here. Use <strong>Upload image</strong> or{" "}
+        <strong>Browse library</strong> on each image field — no manual paths required.
       </div>
 
       <section className="border border-border bg-white p-6 space-y-4">
@@ -62,6 +61,7 @@ export default function AboutPageEditor({ content, onChange }: Props) {
           label="Hero"
           value={about.heroImage}
           onChange={(heroImage) => patch({ heroImage })}
+          uploadFolder="about"
         />
       </section>
 
@@ -73,6 +73,7 @@ export default function AboutPageEditor({ content, onChange }: Props) {
           label="Section image"
           value={about.origin.image ?? { src: "", alt: "" }}
           showCaptions
+          uploadFolder="about"
           onChange={(image) => patch({ origin: { ...about.origin, image } })}
         />
         <Field label="Quote" value={about.origin.quote.text} onChange={(text) => patch({ origin: { ...about.origin, quote: { ...about.origin.quote, text } } })} multiline />
@@ -131,6 +132,7 @@ export default function AboutPageEditor({ content, onChange }: Props) {
           label="Section image (use a different photo from the Landig family section)"
           value={about.saFounders.image ?? { src: "", alt: "" }}
           showCaptions
+          uploadFolder="about"
           onChange={(image) => patch({ saFounders: { ...about.saFounders, image } })}
         />
         <div>
@@ -168,6 +170,7 @@ export default function AboutPageEditor({ content, onChange }: Props) {
         <CmsImageField
           label="Machine image (use a current model, e.g. V.300 Premium X)"
           value={about.quality.image ?? { src: "", alt: "" }}
+          uploadFolder="about"
           onChange={(image) => patch({ quality: { ...about.quality, image } })}
         />
         <div>
@@ -189,6 +192,7 @@ export default function AboutPageEditor({ content, onChange }: Props) {
         <CmsImageField
           label="Section image"
           value={about.sustainability.image ?? { src: "", alt: "" }}
+          uploadFolder="about"
           onChange={(image) => patch({ sustainability: { ...about.sustainability, image } })}
         />
         <div>
