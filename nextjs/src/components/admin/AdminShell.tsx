@@ -21,12 +21,14 @@ import {
   MessagesSquare,
   PhoneForwarded,
   Video,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/admin",             label: "Dashboard",     icon: LayoutDashboard, exact: true  },
   { href: "/admin/site-review", label: "Site review",   icon: Video,           exact: false },
+  { href: "/admin/pages",       label: "Pages",         icon: FileText,        exact: false },
   { href: "/admin/products",    label: "Products",      icon: Package,         exact: false },
   { href: "/admin/orders",      label: "Orders",        icon: ShoppingCart,    exact: false },
   { href: "/admin/order-history", label: "Order history", icon: History,      exact: false },

@@ -4,12 +4,9 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, CheckCircle, AlertTriangle } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
+import { createBlogMetadata } from "@/lib/blog-generate-metadata";
 
-export const metadata: Metadata = {
-  title: "The Hunter's Guide to Vacuum Sealing Game Meat in South Africa",
-  description:
-    "Blesbok, kudu, impala, warthog — how to process, portion and vacuum seal wild game properly so nothing goes to waste after the hunt. Includes species-specific tips and a step-by-step guide.",
-};
+export const generateMetadata = createBlogMetadata("vacuum-sealing-game-meat-south-africa");
 
 const speciesData = [
   ["Blesbok", "Medium", "3–5 days", "2–3 years", "Excellent mild flavour. Minimal fat — seal quickly after processing."],

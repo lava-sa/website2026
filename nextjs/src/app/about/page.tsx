@@ -14,16 +14,20 @@ import {
   ArrowRight,
   Quote,
 } from "lucide-react";
+import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
-import { pageMetadata, webPageSchema, breadcrumbSchema } from "@/lib/seo";
+import { webPageSchema, breadcrumbSchema } from "@/lib/seo";
+import { getSitePageContent } from "@/lib/queries/site-pages";
+import CmsBody from "@/components/cms/CmsBody";
 
-export const metadata = pageMetadata({
-  title: "About Lava-SA — German Vacuum Sealers Since 2007",
-  description:
-    "Lava South Africa is the exclusive distributor of German-engineered LAVA vacuum sealers since 2007. Built on quality, sustainability and a passion for food preservation.",
-  path: "/about",
-  titleAbsolute: true,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const cms = await getSitePageContent("about");
+  return {
+    title: { absolute: cms.seo.title },
+    description: cms.seo.description,
+    alternates: { canonical: "/about" },
+  };
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -68,11 +72,14 @@ const TIMELINE = [
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const cms = await getSitePageContent("about");
+  const stats = cms.stats?.length ? cms.stats : STATS;
+
   const pageLd = webPageSchema({
     type: "AboutPage",
-    name: "About Lava-SA — German Vacuum Sealers Since 2007",
-    description: "Lava South Africa is the exclusive distributor of German-engineered LAVA vacuum sealers since 2007. Built on quality, sustainability and a passion for food preservation.",
+    name: cms.seo.title,
+    description: cms.seo.description,
     url: "/about",
   });
   const crumbLd = breadcrumbSchema([
@@ -105,16 +112,23 @@ export default function AboutPage() {
 
         <div className="relative section-container pb-16 pt-24">
           <div className="max-w-3xl">
-            <p className="overline text-secondary mb-4">Our Story</p>
+            {cms.hero.overline && (
+              <p className="overline text-secondary mb-4">{cms.hero.overline}</p>
+            )}
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight">
-              44 years of German<br />
-              <span className="text-secondary">obsession</span>.<br />
-              Now South Africa&apos;s own.
+              {cms.hero.heading ?? "44 years of German"}
+              {cms.hero.headingEmphasis && (
+                <>
+                  <br />
+                  <span className="text-secondary">{cms.hero.headingEmphasis}</span>
+                </>
+              )}
             </h1>
-            <p className="mt-6 text-lg text-on-dark-muted max-w-xl leading-relaxed">
-              We didn&apos;t invent vacuum sealing. We perfected it — in a family workshop
-              in Baden-Württemberg, machine by machine, since 1982.
-            </p>
+            {cms.hero.subtitle && (
+              <p className="mt-6 text-lg text-on-dark-muted max-w-xl leading-relaxed">
+                {cms.hero.subtitle}
+              </p>
+            )}
           </div>
         </div>
 
@@ -126,7 +140,7 @@ export default function AboutPage() {
       <div className="bg-white border-y border-border">
         <div className="section-container">
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-border">
-            {STATS.map(({ value, label }) => (
+            {stats.map(({ value, label }) => (
               <div key={label} className="flex flex-col items-center justify-center py-8 px-4 text-center">
                 <span className="text-4xl font-bold text-primary">{value}</span>
                 <span className="mt-1.5 text-[11px] font-bold uppercase tracking-widest text-copy-muted">{label}</span>
@@ -620,6 +634,12 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {cms.bodyHtml?.trim() && (
+        <section className="section-container py-16 border-t border-border">
+          <CmsBody html={cms.bodyHtml} />
+        </section>
+      )}
 
     </main>
   );

@@ -4,12 +4,9 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
+import { createBlogMetadata } from "@/lib/blog-generate-metadata";
 
-export const metadata: Metadata = {
-  title: "How to Vacuum Seal Fish After a Day on the Water",
-  description:
-    "Snoek, yellowtail, cob, kingklip — how to handle, fillet, portion and vacuum seal fresh catch the right way. Includes species guide, step-by-step instructions and LAVA video.",
-};
+export const generateMetadata = createBlogMetadata("vacuum-sealing-fish-south-africa");
 
 const fishData = [
   ["Snoek", "1–2 days", "5–7 days", "2–3 months", "12–15 months", "Strong oily fish. Blot well. Seal individual portions. Excellent smoked then vacuum sealed."],

@@ -4,12 +4,10 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, Leaf, Recycle, Clock, TrendingDown } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
+import { createBlogMetadata } from "@/lib/blog-generate-metadata";
+import BlogCmsExtras from "@/components/cms/BlogCmsExtras";
 
-export const metadata: Metadata = {
-  title: "Embracing Sustainability — How LAVA's Longevity Reduces Waste",
-  description:
-    "A machine that lasts 20 years is the most sustainable choice. How LAVA's build quality, vacuum preservation and reforestation commitment align with a reduced-waste lifestyle.",
-};
+export const generateMetadata = createBlogMetadata("embracing-sustainability-lava-quality");
 
 export default function PostSustainability() {
   const articleLd = articleSchema({

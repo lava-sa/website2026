@@ -4,12 +4,10 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
+import { createBlogMetadata } from "@/lib/blog-generate-metadata";
+import BlogCmsExtras from "@/components/cms/BlogCmsExtras";
 
-export const metadata: Metadata = {
-  title: "You Can Rely on Our Quality — Why LAVA Machines Are Built to Last",
-  description:
-    "Cheap vacuum sealers fail within a year. LAVA machines are still sealing perfectly after 20 years. Here's what genuine German engineering looks like on the inside.",
-};
+export const generateMetadata = createBlogMetadata("you-can-rely-on-our-quality");
 
 const qualityPoints = [
   { title: "Double Sealing Strips", desc: "Two sealing elements per cycle — one melts the bag, the second reinforces the seal. Result: zero failures on wet or heavy bags." },

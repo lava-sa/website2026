@@ -4,12 +4,9 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, AlertTriangle, CheckCircle } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
+import { createBlogMetadata } from "@/lib/blog-generate-metadata";
 
-export const metadata: Metadata = {
-  title: "How Long Does Vacuum Sealed Food Last? The Complete South African Guide",
-  description:
-    "Exact shelf life figures for every food type South Africans store — fridge, freezer and pantry — with and without vacuum sealing. Includes venison, snoek, biltong, braai meat and more.",
-};
+export const generateMetadata = createBlogMetadata("how-long-does-vacuum-sealed-food-last");
 
 const shelfLifeData = [
   // [food, fridge-normal, fridge-vacuum, freezer-normal, freezer-vacuum]

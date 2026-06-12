@@ -4,12 +4,9 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, TreePine } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
+import { createBlogMetadata } from "@/lib/blog-generate-metadata";
 
-export const metadata: Metadata = {
-  title: "Planting Roots for a Sustainable Tomorrow — LAVA's Reforestation Commitment",
-  description:
-    "Every LAVA machine sold contributes to global reforestation. How a family business in Baden-Württemberg is helping plant the future.",
-};
+export const generateMetadata = createBlogMetadata("planting-roots-sustainable-tomorrow");
 
 export default function PostPlantingRoots() {
   const articleLd = articleSchema({

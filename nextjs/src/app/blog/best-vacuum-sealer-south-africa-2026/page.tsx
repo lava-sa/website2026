@@ -4,12 +4,9 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, CheckCircle, X } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
+import { createBlogMetadata } from "@/lib/blog-generate-metadata";
 
-export const metadata: Metadata = {
-  title: "Best Vacuum Sealer in South Africa 2026 — Honest Comparison Guide",
-  description:
-    "What to look for, what to avoid, and which LAVA model fits your needs and budget. An honest guide from South Africa's official LAVA distributor. Includes comparison table and video.",
-};
+export const generateMetadata = createBlogMetadata("best-vacuum-sealer-south-africa-2026");
 
 const models = [
   {

@@ -86,6 +86,15 @@ Star security reference (already exists):
 
 ---
 
+## Site pages CMS (added after wrap-up)
+
+- **Admin:** `/admin/pages` — edit homepage, about, contact, blog, help, legal, guides, etc.
+- **DB:** Run `supabase/019_site_pages.sql` in Supabase SQL editor (once).
+- **Fully wired on frontend:** `/`, `/about`, `/contact`, `/blog`, all blog post SEO, `/help/faq` (metadata + optional body HTML).
+- **In admin registry (save works; wire frontend per page as needed):** help, legal, applications, vacuum-packaging subpages — use `cmsPageMetadata(slug, path)` + `<CmsPageExtras slug="..." />`.
+
+---
+
 ## Quick start next Lava-SA session
 
 1. Add Turnstile keys to **Vercel** → redeploy → test contact form on production.

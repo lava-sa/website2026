@@ -2,14 +2,14 @@ import Link from "next/link";
 import { Phone, Mail, ArrowRight } from "lucide-react";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
 import JsonLd from "@/components/seo/JsonLd";
-import { faqSchema, pageMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
+import { faqSchema } from "@/lib/seo";
+import { cmsPageMetadata } from "@/lib/cms-page-metadata";
+import CmsPageExtras from "@/components/cms/CmsPageExtras";
 
-export const metadata = pageMetadata({
-  title: "Frequently Asked Questions",
-  description:
-    "Everything you need to know about LAVA vacuum sealers — buying, using, maintaining and troubleshooting. Answers from people who use these machines every day.",
-  path: "/help/faq",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return cmsPageMetadata("help-faq", "/help/faq");
+}
 
 const faqs = [
   {
@@ -239,6 +239,7 @@ export default function FAQPage() {
         </div>
 
       </div>
+      <CmsPageExtras slug="help-faq" />
     </main>
   );
 }

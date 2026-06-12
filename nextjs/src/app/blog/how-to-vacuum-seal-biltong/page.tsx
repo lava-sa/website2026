@@ -3,12 +3,9 @@ import Link from "next/link";
 import { ArrowRight, AlertTriangle, CheckCircle, X } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
+import { createBlogMetadata } from "@/lib/blog-generate-metadata";
 
-export const metadata: Metadata = {
-  title: "How to Vacuum Seal Biltong — Keep It Dry, Tender and Perfectly Preserved",
-  description:
-    "Biltong and vacuum sealing seem like opposites. Here's the correct technique to seal biltong without ruining the texture — wet, dry and sliced.",
-};
+export const generateMetadata = createBlogMetadata("how-to-vacuum-seal-biltong");
 
 export default function BiltongPage() {
   const articleLd = articleSchema({

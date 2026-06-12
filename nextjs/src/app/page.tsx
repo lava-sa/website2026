@@ -2,25 +2,37 @@ import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import StaticHero from "@/components/home/StaticHero";
+import { getSitePageContent } from "@/lib/queries/site-pages";
 
-export const metadata: Metadata = {
-  title: {
-    absolute:
-      "LAVA Vacuum Sealers South Africa | Premium German Food Preservation Since 2007 | Lava-SA",
-  },
-  description:
-    "LAVA vacuum sealers South Africa — German-engineered V.300 Premium X, bags, rolls & accessories. Nationwide courier delivery. Since 2007.",
-  alternates: { canonical: "/" },
-  openGraph: {
-    title:
-      "LAVA Vacuum Sealers South Africa | Premium German Food Preservation Since 2007 | Lava-SA",
-    url: "/",
-  },
-  twitter: {
-    title:
-      "LAVA Vacuum Sealers South Africa | Premium German Food Preservation | Lava-SA",
-  },
-};
+import StatsBand from "@/components/home/StatsBand";
+import TrustBar from "@/components/home/TrustBar";
+import ProductGallery from "@/components/home/ProductGallery";
+import HeritageSection from "@/components/home/HeritageSection";
+import QualitySection from "@/components/home/QualitySection";
+import SustainabilitySection from "@/components/home/SustainabilitySection";
+import GreenLivingSection from "@/components/home/GreenLivingSection";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
+import ReviewCTA from "@/components/home/ReviewCTA";
+import IndustryLeadersSection from "@/components/home/IndustryLeadersSection";
+import FinalCTA from "@/components/home/FinalCTA";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const cms = await getSitePageContent("home");
+  return {
+    title: { absolute: cms.seo.title },
+    description: cms.seo.description,
+    alternates: { canonical: "/" },
+    openGraph: {
+      title: cms.seo.title,
+      description: cms.seo.description,
+      url: "/",
+    },
+    twitter: {
+      title: cms.seo.title,
+      description: cms.seo.description,
+    },
+  };
+}
 
 const websiteSchema = {
   "@context": "https://schema.org",
@@ -49,58 +61,25 @@ const orgSchema = {
   ],
 };
 
-import StatsBand from "@/components/home/StatsBand";
-import TrustBar from "@/components/home/TrustBar";
-import ProductGallery from "@/components/home/ProductGallery";
-import HeritageSection from "@/components/home/HeritageSection";
-import QualitySection from "@/components/home/QualitySection";
-import SustainabilitySection from "@/components/home/SustainabilitySection";
-import GreenLivingSection from "@/components/home/GreenLivingSection";
-import TestimonialsSection from "@/components/home/TestimonialsSection";
-import ReviewCTA from "@/components/home/ReviewCTA";
-import IndustryLeadersSection from "@/components/home/IndustryLeadersSection";
-import FinalCTA from "@/components/home/FinalCTA";
+export default async function HomePage() {
+  const cms = await getSitePageContent("home");
 
-export default function HomePage() {
   return (
     <main className="min-h-screen bg-white">
       <JsonLd data={[websiteSchema, orgSchema]} />
 
-      {/* 1 — Hero: one image, one message, 100vh with header */}
-      <StaticHero />
-
-      {/* 2 — Credentials: 4 stats + partner logos */}
+      <StaticHero content={cms} />
       <StatsBand />
-
-      {/* 2b — Trust badges: one consolidated strip */}
       <TrustBar />
-
-      {/* 3 — Product range: V.100, V.300, V.333, V.400 */}
       <ProductGallery />
-
-      {/* 5 — Heritage: German family story, Landig family */}
       <HeritageSection />
-
-      {/* 6 — Quality: built to last a lifetime */}
       <QualitySection />
-
-      {/* 7 — Sustainability: beyond disposable culture */}
       <SustainabilitySection />
-
-      {/* 8 — Green Living: reforestation, responsible future */}
       <GreenLivingSection />
-
-      {/* 9 — Social proof: 3 verified reviews + full review / gratitude CTA */}
       <TestimonialsSection />
-
       <ReviewCTA />
-
-      {/* 10 — Industry leaders: SA business partners */}
       <IndustryLeadersSection />
-
-      {/* 12 — Closing conversion */}
       <FinalCTA />
-
     </main>
   );
 }

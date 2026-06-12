@@ -4,12 +4,9 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, Zap, AlertTriangle, CheckCircle, ShieldCheck } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import { articleSchema } from "@/lib/seo";
+import { createBlogMetadata } from "@/lib/blog-generate-metadata";
 
-export const metadata: Metadata = {
-  title: "Vacuum Sealing & Load Shedding — Protect Your Food During Power Outages",
-  description:
-    "Load shedding puts your freezer at serious risk. Vacuum sealed food survives power outages far better than loose food. Here's your complete South African load-shedding food strategy.",
-};
+export const generateMetadata = createBlogMetadata("vacuum-sealing-during-load-shedding");
 
 export default function PostLoadShedding() {
   const articleLd = articleSchema({
