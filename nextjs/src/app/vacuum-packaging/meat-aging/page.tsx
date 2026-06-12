@@ -30,7 +30,7 @@ export default function MeatAgingPage() {
 
         <div className="prose-lava">
 
-          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">Wet Aging vs Dry Aging</h2>
+          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">What Is the Difference Between Wet Aging and Dry Aging?</h2>
           <p>
             The steak world is sometimes divided into dry aging enthusiasts and wet aging
             proponents. The truth is they&apos;re different processes with different strengths:
@@ -64,7 +64,7 @@ export default function MeatAgingPage() {
             </tbody>
           </table>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Vacuum Aging Works</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Does Vacuum Aging Improve Meat Flavour and Tenderness?</h2>
           <p>
             Meat contains natural enzymes — primarily calpains and cathepsins — that continue
             working after slaughter. Their job is to break down the proteins in muscle fibres.
@@ -85,7 +85,7 @@ export default function MeatAgingPage() {
             that can develop in poorly managed dry aging.
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">The Complete Wet Aging Process</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Do You Wet Age Meat With a Vacuum Sealer?</h2>
 
           <div className="space-y-3 my-6">
             {[
@@ -102,7 +102,7 @@ export default function MeatAgingPage() {
             ))}
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">South African Context: Game Meat Aging</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Should You Age Game Meat in South Africa?</h2>
           <p>
             Wild game responds exceptionally well to wet aging. Venison is very lean —
             the enzyme action that creates tenderness is more noticeable on lean meat than

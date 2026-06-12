@@ -71,7 +71,7 @@ export default function PostFish() {
 
         <div className="prose-lava">
 
-          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">Why Fish Needs Vacuum Sealing More Than Any Other Food</h2>
+          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">Why Does Fresh Fish Need Vacuum Sealing More Than Other Foods?</h2>
           <p>
             Fish is the most perishable protein you can handle. The enzymes that break down
             fish tissue are extremely active even at refrigeration temperatures — and fish fat
@@ -87,7 +87,7 @@ export default function PostFish() {
           </p>
 
           <div className="bg-primary/5 border border-primary/20 p-5 my-6">
-            <p className="font-bold text-primary mb-2">The Cold Chain Matters</p>
+            <h3 className="font-bold text-primary mb-2">Why Does the Cold Chain Matter for Vacuum Sealed Fish?</h3>
             <p className="text-sm text-copy leading-relaxed">
               Vacuum sealing on the boat — or as soon as you get home — gives dramatically better
               results than sealing the next day. Every hour at ambient temperature accelerates
@@ -96,7 +96,7 @@ export default function PostFish() {
             </p>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Step by Step: Dock to Freezer</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Do You Vacuum Seal Fish From Dock to Freezer?</h2>
 
           <div className="space-y-4 my-6">
             {[
@@ -111,14 +111,14 @@ export default function PostFish() {
               <div key={step} className="flex gap-4 border border-border p-5">
                 <div className="h-10 w-10 bg-primary text-white font-black text-lg flex items-center justify-center shrink-0">{step}</div>
                 <div>
-                  <p className="font-bold text-primary mb-1">{title}</p>
+                  <h3 className="font-bold text-primary mb-1">{title}</h3>
                   <p className="text-sm text-copy leading-relaxed">{detail}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">South African Species Guide</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Which South African Fish Species Vacuum Seal Best?</h2>
           <div className="overflow-x-auto mb-8">
             <table className="w-full text-sm border border-border">
               <thead>
@@ -146,7 +146,7 @@ export default function PostFish() {
             </table>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Smoked Snoek — The Vacuum Sealing Sweet Spot</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Do You Vacuum Seal Smoked Snoek for Long-Term Storage?</h2>
           <div className="relative aspect-video bg-zinc-100 mb-4">
             <iframe
               src="https://www.youtube-nocookie.com/embed/CgLjpQiMscw?rel=0&modestbranding=1"
@@ -171,7 +171,7 @@ export default function PostFish() {
             <li>Use the <strong>gentle pressure setting</strong> to avoid compressing the flaked texture</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Fish for Sous Vide — A Perfect Combination</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Can You Use Vacuum Sealed Fish for Sous Vide Cooking?</h2>
           <p>
             Fish cooked sous vide is transformative — precise low-temperature cooking means
             the difference between perfectly cooked fish and dry, overcooked disappointment

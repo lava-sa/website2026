@@ -65,7 +65,7 @@ export default function PostFamilyBusiness() {
             Because they had an obsession: <strong>build it right, or don't build it at all.</strong>
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Forty Years Before "Premium" Was a Buzzword</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Did LAVA Build Premium Vacuum Sealers for 40 Years?</h2>
           <p>
             When LAVA started, vacuum sealing was an industrial process. Butcheries and food processors
             used large, expensive chamber machines. Home cooks had no options. The Landig family saw an
@@ -95,7 +95,7 @@ export default function PostFamilyBusiness() {
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Why South Africa?</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Why Did LAVA Choose South Africa as Its African Base?</h2>
           <p>
             In <strong>2007</strong>, Anneke and Wilco Uys discovered LAVA while sourcing equipment
             for their butchery business. They had tested dozens of vacuum sealers — cheap ones that
@@ -112,7 +112,7 @@ export default function PostFamilyBusiness() {
             distributed with the same care the Landig family put into building it.
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">What "Made in Germany" Actually Means</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">What Does Made in Germany Mean for LAVA Vacuum Sealers?</h2>
           <p>
             The phrase gets thrown around casually. But in LAVA&apos;s case, it means:
           </p>
@@ -124,7 +124,7 @@ export default function PostFamilyBusiness() {
             <li><strong>No planned obsolescence</strong> — LAVA machines are designed to be repaired, not replaced</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">A Different Kind of Relationship With Customers</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Does LAVA Support Customers After the Sale?</h2>
           <p>
             When you buy a LAVA machine from Lava-SA, you&apos;re not buying from a warehouse that
             ships boxes. You&apos;re buying from Anneke and Wilco — who will answer the phone if you

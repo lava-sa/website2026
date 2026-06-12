@@ -98,7 +98,7 @@ export default function DryAgingPage() {
               <div key={step} className="flex gap-4 border border-border p-5">
                 <div className="h-10 w-10 bg-primary text-white font-black text-lg flex items-center justify-center shrink-0">{step}</div>
                 <div>
-                  <p className="font-bold text-primary mb-1">{title}</p>
+                  <h3 className="font-bold text-primary mb-1">{title}</h3>
                   <p className="text-sm text-copy leading-relaxed">{detail}</p>
                 </div>
               </div>
@@ -162,7 +162,7 @@ export default function DryAgingPage() {
             <div className="flex items-start gap-3">
               <Thermometer className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <div>
-                <p className="font-bold text-primary mb-1">Which LAVA for Dry Aging?</p>
+                <h3 className="font-bold text-primary mb-1">Which LAVA Machine Is Best for Dry Aging?</h3>
                 <p className="text-sm text-copy leading-relaxed mb-3">
                   Any LAVA machine with a 42 cm+ sealing width handles most home aging cuts.
                   The <strong>V.300 Premium X</strong> is the most popular choice — it seals a

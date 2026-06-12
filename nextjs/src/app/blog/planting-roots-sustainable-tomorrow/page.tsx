@@ -54,7 +54,7 @@ export default function PostPlantingRoots() {
             take responsibility for the footprint it creates — and do something tangible about it.
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">The Commitment</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">What Is LAVA&apos;s Reforestation Commitment in South Africa?</h2>
           <p>
             For every LAVA machine sold — including every machine sold through Lava-SA — a
             contribution is made to verified global reforestation projects. Not carbon offsets
@@ -79,7 +79,7 @@ export default function PostPlantingRoots() {
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Why This Matters in South Africa</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Why Does Reforestation Matter for South African Communities?</h2>
           <p>
             South Africa is one of the world&apos;s most biologically diverse countries, and one of
             the most threatened. Indigenous forests cover less than 0.5% of the country&apos;s land
@@ -91,7 +91,7 @@ export default function PostPlantingRoots() {
             connected to water security, biodiversity and the long-term viability of the land.
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">The Bigger Picture</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Does Tree Planting Fit Into LAVA&apos;s Sustainability Mission?</h2>
           <p>
             Sustainability at LAVA isn&apos;t a department or a campaign. It&apos;s expressed in
             three ways that reinforce each other:

@@ -45,7 +45,7 @@ export default function BiltongPage() {
 
         <div className="prose-lava">
 
-          <h2 className="text-2xl font-bold text-primary mb-4">Why Biltong Is Different</h2>
+          <h2 className="text-2xl font-bold text-primary mb-4">Why Is Vacuum Sealing Biltong Different From Other Foods?</h2>
           <p>
             Most foods benefit from vacuum sealing immediately. Biltong is more complicated
             because it&apos;s a partially fermented, cured product. The rules change depending
@@ -59,7 +59,7 @@ export default function BiltongPage() {
             on week-old biltong that cost you R80 for 100g.
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-6">The Three Types of Biltong — Different Rules Apply</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-6">Which Types of Biltong Can You Vacuum Seal?</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             {[
@@ -92,7 +92,7 @@ export default function BiltongPage() {
               },
             ].map(({ type, colour, textColour, desc, storage, rule, icon }) => (
               <div key={type} className={`border p-4 ${colour}`}>
-                <p className={`font-bold text-sm mb-2 ${textColour}`}>{icon} {type}</p>
+                <h3 className={`font-bold text-sm mb-2 ${textColour}`}>{icon} {type}</h3>
                 <p className={`text-xs leading-relaxed mb-3 ${textColour}`}>{desc}</p>
                 <p className={`text-xs font-bold mb-1 ${textColour}`}>Storage:</p>
                 <p className={`text-xs mb-2 ${textColour}`}>{storage}</p>
@@ -140,14 +140,14 @@ export default function BiltongPage() {
               <div key={step} className="flex gap-4 border border-border bg-surface p-4">
                 <div className="h-8 w-8 bg-secondary text-white font-black text-sm flex items-center justify-center shrink-0 rounded-full">{step}</div>
                 <div>
-                  <p className="font-bold text-primary text-sm mb-1">{title}</p>
+                  <h3 className="font-bold text-primary text-sm mb-1">{title}</h3>
                   <p className="text-sm text-copy leading-relaxed">{detail}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-6">What You Can and Can&apos;t Do</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-6">What Can and Can&apos;t You Do When Vacuum Sealing Biltong?</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div className="border border-green-200 bg-green-50 p-5">
               <p className="font-bold text-green-800 text-sm mb-3 flex items-center gap-1.5">
@@ -226,7 +226,7 @@ export default function BiltongPage() {
             Room temperature storage without complete drying risks mould.
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">For Biltong Producers</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Should Commercial Biltong Producers Use Vacuum Sealing?</h2>
           <p>
             If you&apos;re producing biltong to sell at a farmers market, butchery or online —
             presentation matters as much as preservation. Vacuum sealed biltong in a tight, flat
@@ -245,7 +245,7 @@ export default function BiltongPage() {
           </p>
 
           {/* Video */}
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">See It in Action</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Does LAVA Vacuum Sealing Work for Biltong?</h2>
           <div className="aspect-video mb-4">
             <iframe
               src="https://www.youtube-nocookie.com/embed/yaf_L7C6N6U"
@@ -259,7 +259,7 @@ export default function BiltongPage() {
 
           {/* CTA */}
           <div className="bg-primary/5 border border-primary/20 p-6 mt-10">
-            <p className="font-bold text-primary mb-2">The Right Machine for Biltong</p>
+            <h3 className="font-bold text-primary mb-2">Which LAVA Machine Is Best for Vacuum Sealing Biltong?</h3>
             <p className="text-sm text-copy leading-relaxed mb-4">
               For home use, the V.300® Premium X handles biltong perfectly — pressure control,
               Liquid Stop and a 42 cm seal. For commercial biltong production, talk to Anneke

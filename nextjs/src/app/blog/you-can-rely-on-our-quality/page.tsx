@@ -66,7 +66,7 @@ export default function PostQuality() {
             why our oldest customers don&apos;t need to buy new machines. They just buy bags.
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">What Makes LAVA Different — Inside the Machine</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">What Makes LAVA Vacuum Sealers Different Inside?</h2>
           <p>
             The quality gap between LAVA and budget machines isn&apos;t visible in the brochure.
             It&apos;s visible when you open the lid, run 10,000 sealing cycles, or call for a spare
@@ -79,7 +79,7 @@ export default function PostQuality() {
                 <div className="flex items-start gap-3">
                   <CheckCircle className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-bold text-primary text-sm mb-1">{title}</p>
+                    <h3 className="font-bold text-primary text-sm mb-1">{title}</h3>
                     <p className="text-xs text-copy-muted leading-relaxed">{desc}</p>
                   </div>
                 </div>
@@ -87,7 +87,7 @@ export default function PostQuality() {
             ))}
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">The True Cost Comparison</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Is a LAVA Vacuum Sealer Cheaper Over 10 Years Than a Cheap Model?</h2>
           <p>
             Let&apos;s be honest about what things actually cost:
           </p>
@@ -118,7 +118,7 @@ export default function PostQuality() {
             </tbody>
           </table>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">The V.300 — South Africa&apos;s Most Popular LAVA</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Why Is the LAVA V.300 South Africa&apos;s Most Popular Sealer?</h2>
 
           <div className="relative aspect-video bg-zinc-100 mb-4">
             <iframe
@@ -144,7 +144,7 @@ export default function PostQuality() {
             <li><strong>Brushed stainless steel lid</strong> — looks as good in 10 years as it does on day one</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Our Guarantee to You</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">What Warranty and Support Does LAVA Offer in South Africa?</h2>
           <p>
             Every LAVA machine sold by Lava-SA carries a <strong>2-year factory warranty</strong>.
             If anything goes wrong — we collect the machine, fix it, and return it. No argument.

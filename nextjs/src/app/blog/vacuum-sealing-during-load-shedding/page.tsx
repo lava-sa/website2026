@@ -86,7 +86,7 @@ export default function PostLoadShedding() {
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Why Vacuum Sealed Food Survives Better</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Why Does Vacuum Sealed Food Survive Load Shedding Better?</h2>
 
           <div className="space-y-3 my-6">
             {[
@@ -109,14 +109,14 @@ export default function PostLoadShedding() {
               <div key={title} className="flex gap-4 border border-border bg-surface p-5">
                 <Icon className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-bold text-primary text-sm mb-1">{title}</p>
+                  <h3 className="font-bold text-primary text-sm mb-1">{title}</h3>
                   <p className="text-xs text-copy leading-relaxed">{desc}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">The South African Load-Shedding Food Strategy</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Should South Africans Store Food for Load Shedding?</h2>
 
           <h3 className="text-lg font-bold text-primary mt-6 mb-3">1. Bulk Buy &amp; Vacuum Seal Immediately</h3>
           <p>
@@ -207,7 +207,7 @@ export default function PostLoadShedding() {
             ].map(({ model, desc, href, badge }) => (
               <div key={model} className="border border-border p-5">
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <p className="font-bold text-primary">{model}</p>
+                  <h3 className="font-bold text-primary">{model}</h3>
                   <span className="text-[9px] font-black uppercase tracking-wider bg-secondary/10 text-secondary px-2 py-1 shrink-0">{badge}</span>
                 </div>
                 <p className="text-xs text-copy-muted leading-relaxed mb-4">{desc}</p>

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, CheckCircle, Leaf, Clock, ShieldCheck, TrendingDown, DollarSign, Zap } from "lucide-react";
+import { ArrowRight, Clock, ShieldCheck, TrendingDown, DollarSign, Zap, Leaf } from "lucide-react";
+import FeatureCard from "@/components/content/FeatureCard";
+import AudienceCard from "@/components/content/AudienceCard";
+import { slugifyHeadingId } from "@/lib/content/slugify-heading-id";
 
 export const metadata: Metadata = {
   title: "Advantages of Vacuum Packaging — Why It's Worth It",
@@ -54,12 +57,21 @@ const advantages = [
   },
 ];
 
+const audiences = [
+  ["Hunters & Game Processors", "Process a full animal after a hunt and store 100+ kg with zero waste — for 2+ years."],
+  ["Fishermen", "Seal snoek, yellowtail or kingklip the same day and still have excellent fish 12 months later."],
+  ["Home Cooks & Meal Preppers", "Batch cook on Sundays, seal portions, have restaurant-quality meals all week."],
+  ["Butcheries & Delis", "Extend display life of cuts, reduce shrinkage, improve presentation and hygiene."],
+  ["Biltong & Charcuterie Makers", "Seal finished products for extended shelf life and distribution."],
+  ["Load-Shedding-Affected Households", "Bulk buy when prices are good, seal, and stop losing food to power outages."],
+] as const;
+
 export default function AdvantagesPage() {
   return (
     <main className="py-16">
       <div className="section-container max-w-3xl">
 
-        <div className="mb-12">
+        <header className="mb-12">
           <p className="overline mb-3">Vacuum Packaging</p>
           <h1 className="text-4xl font-black text-primary leading-tight">
             Advantages of Vacuum Packaging
@@ -69,7 +81,7 @@ export default function AdvantagesPage() {
             sous vide cooking and transforms your approach to food storage. Here&apos;s
             everything vacuum packaging does for you.
           </p>
-        </div>
+        </header>
 
         <div className="relative aspect-[16/7] bg-primary/10 mb-12 overflow-hidden">
           <Image src="/images/blog/header-005.jpg" alt="Vacuum sealed vegetables and food" fill className="object-cover" />
@@ -77,102 +89,108 @@ export default function AdvantagesPage() {
 
         <div className="prose-lava">
 
-          <h2 className="text-2xl font-bold text-primary mt-2 mb-6">The Science in One Sentence</h2>
-          <div className="bg-primary text-white p-6 mb-10">
-            <p className="text-lg font-semibold leading-relaxed">
-              Vacuum packaging removes oxygen — the molecule responsible for oxidation, bacterial
-              growth, freezer burn and flavour degradation — and replaces it with nothing.
-              No oxygen. No spoilage mechanism.
-            </p>
-          </div>
+          <section id="how-vacuum-packaging-works" aria-labelledby="science-heading">
+            <h2 id="science-heading" className="text-2xl font-bold text-primary mt-2 mb-6">
+              How Does Vacuum Packaging Preserve Food?
+            </h2>
+            <div className="bg-primary text-white p-6 mb-10">
+              <p className="text-lg font-semibold leading-relaxed">
+                Vacuum packaging removes oxygen — the molecule responsible for oxidation, bacterial
+                growth, freezer burn and flavour degradation — and replaces it with nothing.
+                No oxygen. No spoilage mechanism.
+              </p>
+            </div>
+          </section>
 
-          <h2 className="text-2xl font-bold text-primary mt-8 mb-6">The Six Core Advantages</h2>
+          <section id="core-advantages" aria-labelledby="advantages-heading">
+            <h2 id="advantages-heading" className="text-2xl font-bold text-primary mt-8 mb-6">
+              What Are the Main Advantages of Vacuum Sealing Food?
+            </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
-            {advantages.map(({ icon: Icon, title, desc, stat, statLabel }) => (
-              <div key={title} className="border border-border bg-surface p-5">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="h-9 w-9 bg-primary/10 flex items-center justify-center shrink-0">
-                    <Icon className="h-4.5 w-4.5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-black text-primary leading-snug">{title}</p>
-                    <div className="flex items-baseline gap-1 mt-0.5">
-                      <span className="text-xl font-black text-secondary">{stat}</span>
-                      <span className="text-[10px] text-copy-muted font-medium">{statLabel}</span>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-sm text-copy leading-relaxed">{desc}</p>
-              </div>
-            ))}
-          </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
+              {advantages.map((item) => (
+                <FeatureCard
+                  key={item.title}
+                  id={slugifyHeadingId(item.title)}
+                  icon={item.icon}
+                  title={item.title}
+                  description={item.desc}
+                  stat={item.stat}
+                  statLabel={item.statLabel}
+                />
+              ))}
+            </div>
+          </section>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Advantage 7: Sous Vide — Unlocked</h2>
-          <div className="relative aspect-video bg-zinc-100 mb-4">
-            <iframe
-              src="https://www.youtube-nocookie.com/embed/XEdT5cCNiwk?rel=0&modestbranding=1"
-              title="LAVA Vacuum Packing Fish for Sous Vide"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              loading="lazy"
-              className="absolute inset-0 w-full h-full"
-            />
-          </div>
-          <p className="text-xs text-copy-muted mb-6">Vacuum sealing fish for sous vide precision cooking — in English</p>
+          <section id="sous-vide-advantage" aria-labelledby="sous-vide-heading">
+            <h2 id="sous-vide-heading" className="text-2xl font-bold text-primary mt-10 mb-4">
+              Can Vacuum Packaging Unlock Sous Vide Cooking at Home?
+            </h2>
+            <div className="relative aspect-video bg-zinc-100 mb-4">
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/XEdT5cCNiwk?rel=0&modestbranding=1"
+                title="LAVA Vacuum Packing Fish for Sous Vide"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+            <p className="text-xs text-copy-muted mb-6">Vacuum sealing fish for sous vide precision cooking — in English</p>
+          </section>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Vacuum Packaging vs Other Methods</h2>
-          <div className="overflow-x-auto mb-8">
-            <table className="w-full text-sm border border-border">
-              <thead>
-                <tr className="bg-primary text-white">
-                  <th className="text-left py-3 px-4 font-bold">Method</th>
-                  <th className="text-left py-3 px-4 font-bold">Shelf Life Extension</th>
-                  <th className="text-left py-3 px-4 font-bold">Flavour Preservation</th>
-                  <th className="text-left py-3 px-4 font-bold">Sous Vide</th>
-                  <th className="text-left py-3 px-4 font-bold">Reusable</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ["Vacuum sealing (LAVA)", "3–5×", "Excellent", "Yes", "Bags: 2–3×"],
-                  ["Cling wrap", "1.2×", "Poor — dries out", "No", "No"],
-                  ["Ziplock bags", "1.5×", "Fair", "No", "Limited"],
-                  ["Tupperware / containers", "1.3–1.5×", "Good for dry", "No", "Yes"],
-                  ["Foil wrapping", "1.2×", "Fair", "No", "No"],
-                  ["Freezer bags (standard)", "1.5×", "Fair", "No", "No"],
-                ].map(([method, shelf, flavour, sv, reuse]) => (
-                  <tr key={method} className="border-b border-border odd:bg-surface">
-                    <td className="py-2.5 px-4 font-semibold text-primary">{method}</td>
-                    <td className="py-2.5 px-4 font-semibold text-secondary">{shelf}</td>
-                    <td className="py-2.5 px-4 text-copy">{flavour}</td>
-                    <td className="py-2.5 px-4 text-copy">{sv}</td>
-                    <td className="py-2.5 px-4 text-copy">{reuse}</td>
+          <section id="comparison-table" aria-labelledby="comparison-heading">
+            <h2 id="comparison-heading" className="text-2xl font-bold text-primary mt-10 mb-4">
+              How Does Vacuum Packaging Compare to Cling Wrap and Freezer Bags?
+            </h2>
+            <div className="overflow-x-auto mb-8">
+              <table className="w-full text-sm border border-border">
+                <thead>
+                  <tr className="bg-primary text-white">
+                    <th scope="col" className="text-left py-3 px-4 font-bold">Method</th>
+                    <th scope="col" className="text-left py-3 px-4 font-bold">Shelf Life Extension</th>
+                    <th scope="col" className="text-left py-3 px-4 font-bold">Flavour Preservation</th>
+                    <th scope="col" className="text-left py-3 px-4 font-bold">Sous Vide</th>
+                    <th scope="col" className="text-left py-3 px-4 font-bold">Reusable</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {[
+                    ["Vacuum sealing (LAVA)", "3–5×", "Excellent", "Yes", "Bags: 2–3×"],
+                    ["Cling wrap", "1.2×", "Poor — dries out", "No", "No"],
+                    ["Ziplock bags", "1.5×", "Fair", "No", "Limited"],
+                    ["Tupperware / containers", "1.3–1.5×", "Good for dry", "No", "Yes"],
+                    ["Foil wrapping", "1.2×", "Fair", "No", "No"],
+                    ["Freezer bags (standard)", "1.5×", "Fair", "No", "No"],
+                  ].map(([method, shelf, flavour, sv, reuse]) => (
+                    <tr key={method} className="border-b border-border odd:bg-surface">
+                      <td className="py-2.5 px-4 font-semibold text-primary">{method}</td>
+                      <td className="py-2.5 px-4 font-semibold text-secondary">{shelf}</td>
+                      <td className="py-2.5 px-4 text-copy">{flavour}</td>
+                      <td className="py-2.5 px-4 text-copy">{sv}</td>
+                      <td className="py-2.5 px-4 text-copy">{reuse}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Who Benefits Most?</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-            {[
-              ["Hunters & Game Processors", "Process a full animal after a hunt and store 100+ kg with zero waste — for 2+ years."],
-              ["Fishermen", "Seal snoek, yellowtail or kingklip the same day and still have excellent fish 12 months later."],
-              ["Home Cooks & Meal Preppers", "Batch cook on Sundays, seal portions, have restaurant-quality meals all week."],
-              ["Butcheries & Delis", "Extend display life of cuts, reduce shrinkage, improve presentation and hygiene."],
-              ["Biltong & Charcuterie Makers", "Seal finished products for extended shelf life and distribution."],
-              ["Load-Shedding-Affected Households", "Bulk buy when prices are good, seal, and stop losing food to power outages."],
-            ].map(([who, why]) => (
-              <div key={who} className="flex items-start gap-2 border border-border p-4">
-                <CheckCircle className="h-4 w-4 text-secondary shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold text-primary text-sm">{who}</p>
-                  <p className="text-xs text-copy-muted mt-0.5 leading-relaxed">{why}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <section id="who-benefits" aria-labelledby="audience-heading">
+            <h2 id="audience-heading" className="text-2xl font-bold text-primary mt-10 mb-4">
+              Who Benefits Most From a LAVA Vacuum Sealer in South Africa?
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+              {audiences.map(([who, why]) => (
+                <AudienceCard
+                  key={who}
+                  id={slugifyHeadingId(who)}
+                  title={who}
+                  description={why}
+                />
+              ))}
+            </div>
+          </section>
 
         </div>
 
@@ -185,7 +203,7 @@ export default function AdvantagesPage() {
           </Link>
         </div>
 
-        <div className="mt-10 pt-8 border-t border-border">
+        <nav className="mt-10 pt-8 border-t border-border" aria-label="Related vacuum packaging guides">
           <p className="text-xs font-black uppercase tracking-widest text-copy-muted mb-4">More Vacuum Packaging Guides</p>
           <div className="grid grid-cols-2 gap-3">
             {[
@@ -201,7 +219,7 @@ export default function AdvantagesPage() {
               </Link>
             ))}
           </div>
-        </div>
+        </nav>
 
       </div>
     </main>

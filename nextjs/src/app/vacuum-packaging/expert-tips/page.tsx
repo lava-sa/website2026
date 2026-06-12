@@ -149,7 +149,7 @@ export default function ExpertTipsPage() {
             <div className="space-y-4">
               {section.items.map(({ tip, detail }) => (
                 <div key={tip} className="border border-border bg-surface p-5">
-                  <p className="font-bold text-primary mb-1.5">{tip}</p>
+                  <h3 className="font-bold text-primary mb-1.5">{tip}</h3>
                   <p className="text-sm text-copy leading-relaxed">{detail}</p>
                 </div>
               ))}

@@ -128,7 +128,7 @@ export default function PostBuyingGuide() {
 
         <div className="prose-lava">
 
-          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">The Honest Truth About Cheap Vacuum Sealers</h2>
+          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">Are Cheap Vacuum Sealers Worth Buying in South Africa?</h2>
           <p>
             South Africans are practical people. If a R700 machine did the same job as a R4,500
             machine, we&apos;d all buy the R700 one. The problem is it doesn&apos;t — and the
@@ -150,7 +150,7 @@ export default function PostBuyingGuide() {
             purchased today will likely outlast 15 budget sealers.
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">7 Things to Check Before Buying Any Vacuum Sealer</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">What Should You Check Before Buying a Vacuum Sealer in South Africa?</h2>
 
           <div className="space-y-3 my-6">
             {[
@@ -165,14 +165,14 @@ export default function PostBuyingGuide() {
               <div key={n} className="flex gap-4 border border-border p-5">
                 <div className="h-9 w-9 bg-primary text-white font-black text-sm flex items-center justify-center shrink-0 rounded-full">{n}</div>
                 <div>
-                  <p className="font-bold text-primary mb-1">{title}</p>
+                  <h3 className="font-bold text-primary mb-1">{title}</h3>
                   <p className="text-sm text-copy leading-relaxed">{detail}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">6 Warning Signs of a Poor-Quality Vacuum Sealer</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">What Are the Warning Signs of a Poor-Quality Vacuum Sealer?</h2>
           <div className="border border-red-200 bg-red-50 p-5 my-6">
             <ul className="space-y-2">
               {badBuyers.map((sign) => (
@@ -184,7 +184,7 @@ export default function PostBuyingGuide() {
             </ul>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">LAVA Range Comparison — South Africa 2026</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Which LAVA Vacuum Sealer Should You Buy in 2026?</h2>
           <div className="overflow-x-auto mb-8">
             <table className="w-full text-sm border border-border">
               <thead>
@@ -233,7 +233,7 @@ export default function PostBuyingGuide() {
             </table>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Our Honest Recommendation by Use Case</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Which LAVA Machine Is Best for Your Home or Business?</h2>
           <div className="space-y-3 my-6">
             {[
               { useCase: "I'm new to vacuum sealing and want to try it out", rec: "V.100® Premium X", reason: "Full LAVA quality at entry-level price. If you love it (you will), upgrade to the V.300 later." },
@@ -245,7 +245,7 @@ export default function PostBuyingGuide() {
               <div key={useCase} className="border border-border p-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-1">If...</p>
                 <p className="text-sm text-copy mb-2 italic">&ldquo;{useCase}&rdquo;</p>
-                <p className="font-bold text-primary text-sm">→ {rec}</p>
+                <h3 className="font-bold text-primary text-sm">→ {rec}</h3>
                 <p className="text-xs text-copy-muted mt-1 leading-relaxed">{reason}</p>
               </div>
             ))}

@@ -122,7 +122,7 @@ export default function GiftIdeasPage() {
                       <Link key={href + name} href={href} className="flex items-start gap-3 border border-border bg-surface p-3.5 hover:border-primary transition-colors group">
                         <ArrowRight className="h-4 w-4 text-secondary shrink-0 mt-0.5 group-hover:translate-x-1 transition-transform" />
                         <div>
-                          <p className="font-bold text-primary text-sm">{name}</p>
+                          <h3 className="font-bold text-primary text-sm">{name}</h3>
                           <p className="text-xs text-copy-muted">{note}</p>
                         </div>
                       </Link>

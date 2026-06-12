@@ -57,7 +57,7 @@ export default function PostSustainability() {
             marketing layer, but as a consequence of how they build things.
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Three Ways Vacuum Sealing Reduces Food Waste</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Does Vacuum Sealing Reduce Food Waste in South Africa?</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
             {[
@@ -81,13 +81,13 @@ export default function PostSustainability() {
                 <div className="h-10 w-10 bg-primary/10 flex items-center justify-center mx-auto mb-3">
                   <Icon className="h-5 w-5 text-primary" />
                 </div>
-                <p className="font-bold text-primary text-sm mb-2">{title}</p>
+                <h3 className="font-bold text-primary text-sm mb-2">{title}</h3>
                 <p className="text-xs text-copy-muted leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">The Real Cost of Food Waste in South Africa</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Much Does Food Waste Cost South African Households?</h2>
           <p>
             South Africa wastes approximately <strong>10 million tonnes of food per year</strong> —
             about a third of all food produced. The majority happens at household level: food bought
@@ -124,7 +124,7 @@ export default function PostSustainability() {
             </tbody>
           </table>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">A Machine Built Not to Be Replaced</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Why Are LAVA Machines Built to Last Decades?</h2>
           <p>
             Planned obsolescence — the practice of building products to fail — is one of the most
             wasteful forces in modern manufacturing. A cheap appliance that fails in two years creates
@@ -143,7 +143,7 @@ export default function PostSustainability() {
           <div className="bg-primary/5 border border-primary/20 p-6 my-8 flex gap-4">
             <Leaf className="h-6 w-6 text-primary shrink-0 mt-1" />
             <div>
-              <p className="font-bold text-primary mb-1">Our Reforestation Commitment</p>
+              <h3 className="font-bold text-primary mb-1">What Is LAVA&apos;s Reforestation Commitment?</h3>
               <p className="text-sm text-copy leading-relaxed">
                 LAVA contributes to reforestation projects for every machine sold. The trees planted
                 on our behalf offset the carbon footprint of manufacturing and shipping — and will

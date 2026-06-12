@@ -29,7 +29,7 @@ export default function BagsGuidePage() {
 
         <div className="prose-lava">
 
-          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">The Single Most Important Thing to Know</h2>
+          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">What Is the Most Important Thing to Know About LAVA Vacuum Bags?</h2>
           <div className="bg-primary text-white p-5 mb-8">
             <p className="font-semibold leading-relaxed">
               You <strong className="text-secondary">must</strong> use embossed (textured, ribbed) bags
@@ -39,7 +39,7 @@ export default function BagsGuidePage() {
             </p>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Embossed vs Smooth — When to Use Each</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">When Should You Use Embossed vs Smooth Vacuum Bags?</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div className="border-2 border-secondary p-5">
               <p className="font-black text-primary mb-2 text-base">Embossed Bags (Textured)</p>
@@ -82,7 +82,7 @@ export default function BagsGuidePage() {
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Size Guide</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Which Vacuum Bag Size Should You Buy?</h2>
           <table className="w-full text-sm border border-border mb-8">
             <thead>
               <tr className="bg-primary text-white">
@@ -119,7 +119,7 @@ export default function BagsGuidePage() {
               { title: "Precision-Cut Edges", desc: "Straight-cut edges that seal cleanly and evenly with the LAVA sealing strip — no uneven sealing from inconsistent bag edges." },
             ].map(({ title, desc }) => (
               <div key={title} className="border border-border bg-surface p-4">
-                <p className="font-bold text-primary text-sm mb-1">{title}</p>
+                <h3 className="font-bold text-primary text-sm mb-1">{title}</h3>
                 <p className="text-xs text-copy leading-relaxed">{desc}</p>
               </div>
             ))}

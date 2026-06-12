@@ -72,7 +72,7 @@ export default function PostGameMeat() {
 
         <div className="prose-lava">
 
-          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">Why Game Meat Needs Proper Vacuum Sealing</h2>
+          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">Why Does Game Meat Need Vacuum Sealing After a Hunt?</h2>
           <p>
             Wild game is not commercially processed meat. It has almost no fat marbling to
             protect the surface, it&apos;s been through stress hormones at the point of harvest,
@@ -103,7 +103,7 @@ export default function PostGameMeat() {
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Step-by-Step: Field to Freezer</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Do You Vacuum Seal Game Meat From Field to Freezer?</h2>
 
           <div className="space-y-4 my-6">
             {[
@@ -141,14 +141,14 @@ export default function PostGameMeat() {
               <div key={step} className="flex gap-4 border border-border p-5">
                 <div className="h-10 w-10 bg-primary text-white font-black text-lg flex items-center justify-center shrink-0">{step}</div>
                 <div>
-                  <p className="font-bold text-primary mb-1">{title}</p>
+                  <h3 className="font-bold text-primary mb-1">{title}</h3>
                   <p className="text-sm text-copy leading-relaxed">{detail}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Species Guide — Sealing & Storage Notes</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Should You Vacuum Seal Different Game Species in South Africa?</h2>
           <div className="overflow-x-auto mb-8">
             <table className="w-full text-sm border border-border">
               <thead>
@@ -174,7 +174,7 @@ export default function PostGameMeat() {
             </table>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Vacuum Marinating — The Game Changer</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Does Vacuum Marinating Improve Game Meat?</h2>
           <p>
             Game meat is lean and benefits enormously from marinating. But the traditional
             method — submerging in marinade overnight — is slow and uneven. <strong>Vacuum
@@ -212,7 +212,7 @@ export default function PostGameMeat() {
               },
             ].map(({ model, best, seal, features, href }) => (
               <div key={model} className="border border-border p-5">
-                <p className="font-bold text-primary text-base mb-1">{model}</p>
+                <h3 className="font-bold text-primary text-base mb-1">{model}</h3>
                 <p className="text-[10px] font-bold uppercase tracking-wider text-secondary mb-3">{seal}</p>
                 <p className="text-xs text-copy-muted mb-3 leading-relaxed"><strong>Best for:</strong> {best}</p>
                 <ul className="text-xs text-copy space-y-1">

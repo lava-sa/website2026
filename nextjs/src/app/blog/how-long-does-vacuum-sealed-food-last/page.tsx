@@ -79,7 +79,7 @@ export default function PostShelfLife() {
 
         <div className="prose-lava">
 
-          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">Why Vacuum Sealing Extends Shelf Life So Dramatically</h2>
+          <h2 className="text-2xl font-bold text-primary mt-2 mb-4">Why Does Vacuum Sealing Extend Food Shelf Life So Much?</h2>
           <p>
             Food spoils through three main processes — and vacuum sealing defeats all three:
           </p>
@@ -95,7 +95,7 @@ export default function PostShelfLife() {
             perfectly fresh after 2 years in a LAVA bag.</strong>
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">The Complete Shelf Life Chart</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">How Long Does Vacuum Sealed Food Last in the Fridge and Freezer?</h2>
           <p className="text-sm text-copy-muted mb-4">
             All figures below are conservative estimates. Actual shelf life depends on initial
             food quality, storage temperature and sealing technique.
@@ -137,7 +137,7 @@ export default function PostShelfLife() {
             </p>
           </div>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">South African-Specific Tips</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">What Shelf Life Tips Matter Most for South African Homes?</h2>
 
           <h3 className="text-lg font-bold text-primary mt-6 mb-3">Game Meat (Venison)</h3>
           <p>
@@ -184,7 +184,7 @@ export default function PostShelfLife() {
             the surface. <Link href="/blog/vacuum-sealing-during-load-shedding" className="text-secondary font-semibold hover:text-primary transition-colors">Read our full load-shedding guide →</Link>
           </p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Watch: Why LAVA is the Best Choice for Food Preservation</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">Which Vacuum Sealer Preserves Food Best in South Africa?</h2>
           <div className="relative aspect-video bg-zinc-100 mb-4">
             <iframe
               src="https://www.youtube-nocookie.com/embed/yn-qpoAtbVI?rel=0&modestbranding=1"
@@ -197,7 +197,7 @@ export default function PostShelfLife() {
           </div>
           <p className="text-xs text-copy-muted mb-8">Available in English — unique LAVA advantages explained in under 2 minutes</p>
 
-          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">5 Rules for Maximum Shelf Life</h2>
+          <h2 className="text-2xl font-bold text-primary mt-10 mb-4">What Are the 5 Rules for Maximum Vacuum Sealed Shelf Life?</h2>
           <div className="space-y-3">
             {[
               { n: "1", title: "Start fresh", desc: "Vacuum sealing slows decay — it doesn't reverse it. Seal food at peak freshness for peak results." },
@@ -209,7 +209,7 @@ export default function PostShelfLife() {
               <div key={n} className="flex gap-4 border border-border bg-surface p-4">
                 <div className="h-8 w-8 bg-primary text-white font-black text-sm flex items-center justify-center shrink-0">{n}</div>
                 <div>
-                  <p className="font-bold text-primary text-sm">{title}</p>
+                  <h3 className="font-bold text-primary text-sm">{title}</h3>
                   <p className="text-xs text-copy-muted leading-relaxed mt-0.5">{desc}</p>
                 </div>
               </div>
