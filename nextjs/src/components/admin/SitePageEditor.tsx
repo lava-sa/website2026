@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2, Save, ExternalLink } from "lucide-react";
 import HtmlEditor from "@/components/admin/HtmlEditor";
+import AboutPageEditor from "@/components/admin/AboutPageEditor";
 import type { SitePageContent, SitePageRegistryEntry } from "@/lib/content/site-pages-types";
 
 const inputCls =
@@ -79,7 +80,9 @@ export default function SitePageEditor({ slug, entry, initialContent }: Props) {
     <form onSubmit={handleSave} className="space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-3 border border-border bg-surface px-4 py-3">
         <p className="text-sm text-copy-muted">
-          Layout and images stay in code — edit text, SEO and HTML content here.
+          {slug === "about"
+            ? "Edit all About page sections, images and copy below. Image paths point to files in public/images/."
+            : "Edit text, SEO and HTML content here. Some pages also support section images in their dedicated editor."}
         </p>
         <a
           href={entry.path}
@@ -234,6 +237,13 @@ export default function SitePageEditor({ slug, entry, initialContent }: Props) {
             }
           />
         </section>
+      )}
+
+      {fields.has("aboutPage") && (
+        <AboutPageEditor
+          content={content}
+          onChange={(aboutPage) => patch("aboutPage", aboutPage)}
+        />
       )}
 
       {fields.has("blocks") && (

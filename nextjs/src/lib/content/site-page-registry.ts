@@ -14,7 +14,7 @@ const CORE: SitePageRegistryEntry[] = [
     title: "About Lava-SA",
     path: "/about",
     group: "Marketing",
-    fields: ["seo", "hero", "stats", "blocks"],
+    fields: ["seo", "hero", "stats", "aboutPage"],
   },
   {
     slug: "contact",

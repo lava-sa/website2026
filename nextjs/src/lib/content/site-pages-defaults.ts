@@ -1,4 +1,5 @@
 import { blogPosts } from "@/lib/blog-posts";
+import { DEFAULT_ABOUT_PAGE } from "@/lib/content/about-page-defaults";
 import { getRegistryEntry, SITE_PAGE_REGISTRY } from "@/lib/content/site-page-registry";
 import type { SitePageContent } from "@/lib/content/site-pages-types";
 
@@ -52,15 +53,7 @@ export const DEFAULT_ABOUT: SitePageContent = {
     { value: "44+", label: "Years of German engineering" },
     { value: "350k+", label: "Customers worldwide" },
   ],
-  blocks: [
-    {
-      id: "mission",
-      overline: "Why we exist",
-      heading: "German quality. South African service.",
-      bodyHtml:
-        "<p>Lava-SA exists to bring genuine German vacuum sealing technology to every South African home, butchery, restaurant and hunting lodge — with personal support from people who use the machines every day.</p>",
-    },
-  ],
+  aboutPage: DEFAULT_ABOUT_PAGE,
 };
 
 export const DEFAULT_CONTACT: SitePageContent = {
