@@ -4,9 +4,16 @@ import { INDUSTRIES } from "@/data/industries";
 
 interface Props {
   industryKeys: string[];
+  /** Override default "Industries & Applications" — pass machine-specific heading on PDPs */
+  heading?: string;
+  subheading?: string;
 }
 
-export default function IndustriesSection({ industryKeys }: Props) {
+export default function IndustriesSection({
+  industryKeys,
+  heading = "Industries & Applications",
+  subheading = "This machine is trusted across a wide range of industries. Tap any category to explore specific use cases and accessories.",
+}: Props) {
   if (!industryKeys?.length) return null;
 
   const items = industryKeys
@@ -22,13 +29,8 @@ export default function IndustriesSection({ industryKeys }: Props) {
         {/* Header */}
         <div className="mb-12 text-center">
           <p className="overline mb-3">Built for your world</p>
-          <h2 className="text-3xl font-bold text-primary">
-            Industries & Applications
-          </h2>
-          <p className="mt-4 max-w-xl mx-auto text-base text-copy-muted">
-            This machine is trusted across a wide range of industries.
-            Tap any category to explore specific use cases and accessories.
-          </p>
+          <h2 className="text-3xl font-bold text-primary">{heading}</h2>
+          <p className="mt-4 max-w-xl mx-auto text-base text-copy-muted">{subheading}</p>
         </div>
 
         {/* Icon grid — 4 per row, last row centred */}

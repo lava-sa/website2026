@@ -3,9 +3,13 @@ import type { MachineTestReport } from "@/lib/machine-content";
 
 interface MachineTestsProps {
   tests: MachineTestReport[];
+  heading?: string;
 }
 
-export default function MachineTests({ tests }: MachineTestsProps) {
+export default function MachineTests({
+  tests,
+  heading = "Tested by the Experts",
+}: MachineTestsProps) {
   if (tests.length === 0) return null;
 
   return (
@@ -14,7 +18,7 @@ export default function MachineTests({ tests }: MachineTestsProps) {
         <div className="max-w-3xl mb-12">
           <p className="overline mb-3">Independent verdicts</p>
           <h2 className="text-3xl sm:text-4xl font-black text-primary leading-tight mb-4">
-            Tested by the Experts
+            {heading}
           </h2>
           <p className="text-copy leading-relaxed">
             German hunting, angling and consumer magazines have put Lava machines through

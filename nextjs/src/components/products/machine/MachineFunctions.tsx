@@ -4,9 +4,13 @@ import type { MachineFunctionItem } from "@/lib/machine-content";
 
 interface MachineFunctionsProps {
   functions: MachineFunctionItem[];
+  heading?: string;
 }
 
-export default function MachineFunctions({ functions }: MachineFunctionsProps) {
+export default function MachineFunctions({
+  functions,
+  heading = "Functions & Features",
+}: MachineFunctionsProps) {
   if (functions.length === 0) return null;
 
   return (
@@ -15,7 +19,7 @@ export default function MachineFunctions({ functions }: MachineFunctionsProps) {
         <div className="max-w-3xl mb-12">
           <p className="overline mb-3">Capabilities</p>
           <h2 className="text-3xl sm:text-4xl font-black text-primary leading-tight">
-            Functions &amp; Features
+            {heading}
           </h2>
         </div>
 

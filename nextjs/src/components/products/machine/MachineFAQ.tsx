@@ -6,9 +6,13 @@ import type { MachineFaqItem } from "@/lib/machine-content";
 
 interface MachineFAQProps {
   items: MachineFaqItem[];
+  heading?: string;
 }
 
-export default function MachineFAQ({ items }: MachineFAQProps) {
+export default function MachineFAQ({
+  items,
+  heading = "Frequently Asked Questions",
+}: MachineFAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   if (items.length === 0) return null;
@@ -23,7 +27,7 @@ export default function MachineFAQ({ items }: MachineFAQProps) {
             </div>
             <p className="overline mb-3">Common questions</p>
             <h2 className="text-3xl sm:text-4xl font-black text-primary leading-tight">
-              Frequently Asked
+              {heading}
             </h2>
           </div>
 

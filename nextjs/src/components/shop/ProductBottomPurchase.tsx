@@ -109,12 +109,12 @@ export default function ProductBottomPurchase({
                     SKU: {product.sku}
                   </p>
                 )}
-                <h2
+                <p
                   id={headingId}
                   className="text-xl sm:text-2xl font-black text-primary leading-tight"
                 >
                   {product.name}
-                </h2>
+                </p>
 
                 {reviews && (
                   <a

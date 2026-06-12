@@ -3,9 +3,13 @@ import type { MachineVideo } from "@/lib/machine-content";
 
 interface MachineVideosProps {
   videos: MachineVideo[];
+  heading?: string;
 }
 
-export default function MachineVideos({ videos }: MachineVideosProps) {
+export default function MachineVideos({
+  videos,
+  heading = "Videos",
+}: MachineVideosProps) {
   if (videos.length === 0) return null;
 
   return (
@@ -14,7 +18,7 @@ export default function MachineVideos({ videos }: MachineVideosProps) {
         <div className="max-w-3xl mb-12">
           <p className="overline mb-3">Watch it work</p>
           <h2 className="text-3xl sm:text-4xl font-black text-primary leading-tight">
-            Videos
+            {heading}
           </h2>
         </div>
 

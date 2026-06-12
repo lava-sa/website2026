@@ -3,9 +3,13 @@ import type { MachineDownload } from "@/lib/machine-content";
 
 interface MachineDownloadsProps {
   downloads: MachineDownload[];
+  heading?: string;
 }
 
-export default function MachineDownloads({ downloads }: MachineDownloadsProps) {
+export default function MachineDownloads({
+  downloads,
+  heading = "Downloads",
+}: MachineDownloadsProps) {
   if (downloads.length === 0) return null;
 
   return (
@@ -18,7 +22,7 @@ export default function MachineDownloads({ downloads }: MachineDownloadsProps) {
             </div>
             <p className="overline mb-3">Documentation</p>
             <h2 className="text-3xl font-black text-primary leading-tight mb-4">
-              Downloads
+              {heading}
             </h2>
             <p className="text-sm text-copy-muted leading-relaxed">
               Manuals and datasheets. English-language documentation currently

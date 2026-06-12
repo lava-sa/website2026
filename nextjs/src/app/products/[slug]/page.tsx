@@ -43,6 +43,7 @@ import PhoneNumbers from "@/components/layout/PhoneNumbers";
 import ProductBottomPurchase from "@/components/shop/ProductBottomPurchase";
 import { resolveProductSlugRedirect } from "@/lib/product-redirects";
 import { reviewFormHrefForCategory } from "@/lib/review-forms";
+import { getMachinePdpHeadings } from "@/lib/machine-pdp-headings";
 
 // ── Static params ────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
@@ -252,6 +253,7 @@ export default async function ProductDetailPage({
   const isOnOrder = product.stock_status === "on_order";
   const price     = product.sale_price ?? product.regular_price;
   const isVacuumMachine = product.categories?.slug === "vacuum-machines";
+  const machineHeadings = isVacuumMachine ? getMachinePdpHeadings(product.name) : null;
   const isSousVide = product.categories?.slug === "sous-vide";
   const machineContent = isVacuumMachine ? getMachineContent(slug, specs) : null;
   const funnelConfig = parseFunnelConfig(product.specs?.funnel_config);
@@ -342,9 +344,9 @@ export default async function ProductDetailPage({
       : null);
   const productHighlights = productReviews ? null : getProductHighlights(product);
   const relatedHeading = isIndustrialRelatedMachine(slug)
-    ? "Related Industrial Machines"
+    ? machineHeadings?.relatedIndustrial ?? "Compare Other LAVA Industrial Vacuum Sealers"
     : isVacuumMachine
-      ? "Related Machines"
+      ? machineHeadings?.relatedMachines ?? "Compare Other LAVA Vacuum Sealers"
       : product.categories?.name
         ? `More in ${product.categories.name}`
         : "Related Products";
@@ -641,7 +643,7 @@ export default async function ProductDetailPage({
           <div className="section-container max-w-3xl mx-auto">
             <p className="overline mb-3">Everything you need to know</p>
             <h2 className="text-3xl font-bold text-primary mb-8">
-              About this Product
+              {machineHeadings?.about ?? "About this Product"}
             </h2>
             <div
               className="prose prose-lg max-w-none text-copy"
@@ -665,7 +667,12 @@ export default async function ProductDetailPage({
       {/* ═══════════════════════════════════════════════════════════════
           NEW — Machine Functions (from machine-content.ts)
       ════════════════════════════════════════════════════════════════ */}
-      {machineContent && <MachineFunctions functions={machineContent.functions} />}
+      {machineContent && (
+        <MachineFunctions
+          functions={machineContent.functions}
+          heading={machineHeadings?.functions}
+        />
+      )}
 
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 3 — Specifications
@@ -675,7 +682,9 @@ export default async function ProductDetailPage({
           <div className="section-container">
             <div className="max-w-2xl mx-auto">
               <p className="overline mb-3">Technical details</p>
-              <h2 className="text-3xl font-bold text-primary mb-8">Specifications</h2>
+              <h2 className="text-3xl font-bold text-primary mb-8">
+                {machineHeadings?.specs ?? "Specifications"}
+              </h2>
               <table className="w-full text-sm border border-border">
                 <tbody>
                   {displaySpecs.map(([key, value], i) => (
@@ -696,7 +705,12 @@ export default async function ProductDetailPage({
       {/* ═══════════════════════════════════════════════════════════════
           NEW — Delivery contents (what's in the box)
       ════════════════════════════════════════════════════════════════ */}
-      {machineContent && <MachineDelivery items={machineContent.deliveryContents} />}
+      {machineContent && (
+        <MachineDelivery
+          items={machineContent.deliveryContents}
+          heading={machineHeadings?.delivery}
+        />
+      )}
 
       {/* ═══════════════════════════════════════════════════════════════
           NEW — Brand benefit showcase (5 reusable blocks, every machine)
@@ -713,7 +727,15 @@ export default async function ProductDetailPage({
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 4 — Industries
       ════════════════════════════════════════════════════════════════ */}
-      <IndustriesSection industryKeys={product.industries ?? []} />
+      <IndustriesSection
+        industryKeys={product.industries ?? []}
+        heading={machineHeadings?.industries}
+        subheading={
+          machineHeadings
+            ? `See how the ${product.name} is used in butchery, hunting, catering, home production and more — tap a category for guides and accessories.`
+            : undefined
+        }
+      />
 
       {!isOnOrder && (
         <ProductBottomPurchase
@@ -760,7 +782,9 @@ export default async function ProductDetailPage({
                 <div className="flex items-end justify-between mb-6">
                   <div>
                     <p className="overline mb-1">Compatible with this machine</p>
-                    <h2 className="text-2xl font-bold text-primary">Vacuum Bags</h2>
+                    <h2 className="text-2xl font-bold text-primary">
+                      {machineHeadings?.bags ?? "Vacuum Bags"}
+                    </h2>
                   </div>
                   <Link
                     href="/products/vacuum-bags"
@@ -788,7 +812,9 @@ export default async function ProductDetailPage({
                 <div className="flex items-end justify-between mb-6">
                   <div>
                     <p className="overline mb-1">Compatible with this machine</p>
-                    <h2 className="text-2xl font-bold text-primary">Vacuum Rolls</h2>
+                    <h2 className="text-2xl font-bold text-primary">
+                      {machineHeadings?.rolls ?? "Vacuum Rolls"}
+                    </h2>
                     <p className="text-sm text-copy-muted mt-1">Cut to any length — no waste</p>
                   </div>
                   <Link
@@ -830,7 +856,7 @@ export default async function ProductDetailPage({
           <div className="section-container max-w-4xl mx-auto">
             <p className="overline mb-2">Machine-specific compatibility</p>
             <h2 className="text-3xl font-black text-primary mb-3">
-              Vacuum Bag & Roll Compatibility
+              {machineHeadings?.compatibility ?? "Vacuum Bag & Roll Compatibility"}
             </h2>
             <p className="text-copy mb-8">
               Janet quick answer: <strong>{product.name} seals up to {formatCm(machineMaxWidthCm)} wide.</strong> Compatible consumables must be this width or narrower.
@@ -883,10 +909,10 @@ export default async function ProductDetailPage({
       ════════════════════════════════════════════════════════════════ */}
       {machineContent && (
         <>
-          <MachineVideos videos={machineContent.videos} />
-          <MachineTests tests={machineContent.tests} />
-          <MachineDownloads downloads={machineContent.downloads} />
-          <MachineFAQ items={machineFaqItems} />
+          <MachineVideos videos={machineContent.videos} heading={machineHeadings?.videos} />
+          <MachineTests tests={machineContent.tests} heading={machineHeadings?.tests} />
+          <MachineDownloads downloads={machineContent.downloads} heading={machineHeadings?.downloads} />
+          <MachineFAQ items={machineFaqItems} heading={machineHeadings?.faq} />
         </>
       )}
 
@@ -899,7 +925,9 @@ export default async function ProductDetailPage({
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
               <div>
                 <p className="overline mb-2">Verified customers</p>
-                <h2 className="text-3xl font-bold text-primary">What Customers Say</h2>
+                <h2 className="text-3xl font-bold text-primary">
+                  {machineHeadings?.reviews ?? "What Customers Say"}
+                </h2>
 
                 {slugReviews && (
                   <p className="text-[10px] sm:text-xs text-copy-muted mt-2 font-medium">

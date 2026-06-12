@@ -8,6 +8,7 @@ import {
   parseMachineBenefitsFromSpecs,
   resolveBenefitImageUrl,
 } from "@/lib/machine-benefits";
+import { getBenefitBlockHeading } from "@/lib/machine-pdp-headings";
 
 const BLOCK_META: Record<
   BenefitBlockId,
@@ -55,11 +56,17 @@ function BenefitImage({
 function BenefitText({
   blockId,
   block,
+  machineName,
 }: {
   blockId: BenefitBlockId;
   block: MachineBenefitsConfig[BenefitBlockId];
+  machineName?: string;
 }) {
   const { icon: Icon, dark } = BLOCK_META[blockId];
+  const heading =
+    machineName?.trim()
+      ? getBenefitBlockHeading(blockId, machineName.trim(), block.title)
+      : block.title;
 
   return (
     <div>
@@ -86,7 +93,7 @@ function BenefitText({
           dark ? "" : "text-primary"
         }`}
       >
-        {block.title}
+        {heading}
       </h2>
       {block.paragraph1 && (
         <p className={`leading-relaxed mb-4 ${dark ? "text-white/80" : "text-copy"}`}>
@@ -182,12 +189,12 @@ export default function MachineBenefitsShowcase({
                       className="order-2 lg:order-1"
                     />
                     <div className="order-1 lg:order-2">
-                      <BenefitText blockId={blockId} block={block} />
+                      <BenefitText blockId={blockId} block={block} machineName={machineName} />
                     </div>
                   </>
                 ) : (
                   <>
-                    <BenefitText blockId={blockId} block={block} />
+                    <BenefitText blockId={blockId} block={block} machineName={machineName} />
                     <BenefitImage src={imageSrc} alt={imageAlt} dark={meta.dark} />
                   </>
                 )}

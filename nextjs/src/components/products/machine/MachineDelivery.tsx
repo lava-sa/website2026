@@ -2,9 +2,13 @@ import { Box, Check } from "lucide-react";
 
 interface MachineDeliveryProps {
   items: string[];
+  heading?: string;
 }
 
-export default function MachineDelivery({ items }: MachineDeliveryProps) {
+export default function MachineDelivery({
+  items,
+  heading = "What's Included",
+}: MachineDeliveryProps) {
   if (items.length === 0) return null;
 
   return (
@@ -17,7 +21,7 @@ export default function MachineDelivery({ items }: MachineDeliveryProps) {
             </div>
             <p className="overline mb-3">In the box</p>
             <h2 className="text-3xl font-black text-primary leading-tight mb-4">
-              What&apos;s Included
+              {heading}
             </h2>
             <p className="text-sm text-copy-muted leading-relaxed">
               Everything you need to start vacuum sealing the day your delivery arrives.
