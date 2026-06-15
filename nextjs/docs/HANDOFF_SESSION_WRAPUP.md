@@ -1,117 +1,99 @@
 # Session wrap-up — June 2026
 
-_Use this at the start of the next chat for Lava-SA (and cross-project reminders for Star Aesthetic)._
+_Use this at the start of the next Lava-SA chat._
 
-**Last updated:** 11 June 2026  
-**Committed today:** `Add Cloudflare Turnstile security for public forms` (16 files)
-
----
-
-## Lava-SA — completed this session block
-
-### Product / PDP
-- **Per-machine benefit showcase** — admin editor + frontend; stored in `product.specs.machine_benefits`; sections 2–4 optional; gallery image defaults.
-- **Gold bottom purchase bar** — `ProductBottomPurchase.tsx`; mid + bottom placement on machine PDPs.
-- **Industrial related products** — `getIndustrialRelatedProducts()` for V.300 / V.400 / V.500 slugs.
-- **Hide out-of-stock** from curated listings (homepage featured, related, compatible bags) — not category browse.
-
-### Reviews (Lava-SA)
-- **Three review forms:** `/submit-review`, `/submit-review/bags-rolls`, `/submit-review/containers`.
-- Config: `src/lib/review-forms.ts`; UI: `ReviewFormClient.tsx`, `ReviewFormShell.tsx`, `CategoryReviewBanner.tsx`.
-- API: `POST /api/reviews` — min 80 chars; stores category in `machine` field.
-- PDP links use `reviewFormHrefForCategory()` by category slug.
-
-### Cloudflare / security (Lava-SA) — committed, deploy steps remain
-| Item | Status |
-|------|--------|
-| `lib/security/turnstile.ts`, `signup-guard.ts`, `public-form-guard.ts` | Done |
-| `TurnstileWidget`, `HoneypotField` | Done |
-| API guards: `/api/contact`, `/api/reviews`, `/api/mailing-list` | Done |
-| Forms wired (contact, mailing list, written reviews) | Done |
-| Middleware: block gated write APIs during site-access preview | Done |
-| Security headers in `next.config.ts` | Done |
-| `docs/CLOUDFLARE_SETUP.md` | Done |
-| `.env.example` Turnstile keys | Done |
-| `@marsidev/react-turnstile` in `package.json` | Done — run `npm install` locally if needed |
-| Turnstile widget in Cloudflare dashboard | Done — "Lava-SA Vacuum Sealers", Managed, `lava-sa.com` + `www` |
-| Keys in `.env.local` | Placeholders added — paste site + secret key |
-| Keys in **Vercel Production + Preview** | **Done** (11 Jun 2026) — redeployed |
-| Live smoke test — `/contact` Turnstile | **Done** (11 Jun 2026) — widget loads on production |
-| DNS → Cloudflare nameservers | **Deferred** — see below |
+**Last updated:** 12 June 2026  
+**Latest commits:**
+- `d1080b14` Add CMS image upload and library browser for page editor
+- `17eef2ac` Expand About page CMS with full sections and editable images
+- `42d702aa` Add product AI discoverability auto-fill and populate all products
 
 ---
 
-## Lava-SA — deferred (do when ready)
+## Completed this session (12 Jun 2026)
 
-### Cloudflare DNS (optional for Turnstile; needed for proxy/CDN/WAF)
-- Domain registered at **Domains.co.za**; DNS currently in **cPanel Zone Editor**.
-- Website already correct: `@` → `76.76.21.21`, `www` → `cname.vercel-dns.com`.
-- Email on cPanel server `192.185.175.200` / `monaco.nodeserver.com` — **do not break MX/mail**.
-- **Safe cPanel access:** bookmark `https://192.185.175.200:2083` or hosting panel — **not** `lava-sa.com/cpanel` (breaks when root points to Vercel).
-- When moving nameservers to Cloudflare: copy **all** records first; `@`/`www` proxied orange; `mail`, `cpanel`, `webmail` → A to hosting IP, **grey cloud**; merge duplicate SPF TXT if needed.
-- SSL in Cloudflare: **Full (strict)** after nameserver cutover.
+### Content SEO — heading hierarchy
+- **All 10 blog articles** — H2s rewritten to question-format, SEO-specific copy; card titles changed from `<p>` to `<h3>`.
+- **Vacuum packaging guides** — `advantages`, `meat-aging`, `bags-guide`, `dry-aging`, `expert-tips`, `gift-ideas` — same treatment.
+- **Reusable components:** `FeatureCard.tsx` (h3 + article + id), `AudienceCard.tsx` (h4), `slugify-heading-id.ts`.
+- **Advantages page** fully refactored to use these components.
 
-### Star Aesthetic lesson
-- `staraesthetic.co.za/cpanel` lost after domain pointed to Vercel; DNS with previous host. Recovery = server hostname/IP login or host cooperation — not WHM on public domain path.
+### Product AI Discoverability
+- Fields in admin: `ai_summary`, `ai_search_terms`, `ai_use_cases` (stored in `product.specs`).
+- **All 99 products auto-filled** in Supabase via `npm run fill:product-ai`.
+- Generator: `src/lib/product-ai-discoverability.ts`.
+- Admin **"Auto-fill from product data"** button on product edit.
+- Live PDP: "Product At a Glance" section + highlight cards + JSON-LD description fallback.
 
----
+### Site Pages CMS (`/admin/pages`)
+- **Pages** menu item in admin sidebar (below Site review).
+- **DB:** `supabase/019_site_pages.sql` — run once in Supabase if saves should persist (falls back to code defaults if table missing).
+- **About page — full editor:** all 10 sections editable (hero, origin, timeline, SA founders, pillars, quality, sustainability, service, CTA).
+- **CMS image upload:** `POST /api/admin/cms-upload` — Upload image + Browse library per page folder (`cms/about/` on Supabase).
+- **Component:** `CmsImageField.tsx` — upload, library, preview, alt text, captions.
+- **Fixed:** hero default image path (`/images/headers/...` not `/images/homepage/...`); quality section uses V.300 Premium X image not discontinued model.
 
-## Star Aesthetic — backlog (not started on Lava session)
-
-Mirror or adapt from Lava-SA where useful:
-
-| Feature | Lava-SA | Star Aesthetic |
-|---------|---------|----------------|
-| Cloudflare Turnstile on forms | Done | Partially done (contact, book, rewards, skin assessment) |
-| Cloudflare DNS / nameservers | Deferred | **Not done** — same caution as Lava |
-| **Customer review submission** (3 category forms, structured Q&A, video tab) | Done | **TODO — add to Star** |
-| Per-machine benefit blocks | Lava PDPs | N/A (different product type) |
-| Mailing list with interest categories | Done | Check if equivalent exists |
-
-### Suggested Star Aesthetic review work (when picked up)
-1. Copy/adapt `review-forms.ts`, `ReviewFormClient`, API route, admin approval flow.
-2. Star categories: treatments / skincare products / clinic experience (define with client).
-3. Wire Turnstile + honeypot on new forms (pattern already in Star codebase).
-4. PDP + category banners linking to correct `/submit-review/*` URL.
-
-Reference Lava paths:
-- `nextjs/src/lib/review-forms.ts`
-- `nextjs/src/components/reviews/`
-- `nextjs/src/app/submit-review/**`
-- `nextjs/src/app/api/reviews/route.ts`
-
-Star security reference (already exists):
-- `star-aesthetic-centre/nextjs/lib/security/`
-- `star-aesthetic-centre/nextjs/components/security/`
+### Still wired lightly (registry only — save works, limited frontend CMS)
+- Homepage (`/`), Contact, Blog index — hero/SEO partially wired.
+- Help, legal, applications, vacuum-packaging subpages — use `cmsPageMetadata()` + `<CmsPageExtras />` pattern when extending.
 
 ---
 
-## Site pages CMS (added after wrap-up)
+## Completed earlier (still live)
 
-- **Admin:** `/admin/pages` — edit homepage, about, contact, blog, help, legal, guides, etc.
-- **DB:** Run `supabase/019_site_pages.sql` in Supabase SQL editor (once).
-- **Fully wired on frontend:** `/`, `/about`, `/contact`, `/blog`, all blog post SEO, `/help/faq` (metadata + optional body HTML).
-- **In admin registry (save works; wire frontend per page as needed):** help, legal, applications, vacuum-packaging subpages — use `cmsPageMetadata(slug, path)` + `<CmsPageExtras slug="..." />`.
+### Cloudflare / Turnstile — committed + production verified
+- Turnstile on contact, mailing list, written reviews.
+- Keys in Vercel. Widget works on live `/contact`.
+- **DNS → Cloudflare nameservers: DEFERRED** (protect cPanel email — use `192.185.175.200:2083` not `lava-sa.com/cpanel`).
 
----
+### Machine PDPs
+- Product-specific H2 headings: `src/lib/machine-pdp-headings.ts`.
+- Per-machine benefit showcase in admin + frontend.
 
-## Quick start next Lava-SA session
-
-1. Add Turnstile keys to **Vercel** → redeploy → test contact form on production.
-2. `npm install` in `nextjs` if local build complains about `@marsidev/react-turnstile`.
-3. SEO handoff: `docs/HANDOFF_SEO_NEXT_CHAT.md`.
-4. CRM/Janet: `docs/HANDOFF_CRM_AND_JANET_LEADS.md`.
-5. Cloudflare DNS only when comfortable — `docs/CLOUDFLARE_SETUP.md`.
+### Reviews
+- Three category forms: `/submit-review`, `/submit-review/bags-rolls`, `/submit-review/containers`.
 
 ---
 
-## Key file index (Lava-SA)
+## Local dev — known issues
+
+| Issue | Fix |
+|-------|-----|
+| `Can't resolve '@marsidev/react-turnstile'` | `cd nextjs && npm install` |
+| Pages CMS saves not persisting | Run `supabase/019_site_pages.sql` in Supabase SQL editor |
+| About hero preview broken on old saved data | Re-upload via admin or save page to pick up fixed default path |
+
+---
+
+## Priority for next session
+
+1. **Extend Pages CMS** to Homepage (hero slideshow images, section copy) and Contact — same upload pattern as About.
+2. **Wire remaining registry pages** (help, legal, applications) to frontend CMS fields.
+3. **Cloudflare DNS** — only when ready; copy all MX/mail/cpanel records first (`docs/CLOUDFLARE_SETUP.md`).
+4. **Star Aesthetic backlog** — reviews system, Cloudflare DNS (same email caution).
+5. **About page content** — Anneke to upload correct Wilco & Anneke photo (replace any duplicate Landig image) via admin Upload image.
+
+---
+
+## Key file index
 
 | Area | Paths |
 |------|--------|
-| Security | `src/lib/security/*`, `src/components/security/*`, `src/middleware.ts` |
-| Reviews | `src/lib/review-forms.ts`, `src/components/reviews/*`, `src/app/submit-review/**` |
-| Machine benefits | `src/lib/machine-benefits.ts`, `MachineBenefitsEditor.tsx`, `MachineBenefitsShowcase.tsx` |
-| Shop CTA | `src/components/shop/ProductBottomPurchase.tsx` |
-| Products / stock | `src/lib/products.ts` |
-| Cloudflare docs | `docs/CLOUDFLARE_SETUP.md` |
+| Pages CMS | `src/app/admin/pages/`, `src/lib/content/site-page-*`, `src/lib/queries/site-pages.ts` |
+| About CMS | `src/lib/content/about-page-defaults.ts`, `src/components/admin/AboutPageEditor.tsx` |
+| CMS images | `src/components/admin/CmsImageField.tsx`, `src/app/api/admin/cms-upload/route.ts` |
+| AI discoverability | `src/lib/product-ai-discoverability.ts`, `scripts/fill-product-ai-fields.mjs` |
+| Content cards | `src/components/content/FeatureCard.tsx`, `AudienceCard.tsx` |
+| Security | `src/lib/security/*`, `docs/CLOUDFLARE_SETUP.md` |
+| Machine H2s | `src/lib/machine-pdp-headings.ts` |
+| Reviews | `src/lib/review-forms.ts`, `src/app/submit-review/**` |
+| SEO handoff | `docs/HANDOFF_SEO_NEXT_CHAT.md` |
+| CRM/Janet | `docs/HANDOFF_CRM_AND_JANET_LEADS.md` |
+
+---
+
+## Star Aesthetic — backlog (unchanged)
+
+- Customer review submission (mirror Lava pattern).
+- Cloudflare DNS (deferred on both sites).
+- Reference: `star-aesthetic-centre/nextjs/lib/security/`
