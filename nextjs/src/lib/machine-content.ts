@@ -37,6 +37,8 @@ export interface MachineDownload {
   language: "English" | "German" | "Multi-language";
   fileType: "PDF" | "ZIP" | "DOC";
   size?: string;
+  /** When true, visitor must sign in before opening the manual link */
+  membersOnly?: boolean;
 }
 
 export interface MachineVideo {
@@ -190,10 +192,11 @@ const v100PremiumX: MachineRichContent = {
   downloads: [
     {
       title: "V.100 Premium X — Operating Manual (English)",
-      description: "Full setup, operation, maintenance and troubleshooting guide.",
-      href: "https://la-va.com/en/vacuum-sealer-v.100-premium-x/",
+      description: "Lava-SA edition — portrait format. Open online or save as PDF.",
+      href: "/manuals/v100-premium-x",
       language: "English",
       fileType: "PDF",
+      membersOnly: true,
     },
   ],
 
@@ -229,9 +232,38 @@ const v100PremiumX: MachineRichContent = {
   ],
 };
 
+// ── V.300 Series (Premium X, White, Black) ───────────────────────────────────
+const v300SeriesDownloads: MachineDownload[] = [
+  {
+    title: "V.300 Series — Operating Manual (English)",
+    description: "Full setup, operation, troubleshooting and specifications. Lava-SA edition, portrait format.",
+    href: "/manuals/v300-series",
+    language: "English",
+    fileType: "PDF",
+    membersOnly: true,
+  },
+];
+
+const v300SeriesVideo: MachineVideo = {
+  title: "V.300 Series — Vacuum sealing in action",
+  description: "Automatic and manual modes, container vacuuming, and everyday sealing tasks.",
+  embedUrl: "https://la-va.com/en/vacuum-sealer-v.300-premium-x/#videos",
+};
+
+const v300SeriesShared: Omit<MachineRichContent, "downloads"> = {
+  functions: [],
+  deliveryContents: [],
+  tests: [],
+  videos: [v300SeriesVideo],
+  faq: [],
+};
+
 // ── Registry ─────────────────────────────────────────────────────────────────
 export const MACHINE_CONTENT: Record<string, MachineRichContent> = {
   "v100-premium-x": v100PremiumX,
+  "v300-premium-x": { ...v300SeriesShared, downloads: v300SeriesDownloads },
+  "v300-white": { ...v300SeriesShared, downloads: v300SeriesDownloads },
+  "v300-black": { ...v300SeriesShared, downloads: v300SeriesDownloads },
 };
 
 function hasItems<T>(arr: T[] | undefined): arr is T[] {

@@ -1,10 +1,29 @@
-/** Manual walkthrough: filenames under public/images/manual/v300-premium-x/ */
-export const V300_MANUAL_SLIDES: { base: string; captionEn: string }[] = [
-  { base: "manual-01", captionEn: "Device layout — seals, liquid separator, bag stop, container port, LCS magnet." },
-  { base: "manual-02", captionEn: "Controls — gauge, auto/manual, seal time, bag vs container, start seal." },
-  { base: "manual-03", captionEn: "Automatic mode — one-touch vacuum + seal when full vacuum is reached." },
-  { base: "manual-04", captionEn: "Manual mode + L+ — dial vacuum for wet or delicate foods, seal when ready." },
-  { base: "manual-05", captionEn: "Bag loading, rolls, containers — correct bag stop, overlap technique, care." },
+import { V300_MANUAL_IMAGE_DIR } from "@/lib/v300-manual-images";
+
+/** Manual walkthrough slides for landing pages and galleries */
+export const V300_MANUAL_SLIDES: { file: string; captionEn: string }[] = [
+  {
+    file: "lava-sa-V300-premium-x-manual-02.jpg",
+    captionEn: "Device layout — seals, liquid separator, bag stop, container port, LCS magnet.",
+  },
+  {
+    file: "lava-sa-V300-premium-x-manual-03.jpg",
+    captionEn: "Controls — gauge, auto/manual, seal time, bag vs container, manual seal.",
+  },
+  {
+    file: "lava-sa-V300-premium-x-manual-06.webp",
+    captionEn: "Automatic mode — one-touch vacuum and seal when full vacuum is reached.",
+  },
+  {
+    file: "lava-sa-V300-premium-x-manual-04.jpg",
+    captionEn: "G-Vac overlap technique for smooth bags.",
+  },
+  {
+    file: "lava-sa-V300-premium-x-manual-08.webp",
+    captionEn: "Container vacuuming with the included suction attachment.",
+  },
 ];
 
-export const V300_MANUAL_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"] as const;
+export function v300ManualImageSrc(file: string) {
+  return `${V300_MANUAL_IMAGE_DIR}/${file}`;
+}

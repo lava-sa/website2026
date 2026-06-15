@@ -20,7 +20,8 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
     pathname.startsWith("/buy") ||
     pathname.startsWith("/lp") ||
     pathname.startsWith("/site-review") ||
-    pathname.startsWith("/site-access");
+    pathname.startsWith("/site-access") ||
+    pathname.startsWith("/manuals");
 
   if (isAdmin) {
     return <>{children}</>;

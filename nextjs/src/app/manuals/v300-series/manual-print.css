@@ -1,0 +1,46 @@
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  body {
+    background: white !important;
+  }
+
+  .manual-viewer {
+    background: white !important;
+  }
+
+  .manual-toolbar,
+  header.site-header,
+  footer,
+  nav,
+  .cookie-consent,
+  [data-janet-agent] {
+    display: none !important;
+  }
+
+  .manual-document {
+    gap: 0 !important;
+  }
+
+  .manual-page {
+    box-shadow: none !important;
+    break-after: page;
+    page-break-after: always;
+    width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 auto !important;
+  }
+
+  .manual-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+}

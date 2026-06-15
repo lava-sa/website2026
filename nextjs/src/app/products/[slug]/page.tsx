@@ -29,6 +29,7 @@ import AddToCartButton from "@/components/shop/AddToCartButton";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
 import { parseFunnelConfig } from "@/lib/funnel";
 import { getMachineContent, type MachineFaqItem } from "@/lib/machine-content";
+import { getMachineMedia } from "@/lib/get-machine-media";
 import MachineFunctions from "@/components/products/machine/MachineFunctions";
 import MachineDelivery from "@/components/products/machine/MachineDelivery";
 import MachineBenefitsShowcase from "@/components/products/machine/MachineBenefitsShowcase";
@@ -257,6 +258,9 @@ export default async function ProductDetailPage({
   const machineHeadings = isVacuumMachine ? getMachinePdpHeadings(product.name) : null;
   const isSousVide = product.categories?.slug === "sous-vide";
   const machineContent = isVacuumMachine ? getMachineContent(slug, specs) : null;
+  const machineMedia = isVacuumMachine
+    ? getMachineMedia(slug, product.name, machineContent)
+    : null;
   const funnelConfig = parseFunnelConfig(product.specs?.funnel_config);
   const aiFields = resolveProductAiDiscoverability({
     name: product.name,
@@ -735,6 +739,16 @@ export default async function ProductDetailPage({
       )}
 
       {/* ═══════════════════════════════════════════════════════════════
+          Videos + Manuals (all vacuum machines — above Industries)
+      ════════════════════════════════════════════════════════════════ */}
+      {isVacuumMachine && machineMedia ? (
+        <>
+          <MachineVideos videos={machineMedia.videos} heading={machineHeadings?.videos} />
+          <MachineDownloads downloads={machineMedia.downloads} heading={machineHeadings?.downloads} />
+        </>
+      ) : null}
+
+      {/* ═══════════════════════════════════════════════════════════════
           SECTION 4 — Industries
       ════════════════════════════════════════════════════════════════ */}
       <IndustriesSection
@@ -915,16 +929,14 @@ export default async function ProductDetailPage({
       )}
 
       {/* ═══════════════════════════════════════════════════════════════
-          NEW — Videos / Tests / Downloads / FAQ
+          Tests / FAQ (videos + manuals moved above Industries)
       ════════════════════════════════════════════════════════════════ */}
-      {machineContent && (
+      {machineContent ? (
         <>
-          <MachineVideos videos={machineContent.videos} heading={machineHeadings?.videos} />
           <MachineTests tests={machineContent.tests} heading={machineHeadings?.tests} />
-          <MachineDownloads downloads={machineContent.downloads} heading={machineHeadings?.downloads} />
           <MachineFAQ items={machineFaqItems} heading={machineHeadings?.faq} />
         </>
-      )}
+      ) : null}
 
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 6 — Reviews (machines + items in reviews.json) or features

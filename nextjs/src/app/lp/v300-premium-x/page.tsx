@@ -4,7 +4,6 @@ import { CheckCircle2 } from "lucide-react";
 import V300InstantCheckout from "@/components/landing/V300InstantCheckout";
 import V300ManualGallery from "@/components/landing/V300ManualGallery";
 import V300LpReviews from "@/components/landing/V300LpReviews";
-import { V300_MANUAL_DE_EXCERPT } from "@/content/v300-manual-de-excerpt";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -121,38 +120,18 @@ export default function V300PremiumXLandingPage() {
         </div>
       </section>
 
-      {/* Manual visuals */}
+      {/* Manual */}
       <section id="manual" className="py-14 bg-surface border-y border-border scroll-mt-4">
         <div className="section-container max-w-5xl">
           <h2 className="text-2xl sm:text-3xl font-black text-primary">
-            Factory manual — visual walkthrough (your reference photos)
+            Operating manual — English, portrait format
           </h2>
           <p className="mt-2 text-sm text-copy-muted max-w-3xl">
-            Place images in{" "}
-            <code className="bg-white px-1 py-0.5 border border-border text-xs">public/images/manual/v300-premium-x/</code>{" "}
-            as <code className="text-xs">manual-01</code> through <code className="text-xs">manual-05</code> with
-            extension <code className="text-xs">.jpg</code>, <code className="text-xs">.png</code>, or{" "}
-            <code className="text-xs">.webp</code>. The gallery tries each format automatically.
+            Lava-SA edition based on the Landig + Lava factory manual. Open the full document, then use{" "}
+            <strong className="text-primary">Save as PDF</strong> for a printable A4 copy.
           </p>
           <div className="mt-8">
             <V300ManualGallery />
-          </div>
-
-          <div className="mt-10 border-2 border-primary/20 bg-white p-5 sm:p-6">
-            <h3 className="text-lg font-black text-primary">Original German manual (excerpt — text you supplied)</h3>
-            <p className="mt-2 text-xs text-copy-muted">
-              Full printed/PDF manual ships with the machine. Below is a searchable excerpt from the manufacturer
-              documentation (German).
-            </p>
-            <details className="mt-4 group">
-              <summary className="cursor-pointer text-sm font-black uppercase tracking-wide text-[#c41230] list-none flex items-center gap-2">
-                <span className="group-open:rotate-90 transition-transform">▸</span>
-                Bedienungsanleitung (Auszug) — anzeigen
-              </summary>
-              <pre className="mt-4 max-h-[min(70vh,480px)] overflow-y-auto whitespace-pre-wrap text-xs sm:text-sm text-copy leading-relaxed bg-surface p-4 border border-border font-sans">
-                {V300_MANUAL_DE_EXCERPT}
-              </pre>
-            </details>
           </div>
         </div>
       </section>

@@ -90,6 +90,43 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // ── Member-only operating manuals ───────────────────────────────────────
+  if (pathname.startsWith("/manuals")) {
+    let manualResponse = NextResponse.next({ request });
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+            manualResponse = NextResponse.next({ request });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              manualResponse.cookies.set(name, value, options)
+            );
+          },
+        },
+      }
+    );
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      const loginUrl = new URL("/account/login", request.url);
+      loginUrl.searchParams.set("from", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    if (preview) withNoindex(manualResponse);
+    return manualResponse;
+  }
+
   // ── Customer auth (Supabase session) ────────────────────────────────────
   if (pathname.startsWith("/account")) {
     const isPublicAccountPath =
