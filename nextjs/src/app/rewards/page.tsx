@@ -181,10 +181,10 @@ export default function RewardsPage() {
 
           <div className="space-y-3 sm:flex gap-4">
             <Link
-              href="/account/login?mode=setup&from=/account/dashboard"
+              href="/account/login?mode=signup&from=/account/dashboard"
               className="flex-1 inline-block bg-secondary text-white font-bold py-4 px-8 text-center hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
             >
-              <span>Set Up Member Account</span>
+              <span>Create free member account</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
@@ -251,7 +251,7 @@ export default function RewardsPage() {
             {[
               {
                 q: "How do I sign up for Lava Points?",
-                a: "Click 'Set Up Member Account' on this page. We'll email you a secure setup link, and your rewards profile is then active.",
+                a: "Click 'Create free member account' on this page. We'll email an activation link — no purchase required. Then track points and orders in your dashboard.",
               },
               {
                 q: "When are my points credited?",

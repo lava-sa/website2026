@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, LogIn, Lock, X } from "lucide-react";
+import { Loader2, LogIn, Lock, UserPlus, KeyRound, X } from "lucide-react";
 import PasswordInput from "@/components/ui/PasswordInput";
 import { createClient } from "@/utils/supabase/client";
 
@@ -20,7 +20,7 @@ export default function MemberGateModal({
   onClose,
   returnTo,
   title = "Member access required",
-  subtitle = "Sign in to open the operating manual. Free to join — takes under a minute.",
+  subtitle = "Sign in to open the operating manual. Free to join — no purchase required.",
 }: Props) {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -69,7 +69,8 @@ export default function MemberGateModal({
     router.refresh();
   }
 
-  const registerHref = `/account/login?mode=setup&from=${encodeURIComponent(returnTo)}`;
+  const signupHref = `/account/login?mode=signup&from=${encodeURIComponent(returnTo)}`;
+  const resetHref = `/account/login?mode=reset&from=${encodeURIComponent(returnTo)}`;
 
   return (
     <div
@@ -151,17 +152,38 @@ export default function MemberGateModal({
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-border text-center space-y-3">
-            <p className="text-xs text-copy-muted">Not a member yet?</p>
-            <Link
-              href={registerHref}
-              className="inline-flex w-full items-center justify-center border-2 border-primary text-primary font-black text-xs uppercase tracking-wide py-3 hover:bg-surface transition-colors"
-            >
-              Register — set up free member account
-            </Link>
-            <p className="text-[11px] text-copy-muted">
-              Registration opens the full account setup page. You&apos;ll confirm your email and create a password.
-            </p>
+          <div className="mt-6 pt-6 border-t border-border space-y-4">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-primary mb-2">
+                New visitor — free, no purchase required
+              </p>
+              <Link
+                href={signupHref}
+                className="inline-flex w-full items-center justify-center gap-2 border-2 border-secondary bg-secondary/10 text-primary font-black text-xs uppercase tracking-wide py-3 hover:bg-secondary/20 transition-colors"
+              >
+                <UserPlus className="h-4 w-4" />
+                Create member account
+              </Link>
+              <p className="text-[11px] text-copy-muted mt-2 leading-relaxed">
+                Get manual access now. Create a password via email — takes about a minute.
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-border/60">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-primary mb-2">
+                Existing customer
+              </p>
+              <Link
+                href={resetHref}
+                className="inline-flex w-full items-center justify-center gap-2 border border-border text-primary font-bold text-xs uppercase tracking-wide py-3 hover:bg-surface transition-colors"
+              >
+                <KeyRound className="h-4 w-4" />
+                Reset password
+              </Link>
+              <p className="text-[11px] text-copy-muted mt-2 leading-relaxed">
+                Ordered before or already have a login? Reset your password for this site.
+              </p>
+            </div>
           </div>
         </div>
       </div>
