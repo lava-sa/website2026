@@ -202,9 +202,14 @@ const v100PremiumX: MachineRichContent = {
 
   videos: [
     {
-      title: "V.100 Premium X — Vacuum sealing in action",
-      description: "Watch the V.100 Premium X handle everyday vacuum-sealing tasks from start to finish.",
-      embedUrl: "https://la-va.com/en/vacuum-sealer-v.100-premium-x/#videos",
+      title: "Why choose a LAVA vacuum sealer?",
+      description: "German engineering and what sets LAVA apart from cheaper alternatives.",
+      embedUrl: "https://www.youtube.com/watch?v=yn-qpoAtbVI",
+    },
+    {
+      title: "Which vacuum sealer is right for you?",
+      description: "Compare LAVA models — ideal context for the V.100 Premium X.",
+      embedUrl: "https://www.youtube.com/watch?v=4Ut74sEOf1I",
     },
   ],
 
@@ -244,17 +249,24 @@ const v300SeriesDownloads: MachineDownload[] = [
   },
 ];
 
-const v300SeriesVideo: MachineVideo = {
-  title: "V.300 Series — Vacuum sealing in action",
-  description: "Automatic and manual modes, container vacuuming, and everyday sealing tasks.",
-  embedUrl: "https://la-va.com/en/vacuum-sealer-v.300-premium-x/#videos",
-};
+const v300SeriesVideos: MachineVideo[] = [
+  {
+    title: "Which vacuum sealer is right for you?",
+    description: "English buying guide — compares domestic and semi-professional LAVA models.",
+    embedUrl: "https://www.youtube.com/watch?v=4Ut74sEOf1I",
+  },
+  {
+    title: "Vacuum sealer for hunters & fishermen",
+    description: "Game meat and fresh catch — a core use case for the V.300 series.",
+    embedUrl: "https://www.youtube.com/watch?v=yaf_L7C6N6U",
+  },
+];
 
 const v300SeriesShared: Omit<MachineRichContent, "downloads"> = {
   functions: [],
   deliveryContents: [],
   tests: [],
-  videos: [v300SeriesVideo],
+  videos: v300SeriesVideos,
   faq: [],
 };
 
