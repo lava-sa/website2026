@@ -68,7 +68,6 @@ export default function LeadsClient({ leads }: { leads: AdminLead[] }) {
   const [membersOnly, setMembersOnly] = useState(false);
   const [newsletterOnly, setNewsletterOnly] = useState(false);
   const [janetOnly, setJanetOnly] = useState(false);
-  const [leadsOnly, setLeadsOnly] = useState(false);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -76,7 +75,6 @@ export default function LeadsClient({ leads }: { leads: AdminLead[] }) {
       if (membersOnly && !r.sources.includes("member")) return false;
       if (newsletterOnly && !r.sources.includes("newsletter")) return false;
       if (janetOnly && !r.sources.includes("janet")) return false;
-      if (leadsOnly && r.is_customer) return false;
       if (!q) return true;
       const hay = [
         r.email,
@@ -90,12 +88,11 @@ export default function LeadsClient({ leads }: { leads: AdminLead[] }) {
         .toLowerCase();
       return hay.includes(q);
     });
-  }, [leads, search, membersOnly, newsletterOnly, janetOnly, leadsOnly]);
+  }, [leads, search, membersOnly, newsletterOnly, janetOnly]);
 
   const memberCount = leads.filter((l) => l.sources.includes("member")).length;
   const newsletterCount = leads.filter((l) => l.sources.includes("newsletter")).length;
   const janetCount = leads.filter((l) => l.sources.includes("janet")).length;
-  const leadsNotCustomers = leads.filter((l) => !l.is_customer).length;
 
   return (
     <div className="space-y-6">
@@ -103,8 +100,9 @@ export default function LeadsClient({ leads }: { leads: AdminLead[] }) {
         <div>
           <h1 className="text-2xl font-black text-gray-900">Leads</h1>
           <p className="text-sm text-gray-500 mt-1 max-w-2xl">
-            Member signups (website login), mailing list subscribers, and Janet support chats — merged by email.
-            People with orders live under <strong>Customers</strong>.
+            People who engaged on the website but have <strong>not purchased</strong> — member signups,
+            mailing list, and Janet chats. Anyone in <strong>Customers</strong> (including WooCommerce
+            imports) is excluded here.
           </p>
         </div>
         <button
@@ -122,7 +120,7 @@ export default function LeadsClient({ leads }: { leads: AdminLead[] }) {
           { label: "Total contacts", value: leads.length, icon: Users },
           { label: "Member signups", value: memberCount, icon: UserPlus },
           { label: "Newsletter", value: newsletterCount, icon: Mail },
-          { label: "Not customers yet", value: leadsNotCustomers, icon: MessagesSquare },
+          { label: "Janet enquiries", value: janetCount, icon: MessagesSquare },
         ].map(({ label, value, icon: Icon }) => (
           <div key={label} className="bg-white border border-gray-200 p-4">
             <div className="flex items-center gap-2 text-gray-500 text-xs font-bold uppercase tracking-wide mb-2">
@@ -146,10 +144,6 @@ export default function LeadsClient({ leads }: { leads: AdminLead[] }) {
           />
         </div>
         <label className="flex items-center gap-2 text-xs font-semibold text-gray-600">
-          <input type="checkbox" checked={leadsOnly} onChange={(e) => setLeadsOnly(e.target.checked)} />
-          Leads only (not customers)
-        </label>
-        <label className="flex items-center gap-2 text-xs font-semibold text-gray-600">
           <input type="checkbox" checked={membersOnly} onChange={(e) => setMembersOnly(e.target.checked)} />
           Members
         </label>
@@ -168,15 +162,7 @@ export default function LeadsClient({ leads }: { leads: AdminLead[] }) {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
-                {[
-                  "Contact",
-                  "Sources",
-                  "Member",
-                  "Newsletter",
-                  "Janet",
-                  "Customer",
-                  "Last activity",
-                ].map((h) => (
+                {["Contact", "Sources", "Member", "Newsletter", "Janet", "Last activity"].map((h) => (
                   <th
                     key={h}
                     className="text-left px-4 py-3 font-bold text-gray-600 text-[10px] uppercase tracking-wider whitespace-nowrap"
@@ -244,18 +230,6 @@ export default function LeadsClient({ leads }: { leads: AdminLead[] }) {
                       </>
                     ) : (
                       "—"
-                    )}
-                  </td>
-                  <td className="px-4 py-3 align-top text-xs">
-                    {row.is_customer ? (
-                      <Link
-                        href={`/admin/customers/${row.customer_id}`}
-                        className="font-bold text-primary hover:underline"
-                      >
-                        Yes — open
-                      </Link>
-                    ) : (
-                      <span className="text-gray-500">Lead only</span>
                     )}
                   </td>
                   <td className="px-4 py-3 align-top text-xs text-gray-500 whitespace-nowrap">

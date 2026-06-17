@@ -169,16 +169,18 @@ export async function fetchAdminLeads(): Promise<AdminLead[]> {
   }
 
   for (const c of customersRes.data ?? []) {
-    const row = upsert(c.email);
+    const email = c.email?.trim().toLowerCase();
+    if (!email) continue;
+    const row = map.get(email);
     if (!row) continue;
     row.customer_id = c.id;
     row.is_customer = true;
-    if (c.first_name) row.first_name = row.first_name || c.first_name;
-    if (c.last_name) row.last_name = row.last_name || c.last_name;
-    if (c.phone) row.phone = row.phone || c.phone;
+    if (c.first_name && !row.first_name) row.first_name = c.first_name;
+    if (c.last_name && !row.last_name) row.last_name = c.last_name;
+    if (c.phone && !row.phone) row.phone = c.phone;
   }
 
-  return Array.from(map.values()).sort((a, b) =>
-    b.last_activity_at.localeCompare(a.last_activity_at)
-  );
+  return Array.from(map.values())
+    .filter((row) => !row.is_customer && row.sources.length > 0)
+    .sort((a, b) => b.last_activity_at.localeCompare(a.last_activity_at));
 }
