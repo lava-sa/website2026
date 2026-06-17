@@ -1,128 +1,359 @@
 export const ANNEKE_REPORT_META = {
-  title: "Website Update Briefing",
-  subtitle: "Lava-SA.com — changes, fixes & demo guide",
+  title: "Website Launch Briefing",
+  subtitle: "Anneke’s requests, meeting notes & Monday 22 June 2026 launch plan",
   meetingDate: "17 June 2026",
   meetingTime: "12:00",
-  version: "June 2026",
+  launchDate: "Monday 22 June 2026",
+  version: "June 2026 (final)",
   path: "/reports/anneke-june-2026",
 } as const;
 
-export const EXECUTIVE_SUMMARY = [
-  "Member-gated web operating manuals for V.100 Premium X and V.300 Series (portrait A4, Save as PDF).",
-  "Product pages show embedded YouTube videos and manuals above Industries; videos are public, manuals require login.",
-  "Member signup is split from password reset so new visitors and past customers follow the right path.",
-  "Admin → Leads lists newsletter, member signups, and Janet enquiries — customers with orders stay under Customers only.",
-  "Production fixes: empty product-page files, invite emails pointing to localhost, password reset via Resend.",
+export type RequestStatus = "Done" | "Partial" | "Not yet" | "Waiting on Anneke";
+
+export interface CatalogueRequest {
+  area: string;
+  request: string;
+  status: RequestStatus;
+  notes: string;
+}
+
+/** Anneke’s email notes + Easy Pump follow-up. */
+export const ANNEKE_EMAIL_REQUESTS: CatalogueRequest[] = [
+  {
+    area: "All categories",
+    request: "Use pictures and product information from www.la-va.com where noted",
+    status: "Partial",
+    notes: "Many machines and new lines (G-Line glass, Easy Pump, Flex jar sealer, extra lid sizes) pulled from la-va. Ongoing per category.",
+  },
+  {
+    area: "Lava spare parts",
+    request: "Remove “Which parts fit my machine?” section",
+    status: "Not yet",
+    notes: "Section still on spare parts page — remove before launch if agreed.",
+  },
+  {
+    area: "Vacuum bags",
+    request: "Remove bag size guide",
+    status: "Not yet",
+    notes: "Transcript: Anneke may prefer a more visual guide instead of removing — confirm today.",
+  },
+  {
+    area: "Vacuum bags",
+    request: "Remove 2-year guarantee mention",
+    status: "Partial",
+    notes: "Guarantee applies to machines and selected scales — not bags (see warranty rule below).",
+  },
+  {
+    area: "Vacuum bags",
+    request: "Better product photos (not placeholder / third-party look)",
+    status: "Waiting on Anneke",
+    notes: "From first meeting — not in email. Anneke to supply photos.",
+  },
+  {
+    area: "Vacuum rolls",
+    request: "Remove 25 cm and 30 cm rolls from the shop",
+    status: "Not yet",
+    notes: "Unpublish after Anneke confirms.",
+  },
+  {
+    area: "Vacuum rolls",
+    request: "Remove 2-year guarantee mention",
+    status: "Partial",
+    notes: "Same warranty rule as bags.",
+  },
+  {
+    area: "Glass vacuum containers",
+    request: "Remove old listings; separate glass from pump",
+    status: "Done",
+    notes: "G-Line black/white + Easy Pump on Glass Containers. Jar sealers under Glass Jar Sealer.",
+  },
+  {
+    area: "Glass vacuum containers",
+    request: "Add new glass items Anneke will send",
+    status: "Waiting on Anneke",
+    notes: "Ready when photos/SKUs arrive.",
+  },
+  {
+    area: "Glass vacuum containers",
+    request: "Remove jar attachment from Glass Containers category",
+    status: "Done",
+    notes: "8–9 cm jar attachment lives under Jar Sealer only.",
+  },
+  {
+    area: "Sealers for glass jars",
+    request: "Remove 2-year guarantee where not applicable",
+    status: "Partial",
+    notes: "Check jar sealer pages.",
+  },
+  {
+    area: "Sealers for glass jars",
+    request: "Add another glass jar sealer",
+    status: "Partial",
+    notes: "Flex Sealer for Jars added. Second SKU when Anneke specifies.",
+  },
+  {
+    area: "Acrylic vacuum lids",
+    request: "Populate all lid sizes from the old website",
+    status: "Partial",
+    notes: "Five sizes live; two smaller sizes noted in meeting — Anneke to confirm sizes.",
+  },
+  {
+    area: "Acrylic containers",
+    request: "Remove acrylic container set (4-piece bundle)",
+    status: "Not yet",
+    notes: "Individual containers only — unpublish set.",
+  },
+  {
+    area: "Stainless containers",
+    request: "Remove stainless container sets — individuals only",
+    status: "Not yet",
+    notes: "From first meeting — not in email.",
+  },
+  {
+    area: "Scales",
+    request: "Remove first scale, 200 kg and 300 kg digital scales",
+    status: "Not yet",
+    notes: "No longer in stock per Anneke.",
+  },
+  {
+    area: "Sous vide",
+    request: "Under Sous Vide — no dropdown; show products directly",
+    status: "Partial",
+    notes: "Single menu link (no dropdown). Meeting: two circulator products on page; glass/pump under Glass Containers.",
+  },
+  {
+    area: "Clearance",
+    request: "Acrylic vacuum containers at 10% discount",
+    status: "Not yet",
+    notes: "Butchery script exists; acrylic range still to apply.",
+  },
+  {
+    area: "Clearance",
+    request: "All butchery accessories at 10% discount",
+    status: "Partial",
+    notes: "Clearance section built — confirm sale prices on live shop.",
+  },
+  {
+    area: "Current promotions",
+    request: "Anneke can add and remove promotions herself",
+    status: "Not yet",
+    notes: "Discuss self-service vs request-based for launch.",
+  },
+  {
+    area: "Vacuum machines",
+    request: "Remove V.333 from the range",
+    status: "Partial",
+    notes: "Off main menu; hide product page if fully discontinued.",
+  },
+  {
+    area: "Delivery",
+    request: "Within South Africa: 5–10 working days",
+    status: "Partial",
+    notes: "Align Help, checkout and shipping pages before launch.",
+  },
+];
+
+/** First meeting — items not repeated in Anneke’s email. */
+export const TRANSCRIPT_ONLY_REQUESTS: CatalogueRequest[] = [
+  {
+    area: "Warranty policy",
+    request: "2-year guarantee on machines and applicable scales only — not bags, rolls, butchery, etc.",
+    status: "Partial",
+    notes: "Remove misleading guarantee copy from non-machine categories.",
+  },
+  {
+    area: "Returns / service",
+    request: "“Repair or replace” wording; clear send-in troubleshooting process",
+    status: "Not yet",
+    notes: "Legal/shipping pages — softer than full-refund tone.",
+  },
+  {
+    area: "Contact",
+    request: "Anneke’s cell and email on relevant pages (plus info@lava-sa.com)",
+    status: "Partial",
+    notes: "Contact page strong; extend to category footers if desired.",
+  },
+  {
+    area: "Butchery strategy",
+    request: "Phase out butchery focus; keep tools for now; clearance on rest",
+    status: "Partial",
+    notes: "Company concentrating on vacuum processing.",
+  },
+  {
+    area: "Content / SEO",
+    request: "Expand Applications; strengthen vacuum education content",
+    status: "Partial",
+    notes: "Ongoing — supports Google and AI visibility.",
+  },
+  {
+    area: "Site review",
+    request: "Internal site-info page for scores and keywords",
+    status: "Done",
+    notes: "lava-sa.com/site-info (not for public marketing).",
+  },
+  {
+    area: "Images",
+    request: "Remove duplicated images across site",
+    status: "Not yet",
+    notes: "Audit before launch.",
+  },
+  {
+    area: "Navigation",
+    request: "Remove unnecessary dropdowns where few products remain",
+    status: "Partial",
+    notes: "Sous Vide simplified; review other menus.",
+  },
+  {
+    area: "StoreVac cross-link",
+    request: "Out-of-stock bag sizes → link to StoreVac compatible bag",
+    status: "Not yet",
+    notes: "Compare stock levels first; storevac.co.za domain available to register.",
+  },
+  {
+    area: "Domains",
+    request: "lava-sa.cl → new site after approval",
+    status: "Not yet",
+    notes: "After .com launch stabilises.",
+  },
+  {
+    area: "Video",
+    request: "Reuse Anneke’s social videos on website when ready",
+    status: "Waiting on Anneke",
+    notes: "Anneke creating IG/FB content.",
+  },
+  {
+    area: "About page",
+    request: "Wilco & Anneke photo via admin upload",
+    status: "Waiting on Anneke",
+    notes: "Replace duplicate Landig image.",
+  },
+];
+
+export const FIRST_MEETING_FOLLOWUPS: CatalogueRequest[] = [
+  {
+    area: "Shipping",
+    request: "Courier pricing — Gauteng vs rest of South Africa",
+    status: "Done",
+    notes: "R190 excl. VAT Gauteng · R250 elsewhere.",
+  },
+  {
+    area: "Vacuum machines",
+    request: "V.100 Premium (limited stock, ~6 units) on menu",
+    status: "Done",
+    notes: "Listed as limited stock in machine menu.",
+  },
+  {
+    area: "Product pages",
+    request: "Real reviews only where we have them",
+    status: "Done",
+    notes: "Sensible highlights on other categories.",
+  },
+  {
+    area: "Special offers",
+    request: "Clearance without duplicate product pages",
+    status: "Done",
+    notes: "Same URL; sale price on card.",
+  },
+  {
+    area: "Prices",
+    request: "Lava-SA shop prices",
+    status: "Done",
+    notes: "No bulk price changes needed — earlier confusion was Star Aesthetic, not Lava-SA.",
+  },
+  {
+    area: "Site review room",
+    request: "Voice + screen-share on the website",
+    status: "Done",
+    notes: "Admin → Site review for walk-throughs with guest link.",
+  },
+];
+
+export const WEBSITE_EXPERIENCE_DELIVERED = [
+  { feature: "V.300 Series operating manual", detail: "Portrait A4 — Save as PDF. Member login required." },
+  { feature: "V.100 Premium X operating manual", detail: "14 pages, same format." },
+  { feature: "Videos on machine pages", detail: "YouTube embedded — public, no login." },
+  { feature: "Manual + Video above Industries", detail: "Machine product page layout." },
+  { feature: "Member account vs password reset", detail: "Clear paths for new visitors and existing customers." },
+  { feature: "Admin → Leads", detail: "Newsletter, signups, Janet — not existing buyers." },
+  { feature: "Admin → Customers", detail: "Orders and WooCommerce history." },
+  { feature: "Janet enquiries", detail: "Saved in admin for Anneke to follow up." },
 ] as const;
 
-export const COMPLETED_ITEMS = [
-  {
-    feature: "V.300 Series manual",
-    where: "/manuals/v300-series or V.300 product page → Manual",
-    notes: "Portrait A4, ~18 pages, member login required, Save as PDF",
-  },
-  {
-    feature: "V.100 Premium X manual",
-    where: "/manuals/v100-premium-x or V.100 product page → Manual",
-    notes: "Same format, 14 pages",
-  },
-  {
-    feature: "Manuals on product pages",
-    where: "Vacuum machine PDPs",
-    notes: "Video then Manual above Industries section",
-  },
-  {
-    feature: "Member-only manuals",
-    where: "Open manual without logging in",
-    notes: "Sign-in gate; free member account for new visitors",
-  },
-  {
-    feature: "Signup vs reset",
-    where: "/account/login",
-    notes: "Create free member account (new) vs Reset password (existing customers)",
-  },
-  {
-    feature: "Admin → Leads",
-    where: "/admin/leads",
-    notes: "Non-purchasers only after latest fix — not WooCommerce buyers",
-  },
-  {
-    feature: "Admin → Customers",
-    where: "/admin/customers",
-    notes: "~1,000 WooCommerce / order history — separate from Leads",
-  },
-  {
-    feature: "YouTube videos on PDP",
-    where: "e.g. /products/v300-premium-x",
-    notes: "Embedded player instead of blank external link cards",
-  },
+export const LAUNCH_PLAN = {
+  date: "Monday 22 June 2026",
+  time: "Morning",
+  headline: "Go live on lava-sa.com",
+  steps: [
+    "Remove site preview password / open site to public (if still gated).",
+    "Point lava-sa.co.za and www.lava-sa.co.za to lava-sa.com (already configured in site routing).",
+    "Verify all old WordPress / WooCommerce URLs redirect to matching new pages.",
+    "Final pass on Anneke’s removals (bags guide, spare-parts table, rolls, scales, sets).",
+    "Apply butchery + acrylic clearance pricing if agreed.",
+    "Standardise delivery copy: 5–10 working days within South Africa.",
+    "Add to Home Screen (website app) — ship basic install icons before or immediately after launch mail.",
+    "Send customer + leads mailing: new site, add to phone, review invitation.",
+    "Update Google Business Profile quietly (not mentioned in customer email).",
+    "Monitor orders, contact form, and PayFast for first 48 hours.",
+  ],
+} as const;
+
+export const LAUNCH_MAILING = {
+  audience: "All customers (Admin → Customers) and leads (Admin → Leads / mailing list).",
+  include: [
+    "Welcome to the new lava-sa.com — same Lava quality, faster shop, manuals and videos on machine pages.",
+    "Add Lava-SA to your phone (Add to Home Screen) — bags, rolls and spares one tap away.",
+    "Existing customers: please share a review of your machine and service from Anneke and the Lava team.",
+    "Link to review forms / submit-review on site.",
+  ],
+  exclude: [
+    "Google Business Profile changes (action separately).",
+    "Technical hosting details.",
+  ],
+} as const;
+
+export const LAUNCH_READINESS = {
+  verdict: "Reasonable if catalogue cleanup happens Thu–Fri 19–20 June",
+  risks: [
+    "Several Anneke removals still not live (bag guide, spare-parts table, rolls, scales, sets).",
+    "PWA / Add to Home Screen not fully built yet — launch mail should say “add to home screen” only after icons/manifest ship (Fri–Mon).",
+    "Old URL redirect map needs a tested checklist against top WooCommerce URLs.",
+    "Butchery/acrylic clearance prices must show on live shop before clearance mail.",
+    "Member activation emails — test one fresh signup before bulk mail.",
+  ],
+  strengths: [
+    "New design approved by Anneke; core shop, checkout, and admin working.",
+    "co.za → .com redirect already in site configuration.",
+    "Manuals, videos, leads/customers split, site review room delivered.",
+    "No Lava-SA price list rework required.",
+  ],
+} as const;
+
+export const MIGHT_HAVE_MISSED = [
+  "Remove site preview / staging password before Monday.",
+  "PayFast live credentials and a real R1 test transaction.",
+  "SSL on all domains (lava-sa.com, www, .co.za).",
+  "404 page and broken-link check after redirects.",
+  "sitemap.xml submitted in Google Search Console (internal — not in customer mail).",
+  "Robots: production indexing enabled (preview hosts stay noindex).",
+  "Cookie / POPIA consent still valid on new site.",
+  "Anneke out-of-office phone coverage for launch week.",
+  "Backup: old WordPress site kept read-only until redirects verified.",
+  "lava-sa.cl domain timing (separate from Monday .com launch).",
+  "Register storevac.co.za if bag cross-link strategy confirmed (available ~R99).",
+  "Spam/test customer cleanup before mailing list send.",
+  "Email send rate / Resend domain warm-up for large blast.",
 ] as const;
 
-export const MEMBER_FLOWS = [
-  {
-    audience: "New visitor (manuals, no purchase)",
-    action: "Create free member account",
-    data: "Supabase Authentication + Leads (if applicable)",
-  },
-  {
-    audience: "Past customer (ordered before)",
-    action: "Reset password",
-    data: "Must exist in auth from invite or prior signup",
-  },
-  {
-    audience: "Buyer / CRM",
-    action: "Orders, points, history",
-    data: "Customers in admin (WooCommerce import)",
-  },
-] as const;
+export const STOREVAC_DOMAIN = {
+  domain: "storevac.co.za",
+  status: "Available to register",
+  note: "Confirmed on domains.co.za (~R99). Not registered yet — DNS lookup shows no active zone. Register if cross-link or sister brand needed.",
+} as const;
 
-export const BUGS_FIXED = [
-  { issue: "Product pages white screen", cause: "Empty source files (AVG antivirus?)", fix: "Restored components from git" },
-  { issue: "getMachineMedia is not a function", cause: "Empty get-machine-media.ts", fix: "Reimplemented module" },
-  { issue: "Manual images missing", cause: "Wrong file extensions (.jpg vs .webp)", fix: "Corrected image paths" },
-  { issue: "Setup email → localhost", cause: "Dev URL in invite redirect", fix: "Production uses NEXT_PUBLIC_SITE_URL" },
-  { issue: "Password reset failed on live", cause: "Service-role client does not send mail", fix: "Resend + anon fallback" },
-  { issue: "User in Auth but not Customers", cause: "Auth user ≠ customer row", fix: "Use Reset password or remove test user in Supabase" },
-  { issue: "Leads showed all customers", cause: "Woo CSV merged into Leads list", fix: "Customers excluded from Leads" },
-] as const;
-
-export const REQUESTED_VS_DELIVERED = [
-  { request: "V.300 manual — English, portrait, 2026 look", status: "Done" },
-  { request: "V.100 manual", status: "Done" },
-  { request: "One manual per series (V.300 Premium X / White / Black)", status: "Done" },
-  { request: "Member-gated manual; videos public", status: "Done" },
-  { request: "Video + Manual above Industries on PDP", status: "Done" },
-  { request: "New visitor signup (no purchase for manuals)", status: "Done" },
-  { request: "Existing customer password reset (separate flow)", status: "Done" },
-  { request: "Admin view for non-customer contacts", status: "Done (Leads)" },
-  { request: "Clean YouTube embeds on product pages", status: "Done" },
-  { request: "Manuals for V.333, V.400, V.500, etc.", status: "Not yet — la-va.com PDFs still" },
-  { request: "Contact form stored in admin", status: "Not yet — email only" },
-  { request: "Pre-built PDF in /downloads/", status: "Not yet" },
-] as const;
-
-export const DEFERRED_ITEMS = [
-  "Leads vs newsletter overlap for imported customers who also opted into mailing list (stats only; list now excludes customers).",
-  "Contact form → save to database and show on Leads.",
-  "Remaining machine manuals (factory PDFs → Lava-SA web manuals).",
-  "V.100 PDP copy still mentions automatic mode in places — machine is fully manual (content tidy-up).",
-  "Optional: Cloudflare Turnstile on login (currently contact / reviews / mailing list only).",
-  "Clean up localhost test users in Supabase Auth before wider testing.",
-] as const;
-
-export const DEMO_STEPS = [
-  "Homepage — confirm site loads (hard refresh if needed).",
-  "V.300 product page — Video (play thumbnail) then Manual (member gate).",
-  "Create free member account with a new test email — check inbox and spam.",
-  "Open manual when logged in — Save as PDF (A4 portrait, background graphics on).",
-  "Admin → Leads — should show real leads only, not ~1,000 customers.",
-  "Admin → Customers — WooCommerce buyers (e.g. Janus) appear here only.",
-  "Admin → Janet support chats — voice enquiry detail.",
-] as const;
-
-export const SUPABASE_CHECKLIST = [
-  "Site URL = https://www.lava-sa.com",
-  "Redirect URLs include /auth/callback",
-  "Vercel env: SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_SITE_URL, RESEND_API_KEY",
-  "Auth → Users for test members; delete stale localhost invites if needed",
-] as const;
+export const SUMMARY_COUNTS = {
+  done: ANNEKE_EMAIL_REQUESTS.filter((r) => r.status === "Done").length,
+  partial: ANNEKE_EMAIL_REQUESTS.filter((r) => r.status === "Partial").length,
+  notYet: ANNEKE_EMAIL_REQUESTS.filter((r) => r.status === "Not yet").length,
+  waiting: ANNEKE_EMAIL_REQUESTS.filter((r) => r.status === "Waiting on Anneke").length,
+  emailTotal: ANNEKE_EMAIL_REQUESTS.length,
+} as const;

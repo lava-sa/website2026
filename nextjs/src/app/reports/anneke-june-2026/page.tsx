@@ -13,7 +13,9 @@ export const metadata: Metadata = {
 export default function AnnekeJune2026ReportPage() {
   return (
     <div className="manual-viewer min-h-screen bg-[#d8e0e0] print:bg-white">
-      <ReportToolbar title={`${ANNEKE_REPORT_META.title} · ${ANNEKE_REPORT_META.meetingDate}`} />
+      <ReportToolbar
+        title={`${ANNEKE_REPORT_META.title} · Launch ${ANNEKE_REPORT_META.launchDate}`}
+      />
       <div className="section-container py-8 print:py-0 print:px-0 print:max-w-none">
         <AnnekeReportDocument />
       </div>

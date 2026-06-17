@@ -347,6 +347,27 @@ export const JanetAgent = () => {
     setErrorMsg("");
     transcriptRef.current = [];
     sessionIdRef.current = crypto.randomUUID();
+
+    // Request mic before opening the live session so the browser prompt appears immediately
+    try {
+      const probe = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      probe.getTracks().forEach((t) => t.stop());
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const input = devices.find((d) => d.kind === "audioinput");
+      if (input?.label) setInputDeviceLabel(input.label);
+    } catch (micErr) {
+      const denied =
+        micErr instanceof DOMException &&
+        (micErr.name === "NotAllowedError" || micErr.name === "SecurityError");
+      setErrorMsg(
+        denied
+          ? "Microphone blocked — click the lock icon beside the web address, allow Microphone, then try again."
+          : "Microphone unavailable — check your device or try another browser."
+      );
+      setStatus("error");
+      return;
+    }
+
     cartAddedRef.current = false;
     savedRef.current = false;
     leadRef.current = {};
@@ -613,7 +634,14 @@ export const JanetAgent = () => {
       try {
         await startMic(session);
       } catch (micErr) {
-        setErrorMsg("Microphone access denied — please allow mic permissions.");
+        const denied =
+          micErr instanceof DOMException &&
+          (micErr.name === "NotAllowedError" || micErr.name === "SecurityError");
+        setErrorMsg(
+          denied
+            ? "Microphone blocked — click the lock icon beside the web address, allow Microphone, then tap Start New Call."
+            : "Microphone unavailable — check your device or try another browser."
+        );
         setStatus("error");
       }
     } catch (err) {

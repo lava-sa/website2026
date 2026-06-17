@@ -19,7 +19,8 @@ const nextConfig: NextConfig = {
       { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
       {
         key: "Permissions-Policy",
-        value: "camera=(), microphone=(), geolocation=()",
+        // microphone/camera=(self) required for Janet voice + review video; keep geolocation blocked
+        value: "camera=(self), microphone=(self), geolocation=()",
       },
     ];
 
