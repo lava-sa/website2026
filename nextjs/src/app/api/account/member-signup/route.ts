@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMemberSignupEmail } from "@/lib/account-auth-email";
+import { getMemberPasswordSetupRedirectUrl } from "@/lib/auth-redirect";
 import { isSuspiciousSignupEmail } from "@/lib/security/signup-guard";
 
 export const dynamic = "force-dynamic";
 
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function authRedirectUrl(req: NextRequest): string {
-  const origin = new URL(req.url).origin;
-  return `${origin}/auth/callback?next=/account/reset-password`;
 }
 
 /** Free member signup — new visitors (manuals, points). No purchase required. */
@@ -34,7 +30,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Please use a valid email address." }, { status: 400 });
     }
 
-    const result = await sendMemberSignupEmail(email, authRedirectUrl(req));
+    const redirectTo = getMemberPasswordSetupRedirectUrl(new URL(req.url).origin);
+    const result = await sendMemberSignupEmail(email, redirectTo);
 
     if (result.ok) {
       return NextResponse.json({ ok: true });

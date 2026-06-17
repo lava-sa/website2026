@@ -22,6 +22,7 @@ import {
   PhoneForwarded,
   Video,
   FileText,
+  UserPlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +35,7 @@ const NAV = [
   { href: "/admin/order-history", label: "Order history", icon: History,      exact: false },
   { href: "/admin/import",      label: "Import data",   icon: Upload,          exact: false },
   { href: "/admin/mailing-list", label: "Mailing list", icon: Mail,            exact: false },
+  { href: "/admin/leads",        label: "Leads",         icon: UserPlus,        exact: false },
   { href: "/admin/customers",   label: "Customers",     icon: Users,           exact: false },
   { href: "/admin/reviews",     label: "Reviews",       icon: Star,            exact: false },
   { href: "/admin/janet-chats", label: "Janet support chats", icon: MessagesSquare, exact: false },

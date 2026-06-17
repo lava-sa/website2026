@@ -44,3 +44,16 @@ export function createServiceClient() {
         }
     );
 }
+
+/** Anon client for auth emails (resetPasswordForEmail must use anon, not service role). */
+export function createAuthAnonClient() {
+    const url = getEnv("NEXT_PUBLIC_SUPABASE_URL");
+    const key = getEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY");
+
+    return createClient(url || "https://placeholder.supabase.co", key || "placeholder", {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false,
+        },
+    });
+}
