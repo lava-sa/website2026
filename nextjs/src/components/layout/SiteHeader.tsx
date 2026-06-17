@@ -124,18 +124,20 @@ function CategoryDropdown({
         setOpen(false);
       }}
     >
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
+      <Link
+        href={href}
         className={cn(
           "flex items-center gap-1 text-[10px] font-bold tracking-[0.12em] uppercase py-3 transition-colors",
           highlight ? "text-secondary hover:text-white" : "text-white hover:text-secondary"
         )}
+        onClick={() => setOpen(false)}
       >
         {label}
-        <ChevronDown className={cn("h-2.5 w-2.5 opacity-50 transition-transform duration-200", open && "rotate-180")} />
-      </button>
+        <ChevronDown
+          className={cn("h-2.5 w-2.5 opacity-50 transition-transform duration-200", open && "rotate-180")}
+          aria-hidden
+        />
+      </Link>
       <div
         className={cn(
           "absolute top-full left-0 bg-white shadow-2xl border border-border/80 z-[500]",
@@ -144,11 +146,6 @@ function CategoryDropdown({
           open ? "opacity-100 translate-y-0 pointer-events-auto visible" : "invisible opacity-0 translate-y-2 pointer-events-none"
         )}
       >
-        <div className="border-b border-border/60 px-5 py-2.5">
-          <Link href={href} className="text-[11px] font-bold uppercase tracking-wider text-primary hover:text-secondary transition-colors">
-            View All {label} →
-          </Link>
-        </div>
         {children}
       </div>
     </div>
@@ -400,7 +397,6 @@ const SiteHeader = () => {
                     ["Vacuum sealer for Glass Jar", "/products/glass-jar-sealer"],
                     ["Vacuum Acrylic Lids", "/products/acrylic-lids"],
                     ["Stainless Steel Vacuum Containers", "/products/stainless-containers"],
-                    ["Vacuum Containers and Lids", "/products/containers-lids"],
                   ]}
                 />
               </CategoryDropdown>
@@ -455,7 +451,13 @@ const SiteHeader = () => {
           <div className="p-6 space-y-8">
 
             <div className="space-y-3">
-              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-secondary">Vacuum Machines</p>
+              <Link
+                href="/products/vacuum-machines"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-[9px] font-bold uppercase tracking-[0.2em] text-secondary hover:text-primary transition-colors"
+              >
+                Vacuum Machines
+              </Link>
               <nav className="grid grid-cols-1 gap-1">
                 {VACUUM_MACHINES.map(([label, href]) => (
                   <Link key={href} href={href} onClick={() => setMobileMenuOpen(false)}
@@ -470,6 +472,7 @@ const SiteHeader = () => {
               <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-secondary">Shop Products</p>
               <nav className="grid grid-cols-1 gap-1">
                 {[
+                  ["Vacuum Bags & Rolls", "/products/bags-rolls"],
                   ["Vacuum Bags", "/products/vacuum-bags"],
                   ["Vacuum Rolls", "/products/vacuum-rolls"],
                   ["Containers & Lids", "/products/containers-lids"],
