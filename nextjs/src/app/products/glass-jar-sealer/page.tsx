@@ -24,6 +24,7 @@ export default async function GlassJarSealerPage() {
 
   const JAR_SEALER_SLUGS = new Set([
     "lava-flex-sealer-for-jars",
+    "glass-jar-vacuum-bell-vl0193",
     "vacuum-sealer-attachment-for-glass-jars-8-9-cm-diameter",
   ]);
 

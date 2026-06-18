@@ -155,6 +155,12 @@ function categoryUseCases(name: string, categorySlug: string): string[] {
         `Hygiene & workflow — Boards and knives built for meat handling alongside vacuum sealing.`,
         `Game & beef processing — Cut, portion and seal in one efficient workflow.`,
       ];
+    case "accessories":
+      return [
+        `Genuine LAVA accessories — Labels, fluid stop, wine sealers and roll tools.`,
+        `Safer vacuum sealing — Protect seals when packing moist or sharp-edged foods.`,
+        `Local stock — Order from Lava-SA with nationwide courier delivery.`,
+      ];
     case "special-offers":
       return [
         `Bundle value — Machine, bags or accessories combined at a package price.`,
@@ -227,6 +233,9 @@ function searchTerms(name: string, categorySlug: string, specs?: Record<string, 
       break;
     case "butchery-accessories":
       terms.push("butchery equipment South Africa", "butcher knives", "meat processing tools");
+      break;
+    case "accessories":
+      terms.push("LAVA vacuum accessories", "vacuum bag labels", "fluid stop", "wine vacuum sealer");
       break;
     default:
       terms.push(base, "vacuum packaging South Africa");

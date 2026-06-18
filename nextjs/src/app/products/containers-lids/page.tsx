@@ -62,6 +62,7 @@ export default async function ContainersLidsPage() {
               ["Acrylic Containers", "#acrylic-containers"],
               ["Stainless Steel", "/products/stainless-containers"],
               ["Universal Lids", "/products/acrylic-lids"],
+              ["Vacuum Accessories", "/products/accessories"],
             ].map(([label, href]) => (
               <a key={href} href={href}
                 className="text-sm font-semibold border border-white/30 text-white/80 px-4 py-2 hover:bg-white/10 hover:text-white transition-colors">

@@ -383,6 +383,7 @@ const SiteHeader = () => {
                   links={[
                     ["Embossed Vacuum Bags", "/products/vacuum-bags"],
                     ["Embossed Vacuum Rolls", "/products/vacuum-rolls"],
+                    ["Vacuum Accessories", "/products/accessories"],
                   ]}
                 />
               </CategoryDropdown>
@@ -475,6 +476,7 @@ const SiteHeader = () => {
                   ["Vacuum Bags & Rolls", "/products/bags-rolls"],
                   ["Vacuum Bags", "/products/vacuum-bags"],
                   ["Vacuum Rolls", "/products/vacuum-rolls"],
+                  ["Vacuum Accessories", "/products/accessories"],
                   ["Containers & Lids", "/products/containers-lids"],
                   ["Butchery Accessories", "/products/butchery-accessories"],
                   ["Sous Vide", "/products/sous-vide"],

@@ -20,7 +20,7 @@ export default async function ButcheryKnivesPage() {
     // Supabase unavailable
   }
 
-  const knives = products.filter((p) => p.tags?.includes("knife") && !p.tags?.includes("magnetic-holder") && !p.tags?.includes("magnetic-board") && !p.tags?.includes("sharpener"));
+  const knives = products.filter((p) => (p.tags?.includes("knife") || p.tags?.includes("knife-set")) && !p.tags?.includes("magnetic-holder") && !p.tags?.includes("magnetic-board") && !p.tags?.includes("sharpener"));
   const knifeStorage = products.filter((p) => p.tags?.includes("knife") && (p.tags?.includes("magnetic-holder") || p.tags?.includes("magnetic-board") || p.tags?.includes("sharpener")));
 
   return (

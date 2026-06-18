@@ -22,18 +22,18 @@ const category = {
 const products = [
   // ── Acrylic individual ──────────────────────────────────────────────────────
   {
-    sku: "VL0060-1", slug: "acrylic-container-650ml-square",
+    sku: "VL0054", slug: "acrylic-container-650ml-square",
     name: "LAVA 650ml Square Acrylic Vacuum Container",
     short_description: "Compact 650ml square acrylic vacuum container. Perfect for herbs, spices, nuts, cheese and small portions. Includes lid.",
     description: `<p>The <strong>LAVA 650ml Square Acrylic Container</strong> is ideal for herbs, spices, nuts, coffee and small portions. Works with the vacuum pump attachment included with all LAVA machines.</p>
 <ul><li><strong>Capacity:</strong> 650 ml</li><li><strong>Shape:</strong> Square</li><li>Crystal-clear BPA-free acrylic</li><li>Lid included</li><li>Dishwasher safe</li></ul>`,
-    regular_price: 510, stock_status: "in_stock", stock_quantity: 10,
+    regular_price: 480, stock_status: "in_stock", stock_quantity: 10,
     is_featured: false, sort_order: 1, tags: ["container", "acrylic", "650ml", "square"],
     primary_image: `${C}/lava-650ml-square-acrylic-vacuum-container-versatile-food-preservation-system-vl0060-1.webp`,
     images: [{ url: `${C}/lava-650ml-square-acrylic-vacuum-container-versatile-food-preservation-system-vl0060-1.webp`, alt: "LAVA 650ml Square Acrylic Container", is_primary: true }],
   },
   {
-    sku: "VL0063-1", slug: "acrylic-container-1000ml-round",
+    sku: "VL0163", slug: "acrylic-container-1000ml-round",
     name: "LAVA 1000ml Round Acrylic Vacuum Container",
     short_description: "1000ml round acrylic vacuum container — ideal for marinating meat, storing fruit and vegetables. Includes lid.",
     description: `<p>The <strong>LAVA 1000ml Round Acrylic Container</strong> is the ideal size for marinating steaks and chops, storing sliced fruit, vegetables and meal-prep portions.</p>
@@ -44,7 +44,7 @@ const products = [
     images: [{ url: `${C}/lava-1000ml-round-acrylic-vacuum-container-premium-food-storage-solution-vl0063-1.webp`, alt: "LAVA 1000ml Round Acrylic Container", is_primary: true }],
   },
   {
-    sku: "VL0065-1", slug: "acrylic-container-1200ml-square",
+    sku: "VL0065", slug: "acrylic-container-1200ml-square",
     name: "LAVA 1200ml Square Acrylic Vacuum Container",
     short_description: "1200ml square acrylic container for larger portions — steaks, chops, marinated meat. Includes lid.",
     description: `<p>The <strong>LAVA 1200ml Square Acrylic Container</strong> handles larger portions — marinating steaks and chops, storing prepared meals and preserving leftovers.</p>
@@ -55,7 +55,7 @@ const products = [
     images: [{ url: `${C}/lava-1200ml-square-acrylic-vacuum-container-professional-food-storage-system-vl0065-1.webp`, alt: "LAVA 1200ml Square Acrylic Container", is_primary: true }],
   },
   {
-    sku: "VL0066-1", slug: "acrylic-container-1650ml-rectangular",
+    sku: "VL0066", slug: "acrylic-container-1650ml-rectangular",
     name: "LAVA 1650ml Rectangular Acrylic Vacuum Container",
     short_description: "1650ml rectangular acrylic container — perfect for long cuts, whole fish and biltong strips.",
     description: `<p>The <strong>LAVA 1650ml Rectangular Acrylic Container</strong> suits longer items — whole fish, long biltong strips, large roasts and bulky portions.</p>
@@ -66,15 +66,35 @@ const products = [
     images: [{ url: `${C}/lava-1650ml-rectangular-acrylic-vacuum-container-high-capacity-professional-storage-solution-vl0066-1.webp`, alt: "LAVA 1650ml Rectangular Acrylic Container", is_primary: true }],
   },
   {
-    sku: "VL0058-1", slug: "acrylic-container-2000ml-square",
+    sku: "VL0058", slug: "acrylic-container-2000ml-square",
     name: "LAVA 2000ml Square Acrylic Vacuum Container",
     short_description: "2000ml large square acrylic container — maximum capacity for big batches, marinating large cuts and meal prep.",
     description: `<p>The <strong>LAVA 2000ml Square Acrylic Container</strong> is the largest individual container — ideal for batch marinating, big game cuts and large meal prep quantities.</p>
 <ul><li><strong>Capacity:</strong> 2000 ml</li><li><strong>Shape:</strong> Square</li><li>Crystal-clear BPA-free acrylic</li><li>Lid included</li><li>Dishwasher safe</li></ul>`,
-    regular_price: 990, stock_status: "in_stock", stock_quantity: 10,
+    regular_price: 915, stock_status: "in_stock", stock_quantity: 10,
     is_featured: false, sort_order: 5, tags: ["container", "acrylic", "2000ml", "square"],
     primary_image: `${C}/lava-2000ml-square-acrylic-vacuum-container-maximum-capacity-professional-storage-system-vl0058-1.webp`,
     images: [{ url: `${C}/lava-2000ml-square-acrylic-vacuum-container-maximum-capacity-professional-storage-system-vl0058-1.webp`, alt: "LAVA 2000ml Square Acrylic Container", is_primary: true }],
+  },
+  {
+    sku: "VL0057", slug: "acrylic-container-640ml-round",
+    name: "LAVA 640 ml Round Acrylic Vacuum Container",
+    short_description: "640 ml round acrylic vacuum container (13 × 10 cm) — compact size for portions and deli items.",
+    description: `<p>Compact <strong>640 ml round acrylic container</strong> with integrated vacuum valve.</p><ul><li><strong>Capacity:</strong> 640 ml</li><li>BPA-free acrylic</li><li>Lid included</li></ul>`,
+    regular_price: 520, stock_status: "in_stock", stock_quantity: 10,
+    is_featured: false, sort_order: 5, tags: ["container", "acrylic", "640ml", "round"],
+    primary_image: `${C}/lava-640ml-round-acrylic-vacuum-container-vl0057.webp`,
+    images: [{ url: `${C}/lava-640ml-round-acrylic-vacuum-container-vl0057.webp`, alt: "LAVA 640ml Round Acrylic Container", is_primary: true }],
+  },
+  {
+    sku: "VL0007", slug: "glass-vacuum-container-1520ml",
+    name: "LAVA 1.52 L Glass Vacuum Container",
+    short_description: "1.52 litre glass vacuum container (220 × 165 × 66 mm) — heat-resistant borosilicate glass.",
+    description: `<p>Premium <strong>1.52 L glass vacuum container</strong> for marinating, storing and reheating.</p><ul><li><strong>Capacity:</strong> 1.52 L</li><li>Borosilicate glass</li><li>Compatible with LAVA pump attachment</li></ul>`,
+    regular_price: 1225, stock_status: "in_stock", stock_quantity: 5,
+    is_featured: false, sort_order: 5, tags: ["glass", "container"],
+    primary_image: `${C}/glass-vacuum-container-1520ml-vl0007.webp`,
+    images: [{ url: `${C}/glass-vacuum-container-1520ml-vl0007.webp`, alt: "LAVA 1.52L Glass Vacuum Container", is_primary: true }],
   },
   // ── Acrylic set ─────────────────────────────────────────────────────────────
   {
@@ -98,7 +118,7 @@ const products = [
     short_description: "1300ml premium stainless steel vacuum container. Odour-resistant, dishwasher safe, built to last a lifetime.",
     description: `<p>The <strong>LAVA 1300ml ES-Line Stainless Steel Container</strong> is the premium everyday container — odour-resistant, stain-resistant, and fully dishwasher safe.</p>
 <ul><li><strong>Capacity:</strong> 1300 ml</li><li><strong>Material:</strong> 18/8 stainless steel</li><li>Odour and stain resistant</li><li>Lid included</li><li>Fully dishwasher safe</li><li>Works with all LAVA machines via pump attachment</li></ul>`,
-    regular_price: 1450, stock_status: "in_stock", stock_quantity: 5,
+    regular_price: 980, stock_status: "in_stock", stock_quantity: 5,
     is_featured: false, sort_order: 7, tags: ["container", "stainless-steel", "es-line", "1300ml"],
     primary_image: `${C}/lava-1300ml-es-line-stainless-steel-vacuum-container-premium-professional-storage-solution-vl0075.webp`,
     images: [{ url: `${C}/lava-1300ml-es-line-stainless-steel-vacuum-container-premium-professional-storage-solution-vl0075.webp`, alt: "LAVA 1300ml ES-Line Stainless Steel Container", is_primary: true }],
@@ -109,7 +129,7 @@ const products = [
     short_description: "2500ml high-capacity stainless steel vacuum container. For larger portions, marinating and batch storage.",
     description: `<p>The <strong>LAVA 2500ml ES-Line Stainless Steel Container</strong> is designed for larger quantities — marinating roasts, batch meal prep, and bulk storage.</p>
 <ul><li><strong>Capacity:</strong> 2500 ml</li><li><strong>Material:</strong> 18/8 stainless steel</li><li>Odour and stain resistant</li><li>Lid included</li><li>Fully dishwasher safe</li></ul>`,
-    regular_price: 1950, stock_status: "in_stock", stock_quantity: 5,
+    regular_price: 1130, stock_status: "in_stock", stock_quantity: 5,
     is_featured: false, sort_order: 8, tags: ["container", "stainless-steel", "es-line", "2500ml"],
     primary_image: `${C}/lava-2500ml-es-line-stainless-steel-vacuum-container-high-capacity-professional-storage-solution-vl0076.webp`,
     images: [{ url: `${C}/lava-2500ml-es-line-stainless-steel-vacuum-container-high-capacity-professional-storage-solution-vl0076.webp`, alt: "LAVA 2500ml ES-Line Stainless Steel Container", is_primary: true }],
@@ -120,7 +140,7 @@ const products = [
     short_description: "4000ml maximum-capacity stainless steel vacuum container. Ideal for large game portions, professional kitchens and catering.",
     description: `<p>The <strong>LAVA 4000ml ES-Line Stainless Steel Container</strong> is the largest individual container in the range — built for large game portions, catering operations and serious home preservers.</p>
 <ul><li><strong>Capacity:</strong> 4000 ml</li><li><strong>Material:</strong> 18/8 stainless steel</li><li>Odour and stain resistant</li><li>Lid included</li><li>Fully dishwasher safe</li></ul>`,
-    regular_price: 2950, stock_status: "on_order", stock_quantity: 0,
+    regular_price: 1405, stock_status: "on_order", stock_quantity: 0,
     is_featured: false, sort_order: 9, tags: ["container", "stainless-steel", "es-line", "4000ml", "large"],
     primary_image: `${C}/lava-4000ml-es-line-stainless-steel-vacuum-container-maximum-capacity-industrial-storage-solution-vl0077.webp`,
     images: [{ url: `${C}/lava-4000ml-es-line-stainless-steel-vacuum-container-maximum-capacity-industrial-storage-solution-vl0077.webp`, alt: "LAVA 4000ml ES-Line Stainless Steel Container", is_primary: true }],
@@ -147,7 +167,7 @@ const products = [
     short_description: "Small universal vacuum lid for jars, cans and bowls 47–112 mm diameter. Includes vacuum valve.",
     description: `<p>Universal vacuum lid for containers with a rim diameter of <strong>47–112 mm</strong>. Ideal for small jars, cans and bowls.</p>
 <ul><li><strong>Fits:</strong> 47–112 mm diameter</li><li>BPA-free polycarbonate</li><li>Integrated vacuum valve</li><li>Works with all LAVA machines and Easy Pump</li></ul>`,
-    regular_price: 240, stock_status: "in_stock", stock_quantity: 20,
+    regular_price: 255, stock_status: "in_stock", stock_quantity: 20,
     is_featured: false, sort_order: 9, tags: ["lid", "acrylic", "universal", "replacement", "47-112mm"],
     primary_image: `${L}/lava-sa-vacuum-container-acrylic-lid-47-112mm-vl0180.webp`,
     images: [{ url: `${L}/lava-sa-vacuum-container-acrylic-lid-47-112mm-vl0180.webp`, alt: "LAVA Universal Lid 47-112mm", is_primary: true }],
@@ -158,7 +178,7 @@ const products = [
     short_description: "Medium universal vacuum lid for bowls and preserving jars 76–143 mm diameter. Includes vacuum valve.",
     description: `<p>Universal vacuum lid for containers with a rim diameter of <strong>76–143 mm</strong>. Ideal for medium bowls and preserving jars.</p>
 <ul><li><strong>Fits:</strong> 76–143 mm diameter</li><li>BPA-free polycarbonate</li><li>Integrated vacuum valve</li><li>Works with all LAVA machines and Easy Pump</li></ul>`,
-    regular_price: 330, stock_status: "in_stock", stock_quantity: 20,
+    regular_price: 345, stock_status: "in_stock", stock_quantity: 20,
     is_featured: false, sort_order: 10, tags: ["lid", "acrylic", "universal", "replacement", "76-143mm"],
     primary_image: `${L}/lava-sa-vacuum-container-acrylic-lid-76-143mm-vl0181.webp`,
     images: [{ url: `${L}/lava-sa-vacuum-container-acrylic-lid-76-143mm-vl0181.webp`, alt: "LAVA Universal Lid 76-143mm", is_primary: true }],
@@ -169,7 +189,7 @@ const products = [
     short_description: "Replacement acrylic vacuum container lid for containers 160–203mm diameter. Includes vacuum valve.",
     description: `<p>Replacement lid for LAVA acrylic vacuum containers with a diameter of <strong>160–203mm</strong>. Includes integrated vacuum valve.</p>
 <ul><li><strong>Fits:</strong> 160–203mm diameter containers</li><li>Includes vacuum valve</li><li>BPA-free acrylic</li><li>Dishwasher safe</li></ul>`,
-    regular_price: 195, stock_status: "in_stock", stock_quantity: 20,
+    regular_price: 640, stock_status: "in_stock", stock_quantity: 20,
     is_featured: false, sort_order: 11, tags: ["lid", "acrylic", "replacement", "160-203mm"],
     primary_image: `${L}/lava-sa-vacuum-container-acrylic-lid-160-203mm-vl0083.webp`,
     images: [{ url: `${L}/lava-sa-vacuum-container-acrylic-lid-160-203mm-vl0083.webp`, alt: "LAVA Acrylic Lid 160-203mm", is_primary: true }],
@@ -180,7 +200,7 @@ const products = [
     short_description: "Replacement acrylic vacuum container lid for containers 204–237mm diameter. Includes vacuum valve.",
     description: `<p>Replacement lid for LAVA acrylic containers with a diameter of <strong>204–237mm</strong>.</p>
 <ul><li><strong>Fits:</strong> 204–237mm diameter containers</li><li>Includes vacuum valve</li><li>BPA-free acrylic</li><li>Dishwasher safe</li></ul>`,
-    regular_price: 195, stock_status: "in_stock", stock_quantity: 20,
+    regular_price: 790, stock_status: "in_stock", stock_quantity: 20,
     is_featured: false, sort_order: 12, tags: ["lid", "acrylic", "replacement", "204-237mm"],
     primary_image: `${L}/lava-sa-vacuum-container-acrylic-lid-204-237mm-vl0084.webp`,
     images: [{ url: `${L}/lava-sa-vacuum-container-acrylic-lid-204-237mm-vl0084.webp`, alt: "LAVA Acrylic Lid 204-237mm", is_primary: true }],
@@ -191,7 +211,7 @@ const products = [
     short_description: "Replacement acrylic vacuum container lid for containers 238–280mm diameter. Includes vacuum valve.",
     description: `<p>Replacement lid for LAVA acrylic containers with a diameter of <strong>238–280mm</strong>.</p>
 <ul><li><strong>Fits:</strong> 238–280mm diameter containers</li><li>Includes vacuum valve</li><li>BPA-free acrylic</li><li>Dishwasher safe</li></ul>`,
-    regular_price: 195, stock_status: "in_stock", stock_quantity: 20,
+    regular_price: 850, stock_status: "in_stock", stock_quantity: 20,
     is_featured: false, sort_order: 13, tags: ["lid", "acrylic", "replacement", "238-280mm"],
     primary_image: `${L}/lava-sa-vacuum-container-acrylic-lid-238-280mm-vl0085.webp`,
     images: [{ url: `${L}/lava-sa-vacuum-container-acrylic-lid-238-280mm-vl0085.webp`, alt: "LAVA Acrylic Lid 238-280mm", is_primary: true }],

@@ -19,6 +19,7 @@ const GLASS_PRODUCT_SLUGS = new Set([
   "electric-vacuum-pump",
   "g-line-glass-vacuum-container-black",
   "g-line-glass-vacuum-container-white",
+  "glass-vacuum-container-1520ml",
 ]);
 
 /** G-Line glass + Easy Pump only — jar sealers live on /products/glass-jar-sealer */

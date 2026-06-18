@@ -52,7 +52,7 @@ const machines = [
 <li><strong>Container capability</strong> — includes vacuum pump attachment for acrylic containers</li>
 </ul>
 <p><em>Note: This model has been discontinued. Remaining stock is limited.</em></p>`,
-    regular_price: 6495,
+    regular_price: 10000,
     stock_status:  "in_stock",
     stock_quantity: 6,
     weight_kg:     3.95,
@@ -143,7 +143,7 @@ const machines = [
     ],
   },
   {
-    sku:           "VL0300PX-1",
+    sku:           "VL0300PX",
     name:          "LAVA V.300 Premium X",
     slug:          "v300-premium-x",
     short_description: "Most popular vacuum sealer — fully automatic and manual modes, dial pressure gauge, double seal. The go-to machine for hunters, anglers and serious home users.",
@@ -197,7 +197,7 @@ const machines = [
     ],
   },
   {
-    sku:           "VL0300PBLACK",
+    sku:           "VL0300P",
     name:          "LAVA V.300 Premium Black — Limited Edition",
     slug:          "v300-black",
     short_description: "Limited Edition black finish. Same professional performance as the V.300 Premium X with a bold black aesthetic. Fully automatic, dial gauge, double seal.",
@@ -252,7 +252,7 @@ const machines = [
     ],
   },
   {
-    sku:           null,
+    sku:           "VL0300PW",
     name:          "LAVA V.300 Premium White — Limited Edition",
     slug:          "v300-white",
     short_description: "Limited Edition white finish with patented 2-step filter system and stronger pump (-0.96 bar). The most powerful V.300 ever made.",
@@ -349,7 +349,7 @@ const machines = [
     ],
   },
   {
-    sku:           "VL0400P-1",
+    sku:           "VL0400P",
     name:          "LAVA V.400 Premium",
     slug:          "v400-premium",
     short_description: "Commercial-grade vacuum sealer with 450mm triple seal and stainless steel housing. Designed for restaurants, butcheries and commercial kitchens. Special order.",

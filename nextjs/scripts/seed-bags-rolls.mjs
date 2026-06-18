@@ -83,7 +83,7 @@ const bags = [
     ],
   },
   {
-    sku:           "LVB1322-50",
+    sku:           "VL0018",
     name:          "Embossed Vacuum Bags 13 × 22.5 cm — 50 Bags",
     slug:          "embossed-vacuum-bags-13x22-50",
     short_description: "Popular 13 × 22.5 cm embossed vacuum bags — great for chicken pieces, fish, sausages. Pack of 50.",
@@ -96,7 +96,7 @@ const bags = [
 <li><strong>Freezer, microwave and sous-vide safe</strong></li>
 </ul>`,
     category_slug: "vacuum-bags",
-    regular_price: 245,
+    regular_price: 230,
     stock_status:  "in_stock",
     stock_quantity: 50,
     is_featured:   false,
@@ -108,7 +108,7 @@ const bags = [
     ],
   },
   {
-    sku:           "LVB2030-50",
+    sku:           "VL0023",
     name:          "Embossed Vacuum Bags 20 × 30 cm — 50 Bags",
     slug:          "embossed-vacuum-bags-20x30-50",
     short_description: "Mid-size 20 × 30 cm embossed vacuum bags — perfect for steaks, chops, and medium portions. Pack of 50.",
@@ -121,7 +121,7 @@ const bags = [
 <li><strong>Freezer, microwave and sous-vide safe</strong></li>
 </ul>`,
     category_slug: "vacuum-bags",
-    regular_price: 285,
+    regular_price: 365,
     stock_status:  "in_stock",
     stock_quantity: 50,
     is_featured:   true,
@@ -237,7 +237,7 @@ const bags = [
 // ─── Rolls ───────────────────────────────────────────────────────────────────
 const rolls = [
   {
-    sku:           "LVR15-6-4",
+    sku:           "VL0010(4)",
     name:          "Embossed Vacuum Sealer Rolls 15 cm × 6 m — 4 Rolls",
     slug:          "embossed-vacuum-rolls-15cm-6m-4pack",
     short_description: "15 cm wide embossed vacuum rolls — cut to any length. Ideal for sausages, asparagus, and narrow portions. Pack of 4 × 6 m rolls.",
@@ -250,7 +250,7 @@ const rolls = [
 <li><strong>BPA-free</strong>, food-safe, freezer and sous-vide safe</li>
 </ul>`,
     category_slug: "vacuum-rolls",
-    regular_price: 245,
+    regular_price: 675,
     stock_status:  "in_stock",
     stock_quantity: 30,
     is_featured:   false,
@@ -262,7 +262,7 @@ const rolls = [
     ],
   },
   {
-    sku:           "LVR20-6-2",
+    sku:           "VL0011(2)",
     name:          "Embossed Vacuum Sealer Rolls 20 cm × 6 m — 2 Rolls",
     slug:          "embossed-vacuum-rolls-20cm-6m-2pack",
     short_description: "20 cm wide embossed vacuum rolls — most popular width. Perfect for steaks, chops, fish fillets. Pack of 2 × 6 m rolls.",
@@ -275,7 +275,7 @@ const rolls = [
 <li><strong>BPA-free</strong>, food-safe, freezer and sous-vide safe</li>
 </ul>`,
     category_slug: "vacuum-rolls",
-    regular_price: 245,
+    regular_price: 485,
     stock_status:  "in_stock",
     stock_quantity: 30,
     is_featured:   true,
@@ -287,7 +287,7 @@ const rolls = [
     ],
   },
   {
-    sku:           "LVR25-6-2",
+    sku:           "VL0013(2)",
     name:          "Embossed Vacuum Sealer Rolls 25 cm × 6 m — 2 Rolls",
     slug:          "embossed-vacuum-rolls-25cm-6m-2pack",
     short_description: "25 cm wide embossed vacuum rolls for roasts, larger cuts and game portions. Pack of 2 × 6 m rolls.",
@@ -300,7 +300,7 @@ const rolls = [
 <li><strong>BPA-free</strong>, food-safe, freezer and sous-vide safe</li>
 </ul>`,
     category_slug: "vacuum-rolls",
-    regular_price: 265,
+    regular_price: 545,
     stock_status:  "in_stock",
     stock_quantity: 30,
     is_featured:   false,
@@ -312,7 +312,7 @@ const rolls = [
     ],
   },
   {
-    sku:           "LVR30-6-2",
+    sku:           "VL0012(2)",
     name:          "Embossed Vacuum Sealer Rolls 30 cm × 6 m — 2 Rolls",
     slug:          "embossed-vacuum-rolls-30cm-6m-2pack",
     short_description: "30 cm wide embossed vacuum rolls for whole chickens, shoulders, and large game portions. Pack of 2 × 6 m rolls.",
@@ -325,7 +325,7 @@ const rolls = [
 <li><strong>BPA-free</strong>, food-safe, freezer and sous-vide safe</li>
 </ul>`,
     category_slug: "vacuum-rolls",
-    regular_price: 285,
+    regular_price: 620,
     stock_status:  "in_stock",
     stock_quantity: 30,
     is_featured:   false,

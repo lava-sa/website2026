@@ -119,6 +119,7 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
   "/products/vacuum-bags":     [{ label: "Vacuum Bags" }],
   "/products/vacuum-rolls":    [{ label: "Vacuum Rolls" }],
   "/products/bags-rolls":      [{ label: "Vacuum Bags & Rolls" }],
+  "/products/accessories":     [{ label: "Vacuum Accessories" }],
   "/products/containers-lids": [{ label: "Containers & Lids" }],
   "/products/glass-containers": [
     { label: "Containers & Lids", href: "/products/containers-lids" },

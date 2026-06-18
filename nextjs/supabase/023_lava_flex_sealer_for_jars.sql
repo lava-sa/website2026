@@ -50,7 +50,7 @@ VALUES (
 <li><strong>Finish:</strong> Once the device has reached its maximum vacuum pressure, end the process by removing the hose either from the top of the jar-sealer or from the device.</li>
 </ol>
 <p><strong>Included:</strong> Flex jar-sealer with integrated silicone seal and vacuum hose (approx. 80 cm).</p>',
-  645,
+  699,
   NULL,
   'in_stock',
   NULL,

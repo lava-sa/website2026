@@ -64,6 +64,11 @@ const CATEGORY_HIGHLIGHTS: Record<string, ProductHighlight[]> = {
     { title: "Hygiene & workflow", description: "Boards, knives and accessories built for daily commercial use." },
     { title: "Pairs with vacuum sealing", description: "Cut, portion and seal game or beef in one workflow." },
   ],
+  accessories: [
+    { title: "Genuine LAVA accessories", description: "Labels, fluid stop, wine sealers and roll tools from the official distributor." },
+    { title: "Better bag workflow", description: "Label, protect and seal moist or sharp-edged foods with confidence." },
+    { title: "Works with your machine", description: "Compatible with every LAVA vacuum sealer and container system." },
+  ],
   "special-offers": [
     { title: "Bundle value", description: "Combined machine, bags or accessories at a package price." },
     { title: "Starter kits", description: "Everything you need to begin vacuum sealing in one order." },

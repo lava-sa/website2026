@@ -20,7 +20,9 @@ export default async function ButcheryBoardsPage() {
     // Supabase unavailable
   }
 
-  const boards = products.filter((p) => p.tags?.includes("cutting-board"));
+  const boards = products.filter((p) =>
+    p.tags?.some((t) => ["cutting-board", "display-board", "salmon-board"].includes(t))
+  );
 
   return (
     <main className="min-h-screen bg-white">

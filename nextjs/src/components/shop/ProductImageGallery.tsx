@@ -17,7 +17,13 @@ export default function ProductImageGallery({ images, productName }: Props) {
   const [thumbOffset, setThumbOffset] = useState(0);
   const thumbRef = useRef<HTMLDivElement>(null);
 
-  if (!images.length) return null;
+  if (!images.length) {
+    return (
+      <div className="flex aspect-square w-full items-center justify-center border border-border bg-[#F2F2F2] text-copy-muted text-sm">
+        Image coming soon
+      </div>
+    );
+  }
 
   const prev = () => setActive((i) => (i === 0 ? images.length - 1 : i - 1));
   const next = () => setActive((i) => (i === images.length - 1 ? 0 : i + 1));
