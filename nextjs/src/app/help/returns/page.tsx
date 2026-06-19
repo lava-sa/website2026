@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { RefreshCw, Phone, Mail, CheckCircle, X, AlertTriangle } from "lucide-react";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
+import { BUSINESS_HOURS } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Returns & Exchanges",
@@ -119,7 +120,7 @@ export default function ReturnsPage() {
                 <Phone className="h-5 w-5 text-secondary shrink-0" />
                 <div>
                   <PhoneNumbers layout="stacked" linkClassName="font-bold text-primary text-sm hover:text-secondary" />
-                  <p className="text-xs text-copy-muted">Mon–Fri 09:00–17:00</p>
+                  <p className="text-xs text-copy-muted">{BUSINESS_HOURS.display}</p>
                 </div>
               </div>
               <a href="mailto:info@lava-sa.com" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">

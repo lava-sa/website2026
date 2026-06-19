@@ -18,3 +18,26 @@ export const ANNEKE_PHONE = {
 /** Plain-text for meta, emails, legal copy */
 export const PHONES_DISPLAY_LONG =
   `${MAIN_PHONE.displayLocal} or ${ANNEKE_PHONE.displayLocal} (Anneke)` as const;
+
+/** Office / trading hours — Mon–Fri 08:00–15:30 (Anneke, June 2026) */
+export const BUSINESS_HOURS = {
+  days: "Mon–Fri",
+  daysLong: "Monday – Friday",
+  opens: "08:00",
+  closes: "15:30",
+  /** Mon–Fri, 08:00–15:30 */
+  display: "Mon–Fri, 08:00–15:30",
+  /** 08:00 – 15:30 */
+  displayRange: "08:00 – 15:30",
+  /** Mon–Fri, 8am–3:30pm */
+  displayFriendly: "Mon–Fri, 8am–3:30pm",
+  /** Monday – Friday, 08:00 – 15:30 SAST */
+  displayLegal: "Monday – Friday, 08:00 – 15:30 SAST",
+} as const;
+
+export const CALLBACK_TIME_OPTIONS = [
+  `Any time (${BUSINESS_HOURS.display})`,
+  "Morning (08:00–12:00)",
+  "Midday (12:00–14:00)",
+  "Afternoon (14:00–15:30)",
+] as const;

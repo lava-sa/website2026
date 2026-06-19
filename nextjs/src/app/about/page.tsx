@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
-import { PHONES_DISPLAY_LONG } from "@/lib/contact";
+import { BUSINESS_HOURS, PHONES_DISPLAY_LONG } from "@/lib/contact";
 import {
   ShieldCheck,
   Leaf,
@@ -290,7 +290,7 @@ export default async function AboutPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {[
-              { icon: Phone, title: "Call Us", detail: PHONES_DISPLAY_LONG, sub: "Mon–Fri 8am–5pm", href: null },
+              { icon: Phone, title: "Call Us", detail: PHONES_DISPLAY_LONG, sub: BUSINESS_HOURS.displayFriendly, href: null },
               { icon: Mail, title: "Email Us", detail: "info@lava-sa.com", sub: "Reply within 1 business day", href: "mailto:info@lava-sa.com" },
               { icon: MapPin, title: "Based In", detail: "Bryanston, Johannesburg", sub: "Serving all of South Africa", href: null },
               { icon: Clock, title: "Order Cut-Off", detail: "3pm weekdays", sub: "For same-day dispatch", href: null },

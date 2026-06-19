@@ -53,7 +53,7 @@ export const KEY_DECISIONS = [
   },
   {
     topic: "Business hours",
-    decision: "Change to 08:00–15:00 (Mon–Fri) across contact and footer copy.",
+    decision: "Change to 08:00–15:30 (Mon–Fri) across contact and footer copy.",
   },
   {
     topic: "Navigation",
@@ -78,7 +78,7 @@ export const ACTION_IGNATIUS = [
   "Fix product image order and aspect ratios discussed on the call.",
   "Mark out-of-stock items clearly; add link to alternatives / StoreVac when live.",
   "Remove duplicate butchery listings; tidy category navigation labels.",
-  "Update business hours to 08:00–15:00 site-wide.",
+  "Update business hours to 08:00–15:30 site-wide.",
   "Confirm go-live schedule (end of June) once Anneke confirms StoreVac project.",
 ] as const;
 
@@ -131,9 +131,9 @@ export const POST_MEETING_STATUS: CatalogueRequest[] = [
   },
   {
     area: "Contact",
-    request: "Business hours 08:00–15:00",
-    status: "Not yet",
-    notes: "Site still shows 9am–5pm in places.",
+    request: "Business hours 08:00–15:30",
+    status: "Done",
+    notes: "Updated site-wide to Mon–Fri, 08:00–15:30.",
   },
   {
     area: "Navigation",
@@ -184,7 +184,7 @@ export const LAUNCH_PLAN = {
   steps: [
     "Receive and apply Anneke’s updated price list.",
     "Final image pass and out-of-stock labelling.",
-    "Business hours 08:00–15:00; navigation cleanup.",
+    "Business hours 08:00–15:30; navigation cleanup.",
     "Send testimonial link and manual PDFs to Anneke.",
     "Redirect lava-sa.co.za → lava-sa.com; verify old WordPress URLs.",
     "Optional: customer mailing — new site, add to phone, review invitation.",

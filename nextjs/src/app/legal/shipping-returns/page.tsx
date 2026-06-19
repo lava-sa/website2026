@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Truck, RefreshCw, ShieldCheck, Clock, Phone, Mail } from "lucide-react";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
+import { BUSINESS_HOURS } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Shipping & Returns",
@@ -179,7 +180,7 @@ export default function ShippingReturnsPage() {
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-copy-muted">Call</p>
                   <PhoneNumbers layout="stacked" linkClassName="font-bold text-primary hover:text-secondary" />
-                  <p className="text-xs text-copy-muted mt-1">Mon–Fri 09:00–17:00</p>
+                  <p className="text-xs text-copy-muted mt-1">{BUSINESS_HOURS.display}</p>
                 </div>
               </div>
               <a href="mailto:info@lava-sa.com"

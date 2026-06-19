@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Outfit } from "next/font/google";
 import "./globals.css";
-import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
+import { ANNEKE_PHONE, BUSINESS_HOURS, MAIN_PHONE } from "@/lib/contact";
 
 const montserrat = Montserrat({
     variable: "--font-montserrat",
@@ -119,6 +119,14 @@ const localBusinessSchema = {
     "areaServed": [
         { "@type": "Country", "name": "South Africa" },
         { "@type": "AdministrativeArea", "name": "Gauteng" },
+    ],
+    "openingHoursSpecification": [
+        {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": BUSINESS_HOURS.opens,
+            "closes": BUSINESS_HOURS.closes,
+        },
     ],
     "foundingDate": "2007",
     "parentOrganization": {

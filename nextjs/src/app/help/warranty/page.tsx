@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ShieldCheck, Wrench, Phone, Mail, CheckCircle, X, Clock } from "lucide-react";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
-import { PHONES_DISPLAY_LONG } from "@/lib/contact";
+import { BUSINESS_HOURS, PHONES_DISPLAY_LONG } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "2-Year LAVA Warranty — What's Covered & How to Claim",
@@ -165,7 +165,7 @@ export default function WarrantyPage() {
                 <Phone className="h-5 w-5 text-secondary shrink-0" />
                 <div>
                   <PhoneNumbers layout="stacked" linkClassName="font-bold text-primary text-sm hover:text-secondary" />
-                  <p className="text-xs text-copy-muted mt-1">Mon–Fri 09:00–17:00</p>
+                  <p className="text-xs text-copy-muted mt-1">{BUSINESS_HOURS.display}</p>
                 </div>
               </div>
               <a href="mailto:info@lava-sa.com" className="flex items-center gap-3 border border-border bg-white px-4 py-3 hover:border-primary transition-all">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Phone, Mail, ArrowRight } from "lucide-react";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
+import { BUSINESS_HOURS } from "@/lib/contact";
 import JsonLd from "@/components/seo/JsonLd";
 import type { Metadata } from "next";
 import { faqSchema } from "@/lib/seo";
@@ -212,7 +213,7 @@ export default function FAQPage() {
               <Phone className="h-5 w-5 text-secondary shrink-0" />
               <div>
                 <PhoneNumbers layout="stacked" linkClassName="font-bold text-white text-sm hover:text-secondary" />
-                <p className="text-xs text-white/60 mt-1">Mon–Fri 09:00–17:00</p>
+                <p className="text-xs text-white/60 mt-1">{BUSINESS_HOURS.display}</p>
               </div>
             </div>
             <a href="mailto:info@lava-sa.com" className="flex items-center gap-3 border border-white/20 px-4 py-3 hover:border-white transition-colors">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Truck, Clock, MapPin, Phone, Mail, AlertTriangle, CheckCircle, Package } from "lucide-react";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
+import { BUSINESS_HOURS } from "@/lib/contact";
 import {
   SHIPPING_GAUTENG_EX_VAT,
   SHIPPING_INCL_GAUTENG,
@@ -155,7 +156,7 @@ export default function DeliveryPage() {
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-copy-muted">Call</p>
                 <PhoneNumbers layout="stacked" linkClassName="font-bold text-primary hover:text-secondary" />
-                <p className="text-xs text-copy-muted mt-1">Mon–Fri 09:00–17:00</p>
+                <p className="text-xs text-copy-muted mt-1">{BUSINESS_HOURS.display}</p>
               </div>
             </div>
             <a href="mailto:info@lava-sa.com" className="flex items-center gap-3 border border-border bg-surface px-4 py-4 hover:border-primary transition-all">

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Phone, Mail, MapPin, Clock, Send, Loader2, CheckCircle } from "lucide-react";
-import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
+import { ANNEKE_PHONE, BUSINESS_HOURS, CALLBACK_TIME_OPTIONS, MAIN_PHONE } from "@/lib/contact";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
 import { HoneypotField } from "@/components/security/HoneypotField";
 import { TurnstileWidget } from "@/components/security/TurnstileWidget";
@@ -24,12 +24,7 @@ const ENQUIRY_TYPES = [
   "Something else",
 ];
 
-const CALLBACK_TIME_OPTIONS = [
-  "Any time (Mon-Fri 09:00-17:00)",
-  "Morning (09:00-12:00)",
-  "Midday (12:00-14:00)",
-  "Afternoon (14:00-17:00)",
-];
+const CALLBACK_TIME_OPTIONS_LIST = [...CALLBACK_TIME_OPTIONS];
 
 type Props = { cms: SitePageContent };
 
@@ -37,7 +32,7 @@ export default function ContactPageClient({ cms }: Props) {
   const formBlock = cms.blocks?.[0];
   const [form, setForm] = useState({
     name: "", email: "", phone: "", province: "Gauteng",
-    enquiry_type: "Product enquiry", callback_time: CALLBACK_TIME_OPTIONS[0], message: "",
+    enquiry_type: "Product enquiry", callback_time: CALLBACK_TIME_OPTIONS_LIST[0], message: "",
     website: "",
   });
   const [turnstileToken, setTurnstileToken] = useState("");
@@ -133,13 +128,13 @@ export default function ContactPageClient({ cms }: Props) {
                   layout="stacked"
                   linkClassName="text-sm font-bold text-white leading-snug hover:text-secondary"
                 />
-                <p className="text-[11px] text-on-dark-muted mt-1">Mon–Fri 9am–5pm</p>
+                <p className="text-[11px] text-on-dark-muted mt-1">{BUSINESS_HOURS.displayFriendly}</p>
               </div>
             </div>
             {[
               { icon: Mail,   title: "Email",   value: "info@lava-sa.com", sub: "Reply within 1 business day", href: "mailto:info@lava-sa.com" },
               { icon: MapPin, title: "Address", value: "5 Stirling Road",    sub: "Bryanston, Sandton 2191", href: null },
-              { icon: Clock,  title: "Hours",   value: "Mon–Fri",            sub: "09:00 – 17:00", href: null },
+              { icon: Clock,  title: "Hours",   value: BUSINESS_HOURS.days,            sub: BUSINESS_HOURS.displayRange, href: null },
             ].map(({ icon: Icon, title, value, sub, href }) => {
               const inner = (
                 <div className="flex items-center gap-4 py-5 px-4 lg:px-6">
@@ -216,7 +211,7 @@ export default function ContactPageClient({ cms }: Props) {
                   </Field>
                   <Field label="Best Time for a Call Back" className="sm:col-span-2">
                     <select value={form.callback_time} onChange={set("callback_time")} className={inputCls()}>
-                      {CALLBACK_TIME_OPTIONS.map((t) => <option key={t}>{t}</option>)}
+                      {CALLBACK_TIME_OPTIONS_LIST.map((t) => <option key={t}>{t}</option>)}
                     </select>
                   </Field>
                 </div>

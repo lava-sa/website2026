@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BUSINESS_HOURS } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
@@ -37,7 +38,7 @@ export default function TermsPage() {
               ["Telephone",     "+27 (0)72 160 5556"],
               ["Anneke",        "+27 (0)79 512 6771"],
               ["Email",         "info@lava-sa.com"],
-              ["Business hours","Monday – Friday, 09:00 – 17:00 SAST"],
+              ["Business hours", BUSINESS_HOURS.displayLegal],
             ]} />
           </Section>
 

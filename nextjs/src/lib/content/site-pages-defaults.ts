@@ -60,7 +60,7 @@ export const DEFAULT_CONTACT: SitePageContent = {
   seo: {
     title: "Contact Lava-SA — Speak to Anneke",
     description:
-      "Contact Lava-SA for vacuum sealer advice, orders, warranty and spare parts. Anneke answers personally — Mon–Fri 9am–5pm.",
+      "Contact Lava-SA for vacuum sealer advice, orders, warranty and spare parts. Anneke answers personally — Mon–Fri, 08:00–15:30.",
   },
   hero: {
     overline: "We're Here to Help",
