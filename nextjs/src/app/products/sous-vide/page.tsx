@@ -20,7 +20,8 @@ export const metadata = pageMetadata({
 export const revalidate = 3600;
 
 function isCirculator(p: Product) {
-  return p.tags?.includes("circulator") || p.slug.startsWith("lx");
+  const tags = p.tags ?? [];
+  return tags.includes("circulator") || tags.includes("complete-set");
 }
 
 // ── Fallback circulators when Supabase unavailable ───────────────────────────
@@ -73,6 +74,28 @@ const FALLBACK_CIRCULATORS = [
     },
     badge: "Best Value",
   },
+  {
+    id: "sv-lx0035",
+    sku: "LX0035",
+    slug: "sous-vide-set-xxl-stainless-steel",
+    name: "Sous Vide Set XXL — Stainless Steel",
+    short_description:
+      "Premium 6-piece set with a 12-litre stainless steel basin, LX 20 stick, stainless lid, evaporation lid, bag holder and neoprene cover.",
+    regular_price: 6210,
+    sale_price: null,
+    primary_image_url:
+      "/images/products/sous-vide/sous-vide-set-xxl-stainless-steel/lava-sous-vide-set-xxl-stainless-steel.webp",
+    stock_status: "in_stock" as const,
+    is_featured: false,
+    specs: {
+      Includes: "LX 20 + 12 L SS Basin + Lids + Bag Holder + Cover",
+      "Basin Material": "Stainless steel",
+      "Basin Capacity": "12 litres",
+      "Temperature Accuracy": "±0.1°C",
+      Power: "1,200 W",
+    },
+    badge: "Stainless Steel",
+  },
 ];
 
 const BENEFITS = [
@@ -119,7 +142,9 @@ export default async function SousVidePage() {
       ? circulatorsFromDb
       : FALLBACK_CIRCULATORS.map((p) => ({
           ...p,
-          tags: ["sous-vide", "circulator"],
+          tags: p.slug === "lx20-sous-vide-stick"
+            ? ["sous-vide", "circulator"]
+            : ["sous-vide", "complete-set"],
           description: null,
           sale_price: null,
           stock_quantity: null,
@@ -209,13 +234,13 @@ export default async function SousVidePage() {
         <div className="section-container">
           <div className="mb-10">
             <p className="overline mb-2">Precision cookers</p>
-            <h2 className="text-3xl font-bold text-primary">Sous Vide Circulators</h2>
+            <h2 className="text-3xl font-bold text-primary">Circulators &amp; Complete Sets</h2>
             <p className="mt-3 text-copy-muted max-w-lg">
-              Start with the stick on its own, or get everything you need in one complete set.
+              Start with the LX 20 stick on its own, or choose a complete set — standard or stainless steel basin.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl">
             {circulators.map((product) => {
               const fallback = FALLBACK_CIRCULATORS.find((f) => f.slug === product.slug);
               const specEntries = fallback
