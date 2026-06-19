@@ -33,8 +33,11 @@ const STATUS_COLOURS: Record<string, string> = {
   failed: "#dc2626",
 };
 
+const VAT_RATE = 0.15;
+
 type OrderRow = {
   id: string;
+  order_number: string;
   total: number | string;
   created_at: string;
   status: string;
@@ -42,6 +45,8 @@ type OrderRow = {
   trashed_at?: string | null;
 };
 type HistoryRow = {
+  wp_order_id: number;
+  wp_order_number: string | null;
   total: number | string;
   order_date: string;
   status: string;
@@ -51,9 +56,28 @@ type HistoryRow = {
 type ItemRow = {
   product_name: string;
   product_id?: string | null;
+  product_sku?: string | null;
   quantity: number;
   line_total: number | string;
   order_id: string;
+};
+type ProductCostRow = {
+  id: string;
+  sku: string | null;
+  cost_price: number | string | null;
+};
+type RevenueEvent = {
+  date: Date;
+  total: number;
+  email: string;
+};
+type LineProfitInput = {
+  name: string;
+  sku: string | null;
+  productId: string | null;
+  qty: number;
+  lineTotalIncl: number;
+  orderDate: Date;
 };
 
 export interface MonthlyTargetRow {
@@ -68,10 +92,19 @@ export interface DashboardStats {
   customerCount: number;
   /** Sum of line totals / order totals for revenue-eligible orders only */
   totalRevenue: number;
-  /** All order rows (current + history), every status — for status donut context */
+  /** Unique order rows (live + history, deduped when same order # appears in both) */
   allOrdersCount: number;
+  /** History rows skipped because the same order # exists in Orders */
+  dedupedHistoryCount: number;
   /** Orders that contribute to revenue (paid + selected Woo statuses) */
   revenueOrderCount: number;
+  /** Gross profit from line items with known cost_price (ex-VAT revenue minus NET cost) */
+  totalGrossProfit: number;
+  grossProfitThisMonth: number;
+  grossProfit2026: number;
+  /** Share of product-line revenue where a cost_price was found (0–100) */
+  profitCoveragePct: number;
+  usesActualCost: boolean;
   revenue2026: number;
   revenue2025: number;
   revenue2024: number;
@@ -83,6 +116,7 @@ export interface DashboardStats {
   statusData: StatusDataPoint[];
   topProducts: Array<{ name: string; units: number; revenue: number }>;
   topProductsByEstProfit: Array<{ name: string; units: number; revenue: number; estProfit: number }>;
+  topProductsByProfit: Array<{ name: string; units: number; revenue: number; profit: number }>;
   topCustomers: Array<{ email: string; revenue: number; orders: number }>;
   largestRevenueOrder: { amount: number; dateLabel: string } | null;
   bestRevenueMonth: { label: string; revenue: number } | null;
@@ -120,18 +154,115 @@ function countsAsRevenueWc(status: string): boolean {
   return REVENUE_STATUSES_WC.has(normalized);
 }
 
-function parseHistoryLineItems(raw: unknown): Array<{ name: string; qty: number; lineTotal: number }> {
+function parseHistoryLineItems(raw: unknown): Array<{ name: string; sku: string | null; qty: number; lineTotal: number }> {
   if (!Array.isArray(raw)) return [];
-  const out: Array<{ name: string; qty: number; lineTotal: number }> = [];
+  const out: Array<{ name: string; sku: string | null; qty: number; lineTotal: number }> = [];
   for (const it of raw) {
     if (!it || typeof it !== "object") continue;
     const o = it as Record<string, unknown>;
     const name = String(o.name ?? o.product_name ?? o.Product ?? "Unknown product");
+    const skuRaw = o.sku ?? o.SKU ?? o.product_sku;
+    const sku = skuRaw != null && String(skuRaw).trim() ? String(skuRaw).trim() : null;
     const qty = Math.max(1, toNumber(o.quantity ?? o.qty ?? 1));
     const lineTotal = toNumber(o.line_total ?? o.total ?? o.line_subtotal ?? o.subtotal ?? 0);
-    out.push({ name, qty, lineTotal });
+    out.push({ name, sku, qty, lineTotal });
   }
   return out;
+}
+
+/** Normalize Woo / shop order numbers for cross-table dedup (6127, #6127, ORD-6127). */
+function normalizeOrderKey(v: string | number | null | undefined): string {
+  if (v == null) return "";
+  return String(v)
+    .trim()
+    .replace(/^#/, "")
+    .replace(/^ORD-/i, "")
+    .replace(/\s+/g, "");
+}
+
+function buildPrimaryOrderKeys(currentRows: Pick<OrderRow, "order_number">[]): Set<string> {
+  const keys = new Set<string>();
+  for (const row of currentRows) {
+    const key = normalizeOrderKey(row.order_number);
+    if (key) keys.add(key);
+  }
+  return keys;
+}
+
+function historyDuplicatesPrimary(row: Pick<HistoryRow, "wp_order_id" | "wp_order_number">, primaryKeys: Set<string>): boolean {
+  const wpId = normalizeOrderKey(row.wp_order_id);
+  const wpNum = normalizeOrderKey(row.wp_order_number);
+  return (wpId !== "" && primaryKeys.has(wpId)) || (wpNum !== "" && primaryKeys.has(wpNum));
+}
+
+function lineRevenueExVat(lineTotalIncl: number): number {
+  return lineTotalIncl / (1 + VAT_RATE);
+}
+
+function buildCostLookups(products: ProductCostRow[]) {
+  const byId = new Map<string, number>();
+  const bySku = new Map<string, number>();
+  let withCost = 0;
+  for (const p of products) {
+    const cost = toNumber(p.cost_price);
+    if (cost <= 0) continue;
+    withCost += 1;
+    byId.set(p.id, cost);
+    if (p.sku) {
+      const sku = p.sku.trim().toUpperCase();
+      bySku.set(sku, cost);
+      const base = sku.replace(/\(.*\)/, "");
+      if (base !== sku && !bySku.has(base)) bySku.set(base, cost);
+    }
+  }
+  return { byId, bySku, withCost };
+}
+
+function resolveUnitCost(
+  line: Pick<LineProfitInput, "productId" | "sku">,
+  byId: Map<string, number>,
+  bySku: Map<string, number>
+): number | null {
+  if (line.productId) {
+    const byProduct = byId.get(line.productId);
+    if (byProduct != null) return byProduct;
+  }
+  if (line.sku) {
+    const sku = line.sku.trim().toUpperCase();
+    const direct = bySku.get(sku);
+    if (direct != null) return direct;
+    const base = sku.replace(/\(.*\)/, "").replace(/-1$/, "");
+    return bySku.get(base) ?? null;
+  }
+  return null;
+}
+
+function accumulateLineProfit(
+  line: LineProfitInput,
+  byId: Map<string, number>,
+  bySku: Map<string, number>,
+  productTotals: Map<string, { units: number; revenue: number; profit: number; profitKnown: boolean }>,
+  profitEvents: Array<{ date: Date; profit: number; revenueExVat: number }>,
+  coverage: { revenueExVat: number; revenueExVatWithCost: number }
+) {
+  const name = line.name || "Unknown";
+  const cur = productTotals.get(name) ?? { units: 0, revenue: 0, profit: 0, profitKnown: false };
+  cur.units += line.qty;
+  cur.revenue += line.lineTotalIncl;
+
+  const revenueExVat = lineRevenueExVat(line.lineTotalIncl);
+  coverage.revenueExVat += revenueExVat;
+
+  const unitCost = resolveUnitCost(line, byId, bySku);
+  if (unitCost != null) {
+    const profit = revenueExVat - unitCost * line.qty;
+    cur.profit += profit;
+    cur.profitKnown = true;
+    coverage.revenueExVatWithCost += revenueExVat;
+    profitEvents.push({ date: line.orderDate, profit, revenueExVat });
+  }
+
+  productTotals.set(name, cur);
 }
 
 function getEstimatedMarginPct(): number {
@@ -154,7 +285,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const yoyGrowthPct = getTargetYoYGrowth();
   const loadErrors: string[] = [];
 
-  const [products, reviews, lowStock, historyOrders, customers] = await Promise.all([
+  const [products, reviews, lowStock, historyOrders, customers, productCosts] = await Promise.all([
     supabase.from("products").select("id", { count: "exact", head: true }).eq("is_published", true),
     supabase.from("reviews").select("id", { count: "exact", head: true }).eq("approved", false),
     supabase
@@ -163,15 +294,22 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       .eq("stock_status", "out_of_stock")
       .eq("is_published", true)
       .limit(20),
-    supabase.from("order_history").select("total, order_date, status, customer_email, items"),
+    supabase
+      .from("order_history")
+      .select("wp_order_id, wp_order_number, total, order_date, status, customer_email, items"),
     supabase.from("customers").select("id", { count: "exact", head: true }),
+    supabase.from("products").select("id, sku, cost_price"),
   ]);
 
-  let currentOrders = await supabase.from("orders").select("id, total, created_at, status, email, trashed_at");
+  let currentOrders = await supabase
+    .from("orders")
+    .select("id, order_number, total, created_at, status, email, trashed_at");
   let hasTrashedColumn = true;
   if (currentOrders.error && (currentOrders.error as { code?: string }).code === "42703") {
     hasTrashedColumn = false;
-    currentOrders = await supabase.from("orders").select("id, total, created_at, status, email");
+    currentOrders = await supabase
+      .from("orders")
+      .select("id, order_number, total, created_at, status, email");
   }
 
   if (products.error) loadErrors.push(`products: ${products.error.message}`);
@@ -180,6 +318,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   if (currentOrders.error) loadErrors.push(`orders: ${currentOrders.error.message}`);
   if (historyOrders.error) loadErrors.push(`order_history: ${historyOrders.error.message}`);
   if (customers.error) loadErrors.push(`customers: ${customers.error.message}`);
+  if (productCosts.error && (productCosts.error as { code?: string }).code !== "42703") {
+    loadErrors.push(`product costs: ${productCosts.error.message}`);
+  }
 
   const productCount = products.error ? 0 : products.count ?? 0;
   const pendingReviews = reviews.error ? 0 : reviews.count ?? 0;
@@ -190,7 +331,11 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const currentRows: OrderRow[] = hasTrashedColumn
     ? currentRowsBase.filter((row) => !row.trashed_at)
     : currentRowsBase;
-  const historyRows: HistoryRow[] = historyOrders.error ? [] : ((historyOrders.data ?? []) as HistoryRow[]);
+  const historyRowsAll: HistoryRow[] = historyOrders.error ? [] : ((historyOrders.data ?? []) as HistoryRow[]);
+
+  const primaryOrderKeys = buildPrimaryOrderKeys(currentRows);
+  const historyRows = historyRowsAll.filter((row) => !historyDuplicatesPrimary(row, primaryOrderKeys));
+  const dedupedHistoryCount = historyRowsAll.length - historyRows.length;
 
   const allOrdersCount = currentRows.length + historyRows.length;
 
@@ -199,7 +344,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 
   const revenueOrderCount = revenueCurrent.length + revenueHistory.length;
 
-  const allRevenueEvents = [
+  const allRevenueEvents: RevenueEvent[] = [
     ...revenueCurrent.map((r) => ({
       date: new Date(r.created_at),
       total: toNumber(r.total),
@@ -265,29 +410,62 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     }))
     .sort((a, b) => b.count - a.count);
 
-  const productTotals = new Map<string, { units: number; revenue: number }>();
+  const { byId: costById, bySku: costBySku, withCost: productsWithCost } = buildCostLookups(
+    productCosts.error ? [] : ((productCosts.data ?? []) as ProductCostRow[])
+  );
+  const usesActualCost = productsWithCost > 0;
+
+  const productTotals = new Map<string, { units: number; revenue: number; profit: number; profitKnown: boolean }>();
+  const profitEvents: Array<{ date: Date; profit: number; revenueExVat: number }> = [];
+  const coverage = { revenueExVat: 0, revenueExVatWithCost: 0 };
+
+  const revenueCurrentById = new Map(revenueCurrent.map((r) => [r.id, r]));
 
   const paidIds = revenueCurrent.map((r) => r.id).filter(Boolean);
   if (paidIds.length > 0) {
     const { data: itemRows } = await supabase
       .from("order_items")
-      .select("product_name, product_id, quantity, line_total, order_id")
+      .select("product_name, product_id, product_sku, quantity, line_total, order_id")
       .in("order_id", paidIds);
     for (const it of (itemRows ?? []) as ItemRow[]) {
-      const name = it.product_name || "Unknown";
-      const cur = productTotals.get(name) ?? { units: 0, revenue: 0 };
-      cur.units += it.quantity ?? 0;
-      cur.revenue += toNumber(it.line_total);
-      productTotals.set(name, cur);
+      const parent = revenueCurrentById.get(it.order_id);
+      if (!parent) continue;
+      accumulateLineProfit(
+        {
+          name: it.product_name || "Unknown",
+          sku: it.product_sku ?? null,
+          productId: it.product_id ?? null,
+          qty: it.quantity ?? 0,
+          lineTotalIncl: toNumber(it.line_total),
+          orderDate: new Date(parent.created_at),
+        },
+        costById,
+        costBySku,
+        productTotals,
+        profitEvents,
+        coverage
+      );
     }
   }
 
   for (const row of revenueHistory) {
+    const orderDate = new Date(row.order_date);
     for (const li of parseHistoryLineItems(row.items)) {
-      const cur = productTotals.get(li.name) ?? { units: 0, revenue: 0 };
-      cur.units += li.qty;
-      cur.revenue += li.lineTotal;
-      productTotals.set(li.name, cur);
+      accumulateLineProfit(
+        {
+          name: li.name,
+          sku: li.sku,
+          productId: null,
+          qty: li.qty,
+          lineTotalIncl: li.lineTotal,
+          orderDate,
+        },
+        costById,
+        costBySku,
+        productTotals,
+        profitEvents,
+        coverage
+      );
     }
   }
 
@@ -306,6 +484,27 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     }))
     .sort((a, b) => b.estProfit - a.estProfit)
     .slice(0, 5);
+
+  const topProductsByProfit = Array.from(productTotals.entries())
+    .filter(([, v]) => v.profitKnown)
+    .map(([name, v]) => ({
+      name,
+      units: v.units,
+      revenue: v.revenue,
+      profit: v.profit,
+    }))
+    .sort((a, b) => b.profit - a.profit)
+    .slice(0, 5);
+
+  const totalGrossProfit = profitEvents.reduce((s, e) => s + e.profit, 0);
+  const grossProfitThisMonth = profitEvents
+    .filter((e) => e.date.getFullYear() === currentYear && e.date.getMonth() === currentMonth)
+    .reduce((s, e) => s + e.profit, 0);
+  const grossProfit2026 = profitEvents
+    .filter((e) => e.date.getFullYear() === 2026)
+    .reduce((s, e) => s + e.profit, 0);
+  const profitCoveragePct =
+    coverage.revenueExVat > 0 ? (coverage.revenueExVatWithCost / coverage.revenueExVat) * 100 : 0;
 
   const customerTotals = new Map<string, { revenue: number; orders: number }>();
   for (const e of allRevenueEvents) {
@@ -369,7 +568,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   }));
 
   const revenueLensExplanation =
-    "Revenue and product/customer rankings include Woo orders in Completed, Processing, or On hold (treated as shipped sales), plus On-line store orders marked Paid. Cancelled, refunded, failed, and pending payment are excluded. Markup ranking uses ESTIMATED_GROSS_MARGIN_PCT (no cost field in the database).";
+    "Revenue counts Woo orders in Completed, Processing, or On hold, plus new-site orders marked Paid. Cancelled, refunded, failed, and pending payment are excluded. When the same order number exists in Orders and Order History, only the Orders row is counted (no double-counting). Gross profit uses product cost_price (NET ex-VAT from the June 2026 price list) against line revenue ex-VAT; shipping and lines without a known cost are excluded from profit.";
 
   return {
     productCount,
@@ -378,7 +577,13 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     customerCount,
     totalRevenue,
     allOrdersCount,
+    dedupedHistoryCount,
     revenueOrderCount,
+    totalGrossProfit,
+    grossProfitThisMonth,
+    grossProfit2026,
+    profitCoveragePct,
+    usesActualCost,
     revenue2026,
     revenue2025,
     revenue2024,
@@ -389,6 +594,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     statusData,
     topProducts,
     topProductsByEstProfit,
+    topProductsByProfit,
     topCustomers,
     largestRevenueOrder,
     bestRevenueMonth,

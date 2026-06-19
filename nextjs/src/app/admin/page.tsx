@@ -145,8 +145,17 @@ export default async function AdminDashboard() {
             <span className="font-black uppercase tracking-wider text-gray-400">Data snapshot</span>
             <span>
               <strong className="text-gray-900 tabular-nums">{formatNumber(stats.allOrdersCount)}</strong>{" "}
-              order rows (live + history)
+              unique orders (live + history)
             </span>
+            {stats.dedupedHistoryCount > 0 && (
+              <>
+                <span className="hidden sm:inline text-gray-200">·</span>
+                <span>
+                  <strong className="text-gray-900 tabular-nums">{formatNumber(stats.dedupedHistoryCount)}</strong>{" "}
+                  history rows deduped (also in Orders)
+                </span>
+              </>
+            )}
             <span className="hidden sm:inline text-gray-200">·</span>
             <span>
               <strong className="text-gray-900 tabular-nums">{formatNumber(stats.revenueOrderCount)}</strong>{" "}
@@ -193,7 +202,7 @@ export default async function AdminDashboard() {
             icon={ShoppingCart}
             color="bg-indigo-600"
             href="/admin/orders"
-            sub={`${formatNumber(stats.allOrdersCount)} rows incl. cancelled / pending`}
+            sub={`${formatNumber(stats.allOrdersCount)} unique orders`}
           />
           <KPICard
             label="Customers"
@@ -204,7 +213,7 @@ export default async function AdminDashboard() {
           />
         </div>
 
-        {/* Row 2 — Period comparisons */}
+        {/* Row 2 — Period comparisons + profit */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
           <KPICard
             label="2026 Sales (YTD)"
@@ -212,6 +221,27 @@ export default async function AdminDashboard() {
             icon={Calendar}
             color="bg-primary-dark"
           />
+          <KPICard
+            label="2026 Gross Profit (YTD)"
+            value={stats.usesActualCost ? formatZAR(stats.grossProfit2026) : "—"}
+            icon={CircleDollarSign}
+            color="bg-emerald-700"
+            sub={
+              stats.usesActualCost
+                ? `${Math.round(stats.profitCoveragePct)}% of line revenue has cost data`
+                : "Run migration 031_product_cost_prices.sql"
+            }
+          />
+          <KPICard
+            label="Gross Profit This Month"
+            value={stats.usesActualCost ? formatZAR(stats.grossProfitThisMonth) : "—"}
+            icon={CircleDollarSign}
+            color="bg-teal-600"
+            sub={stats.usesActualCost ? "Ex-VAT revenue minus NET cost per line" : "Cost prices not loaded yet"}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
           <KPICard
             label="2025 Sales"
             value={formatZAR(stats.revenue2025)}
@@ -223,6 +253,13 @@ export default async function AdminDashboard() {
             value={formatZAR(stats.revenue2024)}
             icon={Calendar}
             color="bg-primary-light"
+          />
+          <KPICard
+            label="Total Gross Profit (all time)"
+            value={stats.usesActualCost ? formatZAR(stats.totalGrossProfit) : "—"}
+            icon={CircleDollarSign}
+            color="bg-emerald-600"
+            sub={stats.usesActualCost ? "Product lines with known cost only" : "Run migration 031_product_cost_prices.sql"}
           />
         </div>
 
@@ -344,12 +381,37 @@ export default async function AdminDashboard() {
             )}
           </div>
           <div className="bg-white border border-gray-200 p-6">
-            <PanelHeader icon={CircleDollarSign} title={`Top 5 products by est. gross (${stats.estimatedMarginPct}% margin)`} />
+            <PanelHeader
+              icon={CircleDollarSign}
+              title={
+                stats.usesActualCost && stats.topProductsByProfit.length > 0
+                  ? "Top 5 products by gross profit"
+                  : `Top 5 products by est. gross (${stats.estimatedMarginPct}% margin)`
+              }
+            />
             <p className="text-[10px] text-gray-400 mb-3 -mt-2">
-              No cost-of-goods in the database — ranking is revenue × margin. Set{" "}
-              <code className="bg-gray-100 px-1">ESTIMATED_GROSS_MARGIN_PCT</code> in Vercel env.
+              {stats.usesActualCost && stats.topProductsByProfit.length > 0
+                ? `Based on cost_price (NET ex-VAT from June 2026 price list). ${Math.round(stats.profitCoveragePct)}% of line revenue matched a cost. Shipping excluded.`
+                : "No cost-of-goods loaded yet — ranking is revenue × ESTIMATED_GROSS_MARGIN_PCT. Run supabase/031_product_cost_prices.sql."}
             </p>
-            {stats.topProductsByEstProfit.length === 0 ? (
+            {stats.usesActualCost && stats.topProductsByProfit.length > 0 ? (
+              <ul className="space-y-2">
+                {stats.topProductsByProfit.map((p, i) => (
+                  <li
+                    key={p.name}
+                    className="flex items-center justify-between gap-2 border-b border-gray-100 pb-2 text-sm"
+                  >
+                    <span className="text-gray-700 truncate flex-1">
+                      <span className="font-black text-secondary mr-2">{i + 1}.</span>
+                      {p.name}
+                    </span>
+                    <span className="font-bold text-emerald-700 tabular-nums shrink-0">
+                      {formatZAR(p.profit)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : stats.topProductsByEstProfit.length === 0 ? (
               <p className="text-sm text-gray-500 py-4">No line-item history yet (import Woo items JSON for history).</p>
             ) : (
               <ul className="space-y-2">

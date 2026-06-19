@@ -1,12 +1,12 @@
 /**
  * Import WebToffee / WooCommerce order export CSV (one row per line item)
- * into Supabase `order_history`.
+ * into Supabase `order_history` AND `orders` + `order_items`.
  *
  * Usage (from nextjs/):
  *   node scripts/import-webtoffee-orders-csv.mjs "path/to/orders.csv"
  *   node scripts/import-webtoffee-orders-csv.mjs --dry-run "path/to/orders.csv"
  *
- * Idempotent on wp_order_id — safe to re-run.
+ * Idempotent: order_history on wp_order_id; orders on order_number.
  */
 
 import fs from "fs";
@@ -146,6 +146,27 @@ function normalizeWooStatus(raw) {
   return map[s] ?? (s.startsWith("wc-") ? s : `wc-${s}`);
 }
 
+/** Maps Woo status → live `orders` table status (Admin → Orders) */
+function mapLiveOrderStatus(wooStatus) {
+  const s = String(wooStatus || "").trim().toLowerCase();
+  if (["completed", "processing", "on-hold"].includes(s)) return "paid";
+  if (s === "pending") return "pending";
+  if (s === "cancelled" || s === "canceled") return "cancelled";
+  if (s === "refunded") return "refunded";
+  if (s === "failed") return "failed";
+  return "paid";
+}
+
+function mapPaymentMethod(title) {
+  const t = String(title || "").trim().toLowerCase();
+  if (t.includes("eft") || t.includes("bank") || t.includes("transfer")) return "bank_transfer";
+  return "payfast";
+}
+
+function cleanPhone(p) {
+  return String(p || "").replace(/^['+\s]+/, "").trim().slice(0, 40) || null;
+}
+
 function groupWebToffeeOrders(rows) {
   const byOrder = new Map();
 
@@ -172,14 +193,30 @@ function groupWebToffeeOrders(rows) {
         continue;
       }
 
+      const wooStatus = row["Order Status"]?.trim() || "processing";
+      const email = (row["Email (Billing)"] || "").toLowerCase().trim() || null;
+
       byOrder.set(orderNum, {
         wp_order_id: orderNum,
         wp_order_number: String(orderNum),
-        customer_email: (row["Email (Billing)"] || "").toLowerCase().trim() || null,
+        order_number: String(orderNum),
+        customer_email: email,
         customer_first_name: row["First Name (Billing)"]?.trim() || null,
         customer_last_name: row["Last Name (Billing)"]?.trim() || null,
+        first_name: row["First Name (Billing)"]?.trim() || "Customer",
+        last_name: row["Last Name (Billing)"]?.trim() || "-",
+        email: email || "unknown@import.local",
+        phone: cleanPhone(row["Phone (Billing)"]),
+        address: row["Address 1&2 (Billing)"]?.trim() || null,
+        city: row["City (Billing)"]?.trim() || null,
+        province: row["State Code (Billing)"]?.trim() || null,
+        postal_code: row["Postcode (Billing)"]?.trim() || null,
+        notes: row["Customer Note"]?.trim() || null,
         order_date: dateIso,
-        status: normalizeWooStatus(row["Order Status"]),
+        woo_status: wooStatus,
+        status: normalizeWooStatus(wooStatus),
+        live_status: mapLiveOrderStatus(wooStatus),
+        payment_method: mapPaymentMethod(row["Payment Method Title"]),
         subtotal: parseMoney(row["Order Subtotal Amount"]),
         tax_total: parseMoney(row["Order Total Tax Amount"]),
         shipping_total: parseMoney(row["Order Shipping Amount"]),
@@ -221,6 +258,81 @@ async function linkOrderHistoryToCustomers(supabase) {
   }
 }
 
+async function importLiveOrders(supabase, orders, skuToId) {
+  let ok = 0;
+  let failed = 0;
+
+  for (const o of orders) {
+    const orderPayload = {
+      order_number: o.order_number,
+      first_name: o.first_name.slice(0, 120),
+      last_name: o.last_name.slice(0, 120),
+      email: o.email.slice(0, 320),
+      phone: o.phone,
+      address: o.address,
+      city: o.city,
+      province: o.province,
+      postal_code: o.postal_code,
+      notes: o.notes ? o.notes.slice(0, 2000) : null,
+      subtotal: o.subtotal,
+      shipping: o.shipping_total,
+      total: o.total,
+      status: o.live_status,
+      payment_method: o.payment_method,
+      created_at: o.order_date,
+      updated_at: o.order_date,
+    };
+
+    const itemRows = o.items.map((it) => ({
+      product_id: it.sku ? skuToId.get(String(it.sku).trim().toUpperCase()) ?? null : null,
+      product_name: it.name.slice(0, 500),
+      product_sku: it.sku ? it.sku.slice(0, 120) : null,
+      quantity: it.quantity,
+      unit_price: it.unit_price,
+      line_total: it.line_total,
+    }));
+
+    try {
+      const { data: existing, error: findErr } = await supabase
+        .from("orders")
+        .select("id")
+        .eq("order_number", o.order_number)
+        .maybeSingle();
+      if (findErr) throw findErr;
+
+      let orderId;
+      if (existing?.id) {
+        orderId = existing.id;
+        const { error: upErr } = await supabase.from("orders").update(orderPayload).eq("id", orderId);
+        if (upErr) throw upErr;
+        await supabase.from("order_items").delete().eq("order_id", orderId);
+      } else {
+        const { data: ins, error: insErr } = await supabase
+          .from("orders")
+          .insert(orderPayload)
+          .select("id")
+          .single();
+        if (insErr) throw insErr;
+        orderId = ins.id;
+      }
+
+      if (itemRows.length) {
+        const { error: itErr } = await supabase.from("order_items").insert(
+          itemRows.map((r) => ({ ...r, order_id: orderId }))
+        );
+        if (itErr) throw itErr;
+      }
+
+      ok++;
+    } catch (e) {
+      console.error(`  ✗ Order ${o.order_number}:`, e.message ?? e);
+      failed++;
+    }
+  }
+
+  return { ok, failed };
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes("--dry-run");
@@ -239,7 +351,7 @@ async function main() {
 
   for (const o of orders) {
     console.log(
-      `  #${o.wp_order_id}  ${o.order_date.slice(0, 10)}  R${o.total.toFixed(2)}  ${o.customer_first_name} ${o.customer_last_name}  (${o.items.length} lines, ${o.num_items} qty)`
+      `  #${o.wp_order_id}  ${o.order_date.slice(0, 10)}  R${o.total.toFixed(2)}  ${o.first_name} ${o.last_name}  → ${o.live_status}  (${o.items.length} lines)`
     );
   }
 
@@ -260,23 +372,46 @@ async function main() {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
-  const payload = orders.map((o) => ({
-    ...o,
+  const historyPayload = orders.map((o) => ({
+    wp_order_id: o.wp_order_id,
+    wp_order_number: o.wp_order_number,
+    customer_email: o.customer_email,
+    customer_first_name: o.customer_first_name,
+    customer_last_name: o.customer_last_name,
+    order_date: o.order_date,
+    status: o.status,
+    num_items: o.num_items,
+    subtotal: o.subtotal,
+    tax_total: o.tax_total,
+    shipping_total: o.shipping_total,
+    total: o.total,
     items: o.items,
   }));
 
-  const { error } = await supabase.from("order_history").upsert(payload, {
+  const { error: histErr } = await supabase.from("order_history").upsert(historyPayload, {
     onConflict: "wp_order_id",
   });
-
-  if (error) {
-    console.error("\nUpsert failed:", error.message);
+  if (histErr) {
+    console.error("\norder_history upsert failed:", histErr.message);
     process.exit(1);
   }
+  console.log(`\n✅ order_history: ${orders.length} orders`);
+
+  const { data: prods, error: pErr } = await supabase.from("products").select("id, sku");
+  if (pErr) {
+    console.error("Could not load products:", pErr.message);
+    process.exit(1);
+  }
+  const skuToId = new Map();
+  for (const p of prods ?? []) {
+    if (p.sku) skuToId.set(String(p.sku).trim().toUpperCase(), p.id);
+  }
+
+  const { ok, failed } = await importLiveOrders(supabase, orders, skuToId);
+  console.log(`✅ orders (Admin → Orders): ${ok} imported/updated${failed ? `, ${failed} failed` : ""}`);
 
   await linkOrderHistoryToCustomers(supabase);
-
-  console.log(`\n✅ Imported/updated ${orders.length} orders in order_history.`);
+  console.log("✅ Linked order_history to customers where emails match.");
 }
 
 main().catch((e) => {

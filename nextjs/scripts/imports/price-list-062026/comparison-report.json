@@ -1,11 +1,11 @@
 {
   "summary": {
     "pdfLineItems": 78,
-    "siteProductsTracked": 104,
-    "matchedBySku": 24,
-    "priceMismatches": 12,
-    "onPdfNotOnSite": 54,
-    "onSiteNotInPdf": 63
+    "siteProductsTracked": 126,
+    "matchedBySku": 47,
+    "priceMismatches": 25,
+    "onPdfNotOnSite": 31,
+    "onSiteNotInPdf": 44
   },
   "priceMismatches": [
     {
@@ -14,9 +14,19 @@
       "pdfTotalIncl": 10000,
       "siteSlug": "v100-premium",
       "siteSku": "VL0100P",
-      "sitePrice": 6495,
+      "sitePrice": 14200,
       "changeTo": 10000,
-      "delta": 3505
+      "delta": -4200
+    },
+    {
+      "pdfCode": "Z55012",
+      "pdfName": "Scale 200kg dial (inculding hook)",
+      "pdfTotalIncl": 1500,
+      "siteSlug": "hanging-scale-200kg",
+      "siteSku": "Z55012",
+      "sitePrice": 5200,
+      "changeTo": 1500,
+      "delta": -3700
     },
     {
       "pdfCode": "VL0077",
@@ -24,69 +34,9 @@
       "pdfTotalIncl": 1405,
       "siteSlug": "es-line-stainless-container-4000ml",
       "siteSku": "VL0077",
-      "sitePrice": 2950,
+      "sitePrice": 255,
       "changeTo": 1405,
-      "delta": -1545
-    },
-    {
-      "pdfCode": "Z55015",
-      "pdfName": "Electronic Scale 300kg",
-      "pdfTotalIncl": 5200,
-      "siteSlug": "platform-scale-15kg",
-      "siteSku": "Z55015",
-      "sitePrice": 4039,
-      "changeTo": 5200,
-      "delta": 1161
-    },
-    {
-      "pdfCode": "VL0085",
-      "pdfName": "Vacuum lid for 23.8-28cm bowls",
-      "pdfTotalIncl": 850,
-      "siteSlug": "acrylic-container-lid-238-280mm",
-      "siteSku": "VL0085",
-      "sitePrice": 195,
-      "changeTo": 850,
-      "delta": 655
-    },
-    {
-      "pdfCode": "VL0075",
-      "pdfName": "1300ml",
-      "pdfTotalIncl": 980,
-      "siteSlug": "es-line-stainless-container-1300ml",
-      "siteSku": "VL0075",
-      "sitePrice": 1450,
-      "changeTo": 980,
-      "delta": -470
-    },
-    {
-      "pdfCode": "VL0083",
-      "pdfName": "Vacuum lid for 16-23.7cm bowls",
-      "pdfTotalIncl": 640,
-      "siteSlug": "acrylic-container-lid-160-203mm",
-      "siteSku": "VL0083",
-      "sitePrice": 195,
-      "changeTo": 640,
-      "delta": 445
-    },
-    {
-      "pdfCode": "Z44052",
-      "pdfName": "Turning Hook (300x12mm) for up to 200kg",
-      "pdfTotalIncl": 353,
-      "siteSlug": "s-hooks-300x12mm-200kg",
-      "siteSku": "Z44052",
-      "sitePrice": 107,
-      "changeTo": 353,
-      "delta": 246
-    },
-    {
-      "pdfCode": "Z44053",
-      "pdfName": "S-Hooks (300x12mm) for up to 200kg",
-      "pdfTotalIncl": 140,
-      "siteSlug": "swivel-hooks-260x10mm-150kg",
-      "siteSku": "Z44053",
-      "sitePrice": 353,
-      "changeTo": 140,
-      "delta": -213
+      "delta": 1150
     },
     {
       "pdfCode": "Z44060",
@@ -94,9 +44,19 @@
       "pdfTotalIncl": 900,
       "siteSlug": "gambrel-small-560mm",
       "siteSku": "Z44060",
-      "sitePrice": 706,
+      "sitePrice": 1800,
       "changeTo": 900,
-      "delta": 194
+      "delta": -900
+    },
+    {
+      "pdfCode": "VL0029",
+      "pdfName": "40cm X 60cm (50)",
+      "pdfTotalIncl": 1310,
+      "siteSlug": "40-x-60-cm-50-bags-embossed-vacuum-bags",
+      "siteSku": "VL0029",
+      "sitePrice": 590,
+      "changeTo": 1310,
+      "delta": 720
     },
     {
       "pdfCode": "VL1193",
@@ -104,19 +64,49 @@
       "pdfTotalIncl": 699,
       "siteSlug": "lava-flex-sealer-for-jars",
       "siteSku": "VL1193",
-      "sitePrice": 645,
+      "sitePrice": 45,
       "changeTo": 699,
-      "delta": 54
+      "delta": 654
     },
     {
-      "pdfCode": "VL0180",
-      "pdfName": "Vacuum lid for 4.7-11.2cm bowls",
-      "pdfTotalIncl": 255,
-      "siteSlug": "acrylic-container-lid-47-112mm",
-      "siteSku": "VL0180",
-      "sitePrice": 240,
-      "changeTo": 255,
-      "delta": 15
+      "pdfCode": "VL0027",
+      "pdfName": "30cm X 50cm (50)",
+      "pdfTotalIncl": 595,
+      "siteSlug": "30-x-50-cm-50-bags-embossed-vacuum-bags",
+      "siteSku": "VL0027",
+      "sitePrice": 995,
+      "changeTo": 595,
+      "delta": -400
+    },
+    {
+      "pdfCode": "VL0131",
+      "pdfName": "70cm X 100cm (10)",
+      "pdfTotalIncl": 910,
+      "siteSlug": "70-x-100-cm-10-bags-embossed-vacuum-bags",
+      "siteSku": "VL0131",
+      "sitePrice": 520,
+      "changeTo": 910,
+      "delta": 390
+    },
+    {
+      "pdfCode": "VL0031",
+      "pdfName": "60cm X 80cm (10)",
+      "pdfTotalIncl": 590,
+      "siteSlug": "60-x-80-cm-10-bags-embossed-vacuum-bags",
+      "siteSku": "VL0031",
+      "sitePrice": 910,
+      "changeTo": 590,
+      "delta": -320
+    },
+    {
+      "pdfCode": "VL0028",
+      "pdfName": "35cm X 50cm (50)",
+      "pdfTotalIncl": 995,
+      "siteSlug": "35-x-50-cm-50-bags-embossed-vacuum-bags",
+      "siteSku": "VL0028",
+      "sitePrice": 1310,
+      "changeTo": 995,
+      "delta": -315
     },
     {
       "pdfCode": "VL0181",
@@ -124,9 +114,149 @@
       "pdfTotalIncl": 345,
       "siteSlug": "acrylic-container-lid-76-143mm",
       "siteSku": "VL0181",
-      "sitePrice": 330,
+      "sitePrice": 640,
       "changeTo": 345,
-      "delta": 15
+      "delta": -295
+    },
+    {
+      "pdfCode": "VL0065",
+      "pdfName": "1,2L square (15,5x15x11) L x W x H",
+      "pdfTotalIncl": 665,
+      "siteSlug": "acrylic-container-1200ml-square",
+      "siteSku": "VL0065",
+      "sitePrice": 880,
+      "changeTo": 665,
+      "delta": -215
+    },
+    {
+      "pdfCode": "VL0021",
+      "pdfName": "16cm X 25cm (50)",
+      "pdfTotalIncl": 265,
+      "siteSlug": "16-x-25-cm-50-bags-embossed-vacuum-bags",
+      "siteSku": "VL0021",
+      "sitePrice": 420,
+      "changeTo": 265,
+      "delta": -155
+    },
+    {
+      "pdfCode": "VL0085",
+      "pdfName": "Vacuum lid for 23.8-28cm bowls",
+      "pdfTotalIncl": 850,
+      "siteSlug": "acrylic-container-lid-238-280mm",
+      "siteSku": "VL0085",
+      "sitePrice": 699,
+      "changeTo": 850,
+      "delta": 151
+    },
+    {
+      "pdfCode": "VL0083",
+      "pdfName": "Vacuum lid for 16-23.7cm bowls",
+      "pdfTotalIncl": 640,
+      "siteSlug": "acrylic-container-lid-160-203mm",
+      "siteSku": "VL0083",
+      "sitePrice": 790,
+      "changeTo": 640,
+      "delta": -150
+    },
+    {
+      "pdfCode": "VL0075",
+      "pdfName": "1300ml",
+      "pdfTotalIncl": 980,
+      "siteSlug": "es-line-stainless-container-1300ml",
+      "siteSku": "VL0075",
+      "sitePrice": 1130,
+      "changeTo": 980,
+      "delta": -150
+    },
+    {
+      "pdfCode": "VL0032",
+      "pdfName": "25cm X 35cm (50)",
+      "pdfTotalIncl": 520,
+      "siteSlug": "25-x-35-cm-50-bags-embossed-vacuum-bags",
+      "siteSku": "VL0032",
+      "sitePrice": 655,
+      "changeTo": 520,
+      "delta": -135
+    },
+    {
+      "pdfCode": "VL0054",
+      "pdfName": "600ML round (10x14.5cm) W x H",
+      "pdfTotalIncl": 480,
+      "siteSlug": "acrylic-container-650ml-square",
+      "siteSku": "VL0054",
+      "sitePrice": 590,
+      "changeTo": 480,
+      "delta": -110
+    },
+    {
+      "pdfCode": "VL0180",
+      "pdfName": "Vacuum lid for 4.7-11.2cm bowls",
+      "pdfTotalIncl": 255,
+      "siteSlug": "acrylic-container-lid-47-112mm",
+      "siteSku": "VL0180",
+      "sitePrice": 345,
+      "changeTo": 255,
+      "delta": -90
+    },
+    {
+      "pdfCode": "VL0058",
+      "pdfName": "2L square (15,5x15x15,5cm) L x W x H",
+      "pdfTotalIncl": 915,
+      "siteSlug": "acrylic-container-2000ml-square",
+      "siteSku": "VL0058",
+      "sitePrice": 980,
+      "changeTo": 915,
+      "delta": -65
+    },
+    {
+      "pdfCode": "Z44053",
+      "pdfName": "S-Hooks (300x12mm) for up to 200kg",
+      "pdfTotalIncl": 140,
+      "siteSlug": "s-hooks-300x12mm-200kg",
+      "siteSku": "Z44053",
+      "sitePrice": 205,
+      "changeTo": 140,
+      "delta": -65
+    },
+    {
+      "pdfCode": "Z22012",
+      "pdfName": "Magnetic Knife board (60cm)",
+      "pdfTotalIncl": 424,
+      "siteSlug": "magnetic-knife-board-60cm",
+      "siteSku": "Z22012",
+      "sitePrice": 363,
+      "changeTo": 424,
+      "delta": 61
+    },
+    {
+      "pdfCode": "VL0022",
+      "pdfName": "15cm X 45cm (50)",
+      "pdfTotalIncl": 420,
+      "siteSlug": "15-x-45-cm-50-bags-embossed-vacuum-bags",
+      "siteSku": "VL0022",
+      "sitePrice": 365,
+      "changeTo": 420,
+      "delta": 55
+    },
+    {
+      "pdfCode": "VL0033",
+      "pdfName": "30cm X 40cm (50)",
+      "pdfTotalIncl": 655,
+      "siteSlug": "30-x-40-cm-50-bags-embossed-vacuum-bags",
+      "siteSku": "VL0033",
+      "sitePrice": 675,
+      "changeTo": 655,
+      "delta": -20
+    },
+    {
+      "pdfCode": "Z44044",
+      "pdfName": "S-Hooks (160x8mm) for up to 100kg",
+      "pdfTotalIncl": 66,
+      "siteSlug": "s-hooks-160x8mm-100kg",
+      "siteSku": "Z44044",
+      "sitePrice": 86,
+      "changeTo": 66,
+      "delta": -20
     }
   ],
   "onPdfNotOnSite": [
@@ -136,24 +266,14 @@
       "totalIncl": 11000
     },
     {
-      "code": "VL0300PX",
-      "name": "V300 PREMIUM X (300mm)",
-      "totalIncl": 13500
-    },
-    {
       "code": "VL0300P",
       "name": "V300 PREMIUM (300mm) BLACK / WHITE",
       "totalIncl": 14200
     },
     {
-      "code": "VL0400P",
-      "name": "V400 Premium (450mm)",
-      "totalIncl": 29890
-    },
-    {
-      "code": "VL0018",
-      "name": "13cm X 22,5cm (50)",
-      "totalIncl": 230
+      "code": "VL0500P",
+      "name": "V500 Premium (720mm)",
+      "totalIncl": 41210
     },
     {
       "code": "VL0023",
@@ -191,24 +311,9 @@
       "totalIncl": 620
     },
     {
-      "code": "VL0007",
-      "name": "1.52Liter Glass Vacuum Container (220x165x66mm)",
-      "totalIncl": 1225
-    },
-    {
-      "code": "VL0054",
-      "name": "600ML round (10x14.5cm) W x H",
-      "totalIncl": 480
-    },
-    {
       "code": "VL0057",
       "name": "640ML round (13x10cm) W x H",
       "totalIncl": 520
-    },
-    {
-      "code": "VL0058",
-      "name": "2L square (15,5x15x15,5cm) L x W x H",
-      "totalIncl": 915
     },
     {
       "code": "VL0163",
@@ -216,29 +321,14 @@
       "totalIncl": 590
     },
     {
-      "code": "VL0065",
-      "name": "1,2L square (15,5x15x11) L x W x H",
-      "totalIncl": 665
-    },
-    {
       "code": "VL0066",
       "name": "1,65L rectangular (20,5x12,5x10,5cm) L x W x H",
       "totalIncl": 880
     },
     {
-      "code": "VL0008",
-      "name": "Lava Rolls Dispenser for rolls 15cm - 30cm",
-      "totalIncl": 915
-    },
-    {
       "code": "VL0193",
       "name": "Vacuum Sealer for glass jars",
       "totalIncl": 630
-    },
-    {
-      "code": "VL0056",
-      "name": "Hand pump",
-      "totalIncl": 400
     },
     {
       "code": "VL0076",
@@ -251,34 +341,9 @@
       "totalIncl": 726
     },
     {
-      "code": "VL0003",
-      "name": "Lava Bone Protection (10cm x 5m)",
-      "totalIncl": 325
-    },
-    {
       "code": "VL0090",
       "name": "Wine Sealers (2)",
       "totalIncl": 260
-    },
-    {
-      "code": "VL0099",
-      "name": "Lava Labels and Marker",
-      "totalIncl": 320
-    },
-    {
-      "code": "VL0295",
-      "name": "Salmon boards (black/gold) 12x26.5(5)",
-      "totalIncl": 150
-    },
-    {
-      "code": "VL0296",
-      "name": "Salmon boards (black/gold) 18.5x53(5)",
-      "totalIncl": 200
-    },
-    {
-      "code": "VL0297",
-      "name": "Salmon boards (black/gold) 21x57(5)",
-      "totalIncl": 230
     },
     {
       "code": "Z11060",
@@ -286,19 +351,9 @@
       "totalIncl": 750
     },
     {
-      "code": "Z11052",
-      "name": "Knife set (3 butcher's knifes) Black Handle",
-      "totalIncl": 1315
-    },
-    {
       "code": "Z22009",
       "name": "Magnetic Knife board (30cm)",
       "totalIncl": 302
-    },
-    {
-      "code": "Z22012",
-      "name": "Magnetic Knife board (60cm)",
-      "totalIncl": 424
     },
     {
       "code": "Z99051",
@@ -306,34 +361,9 @@
       "totalIncl": 503
     },
     {
-      "code": "Z99053",
-      "name": "Cutting Board (500x300x20mm)",
-      "totalIncl": 705
-    },
-    {
       "code": "Z99055",
       "name": "Cutting Board (500x400x20mm)",
       "totalIncl": 918
-    },
-    {
-      "code": "Z99057",
-      "name": "Cutting Board (600x400x20mm)",
-      "totalIncl": 1059
-    },
-    {
-      "code": "Z11040",
-      "name": "Cutting Board Scraper S/Steel",
-      "totalIncl": 363
-    },
-    {
-      "code": "Z11061",
-      "name": "3 Piece white handle Lava Kitchen Knife set",
-      "totalIncl": 500
-    },
-    {
-      "code": "Z33010",
-      "name": "Apron (120x80cm) (LxW)",
-      "totalIncl": 399
     },
     {
       "code": "Z33014",
@@ -346,11 +376,6 @@
       "totalIncl": 399
     },
     {
-      "code": "Z33015",
-      "name": "Cutting Gloves (M)",
-      "totalIncl": 399
-    },
-    {
       "code": "Z33020",
       "name": "Cutting Gloves (L)",
       "totalIncl": 399
@@ -359,11 +384,6 @@
       "code": "Z44043",
       "name": "S-Hooks (160x6mm) for up to 60kg",
       "totalIncl": 45
-    },
-    {
-      "code": "Z44044",
-      "name": "S-Hooks (160x8mm) for up to 100kg",
-      "totalIncl": 66
     },
     {
       "code": "Z44046",
@@ -391,70 +411,23 @@
       "totalIncl": 800
     },
     {
-      "code": "Z55012",
-      "name": "Scale 200kg dial (inculding hook)",
-      "totalIncl": 1500
-    },
-    {
-      "code": "Z66130",
-      "name": "Pro-Star Meat Mincer(90kg)",
-      "totalIncl": 4650
+      "code": "Z55015",
+      "name": "Electronic Scale 300kg",
+      "totalIncl": 5200
     }
   ],
   "onSiteNotInPdf": [
     {
-      "slug": "acrylic-container-1000ml-round",
-      "sku": "VL0065-1",
-      "name": "LAVA 1000ml Round Acrylic Vacuum Container",
-      "price": 665,
-      "source": "seed-containers.mjs"
-    },
-    {
-      "slug": "acrylic-container-1200ml-square",
-      "sku": "VL0065-1",
-      "name": "LAVA 1200ml Square Acrylic Vacuum Container",
-      "price": 665,
-      "source": "seed-containers.mjs"
-    },
-    {
-      "slug": "acrylic-container-1650ml-rectangular",
-      "sku": "VL0058-1",
-      "name": "LAVA 1650ml Rectangular Acrylic Vacuum Container",
-      "price": 990,
-      "source": "seed-containers.mjs"
-    },
-    {
-      "slug": "acrylic-container-2000ml-square",
-      "sku": "VL0058-1",
-      "name": "LAVA 2000ml Square Acrylic Vacuum Container",
-      "price": 990,
-      "source": "seed-containers.mjs"
-    },
-    {
-      "slug": "acrylic-container-650ml-square",
-      "sku": "VL0060-1",
-      "name": "LAVA 650ml Square Acrylic Vacuum Container",
-      "price": 510,
-      "source": "seed-containers.mjs"
-    },
-    {
       "slug": "bone-crusher-rib-cutter",
-      "sku": "Z22010",
+      "sku": "Z11111",
       "name": "Professional Bone Crusher & Rib Cutter",
-      "price": 364,
+      "price": 403,
       "source": "seed-butchery.mjs"
     },
     {
       "slug": "boning-knife-13cm",
       "sku": "Z11010",
       "name": "Professional Boning Knife — 13cm Premium Blade",
-      "price": 302,
-      "source": "seed-butchery.mjs"
-    },
-    {
-      "slug": "butchers-apron-pvc-120x80cm",
-      "sku": "Z33020S",
-      "name": "Professional Butcher's Apron — Premium PVC 120×80cm",
       "price": 302,
       "source": "seed-butchery.mjs"
     },
@@ -466,38 +439,10 @@
       "source": "seed-butchery.mjs"
     },
     {
-      "slug": "containers-lids",
-      "sku": "VL0060-1",
-      "name": "Containers & Lids",
-      "price": 510,
-      "source": "seed-containers.mjs"
-    },
-    {
       "slug": "cut-resistant-gloves-large",
-      "sku": "Z33020L",
+      "sku": "Z11111",
       "name": "Professional Cut-Resistant Gloves — Large (Level 5)",
       "price": 302,
-      "source": "seed-butchery.mjs"
-    },
-    {
-      "slug": "cut-resistant-gloves-medium",
-      "sku": "Z33020L",
-      "name": "Professional Cut-Resistant Gloves — Medium (Level 5)",
-      "price": 302,
-      "source": "seed-butchery.mjs"
-    },
-    {
-      "slug": "cut-resistant-gloves-small",
-      "sku": "Z33020S",
-      "name": "Professional Cut-Resistant Gloves — Small (Level 5)",
-      "price": 302,
-      "source": "seed-butchery.mjs"
-    },
-    {
-      "slug": "cutting-board-scraper-stainless",
-      "sku": "Z22010",
-      "name": "Professional Cutting Board Scraper — Stainless Steel",
-      "price": 364,
       "source": "seed-butchery.mjs"
     },
     {
@@ -515,13 +460,6 @@
       "source": "seed-butchery.mjs"
     },
     {
-      "slug": "digital-hanging-scale-300kg",
-      "sku": "Z55300",
-      "name": "Professional Digital Hanging Scale — 300kg",
-      "price": 4900,
-      "source": "seed-butchery.mjs"
-    },
-    {
       "slug": "electric-vacuum-pump",
       "sku": "VL2050",
       "name": "LAVA Electric Vacuum Pump (Easy Pump)",
@@ -533,20 +471,6 @@
       "sku": "LVB1015-50",
       "name": "Embossed Vacuum Bags 10 × 15 cm — 50 Bags",
       "price": 195,
-      "source": "seed-bags-rolls.mjs"
-    },
-    {
-      "slug": "embossed-vacuum-bags-13x20-50",
-      "sku": "LVB1322-50",
-      "name": "Embossed Vacuum Bags 13 × 20 cm — 50 Bags",
-      "price": 245,
-      "source": "seed-bags-rolls.mjs"
-    },
-    {
-      "slug": "embossed-vacuum-bags-13x22-50",
-      "sku": "LVB1322-50",
-      "name": "Embossed Vacuum Bags 13 × 22.5 cm — 50 Bags",
-      "price": 245,
       "source": "seed-bags-rolls.mjs"
     },
     {
@@ -579,37 +503,37 @@
     },
     {
       "slug": "embossed-vacuum-bags-30x60-25",
-      "sku": "LVR15-6-4",
+      "sku": "VL0010(4)",
       "name": "Embossed Vacuum Bags 30 × 60 cm — 25 Bags",
-      "price": 245,
+      "price": 675,
       "source": "seed-bags-rolls.mjs"
     },
     {
       "slug": "embossed-vacuum-rolls-15cm-6m-4pack",
-      "sku": "LVR15-6-4",
+      "sku": "VL0010(4)",
       "name": "Embossed Vacuum Sealer Rolls 15 cm × 6 m — 4 Rolls",
-      "price": 245,
+      "price": 485,
       "source": "seed-bags-rolls.mjs"
     },
     {
       "slug": "embossed-vacuum-rolls-20cm-6m-2pack",
-      "sku": "LVR25-6-2",
+      "sku": "VL0013(2)",
       "name": "Embossed Vacuum Sealer Rolls 20 cm × 6 m — 2 Rolls",
-      "price": 265,
+      "price": 545,
       "source": "seed-bags-rolls.mjs"
     },
     {
       "slug": "embossed-vacuum-rolls-25cm-6m-2pack",
-      "sku": "LVR25-6-2",
+      "sku": "VL0013(2)",
       "name": "Embossed Vacuum Sealer Rolls 25 cm × 6 m — 2 Rolls",
-      "price": 265,
+      "price": 620,
       "source": "seed-bags-rolls.mjs"
     },
     {
       "slug": "embossed-vacuum-rolls-30cm-6m-2pack",
-      "sku": "LVR30-6-2",
+      "sku": "VL0012(2)",
       "name": "Embossed Vacuum Sealer Rolls 30 cm × 6 m — 2 Rolls",
-      "price": 285,
+      "price": 480,
       "source": "seed-bags-rolls.mjs"
     },
     {
@@ -627,24 +551,17 @@
       "source": "021_sous_vide_gline_products.sql"
     },
     {
-      "slug": "giesser-gutting-knife-16cm",
-      "sku": "Z11011",
-      "name": "Professional Giesser Gutting Knife — 16cm Chrome-Molybdenum",
-      "price": 302,
-      "source": "seed-butchery.mjs"
-    },
-    {
-      "slug": "hanging-scale-100kg",
-      "sku": "Z55100",
-      "name": "Professional Hanging Scale — 100kg",
+      "slug": "gambrel-adjustable-810mm",
+      "sku": "Z55060",
+      "name": "Professional Adjustable Meat Gambrel — Large 810mm",
       "price": 800,
       "source": "seed-butchery.mjs"
     },
     {
-      "slug": "hanging-scale-200kg",
-      "sku": "Z55300",
-      "name": "Professional Hanging Scale — 200kg",
-      "price": 4900,
+      "slug": "giesser-gutting-knife-16cm",
+      "sku": "Z11011",
+      "name": "Professional Giesser Gutting Knife — 16cm Chrome-Molybdenum",
+      "price": 302,
       "source": "seed-butchery.mjs"
     },
     {
@@ -676,38 +593,10 @@
       "source": "012_sous_vide_products.sql"
     },
     {
-      "slug": "magnetic-knife-board-60cm",
-      "sku": "Z11031",
-      "name": "Professional Magnetic Knife Board — 60cm",
-      "price": 425,
-      "source": "seed-butchery.mjs"
-    },
-    {
-      "slug": "magnetic-knife-holder-30cm",
-      "sku": "Z11031",
-      "name": "Professional Magnetic Knife Holder — 30cm",
-      "price": 425,
-      "source": "seed-butchery.mjs"
-    },
-    {
       "slug": "platform-scale-60kg",
-      "sku": "Z55100",
+      "sku": "Z55060",
       "name": "Professional Digital Platform Scale — 60kg",
-      "price": 800,
-      "source": "seed-butchery.mjs"
-    },
-    {
-      "slug": "s-hooks-160x6mm-60kg",
-      "sku": "Z44055B",
-      "name": "Premium S-Hooks 160×6mm — 60kg Capacity",
-      "price": 66,
-      "source": "seed-butchery.mjs"
-    },
-    {
-      "slug": "s-hooks-160x8mm-100kg",
-      "sku": "Z44055B",
-      "name": "Heavy-Duty S-Hooks 160×8mm — 100kg Capacity",
-      "price": 66,
+      "price": 3029,
       "source": "seed-butchery.mjs"
     },
     {
@@ -767,6 +656,13 @@
       "source": "seed-butchery.mjs"
     },
     {
+      "slug": "sous-vide-set-xxl-stainless-steel",
+      "sku": "LX0035",
+      "name": "Sous Vide Set XXL — Stainless Steel",
+      "price": 6210,
+      "source": "031_sous_vide_set_xxl_stainless.sql"
+    },
+    {
       "slug": "spare-parts",
       "sku": "VE0201",
       "name": "Spare Parts",
@@ -774,31 +670,17 @@
       "source": "seed-spare-parts.mjs"
     },
     {
-      "slug": "v100-premium-x",
-      "sku": "VL0300PX-1",
-      "name": "LAVA V.100 Premium X",
-      "price": 13500,
-      "source": "seed-machines.mjs"
-    },
-    {
       "slug": "v300-black",
-      "sku": "VL0333C-1",
+      "sku": "VL0300PW",
       "name": "LAVA V.300 Premium Black — Limited Edition",
-      "price": 20010,
+      "price": 14200,
       "source": "seed-machines.mjs"
     },
     {
-      "slug": "v300-premium-x",
-      "sku": "VL0300PX-1",
-      "name": "LAVA V.300 Premium X",
-      "price": 13500,
-      "source": "seed-machines.mjs"
-    },
-    {
-      "slug": "v333-chrome",
-      "sku": "VL0333C-1",
-      "name": "LAVA V.333 Chrome",
-      "price": 20010,
+      "slug": "v300-white",
+      "sku": "VL0300PW",
+      "name": "LAVA V.300 Premium White — Limited Edition",
+      "price": 230,
       "source": "seed-machines.mjs"
     },
     {
