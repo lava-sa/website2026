@@ -10,6 +10,7 @@
     "lint": "eslint",
     "crop:catalog-images": "node scripts/crop-product-catalog-images.mjs",
     "import:woo-orders": "node scripts/import-woo-orders-csv.mjs",
+    "import:webtoffee-orders": "node scripts/import-webtoffee-orders-csv.mjs",
     "import:wp-users": "node scripts/import-wp-users-csv.mjs",
     "cleanup:spam-customers": "node scripts/cleanup-spam-customers.mjs",
     "fill:product-ai": "node scripts/fill-product-ai-fields.mjs"
