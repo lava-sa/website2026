@@ -49,10 +49,20 @@ export function rollsThatFitSealWidthMm(maxMm: number): string[] {
   }).map((r) => `${r.size} — ${r.use}`);
 }
 
+export const JANET_CHECKOUT_RULES = `
+CHECKOUT & PAYMENT (answer confidently when asked)
+- Yes — customers can pay by credit card. Checkout uses PayFast, which accepts Visa and Mastercard.
+- EFT / bank transfer is also available at checkout for customers who prefer it.
+- Full name, phone, and email are collected at checkout — do not re-ask if they already added to cart.
+- Delivery is arranged after payment; shipping is quoted at checkout based on their area.
+- Lava Points earn from 1 July 2026 on paid orders, full-price items only (not sale or clearance).
+`;
+
 export function buildJanetKnowledgePromptBlock(): string {
   const bags = JANET_BAG_SIZES.map((b) => `${b.size} — ${b.use}`).join("; ");
   const rolls = JANET_ROLL_SIZES.map((r) => `${r.size} — ${r.use}`).join("; ");
   return `${JANET_BAG_ROLL_RULES}
+${JANET_CHECKOUT_RULES}
 OUR BAG SIZES (centimetres, embossed channel bags only): ${bags}
 OUR ROLL WIDTHS (centimetres): ${rolls}
 `;

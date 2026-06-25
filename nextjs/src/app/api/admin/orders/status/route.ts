@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase";
+import { awardPointsForPaidOrder } from "@/lib/points-award";
 
 async function isAuthed(): Promise<boolean> {
   const store = await cookies();
@@ -18,11 +19,24 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  const { error } = await createServiceClient()
+  const supabase = createServiceClient();
+
+  const { data: existing } = await supabase
+    .from("orders")
+    .select("id, status")
+    .eq("id", id)
+    .maybeSingle();
+
+  const { error } = await supabase
     .from("orders")
     .update({ status, updated_at: new Date().toISOString() })
     .eq("id", id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  if (status === "paid" && existing?.status !== "paid") {
+    await awardPointsForPaidOrder(supabase, id);
+  }
+
   return NextResponse.json({ ok: true });
 }

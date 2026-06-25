@@ -19,6 +19,8 @@ export async function GET() {
           model: JANET_LIVE_MODEL,
           config: {
             responseModalities: [Modality.AUDIO],
+            inputAudioTranscription: {},
+            outputAudioTranscription: {},
           },
         },
       },

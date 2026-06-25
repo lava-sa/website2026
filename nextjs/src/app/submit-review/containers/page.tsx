@@ -1,13 +1,7 @@
-import type { Metadata } from "next";
 import ReviewFormShell from "@/components/reviews/ReviewFormShell";
-import { getReviewFormConfig } from "@/lib/review-forms";
+import { reviewFormMetadata } from "@/lib/review-forms";
 
-const config = getReviewFormConfig("containers");
-
-export const metadata: Metadata = {
-  title: `${config.pageTitle} — Lava-SA`,
-  description: config.pageDescription,
-};
+export const metadata = reviewFormMetadata("containers");
 
 interface Props {
   searchParams: Promise<{ tab?: string }>;

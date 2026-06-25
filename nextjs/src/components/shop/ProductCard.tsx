@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Award } from "lucide-react";
 import { formatPrice, getDiscountPercent, stripHtml } from "@/lib/products";
 import ProductCatalogImage from "@/components/shop/ProductCatalogImage";
-import { calculatePointsEarned } from "@/lib/rewards-config";
+import { getProductPointsDisplay } from "@/lib/rewards-config";
 import type { Product, StockStatus } from "@/types/product";
 
 const STOCK_LABELS: Record<StockStatus, { label: string; className: string }> = {
@@ -29,11 +29,19 @@ function getPromoBadge(product: Product): { label: string; className: string } |
 export default function ProductCard({ product }: Props) {
   const stock = STOCK_LABELS[product.stock_status] ?? STOCK_LABELS.on_order;
   const href = `/products/${product.slug}`;
-  const points = calculatePointsEarned(product.sale_price || product.regular_price);
+  const pointsDisplay = getProductPointsDisplay(product);
   const promoBadge = getPromoBadge(product);
+  const janetListingItem = JSON.stringify({
+    id: product.id,
+    slug: product.slug,
+    name: product.name,
+    price: product.sale_price ?? product.regular_price,
+    canAddToCart: product.stock_status !== "on_order",
+  });
 
   return (
     <div
+      data-janet-listing-item={janetListingItem}
       className="card-hover-group group relative flex flex-col hover:shadow-lg transition-all duration-300 overflow-hidden"
       style={{ backgroundColor: "#FAFAFA" }}
     >
@@ -100,6 +108,7 @@ export default function ProductCard({ product }: Props) {
         </div>
 
         {/* Lava Points — clickable, links to rewards page */}
+        {pointsDisplay.show && (
         <Link
           href="/rewards"
           className="relative z-20 mt-1 flex items-center justify-between gap-1.5 border border-secondary/30 bg-secondary/5 hover:bg-secondary/10 px-3 py-2 transition-colors"
@@ -107,13 +116,14 @@ export default function ProductCard({ product }: Props) {
           <span className="flex items-center gap-1.5 min-w-0">
             <Award className="h-3.5 w-3.5 text-secondary shrink-0" />
             <span className="text-[11px] font-bold text-secondary uppercase tracking-wide truncate">
-              Earn {points.toLocaleString("en-ZA")} Lava Points
+              Earn {pointsDisplay.points.toLocaleString("en-ZA")} Lava Points
             </span>
           </span>
           <span className="text-[10px] font-bold text-secondary/70 uppercase tracking-wide shrink-0 ml-1">
             →
           </span>
         </Link>
+        )}
 
       </div>
     </div>

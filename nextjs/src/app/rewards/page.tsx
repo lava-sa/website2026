@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Gift, TrendingUp, Zap, Award, ArrowRight, UserRound, ShoppingBag, ReceiptText } from "lucide-react";
-import { calculatePointValue, getRedemptionExamples } from "@/lib/rewards-config";
+import { calculatePointValue, getRedemptionExamples, POINTS_PROGRAM_SUMMARY } from "@/lib/rewards-config";
 import RewardsCalculator from "./RewardsCalculator";
 
 export const metadata: Metadata = {
@@ -25,8 +25,11 @@ export default function RewardsPage() {
               Every Rand You Spend<br />
               <span className="text-secondary">Works Harder for You</span>
             </h1>
-            <p className="text-lg text-white/80 mb-8 max-w-xl leading-relaxed">
-              Earn Lava Points on every purchase — automatically credited to your Lava Points balance and redeemable towards discounts on your next order.
+            <p className="text-lg text-white/80 mb-4 max-w-xl leading-relaxed">
+              Earn Lava Points on qualifying purchases from <strong className="text-white">1 July 2026</strong> — automatically credited to your balance and redeemable towards discounts on your next order.
+            </p>
+            <p className="text-sm text-white/65 mb-8 max-w-xl leading-relaxed">
+              {POINTS_PROGRAM_SUMMARY}
             </p>
             <Link
               href="#signup"
@@ -64,7 +67,7 @@ export default function RewardsPage() {
               </div>
               <h3 className="font-bold text-lg text-primary mb-3">Earn Points Automatically</h3>
               <p className="text-copy-muted leading-relaxed flex-1">
-                Earn 1 point for every R5 spent. Points are instantly credited to your Lava Points balance.
+                Earn 1 point for every R5 spent on <strong className="text-primary">full-price items</strong> (sale and clearance lines are excluded). Points credit when your order is paid.
               </p>
             </div>
 

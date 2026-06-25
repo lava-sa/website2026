@@ -5,10 +5,40 @@ import { getEmailConfig, getResendClient } from "@/lib/email-config";
 
 function getServiceSupabase() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey =
-    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || !supabaseKey) return null;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !supabaseKey) {
+    if (!supabaseKey) {
+      console.error("janet-session: SUPABASE_SERVICE_ROLE_KEY is required (RLS blocks anon writes)");
+    }
+    return null;
+  }
   return createClient(supabaseUrl, supabaseKey);
+}
+
+function buildActionTaken(row: {
+  cartAdded?: boolean;
+  machineAdded?: boolean;
+  phone?: string;
+  firstName?: string;
+  lastName?: string;
+  industry?: string;
+  transcript?: string;
+}): string {
+  if (row.cartAdded && row.machineAdded) {
+    return "Machine added to cart — bags/rolls upsell offered; checkout captures details";
+  }
+  if (row.cartAdded) return "Added to cart — checkout will capture full details";
+  if (row.phone) return "Anneke callback requested — contact captured";
+  if (row.firstName || row.lastName || row.industry) {
+    const parts = [
+      row.firstName || row.lastName ? "name captured" : null,
+      row.industry ? row.industry : null,
+    ].filter(Boolean);
+    return `Lead captured — ${parts.join(" · ")} — Anneke follow-up`;
+  }
+  const hasTranscript = Boolean(row.transcript?.trim());
+  if (hasTranscript) return "Voice session logged — review transcript for follow-up";
+  return "Voice session — no cart, no contact captured";
 }
 
 export async function POST(req: Request) {
@@ -23,9 +53,9 @@ export async function POST(req: Request) {
       firstName,
       lastName,
       phone,
-      email,
       industry,
       cartAdded,
+      machineAdded,
     } = body as {
       sessionId?: string;
       pageUrl?: string;
@@ -35,9 +65,9 @@ export async function POST(req: Request) {
       firstName?: string;
       lastName?: string;
       phone?: string;
-      email?: string;
       industry?: string;
       cartAdded?: boolean;
+      machineAdded?: boolean;
     };
 
     const supabase = getServiceSupabase();
@@ -52,15 +82,18 @@ export async function POST(req: Request) {
         first_name: firstName?.trim() || null,
         last_name: lastName?.trim() || null,
         phone: phone?.trim() || null,
-        email: email?.trim() || null,
+        email: null,
         industry: industry?.trim() || null,
         updated_at: new Date().toISOString(),
-        action_taken:
-          cartAdded === true
-            ? "Added to cart — checkout will capture full details"
-            : phone || email
-              ? "Anneke callback requested (voice fallback)"
-              : "Voice session — no cart, no contact captured",
+        action_taken: buildActionTaken({
+          cartAdded,
+          machineAdded,
+          phone,
+          firstName,
+          lastName,
+          industry,
+          transcript,
+        }),
       };
 
       const { data: existing } = await supabase
@@ -82,16 +115,6 @@ export async function POST(req: Request) {
         else console.warn("janet_support_chats insert:", error.message);
       }
 
-      // Legacy table (optional)
-      await supabase.from("voice_sessions").insert([
-        {
-          session_id: sessionId,
-          page_url: pageUrl,
-          transcript,
-          duration_seconds: durationSeconds,
-          started_at: startedAt,
-        },
-      ]);
     }
 
     const resend = getResendClient();
@@ -99,18 +122,19 @@ export async function POST(req: Request) {
     if (resend) {
       const { fromEmail, adminEmails, replyToEmail } = getEmailConfig();
       const contactBlock =
-        firstName || lastName || phone
+        firstName || lastName || phone || industry
           ? `<p><strong>First name:</strong> ${firstName || "—"}</p>
              <p><strong>Surname:</strong> ${lastName || "—"}</p>
              <p><strong>Phone:</strong> ${phone || "—"}</p>
-             <p><strong>Added to cart:</strong> ${cartAdded ? "Yes" : "No"}</p>`
+             <p><strong>Company / use:</strong> ${industry || "—"}</p>
+             <p><strong>Machine in cart:</strong> ${machineAdded ? "Yes" : cartAdded ? "Other item" : "No"}</p>`
           : `<p><em>No structured contact captured — see transcript.</em></p>`;
 
       const emailRes = await resend.emails.send({
         from: fromEmail,
         to: adminEmails,
         ...(replyToEmail ? { replyTo: replyToEmail } : {}),
-        subject: `Janet voice session — ${durationSeconds ?? 0}s${cartAdded ? " (cart)" : phone ? " (callback)" : ""}`,
+        subject: `Janet voice session — ${durationSeconds ?? 0}s${machineAdded ? " (machine)" : cartAdded ? " (cart)" : phone ? " (callback)" : ""}`,
         html: `
           <h3>Janet voice session</h3>
           <p><strong>Page:</strong> ${pageUrl ?? "—"}</p>

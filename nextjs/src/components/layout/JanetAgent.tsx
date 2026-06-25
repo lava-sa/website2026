@@ -6,7 +6,13 @@ import { X, MessageCircle, Mic, MicOff, Loader2 } from "lucide-react";
 import { GoogleGenAI, Modality } from "@google/genai";
 import type { Session } from "@google/genai";
 import { useCart } from "@/lib/cart-context";
+import type { CartItem } from "@/lib/cart-context";
 import { buildJanetKnowledgePromptBlock } from "@/lib/janet-knowledge";
+import {
+  formatJanetPageContextForPrompt,
+  getJanetPageContext,
+  type JanetPageContext,
+} from "@/lib/janet-page-context";
 import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -15,75 +21,131 @@ import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
 type SessionStatus = "idle" | "connecting" | "active" | "ended" | "error";
 
 const MACHINE_SPECS = [
-  { name: "V.100 Premium", price: "R6,495", suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "No", bestFor: "Budget home use (limited stock — discontinued model)" },
-  { name: "V.100 Premium X", price: "R11,000", suction: "35 ltr/min", maxVacuum: "-0.94 bar", width: "340 mm", seal: "Double", auto: "No", bestFor: "Occasional home use" },
-  { name: "V.300 Premium X", price: "R13,500", suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "Yes", bestFor: "Regular home / hunting" },
-  { name: "V.300 Black",     price: "R14,200", suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "Yes", bestFor: "Style-conscious users" },
-  { name: "V.300 White",     price: "R14,200", suction: "35 ltr/min", maxVacuum: "-0.96 bar", width: "340 mm", seal: "Double", auto: "Yes", bestFor: "Maximum vacuum power" },
-  { name: "V.400 Premium",   price: "R29,890", suction: "35 ltr/min", maxVacuum: "-0.92 bar", width: "450 mm", seal: "Triple", auto: "Yes", bestFor: "Restaurant / butchery" },
-  { name: "V.500 Premium 72cm", price: "R41,210", suction: "110 ltr/min", maxVacuum: "-0.92 bar", width: "750 mm", seal: "Triple", auto: "Yes", bestFor: "High-volume commercial" },
-  { name: "V.500 Premium XXL", price: "R68,280", suction: "110 ltr/min", maxVacuum: "-0.92 bar", width: "1200 mm", seal: "Triple", auto: "Yes", bestFor: "Carcases & industrial" },
+  { name: "V.100 Premium", slug: "v100-premium", price: 6495, suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "No", bestFor: "Budget home use (limited stock — discontinued model)" },
+  { name: "V.100 Premium X", slug: "v100-premium-x", price: 11000, suction: "35 ltr/min", maxVacuum: "-0.94 bar", width: "340 mm", seal: "Double", auto: "No", bestFor: "Occasional home use" },
+  { name: "V.300 Premium X", slug: "v300-premium-x", price: 13500, suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "Yes", bestFor: "Regular home / hunting" },
+  { name: "V.300 Black", slug: "v300-black", price: 14200, suction: "35 ltr/min", maxVacuum: "-0.80 bar", width: "300 mm", seal: "Double", auto: "Yes", bestFor: "Style-conscious users" },
+  { name: "V.300 White", slug: "v300-white", price: 14200, suction: "35 ltr/min", maxVacuum: "-0.96 bar", width: "340 mm", seal: "Double", auto: "Yes", bestFor: "Maximum vacuum power" },
+  { name: "V.400 Premium", slug: "v400-premium", price: 29890, suction: "35 ltr/min", maxVacuum: "-0.92 bar", width: "450 mm", seal: "Triple", auto: "Yes", bestFor: "Restaurant / butchery" },
+  { name: "V.500 Premium 72cm", slug: "v500-premium", price: 41210, suction: "110 ltr/min", maxVacuum: "-0.92 bar", width: "750 mm", seal: "Triple", auto: "Yes", bestFor: "High-volume commercial" },
+  { name: "V.500 Premium XXL", slug: "v500-premium-xxl", price: 68280, suction: "110 ltr/min", maxVacuum: "-0.92 bar", width: "1200 mm", seal: "Triple", auto: "Yes", bestFor: "Carcases & industrial" },
 ];
 
-function buildSystemPrompt(urlPath: string, pageContext: string) {
+/** Opening line — mention the product they're viewing when we know it. */
+function getJanetOpeningFocus(ctx: JanetPageContext | null): string {
+  if (ctx?.type === "product") {
+    const n = ctx.name;
+    if (/v\.?100/i.test(n) || ctx.slug.includes("v100")) {
+      return "any V.100 vacuum sealing machine information you need to help with your purchasing decision";
+    }
+    return `the ${n} and our LAVA vacuum sealing range`;
+  }
+  return "LAVA vacuum sealing machines, bags, rolls, and accessories";
+}
+
+function formatLeadIndustry(lead: { companyName?: string; industry?: string }): string | undefined {
+  const parts = [lead.companyName?.trim(), lead.industry?.trim()].filter(Boolean);
+  return parts.length > 0 ? parts.join(" — ") : undefined;
+}
+
+function isVacuumMachineCartItem(item: { slug: string; name: string }): boolean {
+  const slug = item.slug.toLowerCase();
+  if (/^v\d{3}|^v100|^v300|^v400|^v500/.test(slug)) return true;
+  const name = item.name.toLowerCase();
+  return (
+    (name.includes("vacuum") || name.includes("premium")) &&
+    !name.includes("bag") &&
+    !name.includes("roll")
+  );
+}
+
+function buildSystemPrompt(urlPath: string, pageContext: string, structuredContext: string) {
+  const openingFocus = getJanetOpeningFocus(getJanetPageContext());
+
   return `
-You are Janet — a warm, knowledgeable voice sales assistant for LAVA South Africa, a premium German vacuum sealing company. You behave like a friendly in-store assistant who can actually move around the website for the visitor.
+You are Janet — LAVA South Africa's friendly, knowledgeable voice support agent for premium German vacuum sealing. You help visitors like a real in-store expert: answer honestly, use the page you're on, and guide purchases without pressure.
 
-GREET FIRST: Speak first the moment the session opens — do not wait. Greet warmly, introduce yourself, then ask for their first name. Example: "Hi, I'm Janet, your LAVA product advisor — what's your first name?" The instant they tell you their name, call capture_contact with firstName so we never lose it. Use their first name naturally afterwards.
+═══ OPENING (speak first — do not wait for the visitor) ═══
+Step 1 — Introduce yourself, then ask their first name only:
+"Hi — I'm Janet, LAVA's friendly support agent. I'm here to answer your questions and supply you with ${openingFocus}. May I ask who I'm speaking with?"
 
-LANGUAGE: Speak English by default. Only switch to Afrikaans or Zulu if the visitor explicitly asks.
+Step 2 — The moment they give their first name, call capture_contact with firstName, then respond warmly:
+"Hi [FirstName] — lovely to chat with you." (Use their first name naturally throughout — never overdo it.)
 
-DISCOVER THEIR NEED (important — do this early):
-- Ask what they want to use vacuum sealing for. Listen for the use-case and classify it, then call capture_contact with the "industry" field set to the best match:
-  • "home" — home kitchen / household use
-  • "home_industry" — small home-based food business (e.g. baking rusks, biltong from home, home bakery, cottage food, selling at markets). If they mention making/selling food FROM HOME, this is home_industry, NOT professional.
-  • "hunting" — hunters / game / venison
-  • "fishing" — anglers / fishing
-  • "butchery" — butcheries
-  • "restaurant" — restaurants / catering / commercial kitchens
-  • "retail" — shops / resellers
-- Never assume "professional/commercial" unless they clearly run a commercial operation. When unsure, ask a short clarifying question.
+Do NOT ask for surname, phone, company, or industry at the start. Help them first.
 
-CONTROLLING THE WEBSITE (this is what makes you special — use it proactively):
-- You can move the page for the visitor. When it helps, offer and then do it.
-- scroll_to_section: scroll the current page to a part they care about (e.g. "products", "sizes", "specs", "reviews", "faq"). Say something like "I can scroll down to the machines for you" then call it.
-- navigate_to: take them to another page. Use real site paths. Useful ones:
-  • /products/vacuum-machines (all machines) • /products/bags-rolls • /products/sous-vide
-  • /products/<slug> for a specific product (use the slug from the screen text)
-  • /contact (book a call / leave details) • /rewards • /help/faq
-- After you navigate or scroll, briefly tell them what you did ("Done — you're on the machines page now").
+LANGUAGE: English by default. Afrikaans or Zulu only if they ask.
 
-PRICES: Say the number first, then "Rand" (e.g. R 6999 → "6999 Rand").
+═══ DURING THE CONVERSATION ═══
+- Answer questions thoroughly before pitching. Keep turns to 1–3 sentences — like a phone call.
+- Use structured page context and screen text below — never guess product names or prices.
+- Never downgrade: if they're on a V.300 or V.400 page, help with THAT machine unless they ask for cheaper options.
+- Compare machines with real prices when asked; be honest about trade-offs.
+- PRICES: number first, then "Rand" (11000 → "eleven thousand Rand").
 
 PAGE AWARENESS
-- Current path: ${urlPath}
-- Visible content on the page they are viewing right now:
+${structuredContext}
+
+Screen text (supplementary):
 ---
 ${pageContext}
 ---
-- Refer to the product they are looking at by name. Never downgrade: if they're viewing a V.300 or V.400, help them with that machine unless they ask for cheaper options.
 
 ${buildJanetKnowledgePromptBlock()}
 
-GLOBAL MACHINE CATALOG
+MACHINE CATALOG (slug = productId in add_to_cart)
 ${JSON.stringify(MACHINE_SPECS, null, 2)}
 
-SELLING & add_to_cart
-- Answer questions first; advise honestly (compare machines when asked). Don't rush the sale.
-- When they agree to buy, call add_to_cart with productId = the website slug from the screen text, productName, and numeric price. Don't claim it's in the cart until the tool succeeds.
-- After success: tell them to open the cart (top right) to check out — full name, phone and email are collected there.
+SALES & add_to_cart (April-style — decisive)
+- Chat first; don't rush the sale.
+- When they're ready, ask if they'd like to add it to their cart.
+- CRITICAL: If they say "yes", "yes please", "add it", or "add to cart" — STOP TALKING and call add_to_cart immediately. Do not only say you will do it.
+- After the tool succeeds, say clearly: "Fantastic — I've placed the [product] in your cart. Click the cart at the top right when you're ready to checkout."
+- Use their first name naturally when it fits.
 
-LEAD CAPTURE — NATURAL, NOT ROBOTIC
-- Capture details as they come up in conversation using capture_contact (all fields optional, send whatever you just learned): firstName, lastName, phone, email, industry.
-- If they are interested but not buying today, offer a callback naturally: "Would you like Anneke to give you a call? I can take a few details, or pop you over to our contact page." Office: ${MAIN_PHONE.display}. Anneke direct: ${ANNEKE_PHONE.display}. 
-  • If they want to leave details by voice: ask for their phone number (and surname if natural), confirm once, then call capture_contact with those fields.
-  • If they'd rather fill it in themselves: use navigate_to with /contact and tell them the form is right there.
-- If they already added to cart, don't collect phone/email — checkout handles it. Just confirm the next step warmly.
+WEBSITE TOOLS
+- scroll_to_section: products, specs, sizes, reviews, faq, compare, contact, top, bottom
+- navigate_to: /products/vacuum-machines, /products/bags-rolls, /products/vacuum-bags, /products/vacuum-rolls, /products/<slug>, /contact
+- After scroll/navigate: brief "Done — …"
 
-STYLE
-- Keep turns short — usually 1–3 sentences. Sound like a real phone call, not a brochure.
-- Never invent bag sizes or nicknames (no "small", "jumbo", etc.) — use the centimetre sizes above.
+capture_contact — call the moment you learn each field (send only what you just heard):
+- firstName (right after they introduce themselves)
+- lastName, phone, companyName, industry (only in the NO-PURCHASE closing — see below)
+- Do NOT ask for email — checkout captures email if they buy; voice email capture is awkward.
+
+industry use-case values: home, home_industry, hunting, fishing, butchery, restaurant, retail
+
+═══ END OF CONVERSATION — TWO PATHS (pick one) ═══
+
+PATH A — They bought a vacuum MACHINE (add_to_cart succeeded for a sealer):
+- Do NOT ask for phone, surname, or email — checkout handles that.
+- Before goodbye, naturally offer consumables: "Would you like to add embossed vacuum bags or rolls to go with your sealer? Most people start with 20 by 30 centimetre bags or a 20 centimetre roll."
+- If interested: help pick a size, use navigate_to /products/bags-rolls or add_to_cart for a specific bag/roll slug.
+- Warm sign-off using their first name.
+
+PATH B — They did NOT purchase:
+- Wrap up gently — one question at a time, not a form dump.
+- Collect in order: surname → phone number → company name (if they have one) → what they mainly use vacuum sealing for (industry).
+- Call capture_contact after each answer.
+- Close naturally: "Would you like Anneke to give you a call to follow up? She's brilliant at matching the right machine." Office: ${MAIN_PHONE.display}. Anneke: ${ANNEKE_PHONE.display}.
+- If they prefer a form: navigate_to /contact.
+
+Payment questions: yes — PayFast accepts Visa and Mastercard; EFT also available at checkout.
+
+STYLE: Warm, professional, human. Never invent bag nicknames — use centimetre sizes only.
   `;
+}
+
+function buildSessionOpenTrigger(urlPath: string, structuredContext: string): string {
+  const focus = getJanetOpeningFocus(getJanetPageContext());
+  return `SYSTEM: A visitor just connected on ${urlPath}.
+${structuredContext}
+
+Speak first NOW. Follow the OPENING script exactly:
+1) Introduce yourself as Janet, LAVA's friendly support agent, ready to help with ${focus}.
+2) Ask: "May I ask who I'm speaking with?"
+3) When they reply with their first name, call capture_contact with firstName, then greet them: "Hi [name] — lovely to chat with you."
+Do not ask for anything else yet — start helping with their questions.`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -155,7 +217,43 @@ function scrollToQuery(query: string): boolean {
     return true;
   }
 
-  // 3) common intents → coarse scroll
+  // 3) product grids / listing pages
+  if (/(product|machines|catalog|range|grid|listing)/.test(q)) {
+    const grid =
+      document.getElementById("home-range") ||
+      document.getElementById("commercial-range") ||
+      document.querySelector("[data-janet-section='products']") ||
+      document.querySelector("[data-janet-listing-item]")?.closest("section") ||
+      document.querySelector("main .grid");
+    if (grid) {
+      grid.scrollIntoView({ behavior: "smooth", block: "start" });
+      return true;
+    }
+  }
+  if (/(compare|comparison)/.test(q)) {
+    const compare =
+      document.getElementById("compare-domestic") || document.getElementById("compare-commercial");
+    if (compare) {
+      compare.scrollIntoView({ behavior: "smooth", block: "start" });
+      return true;
+    }
+  }
+  if (/(spec|technical|feature)/.test(q)) {
+    const specs = document.getElementById("specs") || document.querySelector("[id*='spec']");
+    if (specs) {
+      specs.scrollIntoView({ behavior: "smooth", block: "start" });
+      return true;
+    }
+  }
+  if (/(size|bag|roll)/.test(q)) {
+    const sizes = document.getElementById("sizes") || document.querySelector("[id*='size']");
+    if (sizes) {
+      sizes.scrollIntoView({ behavior: "smooth", block: "start" });
+      return true;
+    }
+  }
+
+  // 4) common intents → coarse scroll
   if (/(bottom|contact|footer|book|review|faq)/.test(q)) {
     window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
     return true;
@@ -167,6 +265,148 @@ function scrollToQuery(query: string): boolean {
   return false;
 }
 
+type JanetApiProduct = {
+  id: string;
+  slug: string;
+  name: string;
+  price: number;
+  sku: string | null;
+  image: string | null;
+  canAddToCart: boolean;
+};
+
+async function fetchJanetProduct(slug?: string, q?: string): Promise<JanetApiProduct | null> {
+  const params = slug
+    ? `slug=${encodeURIComponent(slug)}`
+    : q
+      ? `q=${encodeURIComponent(q)}`
+      : "";
+  if (!params) return null;
+  try {
+    const res = await fetch(`/api/janet-product?${params}`);
+    if (!res.ok) return null;
+    const data = (await res.json()) as { product?: JanetApiProduct };
+    return data.product ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function findListingMatch(
+  products: { id: string; slug: string; name: string; price: number; canAddToCart: boolean }[],
+  args: { productId?: string; productName?: string }
+) {
+  const slug = args.productId?.trim().toLowerCase();
+  const nameQ = args.productName?.trim().toLowerCase();
+  if (slug) {
+    const bySlug = products.find((p) => p.slug === slug);
+    if (bySlug) return bySlug;
+  }
+  if (nameQ) {
+    const exact = products.find((p) => p.name.toLowerCase() === nameQ);
+    if (exact) return exact;
+    const partial = products.find((p) => p.name.toLowerCase().includes(nameQ));
+    if (partial) return partial;
+    const reverse = products.find((p) => nameQ.includes(p.name.toLowerCase()));
+    if (reverse) return reverse;
+  }
+  return null;
+}
+
+/** Resolve cart line item — PDP, listing page, or API lookup. */
+async function resolveCartProductAsync(args: {
+  productId?: string;
+  productName?: string;
+  price?: number | string;
+}): Promise<{ item?: Omit<CartItem, "quantity">; blocked?: string; error?: string }> {
+  const pageCtx = getJanetPageContext();
+
+  if (pageCtx?.type === "product") {
+    const pageProduct = pageCtx;
+    if (!pageProduct.canAddToCart) {
+      return { blocked: "This product is on-order only — offer WhatsApp or a phone callback instead." };
+    }
+    return {
+      item: {
+        id: pageProduct.id,
+        slug: pageProduct.slug,
+        name: args.productName?.trim() || pageProduct.name,
+        price: pageProduct.price,
+        sku: pageProduct.sku,
+        image: pageProduct.image,
+      },
+    };
+  }
+
+  if (pageCtx?.type === "listing") {
+    const match = findListingMatch(pageCtx.products, args);
+    if (match) {
+      if (!match.canAddToCart) {
+        return { blocked: `${match.name} is on-order only — offer WhatsApp or a callback.` };
+      }
+      const api = await fetchJanetProduct(match.slug);
+      return {
+        item: {
+          id: match.id,
+          slug: match.slug,
+          name: match.name,
+          price: match.price,
+          sku: api?.sku ?? null,
+          image: api?.image ?? null,
+        },
+      };
+    }
+  }
+
+  if (args.productId?.trim()) {
+    const api = await fetchJanetProduct(args.productId.trim());
+    if (api) {
+      if (!api.canAddToCart) {
+        return { blocked: `${api.name} is on-order only — offer WhatsApp or a callback.` };
+      }
+      return {
+        item: {
+          id: api.id,
+          slug: api.slug,
+          name: api.name,
+          price: api.price,
+          sku: api.sku,
+          image: api.image,
+        },
+      };
+    }
+  }
+
+  if (args.productName?.trim()) {
+    const api = await fetchJanetProduct(undefined, args.productName.trim());
+    if (api) {
+      if (!api.canAddToCart) {
+        return { blocked: `${api.name} is on-order only — offer WhatsApp or a callback.` };
+      }
+      return {
+        item: {
+          id: api.id,
+          slug: api.slug,
+          name: api.name,
+          price: api.price,
+          sku: api.sku,
+          image: api.image,
+        },
+      };
+    }
+  }
+
+  return {
+    error: "Could not find that product — confirm the name with the visitor or navigate to the product page first.",
+  };
+}
+
+function pageContextUpdateText(path: string): string {
+  const structured = formatJanetPageContextForPrompt(getJanetPageContext(), path);
+  const scraped = scrapePageContext();
+  return `SYSTEM: The visitor is now on ${path}.\n\n${structured}\n\nVisible text:\n${scraped}`;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Janet Agent Component
 // ─────────────────────────────────────────────────────────────────────────────
@@ -176,19 +416,20 @@ export const JanetAgent = () => {
   const [status, setStatus]     = useState<SessionStatus>("idle");
   const [isMuted, setIsMuted]   = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const { addItem }             = useCart(); // LAVA Tool access
+  const { addItem, openDrawer } = useCart(); // LAVA Tool access
 
   // Telemetry & State
   const transcriptRef = useRef<string[]>([]); // source of truth for saving (avoids stale state)
   const startedAtRef = useRef("");
   const sessionIdRef = useRef("");
   const cartAddedRef = useRef(false);
+  const machineAddedRef = useRef(false);
   const savedRef = useRef(false); // guards against double-save (End Call + onclose)
   const leadRef = useRef<{
     firstName?: string;
     lastName?: string;
     phone?: string;
-    email?: string;
+    companyName?: string;
     industry?: string;
   }>({});
   const [inputDeviceLabel, setInputDeviceLabel] = useState("Not detected yet");
@@ -257,22 +498,25 @@ export const JanetAgent = () => {
 
     if (saveSession && !savedRef.current && startedAtRef.current && sessionIdRef.current) {
       savedRef.current = true;
+      // Let final transcription chunks arrive before persisting
+      await new Promise((r) => setTimeout(r, 1200));
       try {
+        const transcript = transcriptRef.current.join("\n").trim();
         await fetch("/api/janet-session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             sessionId: sessionIdRef.current,
             pageUrl: window.location.pathname,
-            transcript: transcriptRef.current.join("\n"),
+            transcript: transcript || null,
             durationSeconds: Math.round((Date.now() - new Date(startedAtRef.current).getTime()) / 1000),
             startedAt: startedAtRef.current,
             firstName: leadRef.current.firstName,
             lastName: leadRef.current.lastName,
             phone: leadRef.current.phone,
-            email: leadRef.current.email,
-            industry: leadRef.current.industry,
+            industry: formatLeadIndustry(leadRef.current),
             cartAdded: cartAddedRef.current,
+            machineAdded: machineAddedRef.current,
           }),
         });
       } catch (err) {
@@ -369,12 +613,14 @@ export const JanetAgent = () => {
     }
 
     cartAddedRef.current = false;
+    machineAddedRef.current = false;
     savedRef.current = false;
     leadRef.current = {};
     startedAtRef.current = new Date().toISOString();
 
     const currentUrlPath = window.location.pathname;
-    const pageContext = scrapePageContext(); // main-content text Janet can "see"
+    const pageContext = scrapePageContext();
+    const structuredContext = formatJanetPageContextForPrompt(getJanetPageContext(), currentUrlPath);
 
     try {
       const res = await fetch("/api/gemini-token");
@@ -394,7 +640,7 @@ export const JanetAgent = () => {
         model: model ?? "gemini-2.5-flash-native-audio-preview-12-2025",
         config: {
           responseModalities: [Modality.AUDIO],
-          systemInstruction: buildSystemPrompt(currentUrlPath, pageContext),
+          systemInstruction: buildSystemPrompt(currentUrlPath, pageContext, structuredContext),
           outputAudioTranscription: {}, // To save transcript
           inputAudioTranscription: {}, 
           speechConfig: {
@@ -406,13 +652,15 @@ export const JanetAgent = () => {
             functionDeclarations: [
               {
                 name: "add_to_cart",
-                description: "Call the moment the user agrees to buy. Use the real product slug from the page.",
+                description:
+                  "CRITICAL: Call the EXACT moment the visitor agrees to buy or says add to cart. Do not speak instead of calling this. Use the real product slug as productId.",
                 parameters: {
                   type: "OBJECT",
                   properties: {
-                    productId: { type: "STRING", description: "Website product slug from screen text" },
-                    productName: { type: "STRING", description: "Full product name from the page" },
-                    price: { type: "NUMBER", description: "Numeric price without currency symbols" },
+                    productId: { type: "STRING", description: "Website product slug (e.g. v100-premium-x)" },
+                    productName: { type: "STRING", description: "Full product name" },
+                    price: { type: "NUMBER", description: "Numeric price in Rand, no symbols" },
+                    quantity: { type: "NUMBER", description: "How many to add (default 1, max 10)" },
                   },
                   required: ["productId", "productName", "price"],
                 },
@@ -444,18 +692,18 @@ export const JanetAgent = () => {
               {
                 name: "capture_contact",
                 description:
-                  "Record contact / qualification details the moment you learn them in conversation. Call it whenever you hear a first name, surname, phone, email, or figure out their use-case. Send only the fields you just learned — all are optional.",
+                  "Save contact details the moment you hear them. Call after each answer — send only fields just learned. Never ask for email.",
                 parameters: {
                   type: "OBJECT",
                   properties: {
-                    firstName: { type: "STRING", description: "First name" },
-                    lastName: { type: "STRING", description: "Surname" },
-                    phone: { type: "STRING", description: "Mobile / phone number" },
-                    email: { type: "STRING", description: "Email address" },
+                    firstName: { type: "STRING", description: "First name — capture immediately when they introduce themselves" },
+                    lastName: { type: "STRING", description: "Surname (end of call, no purchase only)" },
+                    phone: { type: "STRING", description: "Phone number (end of call, no purchase only)" },
+                    companyName: { type: "STRING", description: "Business or company name, if they have one" },
                     industry: {
                       type: "STRING",
                       description:
-                        "Use-case: home, home_industry, hunting, fishing, butchery, restaurant, or retail",
+                        "Main use-case: home, home_industry, hunting, fishing, butchery, restaurant, retail",
                     },
                   },
                 },
@@ -484,31 +732,43 @@ export const JanetAgent = () => {
             // TOOL CALL HANDLING
             const toolCall = msg.toolCall;
             if (toolCall) {
-              const responses = toolCall.functionCalls.map((call) => {
+              void (async () => {
+                const live = sessionRef.current;
+                if (!live) return;
+
+                const responses = await Promise.all(
+                  toolCall.functionCalls.map(async (call) => {
                 if (call.name === "add_to_cart") {
                   const args = call.args as {
                     productId?: string;
                     productName?: string;
                     price?: number | string;
+                    quantity?: number;
                   };
-                  const slug = String(args.productId || "unknown").trim();
-                  const numPrice = Number(String(args.price).replace(/[^0-9.]/g, "")) || 0;
-                  addItem({
-                    id: slug,
-                    slug,
-                    name: args.productName || "LAVA product",
-                    price: numPrice,
-                    sku: slug.slice(0, 32).toUpperCase(),
-                    image: null,
-                  });
+                  const qty = Math.max(1, Math.min(10, Number(args.quantity) || 1));
+                  const { item, blocked, error } = await resolveCartProductAsync(args);
+                  if (blocked || error || !item) {
+                    return {
+                      id: call.id,
+                      name: call.name,
+                      response: { result: { success: false, message: blocked || error } },
+                    };
+                  }
+                  for (let i = 0; i < qty; i++) addItem(item);
                   cartAddedRef.current = true;
+                  if (isVacuumMachineCartItem(item)) machineAddedRef.current = true;
+                  setTimeout(() => openDrawer("add"), 300);
+                  const qtyLabel = qty > 1 ? `${qty} × ` : "";
+                  const isMachine = isVacuumMachineCartItem(item);
                   return {
                     id: call.id,
                     name: call.name,
                     response: {
                       result: {
                         success: true,
-                        message: "Added to cart. Do not ask for phone or email — checkout collects them.",
+                        message: isMachine
+                          ? `Added ${qtyLabel}${item.name} to cart. Confirm warmly using their first name. PATH A: before goodbye, naturally offer embossed vacuum bags or rolls. Do not ask for phone or email.`
+                          : `Added ${qtyLabel}${item.name} to cart. Confirm warmly and ask if they need anything else.`,
                       },
                     },
                   };
@@ -518,13 +778,13 @@ export const JanetAgent = () => {
                     firstName?: string;
                     lastName?: string;
                     phone?: string;
-                    email?: string;
+                    companyName?: string;
                     industry?: string;
                   };
                   if (args.firstName) leadRef.current.firstName = args.firstName.trim();
                   if (args.lastName) leadRef.current.lastName = args.lastName.trim();
                   if (args.phone) leadRef.current.phone = args.phone.trim();
-                  if (args.email) leadRef.current.email = args.email.trim();
+                  if (args.companyName) leadRef.current.companyName = args.companyName.trim();
                   if (args.industry) leadRef.current.industry = args.industry.trim();
                   return {
                     id: call.id,
@@ -543,17 +803,12 @@ export const JanetAgent = () => {
                       ok = true;
                       // Give the new page a moment, then feed Janet the fresh page content
                       setTimeout(() => {
-                        const fresh = scrapePageContext();
                         try {
                           sessionRef.current?.sendClientContent({
                             turns: [
                               {
                                 role: "user",
-                                parts: [
-                                  {
-                                    text: `SYSTEM: The visitor is now on ${path}. Visible content:\n${fresh}`,
-                                  },
-                                ],
+                                parts: [{ text: pageContextUpdateText(path) }],
                               },
                             ],
                             turnComplete: false,
@@ -587,15 +842,15 @@ export const JanetAgent = () => {
                   };
                 }
                 return { id: call.id, name: call.name, response: { result: { error: "Unknown tool" } } };
-              });
-              
-              if (responses.length > 0 && sessionRef.current) {
-                 try {
-                   sessionRef.current.sendToolResponse({ functionResponses: responses });
-                 } catch (err) {
-                   console.error("Tool response failed:", err);
-                 }
-              }
+                  })
+                );
+
+                try {
+                  live.sendToolResponse({ functionResponses: responses });
+                } catch (err) {
+                  console.error("Tool response failed:", err);
+                }
+              })();
             }
           },
           onerror: (err) => {
@@ -620,9 +875,7 @@ export const JanetAgent = () => {
             sessionRef.current.sendClientContent({
               turns: [{
                 role: "user",
-                parts: [{
-                  text: "SYSTEM: A visitor just opened the chat. Greet them now, introduce yourself as Janet, and ask for their first name.",
-                }],
+                parts: [{ text: buildSessionOpenTrigger(currentUrlPath, structuredContext) }],
               }],
               turnComplete: true,
             });
@@ -648,7 +901,7 @@ export const JanetAgent = () => {
       setErrorMsg("Janet is currently offline. Please try again later.");
       setStatus("error");
     }
-  }, [playAudio, startMic, addItem, router, teardown]);
+  }, [playAudio, startMic, addItem, openDrawer, router, teardown]);
 
   // ── UI Handlers ─────────────────────────────────────────────────────────────
   const openChat = () => { setIsOpen(true); setStatus("idle"); setErrorMsg(""); };

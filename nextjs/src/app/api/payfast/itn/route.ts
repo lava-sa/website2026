@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
 import { verifyITNSignature, validateITNWithPayFast } from "@/lib/payfast";
 import { sendPaymentReceivedEmails } from "@/lib/order-email";
+import { awardPointsForPaidOrder } from "@/lib/points-award";
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
@@ -94,6 +95,7 @@ export async function POST(req: NextRequest) {
       },
       total: Number(order.total),
     });
+    await awardPointsForPaidOrder(supabase, order.id);
   }
 
   console.log(`ITN processed: ${orderNumber} → ${newStatus}`);

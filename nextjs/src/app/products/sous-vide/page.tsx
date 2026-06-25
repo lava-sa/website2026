@@ -3,7 +3,7 @@ import ProductCatalogImage from "@/components/shop/ProductCatalogImage";
 import ProductCard from "@/components/shop/ProductCard";
 import { Award, CheckCircle2, Thermometer, Clock, ChefHat, Droplets } from "lucide-react";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
-import { calculatePointsEarned } from "@/lib/rewards-config";
+import { getProductPointsDisplay } from "@/lib/rewards-config";
 import { formatPrice, getProductsByCategory, stripHtml } from "@/lib/products";
 import type { Product } from "@/types/product";
 import JsonLd from "@/components/seo/JsonLd";
@@ -246,7 +246,7 @@ export default async function SousVidePage() {
               const specEntries = fallback
                 ? Object.entries(fallback.specs)
                 : Object.entries(product.specs ?? {}).slice(0, 3);
-              const points = calculatePointsEarned(product.sale_price ?? product.regular_price);
+              const pointsDisplay = getProductPointsDisplay(product);
               const badge = fallback?.badge;
 
               return (
@@ -305,6 +305,7 @@ export default async function SousVidePage() {
                       <span className="ml-2 text-xs text-copy-muted">incl. VAT</span>
                     </div>
 
+                    {pointsDisplay.show && (
                     <Link
                       href="/rewards"
                       className="relative z-20 mt-1 flex items-center justify-between gap-2 border border-secondary/30 bg-secondary/5 hover:bg-secondary/10 px-3 py-2 transition-colors"
@@ -312,13 +313,14 @@ export default async function SousVidePage() {
                       <span className="flex items-center gap-2">
                         <Award className="h-4 w-4 text-secondary shrink-0" />
                         <span className="text-xs font-bold text-secondary uppercase tracking-wider">
-                          Earn {points.toLocaleString("en-ZA")} Lava Points
+                          Earn {pointsDisplay.points.toLocaleString("en-ZA")} Lava Points
                         </span>
                       </span>
                       <span className="text-[10px] font-bold text-secondary/70 uppercase tracking-wider">
                         How it works →
                       </span>
                     </Link>
+                    )}
                   </div>
                 </div>
               );

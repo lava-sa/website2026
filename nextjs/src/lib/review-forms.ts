@@ -1,3 +1,6 @@
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+
 export type ReviewFormVariant = "machines" | "bags-rolls" | "containers";
 
 export type ReviewQuestion = {
@@ -27,11 +30,11 @@ export const REVIEW_FORM_CONFIGS: Record<ReviewFormVariant, ReviewFormConfig> = 
   machines: {
     variant: "machines",
     categoryLabel: "Vacuum Machines",
-    pageTitle: "Review Your LAVA Vacuum Machine",
+    pageTitle: "We'd Love to Hear From You",
     pageDescription:
-      "Share a detailed review of your LAVA vacuum sealer. Specific answers help other buyers — and help Google and AI search understand real-world results.",
+      "Anneke and the Lava-SA team invite you to share a review of the LAVA vacuum machine you use — and the service and support you've received from us. Your experience helps other customers choose with confidence.",
     heroSubtitle:
-      "Tell us how your machine performs in the real world. Detailed, specific reviews help hunters, butchers, and home cooks choose with confidence.",
+      "Thank you for being a LAVA customer. Please tell us about the machine you use day to day, how it performs for you, and the service you've received from Anneke and the Lava-SA team. A short written review or a quick video — whichever suits you.",
     productLabel: "Which LAVA vacuum machine do you own?",
     productOptions: [
       "LAVA V.100 Premium",
@@ -241,6 +244,31 @@ export const REVIEW_FORM_CONFIGS: Record<ReviewFormVariant, ReviewFormConfig> = 
 
 export function getReviewFormConfig(variant: ReviewFormVariant): ReviewFormConfig {
   return REVIEW_FORM_CONFIGS[variant];
+}
+
+const REVIEW_FORM_PATHS: Record<ReviewFormVariant, string> = {
+  machines: "/submit-review",
+  "bags-rolls": "/submit-review/bags-rolls",
+  containers: "/submit-review/containers",
+};
+
+/** Social preview images — match the product category (WhatsApp / Facebook / iMessage). */
+const REVIEW_FORM_OG_IMAGES: Record<ReviewFormVariant, string> = {
+  machines: "/images/og-fallback/og-machines.jpg",
+  "bags-rolls": "/images/og-fallback/og-bags-rolls.jpg",
+  containers: "/images/og-fallback/og-containers.jpg",
+};
+
+/** Per-page Open Graph / Twitter metadata so shared review links show the right preview. */
+export function reviewFormMetadata(variant: ReviewFormVariant): Metadata {
+  const config = getReviewFormConfig(variant);
+  return pageMetadata({
+    title: config.pageTitle,
+    description: config.pageDescription,
+    path: REVIEW_FORM_PATHS[variant],
+    image: REVIEW_FORM_OG_IMAGES[variant],
+    imageAlt: config.pageTitle,
+  });
 }
 
 export function emptyAnswers(questions: ReviewQuestion[]): Record<string, string> {

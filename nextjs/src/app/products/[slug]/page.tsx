@@ -20,13 +20,14 @@ import {
   stripHtml,
   SUB_CATEGORY_MAP,
 } from "@/lib/products";
-import { calculatePointsEarned, REWARDS_CONFIG } from "@/lib/rewards-config";
+import { getProductPointsDisplay, REWARDS_CONFIG } from "@/lib/rewards-config";
 import ProductImageGallery from "@/components/shop/ProductImageGallery";
 import IndustriesSection from "@/components/shop/IndustriesSection";
 import ProductCard from "@/components/shop/ProductCard";
 import StockBadge from "@/components/shop/StockBadge";
 import AddToCartButton from "@/components/shop/AddToCartButton";
 import OpenJanetButton from "@/components/shop/OpenJanetButton";
+import JanetPageContextBridge from "@/components/shop/JanetPageContextBridge";
 import { parseFunnelConfig } from "@/lib/funnel";
 import { getMachineContent, type MachineFaqItem } from "@/lib/machine-content";
 import { getMachineMedia } from "@/lib/get-machine-media";
@@ -254,6 +255,7 @@ export default async function ProductDetailPage({
   const hasSpecs = displaySpecs.length > 0;
   const isOnOrder = product.stock_status === "on_order";
   const price     = product.sale_price ?? product.regular_price;
+  const pointsDisplay = getProductPointsDisplay(product);
   const isVacuumMachine = product.categories?.slug === "vacuum-machines";
   const machineHeadings = isVacuumMachine ? getMachinePdpHeadings(product.name) : null;
   const isSousVide = product.categories?.slug === "sous-vide";
@@ -376,6 +378,19 @@ export default async function ProductDetailPage({
 
   return (
     <main className="min-h-screen bg-white">
+      <JanetPageContextBridge
+        product={{
+          type: "product",
+          id: product.id,
+          slug: product.slug,
+          name: product.name,
+          price,
+          sku: product.sku,
+          image: product.primary_image_url,
+          canAddToCart: !isOnOrder,
+          category: product.categories?.name,
+        }}
+      />
       <JsonLd data={[prodLd, crumbLd]} />
 
       {/* ── Breadcrumb ──────────────────────────────────────────────── */}
@@ -548,7 +563,7 @@ export default async function ProductDetailPage({
                 </div>
               )}
 
-              {/* ── Lava Points — points earned on this purchase ─────── */}
+              {pointsDisplay.show && (
               <Link
                 href="/rewards"
                 className="flex items-center justify-between gap-3 border-2 border-secondary/40 bg-secondary/5 hover:bg-secondary/10 hover:border-secondary transition-colors px-5 py-4 group"
@@ -562,17 +577,21 @@ export default async function ProductDetailPage({
                       Lava Points
                     </p>
                     <p className="text-base font-black text-primary mt-1 leading-tight">
-                      Earn {calculatePointsEarned(price).toLocaleString("en-ZA")} Lava Points
+                      Earn {pointsDisplay.points.toLocaleString("en-ZA")} Lava Points
                       <span className="text-sm font-semibold text-copy-muted ml-2">
-                        (worth {formatPrice(calculatePointsEarned(price) * REWARDS_CONFIG.RAND_PER_POINT)} off your next order)
+                        (worth {formatPrice(pointsDisplay.points * REWARDS_CONFIG.RAND_PER_POINT)} off your next order)
                       </span>
                     </p>
+                    {pointsDisplay.note && (
+                      <p className="text-xs text-copy-muted mt-1">{pointsDisplay.note}</p>
+                    )}
                   </div>
                 </div>
                 <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-secondary group-hover:translate-x-0.5 transition-transform shrink-0">
                   How it works →
                 </span>
               </Link>
+              )}
 
               {/* ── Trust Stamps ─────────────────────────────────────── */}
               <div className="grid grid-cols-2 gap-2.5">

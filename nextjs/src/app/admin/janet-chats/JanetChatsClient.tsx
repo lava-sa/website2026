@@ -67,8 +67,7 @@ export default function JanetChatsClient({ rows }: { rows: JanetChatRow[] }) {
                 "First name",
                 "Last name",
                 "Phone",
-                "Email",
-                "Industry",
+                "Company / use",
                 "Transcript",
                 "Action taken",
               ].map((h) => (
@@ -125,20 +124,9 @@ export default function JanetChatsClient({ rows }: { rows: JanetChatRow[] }) {
                 </td>
                 <td className="px-3 py-2">
                   <input
-                    defaultValue={r.email ?? ""}
-                    className={`${inputCls} min-w-[10rem]`}
-                    disabled={savingId === r.id}
-                    onBlur={(e) => {
-                      if (e.target.value !== (r.email ?? ""))
-                        void patch(r.id, { email: e.target.value });
-                    }}
-                  />
-                </td>
-                <td className="px-3 py-2">
-                  <input
                     defaultValue={r.industry ?? ""}
-                    className={inputCls}
-                    placeholder="e.g. Hunting"
+                    className={`${inputCls} min-w-[10rem]`}
+                    placeholder="e.g. Sunrise Butchery — hunting"
                     disabled={savingId === r.id}
                     onBlur={(e) => {
                       if (e.target.value !== (r.industry ?? ""))
