@@ -35,7 +35,7 @@ export default function FoodPreservationWasteGuidePage() {
             and lower spoilage across meat, fish, vegetables, prepared meals, and pantry goods.
           </p>
           <p>
-            Use a simple cycle: batch buy -> portion -> vacuum seal -> date label -> first-in-first-out rotation.
+            Use a simple cycle: batch buy → portion → vacuum seal → date label → first-in-first-out rotation.
             This lowers waste and improves cash-flow efficiency for households and small businesses.
           </p>
           <p className="font-semibold text-primary">Cluster resources from this pillar:</p>

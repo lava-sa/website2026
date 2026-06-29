@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Mail, Loader2, LogIn, UserPlus, KeyRound } from "lucide-react";
@@ -60,13 +60,18 @@ function LoginFormInner() {
   const params = useSearchParams();
   const from = params.get("from") || "/account/dashboard";
   const requestedMode = params.get("mode");
+  const prefilledEmail = params.get("email") || "";
 
   const [mode, setMode] = useState<Mode>(resolveInitialMode(requestedMode));
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(prefilledEmail);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (prefilledEmail) setEmail(prefilledEmail);
+  }, [prefilledEmail]);
 
   const supabase = createClient();
 

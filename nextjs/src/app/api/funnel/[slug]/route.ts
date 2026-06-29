@@ -42,7 +42,8 @@ export async function GET(
     .from("products")
     .select("id, name, slug, regular_price, sale_price, primary_image_url, sku, stock_status, is_published")
     .in("id", allIds)
-    .eq("is_published", true);
+    .eq("is_published", true)
+    .neq("stock_status", "out_of_stock");
 
   if (productsError) {
     return NextResponse.json({ error: productsError.message }, { status: 500 });

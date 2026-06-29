@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
 import { generateSignature, getPayFastUrl } from "@/lib/payfast";
+import { ensureCheckoutCustomerAccount, type CheckoutAccountResult } from "@/lib/checkout-customer-account";
 import { sendOrderPlacedEmails } from "@/lib/order-email";
 import { getPublicSiteUrl } from "@/lib/seo";
 import type { CartItem } from "@/lib/cart-context";
@@ -134,6 +135,27 @@ export async function POST(req: NextRequest) {
     // Non-fatal — order exists, continue to PayFast
   }
 
+  // ── 4a. Customer account (non-fatal) — login for order tracking ───────────
+  const account = await ensureCheckoutCustomerAccount({
+    email: customer.email,
+    firstName: customer.first_name,
+    lastName: customer.last_name,
+    phone: customer.phone,
+  }).catch((err): CheckoutAccountResult => {
+    console.error("Checkout account provisioning failed:", err);
+    return { customerId: null, isNewAccount: false };
+  });
+
+  if (account.customerId) {
+    await supabase
+      .from("orders")
+      .update({ customer_id: account.customerId })
+      .eq("id", order.id)
+      .then(({ error }) => {
+        if (error) console.warn("orders.customer_id update failed:", error.message);
+      });
+  }
+
   // ── 4b. Send order confirmation emails (non-fatal) ─────────────────────────
   await sendOrderPlacedEmails({
     orderNumber,
@@ -143,6 +165,10 @@ export async function POST(req: NextRequest) {
     subtotal,
     shipping,
     total,
+    account: {
+      isNewAccount: account.isNewAccount,
+      temporaryPassword: account.temporaryPassword,
+    },
   });
 
   // ── 5. Bank transfer — return order number, no PayFast needed ────────────

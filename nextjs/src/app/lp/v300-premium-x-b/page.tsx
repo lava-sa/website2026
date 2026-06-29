@@ -84,7 +84,6 @@ const TESTIMONIALS = [
 
 const IN_THE_BOX = [
   "Lava V.300 Premium X vacuum sealer",
-  "Starter pack of professional vacuum bags (mixed sizes)",
   "External vacuum hose for canisters & marinators",
   "Quick-start guide (English) + full German engineering manual",
   "2-year limited manufacturer warranty",

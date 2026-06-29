@@ -24,8 +24,7 @@ export default function MachineDelivery({
               {heading}
             </h2>
             <p className="text-sm text-copy-muted leading-relaxed">
-              Everything you need to start vacuum sealing the day your delivery arrives.
-              No extras to buy.
+              Everything included with your machine when your delivery arrives.
             </p>
           </div>
 

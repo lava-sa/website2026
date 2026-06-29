@@ -116,8 +116,14 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
 
   // Products — Category pages (no "Products" intermediate — Home > Category)
   "/products/vacuum-machines": [{ label: "LAVA Vacuum Sealing Machines" }],
-  "/products/vacuum-bags":     [{ label: "Vacuum Bags" }],
-  "/products/vacuum-rolls":    [{ label: "Vacuum Rolls" }],
+  "/products/vacuum-bags": [
+    { label: "Vacuum Bags & Rolls", href: "/products/bags-rolls" },
+    { label: "Embossed Vacuum Bags" },
+  ],
+  "/products/vacuum-rolls": [
+    { label: "Vacuum Bags & Rolls", href: "/products/bags-rolls" },
+    { label: "Embossed Vacuum Rolls" },
+  ],
   "/products/bags-rolls":      [{ label: "Vacuum Bags & Rolls" }],
   "/products/accessories":     [{ label: "Vacuum Accessories" }],
   "/products/containers-lids": [{ label: "Containers & Lids" }],

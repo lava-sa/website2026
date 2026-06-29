@@ -1,8 +1,6 @@
 import { getProductsByCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/shop/ProductCard";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import CategoryReviewBanner from "@/components/reviews/CategoryReviewBanner";
 import { pageMetadata, collectionPageSchema, breadcrumbSchema } from "@/lib/seo";
@@ -56,17 +54,6 @@ export default async function VacuumBagsPage() {
   return (
     <main className="min-h-screen bg-white">
       <JsonLd data={[collectionLd, crumbLd]} />
-      {/* ── Breadcrumb ──────────────────────────────────────────────── */}
-      <nav className="bg-surface border-b border-border py-4">
-        <div className="section-container flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-copy-muted">
-          <Link href="/" className="hover:text-secondary transition-colors">Home</Link>
-          <ChevronRight className="h-3.5 w-3.5 text-secondary/40" />
-          <Link href="/products/bags-rolls" className="hover:text-secondary transition-colors">Vacuum Bags & Rolls</Link>
-          <ChevronRight className="h-3.5 w-3.5 text-secondary/40" />
-          <span className="text-primary font-black">Embossed Vacuum Bags</span>
-        </div>
-      </nav>
-
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <section className="bg-primary py-16">
         <div className="section-container">

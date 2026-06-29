@@ -40,7 +40,7 @@ export default function CartDrawer() {
   return (
     <>
       <div
-        className={`fixed top-24 right-6 z-[320] transition-all duration-300 ${
+        className={`fixed top-24 right-6 z-[1310] transition-all duration-300 ${
           showToast ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
         }`}
       >
@@ -51,13 +51,13 @@ export default function CartDrawer() {
 
       <div
         onClick={closeDrawer}
-        className={`fixed inset-0 z-[300] bg-black/45 transition-opacity duration-300 ${
+        className={`fixed inset-0 z-[1290] bg-black/45 transition-opacity duration-300 ${
           isDrawerOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       />
 
       <aside
-        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white z-[310] shadow-2xl
+        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white z-[1300] shadow-2xl
           transition-transform duration-300 ease-out ${
             isDrawerOpen ? "translate-x-0" : "translate-x-full"
           }`}

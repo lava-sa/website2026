@@ -197,7 +197,11 @@ export default async function DashboardPage() {
                       : "bg-amber-50 text-amber-700 border-amber-200";
 
                   return (
-                    <div key={order.id} className="bg-white border border-border p-6 hover:border-primary transition-colors">
+                    <Link
+                      key={order.id}
+                      href={order.order_number ? `/account/orders/${order.order_number}` : "/account/dashboard"}
+                      className="block bg-white border border-border p-6 hover:border-primary transition-colors"
+                    >
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <p className="font-bold text-primary">{label}</p>
@@ -221,7 +225,8 @@ export default async function DashboardPage() {
                           R{Number(order.total).toLocaleString("en-ZA", { maximumFractionDigits: 0 })}
                         </p>
                       </div>
-                    </div>
+                      <p className="text-xs font-bold text-secondary mt-3">View order &amp; tracking →</p>
+                    </Link>
                   );
                 })}
               </div>
@@ -305,8 +310,7 @@ export default async function DashboardPage() {
                 Password
               </p>
               <Link
-                href="/account/login"
-                onClick={async () => {}}
+                href="/account/login?mode=reset"
                 className="text-sm font-bold text-primary hover:text-secondary transition-colors"
               >
                 Change password →

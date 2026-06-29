@@ -36,6 +36,10 @@ interface SendOrderPlacedEmailArgs {
   subtotal: number;
   shipping: number;
   total: number;
+  account?: {
+    isNewAccount: boolean;
+    temporaryPassword?: string;
+  };
 }
 
 interface SendPaymentReceivedEmailArgs {
@@ -94,9 +98,11 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
   const { fromEmail, adminEmails, replyToEmail } = getEmailConfig();
 
   const fullName = `${args.customer.first_name} ${args.customer.last_name}`.trim();
-  const methodLabel = args.paymentMethod === "bank_transfer" ? "EFT / Bank Transfer" : "PayFast";
-  const orderUrl = `${getPublicSiteUrl()}/checkout/success?order=${encodeURIComponent(args.orderNumber)}${args.paymentMethod === "bank_transfer" ? "&method=eft" : ""}`;
-  const adminOrdersUrl = `${getPublicSiteUrl()}/admin/orders`;
+  const siteUrl = getPublicSiteUrl();
+  const orderTrackPath = `/account/orders/${encodeURIComponent(args.orderNumber)}`;
+  const loginUrl = `${siteUrl}/account/login?email=${encodeURIComponent(args.customer.email)}&from=${encodeURIComponent(orderTrackPath)}`;
+  const successUrl = `${siteUrl}/checkout/success?order=${encodeURIComponent(args.orderNumber)}${args.paymentMethod === "bank_transfer" ? "&method=eft" : ""}`;
+  const adminOrdersUrl = `${siteUrl}/admin/orders`;
   const itemRows = buildOrderItemRows(args.cart);
   const shippingLabel = formatEmailPrice(args.shipping);
   const itemsTable = emailOrderItemsTable(
@@ -128,6 +134,25 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
         )
       : "";
 
+  const methodLabel = args.paymentMethod === "bank_transfer" ? "EFT / Bank Transfer" : "PayFast";
+
+  const accountBlock =
+    args.account?.isNewAccount && args.account.temporaryPassword
+      ? emailAlertBox(
+          `<p style="margin:0 0 12px;font-size:16px;font-weight:700;color:${EMAIL_BRAND.primary};">Your Lava account</p>
+          <p style="margin:0 0 12px;font-size:14px;">Track this order, view shipping updates, and earn Lava Points from your dashboard.</p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+            <tr><td style="padding:4px 8px 4px 0;color:${EMAIL_BRAND.muted};">Username</td><td><strong>${escEmail(args.customer.email)}</strong></td></tr>
+            <tr><td style="padding:4px 8px 4px 0;color:${EMAIL_BRAND.muted};">Temporary password</td><td><strong style="font-family:monospace;font-size:15px;">${escEmail(args.account.temporaryPassword)}</strong></td></tr>
+          </table>
+          <p style="margin:12px 0 0;font-size:13px;color:${EMAIL_BRAND.muted};">Sign in and change your password under Account settings. Keep this email safe until you do.</p>`,
+          "gold"
+        )
+      : emailAlertBox(
+          `<p style="margin:0 0 8px;font-size:15px;font-weight:700;color:${EMAIL_BRAND.primary};">Track your order</p>
+          <p style="margin:0;font-size:14px;">Sign in with your Lava account (<strong>${escEmail(args.customer.email)}</strong>) to follow shipping updates for this order.</p>`
+        );
+
   const customerBody = `
     <p style="margin:0 0 16px;font-size:16px;">Hi <strong>${escEmail(args.customer.first_name)}</strong>, thank you for choosing LAVA. We have received your order and will keep you updated.</p>
     ${emailDetailGrid([
@@ -140,6 +165,8 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
     <div style="margin:0 0 20px;padding:14px;background:#f9fafb;border:1px solid ${EMAIL_BRAND.border};border-radius:6px;line-height:1.5;">
       ${buildShippingBlockHtml(args.customer)}
     </div>
+    ${emailSectionTitle("Your account")}
+    <div style="margin:0 0 20px;">${accountBlock}</div>
     <p style="margin:0 0 8px;font-size:14px;color:${EMAIL_BRAND.muted};">
       ${
         args.paymentMethod === "bank_transfer"
@@ -147,7 +174,11 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
           : "We are processing your order. You will receive a confirmation once payment is verified."
       }
     </p>
-    ${emailButton(orderUrl, "View order confirmation")}`;
+    <p style="margin:0 0 16px;font-size:14px;color:${EMAIL_BRAND.muted};">
+      Payment details and bank reference are also on your
+      <a href="${successUrl}" style="color:${EMAIL_BRAND.teal};font-weight:600;">order confirmation page</a>.
+    </p>
+    ${emailButton(loginUrl, "Sign in & track your order")}`;
 
   const customerHtml = wrapEmailLayout({
     headline: "Thank you for your order",
@@ -270,6 +301,9 @@ export async function sendPaymentReceivedEmails(args: SendPaymentReceivedEmailAr
   const { fromEmail, adminEmails, replyToEmail } = getEmailConfig();
 
   const fullName = `${args.customer.first_name} ${args.customer.last_name}`.trim();
+  const siteUrl = getPublicSiteUrl();
+  const orderTrackPath = `/account/orders/${encodeURIComponent(args.orderNumber)}`;
+  const loginUrl = `${siteUrl}/account/login?email=${encodeURIComponent(args.customer.email)}&from=${encodeURIComponent(orderTrackPath)}`;
 
   const customerHtml = wrapEmailLayout({
     headline: "Payment received",
@@ -278,7 +312,8 @@ export async function sendPaymentReceivedEmails(args: SendPaymentReceivedEmailAr
     bodyHtml: `
       <p style="margin:0 0 16px;">Hi <strong>${escEmail(args.customer.first_name)}</strong>,</p>
       <p style="margin:0 0 16px;">We have received your payment of <strong>${formatEmailPrice(args.total)}</strong>. Your order is now being prepared for dispatch.</p>
-      <p style="margin:0;font-size:14px;color:${EMAIL_BRAND.muted};">Thank you for choosing LAVA-SA.</p>`,
+      ${emailButton(loginUrl, "Track your order")}
+      <p style="margin:16px 0 0;font-size:14px;color:${EMAIL_BRAND.muted};">Thank you for choosing LAVA-SA.</p>`,
   });
 
   const adminHtml = wrapEmailLayout({

@@ -148,8 +148,6 @@ const v100PremiumX: MachineRichContent = {
     "Lava V.100 Premium X vacuum sealer",
     "Power cable (SA plug)",
     "Operating instruction manual",
-    "Starter pack: 10 vacuum bags (assorted sizes)",
-    "Starter pack: 1 × 28 cm vacuum roll",
     "Container & jar hose attachment",
     "2-year manufacturer warranty card",
   ],
@@ -282,6 +280,21 @@ function hasItems<T>(arr: T[] | undefined): arr is T[] {
   return Array.isArray(arr) && arr.length > 0;
 }
 
+/** Complimentary bags/rolls are no longer included with machines — strip from any source. */
+const COMPLIMENTARY_BAG_ROLL_PATTERNS = [
+  /starter\s*pack.*vacuum\s*bags/i,
+  /starter\s*pack.*vacuum\s*roll/i,
+  /complimentary.*vacuum\s*roll/i,
+  /assortment.*vacuum\s*bags/i,
+  /professional vacuum bags.*mixed sizes/i,
+];
+
+function stripComplimentaryBagsAndRolls(items: string[]): string[] {
+  return items.filter(
+    (item) => !COMPLIMENTARY_BAG_ROLL_PATTERNS.some((re) => re.test(item))
+  );
+}
+
 function parseMachineContentFromSpecs(
   specs: Record<string, unknown> | null | undefined
 ): Partial<MachineRichContent> | null {
@@ -305,9 +318,11 @@ export function getMachineContent(
     functions: hasItems(fromDb?.functions)
       ? fromDb.functions
       : staticContent?.functions ?? [],
-    deliveryContents: hasItems(fromDb?.deliveryContents)
-      ? fromDb.deliveryContents
-      : staticContent?.deliveryContents ?? [],
+    deliveryContents: stripComplimentaryBagsAndRolls(
+      hasItems(fromDb?.deliveryContents)
+        ? fromDb.deliveryContents
+        : staticContent?.deliveryContents ?? []
+    ),
     tests: hasItems(fromDb?.tests) ? fromDb.tests : staticContent?.tests ?? [],
     downloads: hasItems(fromDb?.downloads)
       ? fromDb.downloads

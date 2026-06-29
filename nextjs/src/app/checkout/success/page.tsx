@@ -139,6 +139,21 @@ export default async function SuccessPage({
 
         {/* Contact + nav — shown for both */}
         <div className="bg-white border border-border p-6 mt-6">
+          {order && (
+            <div className="mb-6 pb-6 border-b border-border text-center">
+              <p className="text-sm font-semibold text-primary mb-2">Track this order in your account</p>
+              <p className="text-sm text-copy-muted mb-4 max-w-md mx-auto">
+                Check your confirmation email for your login details, then sign in to follow shipping
+                updates for <strong>{order}</strong>.
+              </p>
+              <Link
+                href={`/account/login?from=${encodeURIComponent(`/account/orders/${order}`)}`}
+                className="inline-block bg-secondary text-white font-bold px-8 py-3 hover:bg-secondary/90 transition-colors"
+              >
+                Sign in &amp; track order
+              </Link>
+            </div>
+          )}
           <p className="text-sm font-semibold text-primary mb-4 text-center">Questions? Contact Anneke directly:</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
             <div className="flex items-center gap-2 text-sm text-copy-muted">
