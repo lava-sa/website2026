@@ -143,14 +143,14 @@ export default async function SuccessPage({
             <div className="mb-6 pb-6 border-b border-border text-center">
               <p className="text-sm font-semibold text-primary mb-2">Track this order in your account</p>
               <p className="text-sm text-copy-muted mb-4 max-w-md mx-auto">
-                Check your confirmation email for your login details, then sign in to follow shipping
-                updates for <strong>{order}</strong>.
+                We sent a <strong>one-click tracking link</strong> to your email — tap it to view
+                this order and shipping updates. No password needed.
               </p>
               <Link
                 href={`/account/login?from=${encodeURIComponent(`/account/orders/${order}`)}`}
-                className="inline-block bg-secondary text-white font-bold px-8 py-3 hover:bg-secondary/90 transition-colors"
+                className="inline-block border-2 border-primary text-primary font-bold px-8 py-3 hover:bg-primary/5 transition-colors"
               >
-                Sign in &amp; track order
+                Sign in with password instead
               </Link>
             </div>
           )}

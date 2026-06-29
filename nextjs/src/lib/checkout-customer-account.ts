@@ -1,19 +1,21 @@
 import { randomBytes } from "node:crypto";
+import { getOrderTrackingAuthRedirectUrl } from "@/lib/auth-redirect";
 import { createServiceClient } from "@/lib/supabase";
 
 export type CheckoutAccountResult = {
   customerId: string | null;
   isNewAccount: boolean;
-  temporaryPassword?: string;
+  /** Secure one-click link — signs the customer in and opens their order page */
+  orderAccessUrl?: string;
 };
 
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
-function generateTemporaryPassword(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
-  const bytes = randomBytes(12);
+function internalPassword(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$";
+  const bytes = randomBytes(24);
   return Array.from(bytes, (b) => chars[b % chars.length]).join("");
 }
 
@@ -73,16 +75,38 @@ async function upsertCustomerRow(params: {
   return inserted.id;
 }
 
+/** Magic link that signs the customer in and lands on their order tracking page. */
+export async function generateOrderAccessMagicLink(
+  email: string,
+  orderNumber: string
+): Promise<string | null> {
+  const supabase = createServiceClient();
+  const normalized = normalizeEmail(email);
+  const redirectTo = getOrderTrackingAuthRedirectUrl(orderNumber);
+
+  const link = await supabase.auth.admin.generateLink({
+    type: "magiclink",
+    email: normalized,
+    options: { redirectTo },
+  });
+
+  const actionLink = link.data?.properties?.action_link;
+  if (!link.error && actionLink) return actionLink;
+
+  console.error("[checkout-account] magiclink failed:", link.error?.message);
+  return null;
+}
+
 /**
- * Ensure a Supabase Auth user + customers row exist for a new checkout.
- * New buyers receive a temporary password in the order email.
- * Existing members keep their password — no reset.
+ * Ensure a Supabase Auth user + customers row exist for checkout.
+ * Returns a one-click magic link for order tracking (no password in email).
  */
 export async function ensureCheckoutCustomerAccount(params: {
   email: string;
   firstName: string;
   lastName: string;
   phone?: string;
+  orderNumber: string;
 }): Promise<CheckoutAccountResult> {
   const email = normalizeEmail(params.email);
   const customerId = await upsertCustomerRow({
@@ -93,11 +117,11 @@ export async function ensureCheckoutCustomerAccount(params: {
   });
 
   const supabase = createServiceClient();
-  const temporaryPassword = generateTemporaryPassword();
+  let isNewAccount = false;
 
   const created = await supabase.auth.admin.createUser({
     email,
-    password: temporaryPassword,
+    password: internalPassword(),
     email_confirm: true,
     user_metadata: {
       first_name: params.firstName,
@@ -106,13 +130,13 @@ export async function ensureCheckoutCustomerAccount(params: {
   });
 
   if (!created.error && created.data.user) {
-    return { customerId, isNewAccount: true, temporaryPassword };
+    isNewAccount = true;
+  } else if (!authUserExistsMessage(created.error?.message ?? "")) {
+    console.error("[checkout-account] createUser failed:", created.error?.message);
   }
 
-  if (authUserExistsMessage(created.error?.message ?? "")) {
-    return { customerId, isNewAccount: false };
-  }
+  const orderAccessUrl =
+    (await generateOrderAccessMagicLink(email, params.orderNumber)) ?? undefined;
 
-  console.error("[checkout-account] createUser failed:", created.error?.message);
-  return { customerId, isNewAccount: false };
+  return { customerId, isNewAccount, orderAccessUrl };
 }

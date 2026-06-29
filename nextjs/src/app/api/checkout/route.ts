@@ -141,6 +141,7 @@ export async function POST(req: NextRequest) {
     firstName: customer.first_name,
     lastName: customer.last_name,
     phone: customer.phone,
+    orderNumber,
   }).catch((err): CheckoutAccountResult => {
     console.error("Checkout account provisioning failed:", err);
     return { customerId: null, isNewAccount: false };
@@ -166,8 +167,7 @@ export async function POST(req: NextRequest) {
     shipping,
     total,
     account: {
-      isNewAccount: account.isNewAccount,
-      temporaryPassword: account.temporaryPassword,
+      orderAccessUrl: account.orderAccessUrl,
     },
   });
 
