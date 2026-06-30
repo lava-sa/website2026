@@ -78,9 +78,9 @@ export default async function ReviewsPage() {
                     Customers sharing their overall experience with Anneke and the Lava-SA team.
                   </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
                   {general.map((review) => (
-                    <PublicReviewCard key={review.id} review={review} />
+                    <PublicReviewCard key={review.id} review={review} className="h-full" />
                   ))}
                 </div>
               </section>
@@ -106,9 +106,9 @@ export default async function ReviewsPage() {
                         View product →
                       </Link>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
                       {section.reviews.map((review) => (
-                        <PublicReviewCard key={review.id} review={review} />
+                        <PublicReviewCard key={review.id} review={review} className="h-full" />
                       ))}
                     </div>
                   </div>
@@ -122,9 +122,14 @@ export default async function ReviewsPage() {
                   <p className="overline mb-2">Video Stories</p>
                   <h2 className="text-2xl font-black text-primary">Video Testimonials</h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
                   {videos.map((review) => (
-                    <PublicReviewCard key={review.id} review={review} showStructured={false} />
+                    <PublicReviewCard
+                      key={review.id}
+                      review={review}
+                      showStructured={false}
+                      className="h-full"
+                    />
                   ))}
                 </div>
               </section>

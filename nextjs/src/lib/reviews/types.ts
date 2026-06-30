@@ -38,6 +38,7 @@ export type DisplayReview = {
   videoUrl?: string;
   isVideo?: boolean;
   productLabel?: string;
+  avatarUrl?: string;
   source: "db" | "static";
 };
 

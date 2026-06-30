@@ -1,62 +1,30 @@
 import Link from "next/link";
-import { Star, Video } from "lucide-react";
-import StructuredReviewBody from "@/components/reviews/StructuredReviewBody";
+import { Star } from "lucide-react";
+import ReviewTestimonialCard, {
+  displayReviewToTestimonial,
+} from "@/components/reviews/ReviewTestimonialCard";
 import type { DisplayReview } from "@/lib/reviews/types";
 
 type Props = {
   review: DisplayReview;
   showStructured?: boolean;
+  compact?: boolean;
   className?: string;
 };
 
-export default function PublicReviewCard({ review, showStructured = true, className = "" }: Props) {
-  const hasStructured = showStructured && review.answers && review.answers.length > 0;
-
+export default function PublicReviewCard({
+  review,
+  showStructured = true,
+  compact = false,
+  className = "",
+}: Props) {
   return (
-    <article
-      className={`bg-white border border-border p-6 flex flex-col gap-4 ${className}`}
-    >
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex gap-0.5">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <Star
-              key={i}
-              className={`h-3.5 w-3.5 ${i <= review.rating ? "fill-secondary text-secondary" : "text-border"}`}
-            />
-          ))}
-        </div>
-        {review.isVideo && (
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5">
-            <Video className="h-3 w-3" /> Video
-          </span>
-        )}
-      </div>
-
-      {review.headline && (
-        <h3 className="text-sm font-black text-primary">{review.headline}</h3>
-      )}
-
-      {review.isVideo && review.videoUrl ? (
-        <video src={review.videoUrl} controls className="w-full aspect-video bg-black" />
-      ) : hasStructured ? (
-        <StructuredReviewBody answers={review.answers!} compact />
-      ) : review.text ? (
-        <p className="text-sm text-copy leading-relaxed flex-1 italic">&ldquo;{review.text}&rdquo;</p>
-      ) : null}
-
-      <div className="border-t border-border pt-4 flex flex-wrap items-center justify-between gap-2 text-xs">
-        <span className="font-bold text-primary">{review.name}</span>
-        <span className="text-copy-muted">
-          {review.location} · {review.date}
-        </span>
-      </div>
-
-      {review.productLabel && (
-        <p className="text-[10px] font-medium text-copy-muted bg-surface px-2 py-1 w-fit">
-          {review.productLabel}
-        </p>
-      )}
-    </article>
+    <ReviewTestimonialCard
+      {...displayReviewToTestimonial(review)}
+      showStructured={showStructured}
+      compact={compact}
+      className={className}
+    />
   );
 }
 
@@ -110,9 +78,11 @@ export function ProductReviewsSection({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8 items-stretch">
           {cards.length > 0 ? (
-            cards.map((review) => <PublicReviewCard key={review.id} review={review} />)
+            cards.map((review) => (
+              <PublicReviewCard key={review.id} review={review} className="h-full" />
+            ))
           ) : (
             <p className="col-span-full text-center text-sm text-copy-muted py-6">
               More reviews are shown above the product gallery.{" "}

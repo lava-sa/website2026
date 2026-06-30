@@ -1,5 +1,4 @@
-import { Star } from "lucide-react";
-import StructuredReviewBody from "@/components/reviews/StructuredReviewBody";
+import PublicReviewCard from "@/components/reviews/PublicReviewCard";
 import type { DisplayReview } from "@/lib/reviews/types";
 
 type Props = {
@@ -30,39 +29,9 @@ export default function ProductGalleryReviews({ reviews, totalReviewCount }: Pro
       </div>
 
       <div className="flex flex-col gap-3">
-        {reviews.map((review) => {
-          const hasStructured = review.answers && review.answers.length > 0;
-          return (
-            <blockquote
-              key={review.id}
-              className="bg-surface border border-border/80 p-4 flex flex-col gap-2.5"
-            >
-              <div className="flex gap-0.5">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star
-                    key={i}
-                    className={`h-3 w-3 ${i <= review.rating ? "fill-secondary text-secondary" : "text-border"}`}
-                  />
-                ))}
-              </div>
-              {review.headline && (
-                <p className="text-xs font-black text-primary leading-snug">{review.headline}</p>
-              )}
-              {hasStructured ? (
-                <StructuredReviewBody answers={review.answers!} compact className="text-[13px]" />
-              ) : review.text ? (
-                <p className="text-[13px] text-copy leading-relaxed italic line-clamp-6">
-                  &ldquo;{review.text}&rdquo;
-                </p>
-              ) : null}
-              <footer className="text-[10px] text-copy-muted pt-1 border-t border-border/60">
-                <span className="font-bold text-primary">{review.name}</span>
-                {" · "}
-                {review.location} · {review.date}
-              </footer>
-            </blockquote>
-          );
-        })}
+        {reviews.map((review) => (
+          <PublicReviewCard key={review.id} review={review} compact showStructured />
+        ))}
       </div>
 
       {totalReviewCount > reviews.length && (
