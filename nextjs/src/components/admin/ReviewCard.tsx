@@ -23,7 +23,8 @@ type Review = {
   approved: boolean;
   created_at: string;
   review_type: "text" | "video" | "written" | null;
-  video_url: string | null;
+  source?: string | null;
+  legacy_import_key?: string | null;
 };
 
 type ProductOption = { slug: string; name: string; category: string };
@@ -138,6 +139,11 @@ export default function ReviewCard({
         ) : (
           <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-2 py-1">
             <MessageSquare className="h-3 w-3" /> Written Review
+          </span>
+        )}
+        {review.source === "imported" && (
+          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-600 bg-gray-100 border border-gray-200 px-2 py-1">
+            Imported
           </span>
         )}
         <span className="text-xs text-gray-400">{formatDate(review.created_at)}</span>

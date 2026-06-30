@@ -7,10 +7,13 @@ export async function POST(req: NextRequest) {
   const { createServiceClient } = await import("@/lib/supabase");
   const supabase = createServiceClient();
   try {
-    const { path, name, product, product_slug, review_scope } = await req.json();
+    const { path, name, email, product, product_slug, review_scope } = await req.json();
 
     if (!path || !name) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+    if (!email?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      return NextResponse.json({ error: "Valid email address required" }, { status: 400 });
     }
 
     const { data: { publicUrl } } = supabase.storage.from("videos").getPublicUrl(path);
@@ -19,6 +22,7 @@ export async function POST(req: NextRequest) {
 
     const { error: dbError } = await supabase.from("reviews").insert({
       name,
+      email: email.trim().toLowerCase(),
       machine: product || null,
       product_slug: scope === "general" ? null : product_slug?.trim() || null,
       review_scope: scope,
@@ -39,10 +43,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { sendNewReviewNotificationEmail } = await import("@/lib/reviews/email");
-    void sendNewReviewNotificationEmail({
+    const { sendReviewSubmissionEmails } = await import("@/lib/reviews/email");
+    void sendReviewSubmissionEmails({
       name,
-      email: "video-submission@lava-sa.com",
+      email: email.trim(),
       machine: product,
       reviewScope: scope,
       productSlug: product_slug,

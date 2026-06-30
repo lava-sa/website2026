@@ -11,9 +11,10 @@ import {
   buildReviewAnswers,
   compileStructuredReview,
   emptyAnswers,
+  getActiveReviewQuestions,
+  getActiveVideoPrompts,
   getReviewFormConfig,
   resolveSubmissionProduct,
-  reviewProductField,
 } from "@/lib/review-forms";
 import { HoneypotField } from "@/components/security/HoneypotField";
 import { TurnstileWidget } from "@/components/security/TurnstileWidget";
@@ -54,15 +55,16 @@ const inputErrCls =
 
 function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
   const config = getReviewFormConfig(variant);
+  const initialProduct = config.productOptions[0];
   const [form, setForm] = useState({
     name: "",
     email: "",
     company: "",
     city: "",
-    product: config.productOptions[0],
+    product: initialProduct,
     rating: 0,
     headline: "",
-    answers: emptyAnswers(config.questions),
+    answers: emptyAnswers(getActiveReviewQuestions(variant, initialProduct)),
     permission: false,
   });
   const [website, setWebsite] = useState("");
@@ -70,12 +72,24 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
 
+  const activeQuestions = getActiveReviewQuestions(variant, form.product);
+
   const set = (field: string) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setForm((p) => ({ ...p, [field]: e.target.value }));
     setErrors((p) => ({ ...p, [field]: "" }));
   };
+
+  function handleProductChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const product = e.target.value;
+    setForm((p) => ({
+      ...p,
+      product,
+      answers: emptyAnswers(getActiveReviewQuestions(variant, product)),
+    }));
+    setErrors((p) => ({ ...p, product: "" }));
+  }
 
   const setAnswer = (id: string, value: string) => {
     setForm((p) => ({ ...p, answers: { ...p.answers, [id]: value } }));
@@ -92,7 +106,7 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
     if (!form.headline.trim()) e.headline = "Required";
     if (!form.product.trim()) e.product = "Please select a product";
 
-    for (const q of config.questions) {
+    for (const q of activeQuestions) {
       const val = form.answers[q.id]?.trim() ?? "";
       const min = q.minLength ?? 30;
       if (!val) e[q.id] = "Please answer in detail";
@@ -116,8 +130,8 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
 
     setStatus("sending");
 
-    const reviewBody = compileStructuredReview(config.questions, form.answers);
-    const answersJson = buildReviewAnswers(config.questions, form.answers);
+    const reviewBody = compileStructuredReview(activeQuestions, form.answers);
+    const answersJson = buildReviewAnswers(activeQuestions, form.answers);
     const productMeta = resolveSubmissionProduct(form.product, variant);
 
     const res = await fetch("/api/reviews", {
@@ -188,7 +202,7 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
         </label>
         <select
           value={form.product}
-          onChange={set("product")}
+          onChange={handleProductChange}
           className={errors.product ? inputErrCls : inputCls}
         >
           {config.productOptions.map((m) => (
@@ -198,6 +212,11 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
           ))}
         </select>
         {errors.product && <p className="text-xs text-red-600 mt-1">{errors.product}</p>}
+        {variant === "machines" && (
+          <p className="text-[10px] text-copy-muted mt-1">
+            The questions below update based on your product selection.
+          </p>
+        )}
       </div>
 
       <div>
@@ -289,7 +308,7 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
 
       <div className="space-y-5 border-t border-border pt-6">
         <p className="text-sm font-bold text-primary">Please answer each question in detail</p>
-        {config.questions.map((q, idx) => (
+        {activeQuestions.map((q, idx) => (
           <div key={q.id}>
             <label className="block text-xs font-bold text-primary mb-1.5 uppercase tracking-wide">
               {idx + 1}. {q.label} <span className="text-red-500">*</span>
@@ -364,9 +383,12 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
   const [blob, setBlob] = useState<Blob | null>(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [product, setProduct] = useState(config.productOptions[0]);
   const [permission, setPermission] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+
+  const videoPrompts = getActiveVideoPrompts(variant, product);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -455,6 +477,11 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
 
   const handleUpload = async () => {
     if (!blob || !name || !permission) return;
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setErrMsg("Please enter a valid email address so we can thank you and follow up if needed.");
+      setMode("error");
+      return;
+    }
     setMode("uploading");
     setErrMsg("");
     try {
@@ -491,6 +518,7 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
         body: JSON.stringify({
           path,
           name,
+          email: email.trim(),
           product: productMeta.machine,
           product_slug: productMeta.product_slug,
           review_scope: productMeta.review_scope,
@@ -538,6 +566,27 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
 
   return (
     <div className="space-y-5">
+      <div>
+        <label className="block text-xs font-bold text-primary mb-1.5 uppercase tracking-wide">
+          {config.productLabel} <span className="text-red-500">*</span>
+        </label>
+        <select
+          value={product}
+          onChange={(e) => setProduct(e.target.value)}
+          className={inputCls}
+          disabled={mode === "recording" || mode === "uploading"}
+        >
+          {config.productOptions.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
+        </select>
+        <p className="text-[10px] text-copy-muted mt-1">
+          The video prompts below update based on your selection.
+        </p>
+      </div>
+
       <a
         href="https://wa.me/27795126771?text=Hi%20Anneke%2C%20ek%20wil%20graag%20'n%20video%20getuienis%20oor%20my%20LAVA%20stuur!"
         target="_blank"
@@ -568,7 +617,7 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
             Cover these points in your 30–90 second video:
           </p>
           <ol className="space-y-2 text-sm text-copy-muted list-decimal list-inside">
-            {config.videoPrompts.map((tip) => (
+            {videoPrompts.map((tip) => (
               <li key={tip}>{tip}</li>
             ))}
           </ol>
@@ -671,19 +720,17 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
             </div>
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-copy mb-1.5">
-                {config.productLabel}
+                Email address <span className="text-red-500">*</span>
               </label>
-              <select
-                value={product}
-                onChange={(e) => setProduct(e.target.value)}
+              <input
+                required
+                type="email"
+                placeholder="your@email.co.za"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className={inputCls}
-              >
-                {config.productOptions.map((m) => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
-                ))}
-              </select>
+              />
+              <p className="text-[10px] text-copy-muted mt-1">Not published — we&apos;ll send a thank-you note.</p>
             </div>
           </div>
           <label className="flex items-start gap-3 cursor-pointer">
@@ -705,7 +752,7 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
           <button
             type="button"
             onClick={handleUpload}
-            disabled={!name || !permission || mode === "uploading"}
+            disabled={!name || !email.trim() || !permission || mode === "uploading"}
             className="w-full flex items-center justify-center gap-2 bg-secondary text-white font-bold py-4 text-base hover:bg-secondary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {mode === "uploading" ? (

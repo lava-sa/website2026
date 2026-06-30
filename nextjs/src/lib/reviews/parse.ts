@@ -55,3 +55,32 @@ export function formatReviewDate(isoOrDisplay: string): string {
   if (Number.isNaN(d.getTime())) return isoOrDisplay;
   return d.toLocaleDateString("en-ZA", { month: "long", year: "numeric" });
 }
+
+/** Higher score = more detailed review (for hero gallery placement). */
+export function reviewDetailScore(review: {
+  isVideo?: boolean;
+  text?: string;
+  headline?: string;
+  answers?: { answer: string }[];
+}): number {
+  if (review.isVideo) return 0;
+  let score = 0;
+  if (review.answers?.length) {
+    score += review.answers.reduce((sum, a) => sum + a.answer.length, 0);
+    score += review.answers.length * 40;
+  }
+  if (review.text) score += review.text.length;
+  if (review.headline) score += 30;
+  return score;
+}
+
+export function pickMostDetailedReviews<T extends { id: string; isVideo?: boolean; text?: string; headline?: string; answers?: { answer: string }[] }>(
+  reviews: T[],
+  count = 2
+): T[] {
+  const written = reviews.filter((r) => !r.isVideo && reviewDetailScore(r) > 0);
+  if (written.length === 0) return [];
+  return [...written]
+    .sort((a, b) => reviewDetailScore(b) - reviewDetailScore(a))
+    .slice(0, count);
+}

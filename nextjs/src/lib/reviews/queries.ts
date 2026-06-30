@@ -86,7 +86,10 @@ export async function fetchReviewsForProductSlug(slug: string): Promise<ReviewBl
     .map(dbToDisplay);
 
   const staticBlock = staticReviews[slug];
-  const staticForProduct = (staticBlock?.reviews ?? []).map((r, i) => staticToDisplay(r, slug, i));
+  const staticForProduct =
+    dbForProduct.length > 0
+      ? []
+      : (staticBlock?.reviews ?? []).map((r, i) => staticToDisplay(r, slug, i));
 
   const merged = [...dbForProduct, ...staticForProduct];
   return computeBlock(merged);

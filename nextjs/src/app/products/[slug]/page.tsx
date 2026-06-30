@@ -46,7 +46,9 @@ import ProductBottomPurchase from "@/components/shop/ProductBottomPurchase";
 import { resolveProductSlugRedirect } from "@/lib/product-redirects";
 import { reviewFormHrefForCategory } from "@/lib/review-forms";
 import { fetchReviewsForProductSlug } from "@/lib/reviews/queries";
+import { pickMostDetailedReviews } from "@/lib/reviews/parse";
 import { ProductReviewsSection } from "@/components/reviews/PublicReviewCard";
+import ProductGalleryReviews from "@/components/reviews/ProductGalleryReviews";
 import { getMachinePdpHeadings } from "@/lib/machine-pdp-headings";
 import { resolveProductAiDiscoverability } from "@/lib/product-ai-discoverability";
 
@@ -370,6 +372,11 @@ export default async function ProductDetailPage({
         }
       : null);
   const hasLaVaImport = !!slugReviewsStatic && productReviews?.reviews.some((r) => r.source === "static");
+  const galleryFeaturedReviews =
+    productReviews && productReviews.reviews.length >= 2
+      ? pickMostDetailedReviews(productReviews.reviews, 2)
+      : [];
+  const galleryFeaturedIds = galleryFeaturedReviews.map((r) => r.id);
   const productHighlights = productReviews ? null : getProductHighlights(product);
   const relatedHeading = isIndustrialRelatedMachine(slug)
     ? machineHeadings?.relatedIndustrial ?? "Compare Other LAVA Industrial Vacuum Sealers"
@@ -455,8 +462,16 @@ export default async function ProductDetailPage({
         <div className="section-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
 
-            {/* ── Left: Gallery ─────────────────────────────────────── */}
-            <ProductImageGallery images={images} productName={product.name} />
+            {/* ── Left: Gallery + highlight reviews ───────────────── */}
+            <div className="flex flex-col gap-4">
+              <ProductImageGallery images={images} productName={product.name} />
+              {galleryFeaturedReviews.length > 0 && (
+                <ProductGalleryReviews
+                  reviews={galleryFeaturedReviews}
+                  totalReviewCount={productReviews!.total_reviews}
+                />
+              )}
+            </div>
 
             {/* ── Right: Purchase Panel ─────────────────────────────── */}
             <div className="flex flex-col gap-5">
@@ -993,6 +1008,7 @@ export default async function ProductDetailPage({
             title={machineHeadings?.reviews ?? `${product.name} Customer Reviews`}
             reviewBlock={productReviews}
             reviewFormHref={`${reviewFormHrefForCategory(product.categories?.slug)}?product=${encodeURIComponent(product.name)}`}
+            excludeIds={galleryFeaturedIds}
           />
         </>
       ) : (

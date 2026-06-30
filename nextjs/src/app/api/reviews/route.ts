@@ -5,7 +5,7 @@ import {
   guardFailureResponse,
   verifyPublicFormSubmission,
 } from "@/lib/security/public-form-guard";
-import { sendNewReviewNotificationEmail } from "@/lib/reviews/email";
+import { sendReviewSubmissionEmails } from "@/lib/reviews/email";
 import type { ReviewAnswer } from "@/lib/reviews/types";
 
 export async function POST(request: NextRequest) {
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  void sendNewReviewNotificationEmail({
+  void sendReviewSubmissionEmails({
     name: name.trim(),
     email: email.trim(),
     headline: headline.trim(),

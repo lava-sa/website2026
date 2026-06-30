@@ -67,6 +67,8 @@ type SectionProps = {
   reviewBlock: { average_rating: number; total_reviews: number; reviews: DisplayReview[] };
   reviewFormHref?: string;
   maxCards?: number;
+  /** IDs already shown elsewhere on the page (e.g. under gallery). */
+  excludeIds?: string[];
 };
 
 export function ProductReviewsSection({
@@ -76,8 +78,10 @@ export function ProductReviewsSection({
   reviewBlock,
   reviewFormHref = "/submit-review",
   maxCards = 6,
+  excludeIds = [],
 }: SectionProps) {
-  const cards = reviewBlock.reviews.slice(0, maxCards);
+  const exclude = new Set(excludeIds);
+  const cards = reviewBlock.reviews.filter((r) => !exclude.has(r.id)).slice(0, maxCards);
 
   return (
     <section id={id} className="py-20 bg-surface border-t border-border">
@@ -107,9 +111,16 @@ export function ProductReviewsSection({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8">
-          {cards.map((review) => (
-            <PublicReviewCard key={review.id} review={review} />
-          ))}
+          {cards.length > 0 ? (
+            cards.map((review) => <PublicReviewCard key={review.id} review={review} />)
+          ) : (
+            <p className="col-span-full text-center text-sm text-copy-muted py-6">
+              More reviews are shown above the product gallery.{" "}
+              <a href={reviewFormHref} className="font-bold text-secondary hover:text-primary">
+                Leave your review →
+              </a>
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
