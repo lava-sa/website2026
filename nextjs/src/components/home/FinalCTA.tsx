@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
+import FinalCTAContactForm from "@/components/home/FinalCTAContactForm";
 
 const FinalCTA = () => {
   return (
@@ -78,64 +79,7 @@ const FinalCTA = () => {
                 We&apos;ll reply within 1 business day.
               </p>
 
-              <form className="mt-7 space-y-4">
-
-                <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-copy">
-                    Your name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Jan van der Berg"
-                    className="w-full border border-border px-4 py-3 text-sm text-primary placeholder-on-dark-muted outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-on-dark-muted"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-copy">
-                    Phone / WhatsApp
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="+27 XX XXX XXXX"
-                    className="w-full border border-border px-4 py-3 text-sm text-primary placeholder-on-dark-muted outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-on-dark-muted"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-copy">
-                    What can we help with?
-                  </label>
-                  <select className="w-full border border-border bg-white px-4 py-3 text-sm text-copy outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-on-dark-muted">
-                    <option value="">Select a machine…</option>
-                    <option>V.100 Premium X</option>
-                    <option>V.300 Premium X</option>
-                    <option>V.500</option>
-                    <option>V.400 Premium</option>
-                    <option>Vacuum Bags &amp; Accessories</option>
-                    <option>Technical Support</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-copy">
-                    Message
-                  </label>
-                  <textarea
-                    rows={3}
-                    placeholder="Tell us what you need and we'll get back to you..."
-                    className="w-full border border-border px-4 py-3 text-sm text-primary placeholder-on-dark-muted outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-on-dark-muted resize-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-primary py-4 text-[15px] font-semibold text-white transition-all hover:bg-primary-dark hover:-translate-y-0.5"
-                >
-                  Send Message →
-                </button>
-              </form>
+              <FinalCTAContactForm />
             </div>
           </div>
 

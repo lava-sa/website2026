@@ -7,9 +7,11 @@ type Props = {
   onToken: (token: string) => void;
   onExpire?: () => void;
   className?: string;
+  /** Use compact widget for tight layouts (e.g. homepage footer) */
+  compact?: boolean;
 };
 
-export function TurnstileWidget({ onToken, onExpire, className }: Props) {
+export function TurnstileWidget({ onToken, onExpire, className, compact }: Props) {
   const ref = useRef<TurnstileInstance>(null);
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
 
@@ -42,7 +44,7 @@ export function TurnstileWidget({ onToken, onExpire, className }: Props) {
         onError={() => onExpire?.()}
         options={{
           theme: "light",
-          size: "normal",
+          size: compact ? "compact" : "normal",
         }}
       />
     </div>
