@@ -8,9 +8,11 @@ import {
 import Link from "next/link";
 import type { ReviewFormVariant } from "@/lib/review-forms";
 import {
+  buildReviewAnswers,
   compileStructuredReview,
   emptyAnswers,
   getReviewFormConfig,
+  resolveSubmissionProduct,
   reviewProductField,
 } from "@/lib/review-forms";
 import { HoneypotField } from "@/components/security/HoneypotField";
@@ -115,6 +117,9 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
     setStatus("sending");
 
     const reviewBody = compileStructuredReview(config.questions, form.answers);
+    const answersJson = buildReviewAnswers(config.questions, form.answers);
+    const productMeta = resolveSubmissionProduct(form.product, variant);
+
     const res = await fetch("/api/reviews", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -123,7 +128,10 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
         email: form.email,
         company: form.company,
         city: form.city,
-        machine: reviewProductField(config.categoryLabel, form.product),
+        machine: productMeta.machine,
+        product_slug: productMeta.product_slug,
+        review_scope: productMeta.review_scope,
+        answers_json: answersJson,
         rating: form.rating,
         headline: form.headline,
         review: reviewBody,
@@ -175,6 +183,24 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
       </div>
 
       <div>
+        <label className="block text-xs font-bold text-primary mb-1.5 uppercase tracking-wide">
+          {config.productLabel} <span className="text-red-500">*</span>
+        </label>
+        <select
+          value={form.product}
+          onChange={set("product")}
+          className={errors.product ? inputErrCls : inputCls}
+        >
+          {config.productOptions.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
+        </select>
+        {errors.product && <p className="text-xs text-red-600 mt-1">{errors.product}</p>}
+      </div>
+
+      <div>
         <label className="block text-xs font-bold text-primary mb-2 uppercase tracking-wide">
           Overall Rating <span className="text-red-500">*</span>
         </label>
@@ -216,24 +242,6 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
           {errors.email && <p className="text-xs text-red-600 mt-1">{errors.email}</p>}
           <p className="text-[10px] text-copy-muted mt-1">Not published — used only to verify your review.</p>
         </div>
-      </div>
-
-      <div>
-        <label className="block text-xs font-bold text-primary mb-1.5 uppercase tracking-wide">
-          {config.productLabel} <span className="text-red-500">*</span>
-        </label>
-        <select
-          value={form.product}
-          onChange={set("product")}
-          className={errors.product ? inputErrCls : inputCls}
-        >
-          {config.productOptions.map((m) => (
-            <option key={m} value={m}>
-              {m}
-            </option>
-          ))}
-        </select>
-        {errors.product && <p className="text-xs text-red-600 mt-1">{errors.product}</p>}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -476,13 +484,16 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
         return;
       }
 
+      const productMeta = resolveSubmissionProduct(product, variant);
       const metaRes = await fetch("/api/reviews/video", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           path,
           name,
-          product: reviewProductField(config.categoryLabel, product),
+          product: productMeta.machine,
+          product_slug: productMeta.product_slug,
+          review_scope: productMeta.review_scope,
           reviewCategory: config.variant,
         }),
       });

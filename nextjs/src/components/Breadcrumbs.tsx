@@ -232,7 +232,8 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
   // Other static pages
   "/contact":        [{ label: "Contact" }],
   "/lava-tv":        [{ label: "Lava TV" }],
-  "/submit-review":              [{ label: "Review Your LAVA Machine" }],
+  "/reviews":                    [{ label: "Customer Reviews" }],
+  "/submit-review":              [{ label: "General Review" }],
   "/submit-review/bags-rolls":   [{ label: "Review Bags & Rolls" }],
   "/submit-review/containers":   [{ label: "Review Containers & Lids" }],
   "/account":        [{ label: "My Account" }],

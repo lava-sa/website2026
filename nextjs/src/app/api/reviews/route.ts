@@ -5,6 +5,8 @@ import {
   guardFailureResponse,
   verifyPublicFormSubmission,
 } from "@/lib/security/public-form-guard";
+import { sendNewReviewNotificationEmail } from "@/lib/reviews/email";
+import type { ReviewAnswer } from "@/lib/reviews/types";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -31,6 +33,9 @@ export async function POST(request: NextRequest) {
     review,
     permission,
     reviewCategory,
+    product_slug,
+    review_scope,
+    answers_json,
   } = body;
 
   if (!name || !email || !rating || !headline || !review || !permission) {
@@ -40,21 +45,42 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Please answer all questions in more detail" }, { status: 400 });
   }
 
+  const scope = review_scope === "general" ? "general" : "product";
+  const parsedAnswers: ReviewAnswer[] = Array.isArray(answers_json)
+    ? answers_json.filter((a: ReviewAnswer) => a?.question && a?.answer)
+    : [];
+
   const supabase = createServiceClient();
 
   const { error } = await supabase.from("reviews").insert({
-    name:     name.trim(),
-    email:    email.trim().toLowerCase(),
-    company:  company?.trim()  || null,
-    city:     city?.trim()     || null,
-    machine:  machine?.trim()  ?? (reviewCategory ? `[${reviewCategory}]` : null),
-    rating:   Number(rating),
+    name: name.trim(),
+    email: email.trim().toLowerCase(),
+    company: company?.trim() || null,
+    city: city?.trim() || null,
+    machine: machine?.trim() ?? (reviewCategory ? `[${reviewCategory}]` : null),
+    product_slug: scope === "general" ? null : product_slug?.trim() || null,
+    review_scope: scope,
+    rating: Number(rating),
     headline: headline.trim(),
-    review:   review.trim(),
+    review: review.trim(),
+    answers_json: parsedAnswers.length > 0 ? parsedAnswers : null,
+    review_type: "written",
     approved: false,
     created_at: new Date().toISOString(),
   });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  void sendNewReviewNotificationEmail({
+    name: name.trim(),
+    email: email.trim(),
+    headline: headline.trim(),
+    machine: machine?.trim(),
+    reviewScope: scope,
+    productSlug: product_slug,
+    rating: Number(rating),
+    reviewType: "written",
+  });
+
   return NextResponse.json({ ok: true });
 }

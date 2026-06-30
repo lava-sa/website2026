@@ -332,6 +332,12 @@ const SiteHeader = () => {
 
             <Link href="/about" className="text-sm font-bold tracking-tight text-primary hover:text-secondary transition-colors pt-0.5">About Lava-SA</Link>
             <Link href="/lava-tv" className="text-sm font-bold tracking-tight text-primary hover:text-secondary transition-colors pt-0.5">Lava TV</Link>
+            <Link
+              href="/submit-review"
+              className="text-sm font-bold tracking-tight text-secondary border border-secondary/40 bg-secondary/10 px-3 py-1 hover:bg-secondary hover:text-white transition-colors pt-0.5"
+            >
+              Write Your Review
+            </Link>
 
           </nav>
 
@@ -517,6 +523,8 @@ const SiteHeader = () => {
                 {[
                   ["About Lava-SA", "/about"],
                   ["Lava TV", "/lava-tv"],
+                  ["Write Your Review", "/submit-review"],
+                  ["Customer Reviews", "/reviews"],
                   ["Delivery Info", "/help/delivery"],
                   ["Returns", "/help/returns"],
                   ["Warranty", "/help/warranty"],

@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   const { createServiceClient } = await import("@/lib/supabase");
   const supabase = createServiceClient();
   try {
-    const { path, name, product } = await req.json();
+    const { path, name, product, product_slug, review_scope } = await req.json();
 
     if (!path || !name) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -15,16 +15,20 @@ export async function POST(req: NextRequest) {
 
     const { data: { publicUrl } } = supabase.storage.from("videos").getPublicUrl(path);
 
+    const scope = review_scope === "general" ? "general" : "product";
+
     const { error: dbError } = await supabase.from("reviews").insert({
       name,
-      machine:     product || null,
+      machine: product || null,
+      product_slug: scope === "general" ? null : product_slug?.trim() || null,
+      review_scope: scope,
       review_type: "video",
-      video_url:   publicUrl,
-      approved:    false,
-      rating:      null,
-      headline:    null,
-      review:      null,
-      email:       null,
+      video_url: publicUrl,
+      approved: false,
+      rating: null,
+      headline: null,
+      review: null,
+      email: null,
     });
 
     if (dbError) {
@@ -34,6 +38,16 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+
+    const { sendNewReviewNotificationEmail } = await import("@/lib/reviews/email");
+    void sendNewReviewNotificationEmail({
+      name,
+      email: "video-submission@lava-sa.com",
+      machine: product,
+      reviewScope: scope,
+      productSlug: product_slug,
+      reviewType: "video",
+    });
 
     return NextResponse.json({ success: true });
   } catch (err) {

@@ -97,6 +97,15 @@ const TestimonialsSection = () => {
           ))}
         </div>
 
+        <p className="mt-10 text-center">
+          <a
+            href="/reviews"
+            className="text-sm font-bold text-secondary hover:text-primary transition-colors"
+          >
+            Read all customer reviews →
+          </a>
+        </p>
+
       </div>
     </section>
   );

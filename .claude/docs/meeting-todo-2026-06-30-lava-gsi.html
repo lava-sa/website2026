@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LAVA-SA — Meeting Action Items (30 Jun 2026)</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 2cm 2.2cm;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Calibri, Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.45;
+      color: #1a1a1a;
+      max-width: 100%;
+    }
+    h1 {
+      font-size: 20pt;
+      color: #8B6914;
+      margin: 0 0 0.25em;
+      border-bottom: 3px solid #C9A227;
+      padding-bottom: 0.35em;
+    }
+    .meta {
+      color: #555;
+      font-size: 9.5pt;
+      margin-bottom: 1.5em;
+    }
+    h2 {
+      font-size: 13pt;
+      color: #8B6914;
+      margin: 1.4em 0 0.5em;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 11pt;
+      color: #333;
+      margin: 1em 0 0.4em;
+    }
+    .launch-banner {
+      background: #FFF8E7;
+      border: 1px solid #C9A227;
+      border-left: 5px solid #C9A227;
+      padding: 0.75em 1em;
+      margin: 1em 0 1.5em;
+      border-radius: 4px;
+    }
+    .launch-banner strong { color: #8B6914; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.5em 0 1em;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+    }
+    th {
+      background: #8B6914;
+      color: #fff;
+      text-align: left;
+      padding: 0.45em 0.6em;
+      font-weight: 600;
+    }
+    td {
+      border: 1px solid #ddd;
+      padding: 0.4em 0.6em;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: #fafafa; }
+    .priority-high { background: #FEF3E2 !important; }
+    .owner { white-space: nowrap; font-weight: 600; }
+    ol.work-order {
+      margin: 0.5em 0;
+      padding-left: 1.4em;
+    }
+    ol.work-order li { margin-bottom: 0.35em; }
+    ul.qa {
+      margin: 0.4em 0;
+      padding-left: 1.3em;
+    }
+    ul.qa li { margin-bottom: 0.25em; }
+    .footer {
+      margin-top: 2em;
+      padding-top: 0.75em;
+      border-top: 1px solid #ccc;
+      font-size: 8.5pt;
+      color: #666;
+    }
+    .section-note {
+      font-size: 9pt;
+      color: #555;
+      font-style: italic;
+      margin-bottom: 0.5em;
+    }
+  </style>
+</head>
+<body>
+
+<h1>LAVA-SA — Storevac — GSI Meeting</h1>
+<p class="meta">
+  <strong>Date:</strong> 30 June 2026 &nbsp;|&nbsp;
+  <strong>Attendees:</strong> Anneke Hofmeyr, Ignatius Ackermann, Peter (GSI) &nbsp;|&nbsp;
+  <strong>Prepared for:</strong> Anneke Hofmeyr
+</p>
+
+<div class="launch-banner">
+  <strong>Launch status:</strong> Website launch is <strong>postponed</strong> until after the follow-up meeting scheduled for <strong>next Tuesday</strong>. All items below should be completed and verified before go-live.
+</div>
+
+<h2>Meeting summary</h2>
+<p>The session covered e-commerce funnel logic, review system improvements, navigation and categorisation fixes, shipping policy updates, and legal document review. Payment options remain EFT and PayFast, with PayFast preferred as the default checkout option for faster completion.</p>
+
+<h2>High priority — Product review system</h2>
+<p class="section-note">Anneke flagged review discoverability and correct product mapping as critical before launch.</p>
+<table>
+  <thead>
+    <tr><th>#</th><th>Task</th><th>Owner</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr class="priority-high"><td>R1</td><td><strong>Fix review rejection</strong> — rejected reviews must be fully removed from the system, not left pending or visible</td><td class="owner">Ignatius</td><td>Bug confirmed in admin dashboard</td></tr>
+    <tr class="priority-high"><td>R2</td><td><strong>Map reviews to products</strong> — link each submission to the specific product or machine reviewed</td><td class="owner">Ignatius</td><td>Not a general-only repository</td></tr>
+    <tr class="priority-high"><td>R3</td><td><strong>Update general review form</strong> — add required field to select the machine or equipment being reviewed</td><td class="owner">Ignatius</td><td>Improves product mapping</td></tr>
+    <tr class="priority-high"><td>R4</td><td><strong>Add header button</strong> — gold “Write your review” button in the top menu, placed after “Lava TV”</td><td class="owner">Ignatius</td><td>Improve discoverability</td></tr>
+    <tr class="priority-high"><td>R5</td><td><strong>Review buttons on product pages</strong> — ensure all relevant product pages expose a review entry point</td><td class="owner">Ignatius</td><td>Per meeting next steps</td></tr>
+    <tr class="priority-high"><td>R6</td><td><strong>Enable review email notifications</strong> — alert the team when a new review is submitted</td><td class="owner">Ignatius</td><td>Decision aligned in meeting</td></tr>
+    <tr class="priority-high"><td>R7</td><td><strong>Investigate George Archer review</strong> — locate missing review and its submission path</td><td class="owner">Ignatius</td><td>Approved in meeting but not found in system</td></tr>
+    <tr class="priority-high"><td>R8</td><td><strong>End-to-end review verification</strong> — confirm reviews post to the correct product/department</td><td class="owner">Ignatius</td><td>Full QA pass after fixes</td></tr>
+  </tbody>
+</table>
+
+<h3>Suggested review QA checklist (after fixes)</h3>
+<ol class="qa">
+  <li>Submit a review via the header button — form includes product selector.</li>
+  <li>Submit from a product page — review auto-links to that product.</li>
+  <li>Approve in admin — review appears on the correct product/section.</li>
+  <li>Reject in admin — review is fully removed (frontend, admin, and database).</li>
+  <li>Notification email is received by the team.</li>
+</ol>
+
+<h2>High priority — E-commerce &amp; cart</h2>
+<table>
+  <thead>
+    <tr><th>#</th><th>Task</th><th>Owner</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr class="priority-high"><td>E1</td><td><strong>Fix discount retention bug</strong> — 10% funnel discount must be removed when the qualifying machine is removed from the cart</td><td class="owner">Ignatius</td><td>Demonstrated live in meeting</td></tr>
+    <tr class="priority-high"><td>E2</td><td><strong>Default payment to PayFast</strong> — EFT remains available as an option</td><td class="owner">Ignatius</td><td>Anneke requested faster checkout default</td></tr>
+  </tbody>
+</table>
+
+<h2>Navigation, catalog &amp; content</h2>
+<table>
+  <thead>
+    <tr><th>#</th><th>Task</th><th>Owner</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>N1</td><td><strong>Remove “Bundle deals”</strong> — keep only “Special offers”</td><td class="owner">Ignatius</td><td>Avoid duplication</td></tr>
+    <tr><td>N2</td><td><strong>Move scale product</strong> from “Hanging systems” to “Scales”</td><td class="owner">Ignatius</td><td>Categorisation correction</td></tr>
+    <tr><td>N3</td><td><strong>Rename nav label</strong> “Vacuum packaging” → “Vacuum packing”</td><td class="owner">Ignatius</td><td>Local terminology — confirm if still required</td></tr>
+    <tr><td>N4</td><td><strong>Remove “Price, shipping &amp; returns” button</strong></td><td class="owner">Anneke</td><td>Navigation/content cleanup</td></tr>
+    <tr><td>N5</td><td><strong>New professional photographs</strong> for vacuum lid products</td><td class="owner">Anneke</td><td>4L stainless container discontinued; focus on lids</td></tr>
+    <tr><td>N6</td><td><strong>Identify out-of-stock container sizes</strong> and communicate stock status</td><td class="owner">Anneke</td><td>For site display and Storevac fallback</td></tr>
+  </tbody>
+</table>
+
+<h2>Policies, legal &amp; security</h2>
+<table>
+  <thead>
+    <tr><th>#</th><th>Task</th><th>Owner</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>P1</td><td><strong>Update shipping policy</strong> — 3–4 business days (major cities); 5–7 business days (outlying areas); remove farm delivery option and R350 surcharge</td><td class="owner">Ignatius</td><td>Align final wording across all policy pages</td></tr>
+    <tr><td>P2</td><td><strong>Final review of legal/policy documents</strong> (warranty, cooling-off, terms)</td><td class="owner">Anneke</td><td>Print, mark up, forward changes to Ignatius</td></tr>
+    <tr><td>P3</td><td><strong>Email verification on all forms</strong> — reduce spam inquiries</td><td class="owner">Ignatius</td><td>Cloudflare security already in place</td></tr>
+  </tbody>
+</table>
+
+<h2>Parallel projects (GSI &amp; Storevac)</h2>
+<table>
+  <thead>
+    <tr><th>#</th><th>Task</th><th>Owner</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>F1</td><td><strong>GSI website</strong> — clean up headings and images</td><td class="owner">Both</td><td>Separate project</td></tr>
+    <tr><td>F2</td><td><strong>Storevac integration</strong> — homepage, logo, product sizes/images; redirect when Lava items out of stock</td><td class="owner">Ignatius / Anneke</td><td>Anneke to provide logo and product details</td></tr>
+    <tr><td>F3</td><td><strong>Submit cost estimate</strong> for Lava and GSI websites</td><td class="owner">Ignatius</td><td></td></tr>
+    <tr><td>F4</td><td><strong>Contact Bruce</strong> — follow up on previous email regarding website updates</td><td class="owner">Anneke</td><td></td></tr>
+  </tbody>
+</table>
+
+<h2>Suggested work order (Ignatius)</h2>
+<ol class="work-order">
+  <li><strong>Review system (R1–R8)</strong> — focused sprint first</li>
+  <li><strong>Discount bug (E1)</strong></li>
+  <li><strong>Shipping policy (P1)</strong>, bundle removal (N1), scale move (N2)</li>
+  <li><strong>Email verification (P3)</strong></li>
+  <li><strong>PayFast default (E2)</strong> — confirm with Anneke</li>
+  <li>Storevac / GSI / quote — after Lava launch checklist</li>
+</ol>
+
+<h2>Decisions recorded (aligned)</h2>
+<ul>
+  <li>Discount removed from cart items when qualifying machine is removed</li>
+  <li>Email verification on all forms</li>
+  <li>Review rejection fully purges rejected reviews</li>
+  <li>General review form requires specific product identification</li>
+  <li>Header “Write your review” button next to Lava TV</li>
+  <li>Email notifications for new review submissions</li>
+  <li>Bundle deals section removed; special offers only</li>
+  <li>Scale moved from hanging systems to scales category</li>
+  <li>Shipping: 3–4 days major cities, 5–7 outlying; no farm delivery</li>
+  <li>Launch postponed until after next Tuesday’s follow-up meeting</li>
+</ul>
+
+<p class="footer">
+  Document generated 30 June 2026 · LAVA-SA pre-launch action list · Prepared by Ignatius Ackermann
+</p>
+
+</body>
+</html>

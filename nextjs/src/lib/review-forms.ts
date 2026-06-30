@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
+import {
+  GENERAL_REVIEW_PRODUCT_LABEL,
+  GENERAL_REVIEW_PRODUCT_OPTIONS,
+  type ReviewAnswer,
+  type ReviewScope,
+} from "@/lib/reviews/types";
 
 export type ReviewFormVariant = "machines" | "bags-rolls" | "containers";
 
@@ -29,25 +35,14 @@ export type ReviewFormConfig = {
 export const REVIEW_FORM_CONFIGS: Record<ReviewFormVariant, ReviewFormConfig> = {
   machines: {
     variant: "machines",
-    categoryLabel: "Vacuum Machines",
-    pageTitle: "We'd Love to Hear From You",
+    categoryLabel: "General",
+    pageTitle: "General Review",
     pageDescription:
-      "Anneke and the Lava-SA team invite you to share a review of the LAVA vacuum machine you use — and the service and support you've received from us. Your experience helps other customers choose with confidence.",
+      "Share your experience with Lava-SA — the LAVA product or machine you use, and the service and support you've received from Anneke and the team.",
     heroSubtitle:
-      "Thank you for being a LAVA customer. Please tell us about the machine you use day to day, how it performs for you, and the service you've received from Anneke and the Lava-SA team. A short written review or a quick video — whichever suits you.",
-    productLabel: "Which LAVA vacuum machine do you own?",
-    productOptions: [
-      "LAVA V.100 Premium",
-      "LAVA V.100 Premium X",
-      "LAVA V.300 Premium X",
-      "LAVA V.300 Premium Black",
-      "LAVA V.300 Premium White",
-      "LAVA V.333 Chrome",
-      "LAVA V.400 Premium",
-      "LAVA V.500 Premium (72 cm)",
-      "LAVA V.500 Premium XXL (121 cm)",
-      "Older / different LAVA model",
-    ],
+      "Thank you for being a LAVA customer. Start by telling us which product or machine you use, then share your experience in your own words. A short written review or a quick video — whichever suits you.",
+    productLabel: "Which LAVA product or machine are you using?",
+    productOptions: GENERAL_REVIEW_PRODUCT_OPTIONS.map((o) => o.label),
     questions: [
       {
         id: "ownership_duration",
@@ -284,8 +279,48 @@ export function compileStructuredReview(
     .join("\n\n");
 }
 
+export function buildReviewAnswers(
+  questions: ReviewQuestion[],
+  answers: Record<string, string>
+): ReviewAnswer[] {
+  return questions
+    .map((q) => ({
+      question: q.label,
+      answer: answers[q.id]?.trim() ?? "",
+    }))
+    .filter((a) => a.answer.length > 0);
+}
+
 export function reviewProductField(categoryLabel: string, product: string): string {
+  if (product === GENERAL_REVIEW_PRODUCT_LABEL) return "[General] Service & Support";
   return `[${categoryLabel}] ${product}`;
+}
+
+export function resolveSubmissionProduct(productLabel: string, variant: ReviewFormVariant): {
+  machine: string;
+  product_slug: string | null;
+  review_scope: ReviewScope;
+  categoryLabel: string;
+} {
+  if (variant === "machines") {
+    const option = GENERAL_REVIEW_PRODUCT_OPTIONS.find((o) => o.label === productLabel);
+    if (option) {
+      return {
+        machine: reviewProductField(option.categoryLabel, productLabel),
+        product_slug: option.slug,
+        review_scope: option.scope,
+        categoryLabel: option.categoryLabel,
+      };
+    }
+  }
+
+  const config = getReviewFormConfig(variant);
+  return {
+    machine: reviewProductField(config.categoryLabel, productLabel),
+    product_slug: null,
+    review_scope: "product",
+    categoryLabel: config.categoryLabel,
+  };
 }
 
 /** PDP / category pages → correct review form URL */

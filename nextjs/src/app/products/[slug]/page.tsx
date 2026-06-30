@@ -45,6 +45,8 @@ import PhoneNumbers from "@/components/layout/PhoneNumbers";
 import ProductBottomPurchase from "@/components/shop/ProductBottomPurchase";
 import { resolveProductSlugRedirect } from "@/lib/product-redirects";
 import { reviewFormHrefForCategory } from "@/lib/review-forms";
+import { fetchReviewsForProductSlug } from "@/lib/reviews/queries";
+import { ProductReviewsSection } from "@/components/reviews/PublicReviewCard";
 import { getMachinePdpHeadings } from "@/lib/machine-pdp-headings";
 import { resolveProductAiDiscoverability } from "@/lib/product-ai-discoverability";
 
@@ -347,17 +349,27 @@ export default async function ProductDetailPage({
   const waMessage = encodeURIComponent(`Hi, I'm interested in the ${product.name}. Can you help me?`);
   const waUrl     = `https://wa.me/${MAIN_PHONE.whatsapp}?text=${waMessage}`;
 
-  // Real reviews from reviews.json, or machine-only fallback — never fake sealer quotes on knives/bags
-  const slugReviews = (reviewsData as Record<string, { average_rating: number; total_reviews: number; reviews: typeof FALLBACK_REVIEWS }>)[product.slug];
+  // Approved DB reviews + static reviews.json; machine fallback when empty
+  const slugReviewsStatic = (reviewsData as Record<string, { average_rating: number; total_reviews: number; reviews: typeof FALLBACK_REVIEWS }>)[product.slug];
+  const mergedReviews = await fetchReviewsForProductSlug(product.slug);
   const productReviews =
-    slugReviews ??
+    mergedReviews ??
     (isVacuumMachine
       ? {
           average_rating: 5.0,
           total_reviews: FALLBACK_REVIEWS.length,
-          reviews: FALLBACK_REVIEWS,
+          reviews: FALLBACK_REVIEWS.map((r, i) => ({
+            id: `fallback-${i}`,
+            name: r.name,
+            location: r.location,
+            date: r.date,
+            rating: r.rating,
+            text: r.text,
+            source: "static" as const,
+          })),
         }
       : null);
+  const hasLaVaImport = !!slugReviewsStatic && productReviews?.reviews.some((r) => r.source === "static");
   const productHighlights = productReviews ? null : getProductHighlights(product);
   const relatedHeading = isIndustrialRelatedMachine(slug)
     ? machineHeadings?.relatedIndustrial ?? "Compare Other LAVA Industrial Vacuum Sealers"
@@ -961,87 +973,28 @@ export default async function ProductDetailPage({
           SECTION 6 — Reviews (machines + items in reviews.json) or features
       ════════════════════════════════════════════════════════════════ */}
       {productReviews ? (
-        <section id="reviews" className="py-20">
-          <div className="section-container">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-              <div>
-                <p className="overline mb-2">Verified customers</p>
-                <h2 className="text-3xl font-bold text-primary">
-                  {machineHeadings?.reviews ?? "What Customers Say"}
-                </h2>
-
-                {slugReviews && (
-                  <p className="text-[10px] sm:text-xs text-copy-muted mt-2 font-medium">
-                    Translated from{" "}
-                    <a
-                      href="https://www.la-va.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-secondary hover:underline"
-                    >
-                      www.la-va.com
-                    </a>
-                  </p>
-                )}
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex gap-0.5">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Star
-                      key={i}
-                      className={`h-5 w-5 ${i <= Math.round(productReviews.average_rating) ? "fill-secondary text-secondary" : "text-border"}`}
-                    />
-                  ))}
-                </div>
-                <div>
-                  <p className="font-black text-primary text-lg leading-none">
-                    {productReviews.average_rating.toFixed(1)} / 5.0
-                  </p>
-                  <p className="text-xs text-copy-muted">{productReviews.total_reviews} reviews</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-8">
-              {productReviews.reviews.slice(0, 6).map((review) => (
-                <div
-                  key={review.name + review.date}
-                  className="bg-white border border-border p-6 flex flex-col gap-4"
+        <>
+          {hasLaVaImport && (
+            <div className="section-container -mb-12 pt-4">
+              <p className="text-[10px] sm:text-xs text-copy-muted font-medium">
+                Some reviews translated from{" "}
+                <a
+                  href="https://www.la-va.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-secondary hover:underline"
                 >
-                  <div className="flex gap-0.5">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <Star
-                        key={i}
-                        className={`h-3.5 w-3.5 ${i <= review.rating ? "fill-secondary text-secondary" : "text-border"}`}
-                      />
-                    ))}
-                  </div>
-                  {"title" in review && review.title && (
-                    <p className="text-sm font-black text-primary">{review.title}</p>
-                  )}
-                  <p className="text-sm text-copy leading-relaxed flex-1 italic">
-                    &ldquo;{review.text}&rdquo;
-                  </p>
-                  <div className="border-t border-border pt-4 flex items-center justify-between text-xs">
-                    <span className="font-bold text-primary">{review.name}</span>
-                    <span className="text-copy-muted">
-                      {review.location || "Verified Buyer"} · {review.date}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                  www.la-va.com
+                </a>
+              </p>
             </div>
-
-            <div className="text-center">
-              <Link
-                href={reviewFormHrefForCategory(product.categories?.slug)}
-                className="inline-flex items-center gap-2 border-2 border-primary text-primary font-bold px-8 py-3 hover:bg-primary hover:text-white transition-colors"
-              >
-                <Star className="h-4 w-4" /> Leave Your Review
-              </Link>
-            </div>
-          </div>
-        </section>
+          )}
+          <ProductReviewsSection
+            title={machineHeadings?.reviews ?? `${product.name} Customer Reviews`}
+            reviewBlock={productReviews}
+            reviewFormHref={`${reviewFormHrefForCategory(product.categories?.slug)}?product=${encodeURIComponent(product.name)}`}
+          />
+        </>
       ) : (
         productHighlights && <ProductHighlights items={productHighlights} />
       )}

@@ -43,6 +43,7 @@ const STATIC_ROUTES = [
   "/products/protective-gear",
   "/products/accessories",
   "/rewards",
+  "/reviews",
   "/submit-review",
   "/submit-review/bags-rolls",
   "/submit-review/containers",
