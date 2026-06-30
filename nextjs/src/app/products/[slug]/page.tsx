@@ -713,19 +713,19 @@ export default async function ProductDetailPage({
       {hasSpecs && (
         <section className="py-20">
           <div className="section-container">
-            <div className="max-w-2xl mx-auto">
-              <p className="overline mb-3">Technical details</p>
-              <h2 className="text-3xl font-bold text-primary mb-8">
-                {machineHeadings?.specs ?? "Specifications"}
-              </h2>
-              <table className="w-full text-sm border border-border">
+            <p className="overline mb-3">Technical details</p>
+            <h2 className="text-3xl font-bold text-primary mb-8">
+              {machineHeadings?.specs ?? "Specifications"}
+            </h2>
+            <div className="overflow-x-auto border border-border bg-white">
+              <table className="w-full min-w-[320px] text-sm table-fixed">
                 <tbody>
                   {displaySpecs.map(([key, value], i) => (
                     <tr key={key} className={i % 2 === 0 ? "bg-surface" : "bg-white"}>
-                      <td className="py-3 px-5 font-semibold text-primary w-1/2 border-b border-border">
+                      <td className="py-3 px-5 font-semibold text-primary w-2/5 sm:w-1/3 border-b border-border align-top">
                         {SPEC_LABELS[key] ?? key.replace(/_/g, " ")}
                       </td>
-                      <td className="py-3 px-5 text-copy border-b border-border">{value}</td>
+                      <td className="py-3 px-5 text-copy border-b border-border align-top">{value}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -896,7 +896,7 @@ export default async function ProductDetailPage({
       ════════════════════════════════════════════════════════════════ */}
       {isVacuumMachine && (
         <section className="py-16 border-b border-border">
-          <div className="section-container max-w-4xl mx-auto">
+          <div className="section-container">
             <p className="overline mb-2">Machine-specific compatibility</p>
             <h2 className="text-3xl font-black text-primary mb-3">
               {machineHeadings?.compatibility ?? "Vacuum Bag & Roll Compatibility"}
@@ -906,12 +906,12 @@ export default async function ProductDetailPage({
             </p>
 
             <div className="overflow-x-auto border border-border bg-white">
-              <table className="w-full text-sm">
+              <table className="w-full min-w-[480px] text-sm table-fixed">
                 <thead className="bg-surface text-left">
                   <tr>
-                    <th className="py-3 px-4 font-black text-primary border-b border-border">Consumable</th>
-                    <th className="py-3 px-4 font-black text-primary border-b border-border">Compatible widths</th>
-                    <th className="py-3 px-4 font-black text-primary border-b border-border">Shop</th>
+                    <th className="py-3 px-4 font-black text-primary border-b border-border w-[28%]">Consumable</th>
+                    <th className="py-3 px-4 font-black text-primary border-b border-border w-[44%]">Compatible widths</th>
+                    <th className="py-3 px-4 font-black text-primary border-b border-border w-[28%]">Shop</th>
                   </tr>
                 </thead>
                 <tbody>

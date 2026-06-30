@@ -74,28 +74,28 @@ export default function MemberGateModal({
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/55"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/55 overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="member-gate-title"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md bg-white border border-border shadow-2xl"
+        className="relative my-auto w-full max-w-md md:max-w-xl lg:max-w-2xl max-h-[min(92vh,720px)] flex flex-col bg-white border border-border shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-3 top-3 p-2 text-copy-muted hover:text-primary"
+          className="absolute right-3 top-3 z-10 p-2 text-copy-muted hover:text-primary"
           aria-label="Close"
         >
           <X className="h-5 w-5" />
         </button>
 
-        <div className="p-8 pt-10">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-11 w-11 bg-primary/10 flex items-center justify-center shrink-0">
+        <div className="overflow-y-auto p-6 pt-10 md:p-7 md:pt-10">
+          <div className="flex items-center gap-3 mb-5 md:mb-4">
+            <div className="h-10 w-10 md:h-11 md:w-11 bg-primary/10 flex items-center justify-center shrink-0">
               <Lock className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -106,7 +106,7 @@ export default function MemberGateModal({
             </div>
           </div>
 
-          <form onSubmit={handleSignIn} className="space-y-4">
+          <form onSubmit={handleSignIn} className="space-y-3 md:space-y-3">
             <div>
               <label className="block text-xs font-bold text-primary mb-1.5 uppercase tracking-wide">
                 Email
@@ -152,14 +152,14 @@ export default function MemberGateModal({
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-border space-y-4">
+          <div className="mt-5 pt-5 md:mt-6 md:pt-6 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-wide text-primary mb-2">
                 New visitor — free, no purchase required
               </p>
               <Link
                 href={signupHref}
-                className="inline-flex w-full items-center justify-center gap-2 border-2 border-secondary bg-secondary/10 text-primary font-black text-xs uppercase tracking-wide py-3 hover:bg-secondary/20 transition-colors"
+                className="inline-flex w-full items-center justify-center gap-2 border-2 border-secondary bg-secondary/10 text-primary font-black text-xs uppercase tracking-wide py-2.5 md:py-3 hover:bg-secondary/20 transition-colors"
               >
                 <UserPlus className="h-4 w-4" />
                 Create member account
@@ -169,13 +169,13 @@ export default function MemberGateModal({
               </p>
             </div>
 
-            <div className="pt-4 border-t border-border/60">
+            <div className="pt-4 border-t border-border/60 md:pt-0 md:border-t-0 md:border-l md:border-border/60 md:pl-6">
               <p className="text-[11px] font-bold uppercase tracking-wide text-primary mb-2">
                 Existing customer
               </p>
               <Link
                 href={resetHref}
-                className="inline-flex w-full items-center justify-center gap-2 border border-border text-primary font-bold text-xs uppercase tracking-wide py-3 hover:bg-surface transition-colors"
+                className="inline-flex w-full items-center justify-center gap-2 border border-border text-primary font-bold text-xs uppercase tracking-wide py-2.5 md:py-3 hover:bg-surface transition-colors"
               >
                 <KeyRound className="h-4 w-4" />
                 Reset password

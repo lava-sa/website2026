@@ -459,10 +459,13 @@ body {
   gap: 1rem;
 }
 
-/* Prevent wide tables from breaking page width on mobile */
-table {
-  display: block;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  max-width: 100%;
+/* Prevent wide prose tables from breaking page width on small screens */
+@media (max-width: 639px) {
+  .prose table,
+  .article-page .prose-lava table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
 }

@@ -2,22 +2,33 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "cancelled", "refunded"];
 
 export default function OrderStatusSelect({ orderId, current }: { orderId: string; current: string }) {
+  const router = useRouter();
   const [status, setStatus] = useState(current);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(false);
 
   async function handleChange(newStatus: string) {
     setSaving(true);
-    await fetch("/api/admin/orders/status", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: orderId, status: newStatus }),
-    });
-    setStatus(newStatus);
-    setSaving(false);
+    setError(false);
+    try {
+      const res = await fetch("/api/admin/orders/status", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: orderId, status: newStatus }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setStatus(newStatus);
+      router.refresh();
+    } catch {
+      setError(true);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -33,6 +44,7 @@ export default function OrderStatusSelect({ orderId, current }: { orderId: strin
         ))}
       </select>
       {saving && <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />}
+      {error && <span className="text-[10px] text-red-600 font-bold">Failed</span>}
     </div>
   );
 }
