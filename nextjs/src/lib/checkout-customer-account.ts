@@ -93,8 +93,34 @@ export async function generateOrderAccessMagicLink(
   const actionLink = link.data?.properties?.action_link;
   if (!link.error && actionLink) return actionLink;
 
-  console.error("[checkout-account] magiclink failed:", link.error?.message);
+  console.error(
+    `[checkout-account] magiclink failed for ${orderNumber} (${normalized}):`,
+    link.error?.message
+  );
   return null;
+}
+
+/** Resolve a one-click order URL, optionally verifying the shopper email matches the order. */
+export async function resolveOrderAccessUrl(
+  orderNumber: string,
+  emailHint?: string
+): Promise<{ url: string | null; email: string | null }> {
+  const supabase = createServiceClient();
+  const { data: order } = await supabase
+    .from("orders")
+    .select("email")
+    .eq("order_number", orderNumber)
+    .maybeSingle();
+
+  if (!order?.email) return { url: null, email: null };
+
+  const email = normalizeEmail(order.email);
+  if (emailHint && normalizeEmail(emailHint) !== email) {
+    return { url: null, email: null };
+  }
+
+  const url = await generateOrderAccessMagicLink(email, orderNumber);
+  return { url, email };
 }
 
 /**
@@ -137,6 +163,12 @@ export async function ensureCheckoutCustomerAccount(params: {
 
   const orderAccessUrl =
     (await generateOrderAccessMagicLink(email, params.orderNumber)) ?? undefined;
+
+  if (!orderAccessUrl) {
+    console.warn(
+      `[checkout-account] No magic link for ${params.orderNumber} (${email}) — customer must use password reset`
+    );
+  }
 
   return { customerId, isNewAccount, orderAccessUrl };
 }

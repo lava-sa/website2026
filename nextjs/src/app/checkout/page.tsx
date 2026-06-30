@@ -98,7 +98,9 @@ export default function CheckoutPage() {
         // Bank transfer — clear cart and redirect to success with EFT flag
         setOrderPlaced(true);
         clearCart();
-        router.push(`/checkout/success?order=${data.orderNumber}&method=eft`);
+        router.push(
+          `/checkout/success?order=${encodeURIComponent(data.orderNumber)}&method=eft&email=${encodeURIComponent(form.email)}`
+        );
         return;
       }
 

@@ -100,8 +100,7 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
   const fullName = `${args.customer.first_name} ${args.customer.last_name}`.trim();
   const siteUrl = getPublicSiteUrl();
   const orderTrackPath = `/account/orders/${encodeURIComponent(args.orderNumber)}`;
-  const loginUrl = `${siteUrl}/account/login?email=${encodeURIComponent(args.customer.email)}&from=${encodeURIComponent(orderTrackPath)}`;
-  const successUrl = `${siteUrl}/checkout/success?order=${encodeURIComponent(args.orderNumber)}${args.paymentMethod === "bank_transfer" ? "&method=eft" : ""}`;
+  const successUrl = `${siteUrl}/checkout/success?order=${encodeURIComponent(args.orderNumber)}&email=${encodeURIComponent(args.customer.email)}${args.paymentMethod === "bank_transfer" ? "&method=eft" : ""}`;
   const adminOrdersUrl = `${siteUrl}/admin/orders`;
   const itemRows = buildOrderItemRows(args.cart);
   const shippingLabel = formatEmailPrice(args.shipping);
@@ -136,18 +135,24 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
 
   const methodLabel = args.paymentMethod === "bank_transfer" ? "EFT / Bank Transfer" : "PayFast";
 
-  const trackOrderUrl = args.account?.orderAccessUrl ?? loginUrl;
+  const orderAccessUrl =
+    args.account?.orderAccessUrl ??
+    (await generateOrderAccessMagicLink(args.customer.email, args.orderNumber)) ??
+    undefined;
 
-  const accountBlock = args.account?.orderAccessUrl
+  const passwordSetupUrl = `${siteUrl}/account/login?mode=reset&email=${encodeURIComponent(args.customer.email)}&from=${encodeURIComponent(orderTrackPath)}`;
+  const trackOrderUrl = orderAccessUrl ?? passwordSetupUrl;
+
+  const accountBlock = orderAccessUrl
     ? emailAlertBox(
         `<p style="margin:0 0 8px;font-size:15px;font-weight:700;color:${EMAIL_BRAND.primary};">Track your order online</p>
-        <p style="margin:0;font-size:14px;line-height:1.5;">Use the button below to open your order and follow shipping updates. <strong>No password needed</strong> — you are signed in automatically from this email.</p>
+        <p style="margin:0;font-size:14px;line-height:1.5;">Tap the button below to open your order and follow shipping updates. <strong>No password needed</strong> — you are signed in automatically.</p>
         <p style="margin:12px 0 0;font-size:13px;color:${EMAIL_BRAND.muted};">Want a password for next time? Set one anytime under Account after you sign in.</p>`,
         "gold"
       )
     : emailAlertBox(
         `<p style="margin:0 0 8px;font-size:15px;font-weight:700;color:${EMAIL_BRAND.primary};">Track your order</p>
-        <p style="margin:0;font-size:14px;">Sign in with your email (<strong>${escEmail(args.customer.email)}</strong>) to follow shipping updates.</p>`
+        <p style="margin:0;font-size:14px;line-height:1.5;">Use the button below to set your password for <strong>${escEmail(args.customer.email)}</strong>, then view order updates in your account.</p>`
       );
 
   const customerBody = `
@@ -172,10 +177,15 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
       }
     </p>
     <p style="margin:0 0 16px;font-size:14px;color:${EMAIL_BRAND.muted};">
-      Payment details and bank reference are also on your
-      <a href="${successUrl}" style="color:${EMAIL_BRAND.teal};font-weight:600;">order confirmation page</a>.
+      ${
+        args.paymentMethod === "bank_transfer"
+          ? `EFT payment details and your bank reference are on your
+      <a href="${successUrl}" style="color:${EMAIL_BRAND.teal};font-weight:600;">order confirmation page</a>.`
+          : `Your order confirmation is also on
+      <a href="${successUrl}" style="color:${EMAIL_BRAND.teal};font-weight:600;">lava-sa.com</a>.`
+      }
     </p>
-    ${emailButton(trackOrderUrl, "Track your order")}`;
+    ${emailButton(trackOrderUrl, orderAccessUrl ? "Open my order — one click" : "Set password & track order")}`;
 
   const customerHtml = wrapEmailLayout({
     headline: "Thank you for your order",

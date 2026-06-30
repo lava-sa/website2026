@@ -61,6 +61,8 @@ function LoginFormInner() {
   const from = params.get("from") || "/account/dashboard";
   const requestedMode = params.get("mode");
   const prefilledEmail = params.get("email") || "";
+  const authCallbackError = params.get("error");
+  const isOrderTracking = from.startsWith("/account/orders/");
 
   const [mode, setMode] = useState<Mode>(resolveInitialMode(requestedMode));
   const [email, setEmail] = useState(prefilledEmail);
@@ -167,6 +169,25 @@ function LoginFormInner() {
               {emailMeta.helper}
             </p>
           ) : null}
+
+          {authCallbackError === "auth_callback_failed" && (
+            <div className="bg-amber-50 border border-amber-200 px-4 py-4 text-sm text-amber-900 mb-4">
+              That one-click sign-in link expired or could not be verified. Open your order
+              confirmation email and tap <strong>Open my order — one click</strong> again, or set
+              your password below.
+            </div>
+          )}
+
+          {mode === "login" && isOrderTracking && !authCallbackError && (
+            <div className="bg-surface border border-border px-4 py-4 text-sm text-copy mb-4">
+              <p className="font-bold text-primary mb-1">Just placed an order?</p>
+              <p className="text-copy-muted leading-relaxed">
+                We don&apos;t email a password. Use the <strong>one-click link</strong> in your order
+                email, or choose <strong>password reset</strong> below to set your password for the
+                first time.
+              </p>
+            </div>
+          )}
 
           {success ? (
             <div className="bg-emerald-50 border border-emerald-200 px-4 py-4 text-sm text-emerald-800 mb-4">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import OrderTrackingCTA from "@/components/checkout/OrderTrackingCTA";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
 import { CheckCircle, Clock, Phone, Mail, Building2 } from "lucide-react";
 import { getEftBankDetails } from "@/lib/bank-details";
@@ -20,9 +21,9 @@ function BankRow({ label, value, highlight }: { label: string; value: string; hi
 export default async function SuccessPage({
   searchParams,
 }: {
-  searchParams: Promise<{ order?: string; method?: string }>;
+  searchParams: Promise<{ order?: string; method?: string; email?: string }>;
 }) {
-  const { order, method } = await searchParams;
+  const { order, method, email } = await searchParams;
   const isEFT = method === "eft";
   const BANK = getEftBankDetails();
 
@@ -140,19 +141,7 @@ export default async function SuccessPage({
         {/* Contact + nav — shown for both */}
         <div className="bg-white border border-border p-6 mt-6">
           {order && (
-            <div className="mb-6 pb-6 border-b border-border text-center">
-              <p className="text-sm font-semibold text-primary mb-2">Track this order in your account</p>
-              <p className="text-sm text-copy-muted mb-4 max-w-md mx-auto">
-                We sent a <strong>one-click tracking link</strong> to your email — tap it to view
-                this order and shipping updates. No password needed.
-              </p>
-              <Link
-                href={`/account/login?from=${encodeURIComponent(`/account/orders/${order}`)}`}
-                className="inline-block border-2 border-primary text-primary font-bold px-8 py-3 hover:bg-primary/5 transition-colors"
-              >
-                Sign in with password instead
-              </Link>
-            </div>
+            <OrderTrackingCTA orderNumber={order} emailHint={email} />
           )}
           <p className="text-sm font-semibold text-primary mb-4 text-center">Questions? Contact Anneke directly:</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
