@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
         order_number: orderNumber,
         first_name: customer.first_name,
         last_name: customer.last_name,
-        email: customer.email,
+        email: customer.email.trim().toLowerCase(),
         phone: customer.phone,
         address: customer.address,
         city: customer.city,

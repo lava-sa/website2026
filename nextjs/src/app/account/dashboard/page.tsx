@@ -20,8 +20,13 @@ type Order = {
   created_at: string;
   total: number;
   status: string;
+  payment_method: string | null;
   order_items: { product_name: string }[];
 };
+
+function normalizeEmail(email: string): string {
+  return email.trim().toLowerCase();
+}
 
 type PointsTx = {
   id: string;
@@ -35,7 +40,9 @@ export default async function DashboardPage() {
   // ── Auth check ──────────────────────────────────────────────────────────
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/account/login");
+  if (!user?.email) redirect("/account/login");
+
+  const userEmail = normalizeEmail(user.email);
 
   // ── Customer record ─────────────────────────────────────────────────────
   const service = createServiceClient();
@@ -43,16 +50,16 @@ export default async function DashboardPage() {
   const { data: customer } = await service
     .from("customers")
     .select("id, first_name, last_name, email, points_balance, lifetime_points, total_spent, order_count, registered_at, is_vip")
-    .eq("email", user.email!)
-    .single();
+    .ilike("email", userEmail)
+    .maybeSingle();
 
-  // ── Orders (most recent 10) ──────────────────────────────────────────────
+  // ── Orders (all for this account — includes EFT pending / unpaid) ───────
   const { data: orders } = await service
     .from("orders")
-    .select("id, order_number, created_at, total, status, order_items(product_name)")
-    .eq("email", user.email!)
+    .select("id, order_number, created_at, total, status, payment_method, order_items(product_name)")
+    .ilike("email", userEmail)
     .order("created_at", { ascending: false })
-    .limit(10);
+    .limit(50);
 
   // ── Points transactions (most recent 10) ────────────────────────────────
   let pointsTxs: PointsTx[] = [];
@@ -78,6 +85,7 @@ export default async function DashboardPage() {
     : new Date(user.created_at).toLocaleDateString("en-ZA", { month: "long", year: "numeric" });
 
   const typedOrders = (orders ?? []) as unknown as Order[];
+  const orderCount = typedOrders.length;
 
   return (
     <main className="min-h-screen bg-surface/30">
@@ -156,7 +164,7 @@ export default async function DashboardPage() {
             <p className="text-sm text-copy-muted">
               {customer?.is_vip
                 ? "Top-tier Lava member"
-                : `${(customer?.order_count ?? 0).toLocaleString("en-ZA")} orders placed`}
+                : `${orderCount.toLocaleString("en-ZA")} order${orderCount === 1 ? "" : "s"} in your history`}
             </p>
           </div>
         </div>
@@ -187,6 +195,9 @@ export default async function DashboardPage() {
                   const firstItem = order.order_items?.[0]?.product_name ?? "Lava Order";
                   const itemCount = order.order_items?.length ?? 0;
                   const label = itemCount > 1 ? `${firstItem} + ${itemCount - 1} more` : firstItem;
+                  const isEftOutstanding =
+                    order.payment_method === "bank_transfer" &&
+                    (order.status === "pending" || order.status === "paid");
                   const statusColor =
                     order.status === "delivered" || order.status === "wc-completed" || order.status === "completed"
                       ? "bg-emerald-50 text-emerald-700 border-emerald-200"
@@ -194,7 +205,12 @@ export default async function DashboardPage() {
                       ? "bg-blue-50 text-blue-700 border-blue-200"
                       : order.status === "cancelled" || order.status === "wc-cancelled"
                       ? "bg-red-50 text-red-700 border-red-200"
+                      : isEftOutstanding
+                      ? "bg-amber-50 text-amber-800 border-amber-300"
                       : "bg-amber-50 text-amber-700 border-amber-200";
+                  const statusLabel = isEftOutstanding
+                    ? "EFT payment outstanding"
+                    : order.status.replace(/^wc-/, "").replace(/-/g, " ");
 
                   return (
                     <Link
@@ -202,15 +218,15 @@ export default async function DashboardPage() {
                       href={order.order_number ? `/account/orders/${order.order_number}` : "/account/dashboard"}
                       className="block bg-white border border-border p-6 hover:border-primary transition-colors"
                     >
-                      <div className="flex justify-between items-start mb-3">
+                      <div className="flex justify-between items-start mb-3 gap-3">
                         <div>
                           <p className="font-bold text-primary">{label}</p>
                           <p className="text-xs text-copy-muted">
                             {order.order_number ? `#${order.order_number}` : `ORD-${order.id.slice(0, 8).toUpperCase()}`}
                           </p>
                         </div>
-                        <span className={`inline-block text-[10px] font-bold uppercase px-2.5 py-1 border ${statusColor}`}>
-                          {order.status.replace(/^wc-/, "").replace(/-/g, " ")}
+                        <span className={`inline-block shrink-0 text-[10px] font-bold uppercase px-2.5 py-1 border ${statusColor}`}>
+                          {statusLabel}
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
