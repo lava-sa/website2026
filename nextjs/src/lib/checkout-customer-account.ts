@@ -1,7 +1,8 @@
 import { randomBytes } from "node:crypto";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { getOrderTrackingAuthRedirectUrl } from "@/lib/auth-redirect";
-import { SITE_URL } from "@/lib/seo";
+import { orderAccessPageUrl } from "@/lib/order-access-token";
+import { getCustomerFacingSiteUrl } from "@/lib/seo";
 import { createServiceClient } from "@/lib/supabase";
 
 export type CheckoutAccountResult = {
@@ -88,7 +89,7 @@ export function buildCustomerAuthCallbackUrl(params: {
     type: params.otpType,
     next: params.nextPath,
   });
-  return `${SITE_URL}/auth/callback?${query.toString()}`;
+  return `${getCustomerFacingSiteUrl()}/auth/callback?${query.toString()}`;
 }
 
 /** Magic link that signs the customer in and lands on their order tracking page. */
@@ -156,7 +157,7 @@ export async function resolveOrderAccessUrl(
     return { url: null, email: null };
   }
 
-  const url = await generateOrderAccessMagicLink(email, orderNumber);
+  const url = `${getCustomerFacingSiteUrl()}${orderAccessPageUrl(email, orderNumber)}`;
   return { url, email };
 }
 
@@ -198,14 +199,7 @@ export async function ensureCheckoutCustomerAccount(params: {
     console.error("[checkout-account] createUser failed:", created.error?.message);
   }
 
-  const orderAccessUrl =
-    (await generateOrderAccessMagicLink(email, params.orderNumber)) ?? undefined;
-
-  if (!orderAccessUrl) {
-    console.warn(
-      `[checkout-account] No magic link for ${params.orderNumber} (${email}) — customer must use password reset`
-    );
-  }
+  const orderAccessUrl = `${getCustomerFacingSiteUrl()}${orderAccessPageUrl(email, params.orderNumber)}`;
 
   return { customerId, isNewAccount, orderAccessUrl };
 }

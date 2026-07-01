@@ -132,7 +132,9 @@ export async function middleware(request: NextRequest) {
     const isPublicAccountPath =
       pathname === "/account/login" ||
       pathname.startsWith("/account/login") ||
-      pathname === "/account/reset-password";
+      pathname === "/account/reset-password" ||
+      pathname === "/account/order-access" ||
+      pathname.startsWith("/account/order-access");
 
     // Always refresh the session so it doesn't expire
     let supabaseResponse = NextResponse.next({ request });

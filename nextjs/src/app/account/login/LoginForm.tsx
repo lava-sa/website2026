@@ -172,17 +172,22 @@ function LoginFormInner() {
 
           {authCallbackError === "auth_callback_failed" && (
             <div className="bg-amber-50 border border-amber-200 px-4 py-4 text-sm text-amber-900 mb-4">
-              That one-click sign-in link expired or could not be verified. Open your order
-              confirmation email and tap <strong>Open my order — one click</strong> again, or set
-              your password below.
+              That sign-in link could not be verified. Open your order confirmation email and use{" "}
+              <strong>View my order</strong> (the post-purchase page), or set your password below.
             </div>
           )}
 
           {authCallbackError === "otp_expired" && (
             <div className="bg-amber-50 border border-amber-200 px-4 py-4 text-sm text-amber-900 mb-4">
-              That one-click link has <strong>expired</strong> (links are single-use and time-limited).
-              Place a new order to get a fresh link, or use <strong>password reset</strong> below to
-              sign in and view your orders.
+              That sign-in link has <strong>expired</strong> or was already used.{" "}
+              {from.startsWith("/account/orders/") ? (
+                <>
+                  Open the <strong>View my order</strong> link in your latest order email, or set a
+                  password below.
+                </>
+              ) : (
+                <>Use password reset below, or request a fresh link from your order email.</>
+              )}
             </div>
           )}
 
@@ -190,9 +195,9 @@ function LoginFormInner() {
             <div className="bg-surface border border-border px-4 py-4 text-sm text-copy mb-4">
               <p className="font-bold text-primary mb-1">Just placed an order?</p>
               <p className="text-copy-muted leading-relaxed">
-                We don&apos;t email a password. Use the <strong>one-click link</strong> in your order
-                email, or choose <strong>password reset</strong> below to set your password for the
-                first time.
+                Use the <strong>View my order</strong> link in your order email — it opens a
+                dedicated post-purchase page (no password needed). Or choose{" "}
+                <strong>password reset</strong> below to set a password for next time.
               </p>
             </div>
           )}

@@ -15,7 +15,7 @@ import {
   wrapEmailLayout,
 } from "@/lib/email-template";
 import { getCustomerFacingSiteUrl, getPublicSiteUrl } from "@/lib/seo";
-import { generateOrderAccessMagicLink } from "@/lib/checkout-customer-account";
+import { createOrderAccessToken } from "@/lib/order-access-token";
 
 type PaymentMethod = "payfast" | "bank_transfer";
 
@@ -135,26 +135,16 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
 
   const methodLabel = args.paymentMethod === "bank_transfer" ? "EFT / Bank Transfer" : "PayFast";
 
-  // Always generate fresh — checkout may have cached a localhost redirect during local dev.
-  const orderAccessUrl =
-    (await generateOrderAccessMagicLink(args.customer.email, args.orderNumber)) ??
-    args.account?.orderAccessUrl ??
-    undefined;
-
+  const accessToken = createOrderAccessToken(args.orderNumber, args.customer.email);
+  const trackOrderUrl = `${siteUrl}/account/order-access?order=${encodeURIComponent(args.orderNumber)}&token=${encodeURIComponent(accessToken)}`;
   const passwordSetupUrl = `${siteUrl}/account/login?mode=reset&email=${encodeURIComponent(args.customer.email)}&from=${encodeURIComponent(orderTrackPath)}`;
-  const trackOrderUrl = orderAccessUrl ?? passwordSetupUrl;
 
-  const accountBlock = orderAccessUrl
-    ? emailAlertBox(
-        `<p style="margin:0 0 8px;font-size:15px;font-weight:700;color:${EMAIL_BRAND.primary};">Track your order online</p>
-        <p style="margin:0;font-size:14px;line-height:1.5;">Tap the button below to open your order and follow shipping updates. <strong>No password needed</strong> — you are signed in automatically.</p>
-        <p style="margin:12px 0 0;font-size:13px;color:${EMAIL_BRAND.muted};">Want a password for next time? Set one anytime under Account after you sign in.</p>`,
-        "gold"
-      )
-    : emailAlertBox(
-        `<p style="margin:0 0 8px;font-size:15px;font-weight:700;color:${EMAIL_BRAND.primary};">Track your order</p>
-        <p style="margin:0;font-size:14px;line-height:1.5;">Use the button below to set your password for <strong>${escEmail(args.customer.email)}</strong>, then view order updates in your account.</p>`
-      );
+  const accountBlock = emailAlertBox(
+    `<p style="margin:0 0 8px;font-size:15px;font-weight:700;color:${EMAIL_BRAND.primary};">Track your order online</p>
+        <p style="margin:0;font-size:14px;line-height:1.5;">Tap the button below to open your secure order page. <strong>No password needed</strong> — then click once more to view ${escEmail(args.orderNumber)}.</p>
+        <p style="margin:12px 0 0;font-size:13px;color:${EMAIL_BRAND.muted};">Link valid 24 hours · Set a password anytime for future visits.</p>`,
+    "gold"
+  );
 
   const customerBody = `
     <p style="margin:0 0 16px;font-size:16px;">Hi <strong>${escEmail(args.customer.first_name)}</strong>, thank you for choosing LAVA. We have received your order and will keep you updated.</p>
@@ -186,7 +176,8 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
       <a href="${successUrl}" style="color:${EMAIL_BRAND.teal};font-weight:600;">lava-sa.com</a>.`
       }
     </p>
-    ${emailButton(trackOrderUrl, orderAccessUrl ? "Open my order — one click" : "Set password & track order")}`;
+    ${emailButton(trackOrderUrl, "View my order")}
+  `;
 
   const customerHtml = wrapEmailLayout({
     headline: "Thank you for your order",
@@ -311,9 +302,8 @@ export async function sendPaymentReceivedEmails(args: SendPaymentReceivedEmailAr
   const fullName = `${args.customer.first_name} ${args.customer.last_name}`.trim();
   const siteUrl = getCustomerFacingSiteUrl();
   const orderTrackPath = `/account/orders/${encodeURIComponent(args.orderNumber)}`;
-  const loginUrl = `${siteUrl}/account/login?email=${encodeURIComponent(args.customer.email)}&from=${encodeURIComponent(orderTrackPath)}`;
-  const orderAccessUrl =
-    (await generateOrderAccessMagicLink(args.customer.email, args.orderNumber)) ?? loginUrl;
+  const accessToken = createOrderAccessToken(args.orderNumber, args.customer.email);
+  const orderAccessUrl = `${siteUrl}/account/order-access?order=${encodeURIComponent(args.orderNumber)}&token=${encodeURIComponent(accessToken)}`;
 
   const customerHtml = wrapEmailLayout({
     headline: "Payment received",
@@ -322,7 +312,7 @@ export async function sendPaymentReceivedEmails(args: SendPaymentReceivedEmailAr
     bodyHtml: `
       <p style="margin:0 0 16px;">Hi <strong>${escEmail(args.customer.first_name)}</strong>,</p>
       <p style="margin:0 0 16px;">We have received your payment of <strong>${formatEmailPrice(args.total)}</strong>. Your order is now being prepared for dispatch.</p>
-      ${emailButton(orderAccessUrl, "Track your order")}
+      ${emailButton(orderAccessUrl, "View my order")}
       <p style="margin:16px 0 0;font-size:14px;color:${EMAIL_BRAND.muted};">Thank you for choosing LAVA-SA.</p>`,
   });
 
