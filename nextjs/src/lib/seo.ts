@@ -7,10 +7,62 @@ import type { Metadata } from "next";
 
 export const SITE_URL = "https://lava-sa.com";
 
-/** Base URL for PayFast return URLs, emails, etc. when `NEXT_PUBLIC_SITE_URL` is unset. */
+/** Legacy / staging hosts — never use in customer-facing email or auth links. */
+const LEGACY_PUBLIC_HOSTS = new Set([
+  "lava-sa.online",
+  "www.lava-sa.online",
+  "lava-sa.co.za",
+  "www.lava-sa.co.za",
+]);
+
+function normalizePublicSiteUrl(raw: string): string {
+  const trimmed = raw.trim().replace(/\/$/, "");
+  try {
+    const host = new URL(trimmed).hostname.toLowerCase();
+    if (LEGACY_PUBLIC_HOSTS.has(host)) return SITE_URL;
+  } catch {
+    /* invalid URL — fall through */
+  }
+  return trimmed;
+}
+
+function isLocalDevHost(hostname: string): boolean {
+  return hostname === "localhost" || hostname === "127.0.0.1";
+}
+
+/**
+ * Canonical site URL for customer emails and magic-link redirect_to.
+ * Hard-coded to the live domain — never localhost, never lava-sa.online.
+ * Override only with CUSTOMER_FACING_SITE_URL (non-localhost) for staging.
+ */
+export function getCustomerFacingSiteUrl(): string {
+  const override = process.env.CUSTOMER_FACING_SITE_URL?.trim();
+  if (override) {
+    try {
+      const host = new URL(override).hostname.toLowerCase();
+      if (!isLocalDevHost(host) && !LEGACY_PUBLIC_HOSTS.has(host)) {
+        return override.replace(/\/$/, "");
+      }
+    } catch {
+      /* ignore invalid override */
+    }
+  }
+  return SITE_URL;
+}
+
+/**
+ * Canonical base URL for PayFast return URLs, order emails, magic links, etc.
+ * Production always uses lava-sa.com (never lava-sa.online / legacy staging hosts).
+ */
 export function getPublicSiteUrl(): string {
+  if (process.env.VERCEL_ENV === "production") {
+    return SITE_URL;
+  }
+
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  return fromEnv || SITE_URL;
+  if (fromEnv) return normalizePublicSiteUrl(fromEnv);
+
+  return SITE_URL;
 }
 
 export const ORG_NAME = "Lava-SA";

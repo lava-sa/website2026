@@ -91,7 +91,16 @@ export async function generateOrderAccessMagicLink(
   });
 
   const actionLink = link.data?.properties?.action_link;
-  if (!link.error && actionLink) return actionLink;
+  if (!link.error && actionLink) {
+    if (actionLink.includes("redirect_to=http%3A%2F%2Flocalhost") || actionLink.includes("redirect_to=http://localhost")) {
+      console.error(
+        `[checkout-account] Supabase returned localhost redirect for ${orderNumber}. ` +
+          `Fix Supabase → Authentication → URL Configuration: Site URL must be ${redirectTo.split("/auth")[0]}, ` +
+          `and add ${redirectTo.split("?")[0]}** to Redirect URLs. Requested redirectTo=${redirectTo}`
+      );
+    }
+    return actionLink;
+  }
 
   console.error(
     `[checkout-account] magiclink failed for ${orderNumber} (${normalized}):`,

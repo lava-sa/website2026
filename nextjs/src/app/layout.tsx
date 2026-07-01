@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AuthHashRecovery from "@/components/auth/AuthHashRecovery";
 import { Montserrat, Outfit } from "next/font/google";
 import "./globals.css";
 import { ANNEKE_PHONE, BUSINESS_HOURS, MAIN_PHONE } from "@/lib/contact";
@@ -164,6 +165,7 @@ export default function RootLayout({
                 className="antialiased bg-white text-copy font-[family-name:var(--font-outfit)] leading-[1.65]"
             >
                 <CartProvider>
+                    <AuthHashRecovery />
                     <SiteChrome>
                         {children}
                     </SiteChrome>

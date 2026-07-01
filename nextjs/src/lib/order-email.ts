@@ -14,7 +14,7 @@ import {
   formatEmailPrice,
   wrapEmailLayout,
 } from "@/lib/email-template";
-import { getPublicSiteUrl } from "@/lib/seo";
+import { getCustomerFacingSiteUrl, getPublicSiteUrl } from "@/lib/seo";
 import { generateOrderAccessMagicLink } from "@/lib/checkout-customer-account";
 
 type PaymentMethod = "payfast" | "bank_transfer";
@@ -98,7 +98,7 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
   const { fromEmail, adminEmails, replyToEmail } = getEmailConfig();
 
   const fullName = `${args.customer.first_name} ${args.customer.last_name}`.trim();
-  const siteUrl = getPublicSiteUrl();
+  const siteUrl = getCustomerFacingSiteUrl();
   const orderTrackPath = `/account/orders/${encodeURIComponent(args.orderNumber)}`;
   const successUrl = `${siteUrl}/checkout/success?order=${encodeURIComponent(args.orderNumber)}&email=${encodeURIComponent(args.customer.email)}${args.paymentMethod === "bank_transfer" ? "&method=eft" : ""}`;
   const adminOrdersUrl = `${siteUrl}/admin/orders`;
@@ -135,9 +135,10 @@ export async function sendOrderPlacedEmails(args: SendOrderPlacedEmailArgs): Pro
 
   const methodLabel = args.paymentMethod === "bank_transfer" ? "EFT / Bank Transfer" : "PayFast";
 
+  // Always generate fresh — checkout may have cached a localhost redirect during local dev.
   const orderAccessUrl =
-    args.account?.orderAccessUrl ??
     (await generateOrderAccessMagicLink(args.customer.email, args.orderNumber)) ??
+    args.account?.orderAccessUrl ??
     undefined;
 
   const passwordSetupUrl = `${siteUrl}/account/login?mode=reset&email=${encodeURIComponent(args.customer.email)}&from=${encodeURIComponent(orderTrackPath)}`;
@@ -308,7 +309,7 @@ export async function sendPaymentReceivedEmails(args: SendPaymentReceivedEmailAr
   const { fromEmail, adminEmails, replyToEmail } = getEmailConfig();
 
   const fullName = `${args.customer.first_name} ${args.customer.last_name}`.trim();
-  const siteUrl = getPublicSiteUrl();
+  const siteUrl = getCustomerFacingSiteUrl();
   const orderTrackPath = `/account/orders/${encodeURIComponent(args.orderNumber)}`;
   const loginUrl = `${siteUrl}/account/login?email=${encodeURIComponent(args.customer.email)}&from=${encodeURIComponent(orderTrackPath)}`;
   const orderAccessUrl =
