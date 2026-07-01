@@ -35,15 +35,22 @@ function AuthCallbackInner() {
       const tokenHash = params.get("token_hash");
       const type = params.get("type");
       if (tokenHash && type) {
-        const { error } = await supabase.auth.verifyOtp({
-          token_hash: tokenHash,
-          type: type as EmailOtpType,
-        });
+        let verified = false;
+        for (const otpType of [type as EmailOtpType, "email" as EmailOtpType]) {
+          const { error } = await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: otpType,
+          });
+          if (!error) {
+            verified = true;
+            break;
+          }
+        }
         if (cancelled) return;
-        if (error) {
-          setMessage(error.message);
+        if (!verified) {
+          setMessage("This sign-in link has expired. Request a new one below.");
           router.replace(
-            `/account/login?error=auth_callback_failed&from=${encodeURIComponent(next)}`
+            `/account/login?error=otp_expired&from=${encodeURIComponent(next)}`
           );
           return;
         }

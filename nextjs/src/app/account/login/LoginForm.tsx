@@ -178,6 +178,14 @@ function LoginFormInner() {
             </div>
           )}
 
+          {authCallbackError === "otp_expired" && (
+            <div className="bg-amber-50 border border-amber-200 px-4 py-4 text-sm text-amber-900 mb-4">
+              That one-click link has <strong>expired</strong> (links are single-use and time-limited).
+              Place a new order to get a fresh link, or use <strong>password reset</strong> below to
+              sign in and view your orders.
+            </div>
+          )}
+
           {mode === "login" && isOrderTracking && !authCallbackError && (
             <div className="bg-surface border border-border px-4 py-4 text-sm text-copy mb-4">
               <p className="font-bold text-primary mb-1">Just placed an order?</p>

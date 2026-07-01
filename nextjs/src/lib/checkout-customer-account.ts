@@ -1,5 +1,7 @@
 import { randomBytes } from "node:crypto";
+import type { EmailOtpType } from "@supabase/supabase-js";
 import { getOrderTrackingAuthRedirectUrl } from "@/lib/auth-redirect";
+import { SITE_URL } from "@/lib/seo";
 import { createServiceClient } from "@/lib/supabase";
 
 export type CheckoutAccountResult = {
@@ -75,6 +77,20 @@ async function upsertCustomerRow(params: {
   return inserted.id;
 }
 
+/** Build a one-click URL on lava-sa.com — bypasses Supabase verify redirect (Site URL) issues. */
+export function buildCustomerAuthCallbackUrl(params: {
+  tokenHash: string;
+  otpType: EmailOtpType;
+  nextPath: string;
+}): string {
+  const query = new URLSearchParams({
+    token_hash: params.tokenHash,
+    type: params.otpType,
+    next: params.nextPath,
+  });
+  return `${SITE_URL}/auth/callback?${query.toString()}`;
+}
+
 /** Magic link that signs the customer in and lands on their order tracking page. */
 export async function generateOrderAccessMagicLink(
   email: string,
@@ -82,6 +98,7 @@ export async function generateOrderAccessMagicLink(
 ): Promise<string | null> {
   const supabase = createServiceClient();
   const normalized = normalizeEmail(email);
+  const nextPath = `/account/orders/${orderNumber}`;
   const redirectTo = getOrderTrackingAuthRedirectUrl(orderNumber);
 
   const link = await supabase.auth.admin.generateLink({
@@ -90,22 +107,33 @@ export async function generateOrderAccessMagicLink(
     options: { redirectTo },
   });
 
+  if (link.error) {
+    console.error(
+      `[checkout-account] magiclink failed for ${orderNumber} (${normalized}):`,
+      link.error.message
+    );
+    return null;
+  }
+
+  const hashedToken = link.data?.properties?.hashed_token;
+  if (hashedToken) {
+    const verificationType = link.data?.properties?.verification_type;
+    const otpType: EmailOtpType =
+      verificationType === "magiclink" || verificationType === "signup"
+        ? "magiclink"
+        : "email";
+    return buildCustomerAuthCallbackUrl({ tokenHash: hashedToken, otpType, nextPath });
+  }
+
   const actionLink = link.data?.properties?.action_link;
-  if (!link.error && actionLink) {
-    if (actionLink.includes("redirect_to=http%3A%2F%2Flocalhost") || actionLink.includes("redirect_to=http://localhost")) {
-      console.error(
-        `[checkout-account] Supabase returned localhost redirect for ${orderNumber}. ` +
-          `Fix Supabase → Authentication → URL Configuration: Site URL must be ${redirectTo.split("/auth")[0]}, ` +
-          `and add ${redirectTo.split("?")[0]}** to Redirect URLs. Requested redirectTo=${redirectTo}`
-      );
-    }
+  if (actionLink) {
+    console.warn(
+      `[checkout-account] No hashed_token for ${orderNumber}; falling back to Supabase action_link`
+    );
     return actionLink;
   }
 
-  console.error(
-    `[checkout-account] magiclink failed for ${orderNumber} (${normalized}):`,
-    link.error?.message
-  );
+  console.error(`[checkout-account] generateLink returned no token for ${orderNumber}`);
   return null;
 }
 
