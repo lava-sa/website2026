@@ -70,9 +70,13 @@ function MachineDropdown({
       href={reviewsHref("vacuum-machines", machines[0]?.slug)}
       active={isActive}
       width="w-72"
-      items={machines.map(({ slug, label, reviewCount }) => ({ slug, label, reviewCount }))}
+      items={machines.map(({ slug, label, reviewCount }) => ({
+        slug,
+        label,
+        reviewCount,
+        href: reviewsHref("vacuum-machines", slug),
+      }))}
       activeProduct={activeProduct}
-      itemHref={(slug) => reviewsHref("vacuum-machines", slug)}
     />
   );
 }
@@ -113,9 +117,13 @@ function CategoryDropdown({
       href={reviewsHref(sectionId, products[0]?.slug)}
       active={isActive}
       width="w-80"
-      items={products.map(({ slug, label, reviewCount }) => ({ slug, label, reviewCount }))}
+      items={products.map(({ slug, label, reviewCount }) => ({
+        slug,
+        label,
+        reviewCount,
+        href: reviewsHref(sectionId, slug),
+      }))}
       activeProduct={activeProduct}
-      itemHref={(slug) => reviewsHref(sectionId, slug)}
     />
   );
 }

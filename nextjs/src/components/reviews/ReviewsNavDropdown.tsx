@@ -9,6 +9,7 @@ export type ReviewsNavDropdownItem = {
   slug: string;
   label: string;
   reviewCount: number;
+  href: string;
 };
 
 type Props = {
@@ -18,7 +19,6 @@ type Props = {
   width?: string;
   items: ReviewsNavDropdownItem[];
   activeProduct?: string;
-  itemHref: (slug: string) => string;
 };
 
 export default function ReviewsNavDropdown({
@@ -28,7 +28,6 @@ export default function ReviewsNavDropdown({
   width = "w-72",
   items,
   activeProduct,
-  itemHref,
 }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -87,7 +86,7 @@ export default function ReviewsNavDropdown({
           {items.map((item) => (
             <li key={item.slug}>
               <Link
-                href={itemHref(item.slug)}
+                href={item.href}
                 className={cn(
                   "block px-5 py-2.5 text-[13px] font-medium transition-colors",
                   activeProduct === item.slug
