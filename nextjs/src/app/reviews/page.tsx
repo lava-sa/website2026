@@ -119,7 +119,7 @@ export default async function ReviewsPage({ searchParams }: Props) {
         />
       )}
 
-      <div className="section-container py-12 max-w-5xl">
+      <div className="section-container py-12 max-w-6xl">
         {!hasContent ? (
           <div className="text-center py-16 border border-border bg-surface">
             <MessageSquare className="h-12 w-12 text-copy-muted mx-auto mb-4" />

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ReviewsNavDropdown from "@/components/reviews/ReviewsNavDropdown";
 import {
   REVIEW_SECTIONS,
   type ReviewCatalog,
@@ -65,38 +65,15 @@ function MachineDropdown({
   }
 
   return (
-    <div className="relative group">
-      <Link
-        href={reviewsHref("vacuum-machines", machines[0]?.slug)}
-        className={cn(
-          "inline-flex items-center gap-1 text-[10px] font-bold tracking-[0.12em] uppercase py-3 transition-colors",
-          isActive ? "text-secondary" : "text-white hover:text-secondary"
-        )}
-      >
-        Vacuum Machines
-        <ChevronDown className="h-2.5 w-2.5 opacity-50 group-hover:rotate-180 transition-transform" />
-      </Link>
-      <div className="absolute top-full left-0 w-72 bg-white shadow-2xl border border-border/80 z-50 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-all duration-200">
-        <ul className="py-2">
-          {machines.map((machine) => (
-            <li key={machine.slug}>
-              <Link
-                href={reviewsHref("vacuum-machines", machine.slug)}
-                className={cn(
-                  "block px-5 py-2.5 text-[13px] font-medium transition-colors",
-                  activeProduct === machine.slug
-                    ? "bg-secondary/10 text-secondary font-bold"
-                    : "text-copy hover:text-secondary hover:bg-gray-50/80"
-                )}
-              >
-                {machine.label}
-                <span className="text-copy-muted text-xs ml-2">({machine.reviewCount})</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <ReviewsNavDropdown
+      label="Vacuum Machines"
+      href={reviewsHref("vacuum-machines", machines[0]?.slug)}
+      active={isActive}
+      width="w-72"
+      items={machines.map(({ slug, label, reviewCount }) => ({ slug, label, reviewCount }))}
+      activeProduct={activeProduct}
+      itemHref={(slug) => reviewsHref("vacuum-machines", slug)}
+    />
   );
 }
 
@@ -131,46 +108,26 @@ function CategoryDropdown({
   }
 
   return (
-    <div className="relative group">
-      <Link
-        href={reviewsHref(sectionId, products[0]?.slug)}
-        className={cn(
-          "inline-flex items-center gap-1 text-[10px] font-bold tracking-[0.12em] uppercase py-3 transition-colors",
-          isActive ? "text-secondary" : "text-white hover:text-secondary"
-        )}
-      >
-        {label}
-        <ChevronDown className="h-2.5 w-2.5 opacity-50 group-hover:rotate-180 transition-transform" />
-      </Link>
-      <div className="absolute top-full left-0 w-80 bg-white shadow-2xl border border-border/80 z-50 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-all duration-200 max-h-80 overflow-y-auto">
-        <ul className="py-2">
-          {products.map((product) => (
-            <li key={product.slug}>
-              <Link
-                href={reviewsHref(sectionId, product.slug)}
-                className={cn(
-                  "block px-5 py-2.5 text-[13px] font-medium transition-colors",
-                  activeProduct === product.slug
-                    ? "bg-secondary/10 text-secondary font-bold"
-                    : "text-copy hover:text-secondary hover:bg-gray-50/80"
-                )}
-              >
-                {product.label}
-                <span className="text-copy-muted text-xs ml-2">({product.reviewCount})</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <ReviewsNavDropdown
+      label={label}
+      href={reviewsHref(sectionId, products[0]?.slug)}
+      active={isActive}
+      width="w-80"
+      items={products.map(({ slug, label, reviewCount }) => ({ slug, label, reviewCount }))}
+      activeProduct={activeProduct}
+      itemHref={(slug) => reviewsHref(sectionId, slug)}
+    />
   );
 }
 
 export default function ReviewsCategoryNav({ catalog, activeSection, activeProduct }: Props) {
   return (
-    <nav className="bg-on-dark-subtle text-white border-b border-white/10" aria-label="Review categories">
-      <div className="section-container">
-        <div className="hidden lg:flex items-center justify-between gap-2 overflow-x-auto">
+    <nav
+      className="relative z-[200] bg-on-dark-subtle text-white border-b border-white/10 overflow-visible"
+      aria-label="Review categories"
+    >
+      <div className="section-container overflow-visible">
+        <div className="hidden lg:flex items-center justify-between gap-2 overflow-visible">
           {REVIEW_SECTIONS.map((section, index) => {
             const count = sectionReviewCount(catalog, section.id);
             if (section.id !== "general" && section.id !== "videos" && count === 0) return null;

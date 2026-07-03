@@ -166,7 +166,7 @@ export default function ReviewsSectionContent({
             No general service reviews yet.
           </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
             {catalog.general.map((review) => (
               <PublicReviewCard key={review.id} review={review} className="h-full" />
             ))}
@@ -189,7 +189,7 @@ export default function ReviewsSectionContent({
             No video testimonials yet.
           </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
             {catalog.videos.map((review) => (
               <PublicReviewCard key={review.id} review={review} showStructured={false} className="h-full" />
             ))}
@@ -245,7 +245,7 @@ export default function ReviewsSectionContent({
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch mb-10">
         {entry.reviews.map((review) => (
           <PublicReviewCard key={review.id} review={review} className="h-full" />
         ))}
