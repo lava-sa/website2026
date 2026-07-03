@@ -1,4 +1,5 @@
 import { createAuthAnonClient, createServiceClient } from "@/lib/supabase";
+import { buildCustomerAuthCallbackUrl } from "@/lib/auth-redirect";
 import { getEmailConfig, getResendClient } from "@/lib/email-config";
 
 function authUserExistsMessage(msg: string): boolean {
@@ -28,6 +29,14 @@ function withRedirectTo(actionLink: string, redirectTo: string): string {
   } catch {
     return actionLink;
   }
+}
+
+function recoveryCallbackUrl(tokenHash: string): string {
+  return buildCustomerAuthCallbackUrl({
+    tokenHash,
+    otpType: "recovery",
+    nextPath: "/account/reset-password",
+  });
 }
 
 async function ensureCustomerRow(email: string) {
@@ -148,6 +157,14 @@ export async function sendPasswordResetEmail(email: string, redirectTo: string) 
       code: "probe_failed" as const,
       message: "We could not verify this email. Please try again or contact support.",
     };
+  }
+
+  const hashedToken = link.data?.properties?.hashed_token;
+  if (hashedToken) {
+    const directLink = recoveryCallbackUrl(hashedToken);
+    if (await sendAuthActionEmail(email, directLink, "reset")) {
+      return { ok: true as const, kind: "recovery" as const };
+    }
   }
 
   const actionLink = link.data?.properties?.action_link;

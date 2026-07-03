@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import type { EmailOtpType } from "@supabase/supabase-js";
-import { getOrderTrackingAuthRedirectUrl } from "@/lib/auth-redirect";
+import { getOrderTrackingAuthRedirectUrl, buildCustomerAuthCallbackUrl } from "@/lib/auth-redirect";
 import { orderAccessPageUrl } from "@/lib/order-access-token";
 import { getCustomerFacingSiteUrl } from "@/lib/seo";
 import { createServiceClient } from "@/lib/supabase";
@@ -76,20 +76,6 @@ async function upsertCustomerRow(params: {
   }
 
   return inserted.id;
-}
-
-/** Build a one-click URL on lava-sa.com — bypasses Supabase verify redirect (Site URL) issues. */
-export function buildCustomerAuthCallbackUrl(params: {
-  tokenHash: string;
-  otpType: EmailOtpType;
-  nextPath: string;
-}): string {
-  const query = new URLSearchParams({
-    token_hash: params.tokenHash,
-    type: params.otpType,
-    next: params.nextPath,
-  });
-  return `${getCustomerFacingSiteUrl()}/auth/callback?${query.toString()}`;
 }
 
 /** Magic link that signs the customer in and lands on their order tracking page. */

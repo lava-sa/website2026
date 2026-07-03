@@ -1,3 +1,4 @@
+import type { EmailOtpType } from "@supabase/supabase-js";
 import { SITE_URL, getCustomerFacingSiteUrl } from "@/lib/seo";
 
 function isLocalDevHost(hostname: string): boolean {
@@ -34,4 +35,20 @@ export function getMemberPasswordSetupRedirectUrl(requestOrigin?: string): strin
 export function getOrderTrackingAuthRedirectUrl(orderNumber: string): string {
   const next = `/account/orders/${encodeURIComponent(orderNumber)}`;
   return `${SITE_URL}/auth/callback?next=${encodeURIComponent(next)}`;
+}
+
+/**
+ * One-click auth URL on lava-sa.com — bypasses Supabase /auth/v1/verify (Site URL → localhost bug).
+ */
+export function buildCustomerAuthCallbackUrl(params: {
+  tokenHash: string;
+  otpType: EmailOtpType;
+  nextPath: string;
+}): string {
+  const query = new URLSearchParams({
+    token_hash: params.tokenHash,
+    type: params.otpType,
+    next: params.nextPath,
+  });
+  return `${getCustomerFacingSiteUrl()}/auth/callback?${query.toString()}`;
 }
