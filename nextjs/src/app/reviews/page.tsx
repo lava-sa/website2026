@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Star, MessageSquare } from "lucide-react";
+import { redirect } from "next/navigation";
 import { pageMetadata } from "@/lib/seo";
-import PublicReviewCard from "@/components/reviews/PublicReviewCard";
+import ReviewsCategoryNav from "@/components/reviews/ReviewsCategoryNav";
+import ReviewsSectionContent from "@/components/reviews/ReviewsSectionContent";
 import { fetchAllApprovedForReviewsPage } from "@/lib/reviews/queries";
+import {
+  REVIEW_SECTIONS,
+  buildReviewCatalog,
+  resolveDefaultSection,
+  reviewsHref,
+  type ReviewSectionId,
+} from "@/lib/reviews/navigation";
 import { createServiceClient } from "@/lib/supabase";
 
 export const metadata: Metadata = pageMetadata({
@@ -15,6 +24,15 @@ export const metadata: Metadata = pageMetadata({
 
 export const revalidate = 3600;
 
+type Props = {
+  searchParams: Promise<{ section?: string; product?: string }>;
+};
+
+function parseSection(value: string | undefined): ReviewSectionId | null {
+  if (!value) return null;
+  return REVIEW_SECTIONS.some((s) => s.id === value) ? (value as ReviewSectionId) : null;
+}
+
 async function getProductNames(slugs: string[]): Promise<Map<string, string>> {
   if (slugs.length === 0) return new Map();
   const supabase = createServiceClient();
@@ -22,25 +40,64 @@ async function getProductNames(slugs: string[]): Promise<Map<string, string>> {
   return new Map((data ?? []).map((p) => [p.slug as string, p.name as string]));
 }
 
-export default async function ReviewsPage() {
-  const { general, byProduct, videos } = await fetchAllApprovedForReviewsPage();
-  const productSlugs = Array.from(byProduct.keys());
+async function getProductMeta(slugs: string[]): Promise<Map<string, import("@/components/reviews/ReviewsSectionContent").ProductSpotlight>> {
+  if (slugs.length === 0) return new Map();
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("products")
+    .select("slug, name, primary_image_url, short_description")
+    .in("slug", slugs)
+    .eq("is_published", true);
+  return new Map(
+    (data ?? []).map((p) => [
+      p.slug as string,
+      {
+        slug: p.slug as string,
+        name: p.name as string,
+        primary_image_url: (p.primary_image_url as string | null) ?? null,
+        short_description: (p.short_description as string | null) ?? null,
+      },
+    ])
+  );
+}
+
+export default async function ReviewsPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const rawData = await fetchAllApprovedForReviewsPage();
+  const productSlugs = Array.from(rawData.byProduct.keys());
   const productNames = await getProductNames(productSlugs);
+  const catalog = buildReviewCatalog(rawData, productNames);
 
-  const productSections = productSlugs
-    .map((slug) => ({
-      slug,
-      name: productNames.get(slug) ?? slug.replace(/-/g, " "),
-      reviews: byProduct.get(slug) ?? [],
-    }))
-    .filter((s) => s.reviews.length > 0)
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const hasContent = catalog.totalReviewCount > 0;
 
-  const hasContent = general.length > 0 || productSections.length > 0 || videos.length > 0;
+  let section = parseSection(params.section?.trim());
+  const productSlug = params.product?.trim();
+
+  if (!section && hasContent) {
+    const defaultSection = resolveDefaultSection(catalog);
+    const firstProduct =
+      defaultSection === "vacuum-machines" ||
+      defaultSection === "bags-rolls" ||
+      defaultSection === "containers-lids"
+        ? catalog.bySection.get(defaultSection)?.[0]?.slug
+        : undefined;
+    redirect(reviewsHref(defaultSection, firstProduct));
+  }
+
+  section = section ?? "general";
+
+  const sectionProducts =
+    section !== "general" && section !== "videos"
+      ? catalog.bySection.get(section) ?? []
+      : [];
+  const metaSlugs = sectionProducts.map((p) => p.slug);
+  const productMeta = await getProductMeta(metaSlugs);
+
+  const spotlight = productSlug ? productMeta.get(productSlug) ?? null : null;
 
   return (
     <main className="min-h-screen bg-white">
-      <section className="bg-primary py-16">
+      <section className="bg-primary py-14">
         <div className="section-container max-w-3xl text-center">
           <div className="flex justify-center gap-1 mb-4" aria-hidden="true">
             {[1, 2, 3, 4, 5].map((i) => (
@@ -49,12 +106,20 @@ export default async function ReviewsPage() {
           </div>
           <h1 className="text-4xl font-black text-white mb-3">Customer Reviews</h1>
           <p className="text-white/70 text-base leading-relaxed">
-            Real experiences from LAVA customers across South Africa — service, support, and product performance in their own words.
+            Real experiences from LAVA customers across South Africa — browse by category or machine model.
           </p>
         </div>
       </section>
 
-      <div className="section-container py-16 space-y-16 max-w-5xl">
+      {hasContent && (
+        <ReviewsCategoryNav
+          catalog={catalog}
+          activeSection={section}
+          activeProduct={productSlug}
+        />
+      )}
+
+      <div className="section-container py-12 max-w-5xl">
         {!hasContent ? (
           <div className="text-center py-16 border border-border bg-surface">
             <MessageSquare className="h-12 w-12 text-copy-muted mx-auto mb-4" />
@@ -68,76 +133,16 @@ export default async function ReviewsPage() {
             </Link>
           </div>
         ) : (
-          <>
-            {general.length > 0 && (
-              <section>
-                <div className="mb-8">
-                  <p className="overline mb-2">Service &amp; Support</p>
-                  <h2 className="text-2xl font-black text-primary">General Reviews</h2>
-                  <p className="text-copy-muted mt-2">
-                    Customers sharing their overall experience with Anneke and the Lava-SA team.
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-                  {general.map((review) => (
-                    <PublicReviewCard key={review.id} review={review} className="h-full" />
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {productSections.length > 0 && (
-              <section className="space-y-12">
-                <div>
-                  <p className="overline mb-2">Products &amp; Machines</p>
-                  <h2 className="text-2xl font-black text-primary">Product Reviews</h2>
-                  <p className="text-copy-muted mt-2">
-                    Reviews linked to specific LAVA machines and products.
-                  </p>
-                </div>
-                {productSections.map((section) => (
-                  <div key={section.slug}>
-                    <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
-                      <h3 className="text-xl font-bold text-primary">{section.name}</h3>
-                      <Link
-                        href={`/products/${section.slug}`}
-                        className="text-sm font-bold text-secondary hover:text-primary transition-colors"
-                      >
-                        View product →
-                      </Link>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-                      {section.reviews.map((review) => (
-                        <PublicReviewCard key={review.id} review={review} className="h-full" />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </section>
-            )}
-
-            {videos.length > 0 && (
-              <section>
-                <div className="mb-8">
-                  <p className="overline mb-2">Video Stories</p>
-                  <h2 className="text-2xl font-black text-primary">Video Testimonials</h2>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-                  {videos.map((review) => (
-                    <PublicReviewCard
-                      key={review.id}
-                      review={review}
-                      showStructured={false}
-                      className="h-full"
-                    />
-                  ))}
-                </div>
-              </section>
-            )}
-          </>
+          <ReviewsSectionContent
+            catalog={catalog}
+            section={section}
+            productSlug={productSlug}
+            spotlight={spotlight}
+            productMeta={productMeta}
+          />
         )}
 
-        <div className="text-center pt-8 border-t border-border">
+        <div className="text-center pt-12 mt-12 border-t border-border">
           <p className="text-copy-muted mb-4">Own a LAVA product? We&apos;d love to hear from you.</p>
           <Link
             href="/submit-review"

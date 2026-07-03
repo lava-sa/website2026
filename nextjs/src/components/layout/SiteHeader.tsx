@@ -318,6 +318,7 @@ const SiteHeader = () => {
               <DropdownLinks
                 label="Help & Support"
                 links={[
+                  ["Customer Reviews", "/reviews"],
                   ["Lava Points", "/rewards"],
                   ["Delivery & Shipping", "/help/delivery"],
                   ["Returns & Exchanges", "/help/returns"],

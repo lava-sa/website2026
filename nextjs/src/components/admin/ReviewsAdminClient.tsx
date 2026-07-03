@@ -5,6 +5,12 @@ import { useRouter } from "next/navigation";
 import { Download, Loader2, Package, Star, Users, Video } from "lucide-react";
 import ReviewCard from "@/components/admin/ReviewCard";
 import type { ReviewScope } from "@/lib/reviews/types";
+import {
+  REVIEW_SECTIONS,
+  VACUUM_MACHINE_REVIEW_ORDER,
+  inferReviewSectionForSlug,
+  type ReviewSectionId,
+} from "@/lib/reviews/navigation";
 
 export type AdminReview = {
   id: string;
@@ -92,6 +98,56 @@ function groupReviewsByProduct(
   return groups.sort((a, b) => a.label.localeCompare(b.label));
 }
 
+type SectionGroup = {
+  sectionId: ReviewSectionId | "unlinked";
+  sectionLabel: string;
+  groups: ProductGroup[];
+};
+
+function groupProductsBySection(productGroups: ProductGroup[]): SectionGroup[] {
+  const buckets = new Map<SectionGroup["sectionId"], ProductGroup[]>();
+
+  for (const group of productGroups) {
+    const sectionId: SectionGroup["sectionId"] =
+      group.slug == null ? "unlinked" : inferReviewSectionForSlug(group.slug);
+    const list = buckets.get(sectionId) ?? [];
+    list.push(group);
+    buckets.set(sectionId, list);
+  }
+
+  const machineOrder = new Map(VACUUM_MACHINE_REVIEW_ORDER.map((p, i) => [p.slug, i]));
+
+  const sections: SectionGroup[] = [];
+
+  for (const section of REVIEW_SECTIONS) {
+    if (section.id === "general" || section.id === "videos") continue;
+    const groups = buckets.get(section.id);
+    if (!groups?.length) continue;
+
+    const sorted =
+      section.id === "vacuum-machines"
+        ? [...groups].sort((a, b) => {
+            const ai = a.slug ? (machineOrder.get(a.slug) ?? 999) : 999;
+            const bi = b.slug ? (machineOrder.get(b.slug) ?? 999) : 999;
+            return ai - bi || a.label.localeCompare(b.label);
+          })
+        : [...groups].sort((a, b) => a.label.localeCompare(b.label));
+
+    sections.push({ sectionId: section.id, sectionLabel: section.label, groups: sorted });
+  }
+
+  const unlinked = buckets.get("unlinked");
+  if (unlinked?.length) {
+    sections.push({
+      sectionId: "unlinked",
+      sectionLabel: "Needs assignment",
+      groups: unlinked,
+    });
+  }
+
+  return sections;
+}
+
 export default function ReviewsAdminClient({
   reviews,
   productOptions,
@@ -117,6 +173,7 @@ export default function ReviewsAdminClient({
     () => groupReviewsByProduct(reviews, productOptions),
     [reviews, productOptions]
   );
+  const sectionGroups = useMemo(() => groupProductsBySection(productGroups), [productGroups]);
 
   const publishedCount = reviews.filter((r) => r.approved).length;
 
@@ -256,61 +313,97 @@ export default function ReviewsAdminClient({
       )}
 
       {view === "products" && (
-        <section className="space-y-4">
-          {productGroups.length === 0 ? (
+        <section className="space-y-8">
+          {sectionGroups.length === 0 ? (
             <p className="text-sm text-gray-500 py-8 text-center border border-dashed border-gray-200">
               No product-linked reviews yet. Import site reviews or approve new submissions with a product link.
             </p>
           ) : (
-            productGroups.map((group) => {
-              const key = group.slug ?? "__unlinked__";
-              const isOpen = expandedSlug === key;
-              return (
-                <div key={key} className="border border-gray-200 bg-white">
-                  <button
-                    type="button"
-                    onClick={() => setExpandedSlug(expandedSlug === key ? "" : key)}
-                    className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors"
-                  >
-                    <div>
-                      <p className="font-bold text-gray-900 text-sm">{group.label}</p>
-                      <p className="text-[10px] uppercase tracking-wider text-gray-400 mt-0.5">
-                        {group.category}
-                        {group.slug && (
-                          <>
-                            {" "}
-                            ·{" "}
-                            <a
-                              href={`/products/${group.slug}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-teal-700 hover:underline"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              View product page ↗
-                            </a>
-                          </>
-                        )}
-                      </p>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className="text-xs font-bold text-emerald-700">{group.published} published</p>
-                      {group.pending > 0 && (
-                        <p className="text-[10px] font-bold text-amber-600">{group.pending} pending</p>
-                      )}
-                      <p className="text-[10px] text-gray-400">{group.reviews.length} total</p>
-                    </div>
-                  </button>
-                  {isOpen && (
-                    <div className="border-t border-gray-100 p-3 space-y-3 bg-gray-50/50">
-                      {group.reviews.map((r) => (
-                        <ReviewCard key={r.id} review={r} productOptions={productOptions} />
-                      ))}
-                    </div>
+            sectionGroups.map((section) => (
+              <div key={section.sectionId}>
+                <div className="flex flex-wrap items-end justify-between gap-2 mb-3 pb-2 border-b border-gray-200">
+                  <div>
+                    <h2 className="text-sm font-black uppercase tracking-wider text-gray-900">
+                      {section.sectionLabel}
+                    </h2>
+                    <p className="text-[10px] text-gray-400 mt-0.5">
+                      {section.groups.length} product group{section.groups.length === 1 ? "" : "s"} · mirrors public /reviews navigation
+                    </p>
+                  </div>
+                  {section.sectionId !== "unlinked" && (
+                    <a
+                      href={`/reviews?section=${section.sectionId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-bold text-teal-700 hover:underline"
+                    >
+                      View on site ↗
+                    </a>
                   )}
                 </div>
-              );
-            })
+                <div className="space-y-4">
+                  {section.groups.map((group) => {
+                    const key = group.slug ?? "__unlinked__";
+                    const isOpen = expandedSlug === key;
+                    return (
+                      <div key={key} className="border border-gray-200 bg-white">
+                        <button
+                          type="button"
+                          onClick={() => setExpandedSlug(expandedSlug === key ? "" : key)}
+                          className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+                        >
+                          <div>
+                            <p className="font-bold text-gray-900 text-sm">{group.label}</p>
+                            <p className="text-[10px] uppercase tracking-wider text-gray-400 mt-0.5">
+                              {group.category}
+                              {group.slug && (
+                                <>
+                                  {" "}
+                                  ·{" "}
+                                  <a
+                                    href={`/reviews?section=${section.sectionId}&product=${group.slug}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-teal-700 hover:underline"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    Public reviews page ↗
+                                  </a>
+                                  {" · "}
+                                  <a
+                                    href={`/products/${group.slug}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-teal-700 hover:underline"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    Product page ↗
+                                  </a>
+                                </>
+                              )}
+                            </p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="text-xs font-bold text-emerald-700">{group.published} published</p>
+                            {group.pending > 0 && (
+                              <p className="text-[10px] font-bold text-amber-600">{group.pending} pending</p>
+                            )}
+                            <p className="text-[10px] text-gray-400">{group.reviews.length} total</p>
+                          </div>
+                        </button>
+                        {isOpen && (
+                          <div className="border-t border-gray-100 p-3 space-y-3 bg-gray-50/50">
+                            {group.reviews.map((r) => (
+                              <ReviewCard key={r.id} review={r} productOptions={productOptions} />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))
           )}
         </section>
       )}

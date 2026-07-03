@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Check, ShoppingBag, ChevronRight, Tag, Shield, Truck } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
-import { applyFunnelDiscount } from "@/lib/funnel";
+import { applyFunnelDiscount, type CartItemFunnelMeta } from "@/lib/funnel";
 import type { CartItem } from "@/lib/cart-context";
 
 type FunnelApiProduct = {
@@ -140,10 +140,29 @@ export default function FunnelPage() {
     router.push("/cart");
   }
 
+  function catalogPriceFor(product: FunnelApiProduct): number {
+    if (
+      product.sale_price != null &&
+      product.sale_price > 0 &&
+      product.sale_price < product.regular_price
+    ) {
+      return product.sale_price;
+    }
+    return product.regular_price;
+  }
+
   function addSelectedAndContinue() {
     if (selectedProducts.length === 0) return;
     const qty = quantityByStep[currentStep] ?? 1;
     for (const selectedProduct of selectedProducts) {
+      const funnelMeta: CartItemFunnelMeta = {
+        sourceSlug: slug,
+        baseProductId: selectedProduct.id,
+        baseName: selectedProduct.name,
+        regularPrice: selectedProduct.regular_price,
+        catalogPrice: catalogPriceFor(selectedProduct),
+        discountPercent: step.discountPercent,
+      };
       for (let i = 0; i < qty; i += 1) {
         addItem({
           id: `${selectedProduct.id}__funnel_${slug}_step${currentStep + 1}`,
@@ -152,6 +171,7 @@ export default function FunnelPage() {
           price: applyFunnelDiscount(selectedProduct.regular_price, step.discountPercent),
           image: selectedProduct.primary_image_url,
           sku: selectedProduct.sku,
+          funnel: funnelMeta,
         });
       }
     }

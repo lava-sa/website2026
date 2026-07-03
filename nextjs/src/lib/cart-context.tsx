@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { getShipping, getShippingCartEstimate, SHIPPING_INCL_OTHER } from "@/lib/shipping";
+import { reconcileFunnelDiscounts } from "@/lib/funnel";
 
 export interface CartItem {
   id: string;
@@ -18,6 +19,7 @@ export interface CartItem {
   image: string | null;
   quantity: number;
   sku: string | null;
+  funnel?: import("@/lib/funnel").CartItemFunnelMeta;
 }
 
 interface CartContextValue {
@@ -59,7 +61,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       // corrupted storage — start fresh
     }
     setState((prev) => {
-      const safeItems = prev.items.length > 0 ? prev.items : hydratedItems;
+      const safeItems = reconcileFunnelDiscounts(prev.items.length > 0 ? prev.items : hydratedItems);
       return { items: safeItems, isHydrated: true };
     });
   }, []);
@@ -86,7 +88,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const removeItem = useCallback((id: string) => {
     setState((prev) => ({
       ...prev,
-      items: prev.items.filter((i) => i.id !== id),
+      items: reconcileFunnelDiscounts(prev.items.filter((i) => i.id !== id)),
     }));
   }, []);
 

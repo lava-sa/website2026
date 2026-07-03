@@ -138,6 +138,17 @@ export async function fetchAllApprovedForReviewsPage(): Promise<{
     }
   }
 
+  // Merge legacy reviews.json where the database has no approved rows for a slug.
+  for (const [slug, block] of Object.entries(staticReviews)) {
+    const existing = byProduct.get(slug) ?? [];
+    if (existing.length > 0) continue;
+    if (!block.reviews?.length) continue;
+    byProduct.set(
+      slug,
+      block.reviews.map((r, i) => staticToDisplay(r, slug, i))
+    );
+  }
+
   return { general, byProduct, videos };
 }
 

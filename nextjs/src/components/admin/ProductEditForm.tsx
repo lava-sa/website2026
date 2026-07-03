@@ -9,7 +9,7 @@ import ImageUploader from "@/components/admin/ImageUploader";
 import HtmlEditor from "@/components/admin/HtmlEditor";
 import MachineContentEditor from "@/components/admin/MachineContentEditor";
 import MachineBenefitsEditor from "@/components/admin/MachineBenefitsEditor";
-import { parseFunnelConfig, type FunnelStepConfig } from "@/lib/funnel";
+import { parseFunnelConfig, isFunnelExcludedCategory } from "@/lib/funnel";
 import { generateSlug } from "@/lib/slug";
 import {
   machineContentFromSpecs,
@@ -24,7 +24,12 @@ import {
 import { generateProductAiDiscoverability } from "@/lib/product-ai-discoverability";
 
 type Category = { id: string; name: string; slug: string };
-type ProductChoice = { id: string; name: string; slug: string; categories?: { name?: string } | null };
+type ProductChoice = {
+  id: string;
+  name: string;
+  slug: string;
+  categories?: { name?: string; slug?: string } | null;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ProductEditForm({
@@ -716,6 +721,8 @@ export default function ProductEditForm({
                         {(() => {
                           const query = (funnelProductSearch[stepIndex] ?? "").trim().toLowerCase();
                           const filteredChoices = productChoices.filter((choice) => {
+                            const categorySlug = choice.categories?.slug;
+                            if (isFunnelExcludedCategory(categorySlug)) return false;
                             if (!query) return true;
                             const categoryName = choice.categories?.name?.toLowerCase() ?? "";
                             return (

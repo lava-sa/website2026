@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
-import { parseFunnelConfig, type FunnelStepConfig } from "@/lib/funnel";
+import { parseFunnelConfig, type FunnelStepConfig, isFunnelExcludedCategory } from "@/lib/funnel";
 
 function toMapById<T extends { id: string }>(rows: T[]): Map<string, T> {
   return new Map(rows.map((row) => [row.id, row]));
@@ -40,7 +40,7 @@ export async function GET(
 
   const { data: products, error: productsError } = await supabase
     .from("products")
-    .select("id, name, slug, regular_price, sale_price, primary_image_url, sku, stock_status, is_published")
+    .select("id, name, slug, regular_price, sale_price, primary_image_url, sku, stock_status, is_published, categories ( slug )")
     .in("id", allIds)
     .eq("is_published", true)
     .neq("stock_status", "out_of_stock");
@@ -49,7 +49,12 @@ export async function GET(
     return NextResponse.json({ error: productsError.message }, { status: 500 });
   }
 
-  const byId = toMapById(products ?? []);
+  const eligibleProducts = (products ?? []).filter((product) => {
+    const categorySlug = (product.categories as { slug?: string } | null)?.slug;
+    return !isFunnelExcludedCategory(categorySlug);
+  });
+
+  const byId = toMapById(eligibleProducts);
   const steps = (config.steps as FunnelStepConfig[])
     .map((step, idx) => ({
       index: idx,

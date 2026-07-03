@@ -24,7 +24,7 @@ async function getProductChoices(currentId: string) {
   const supabase = createServiceClient();
   const { data } = await supabase
     .from("products")
-    .select("id, name, slug, category_id, categories(name)")
+    .select("id, name, slug, category_id, categories(name, slug)")
     .eq("is_published", true)
     .neq("id", currentId)
     .order("name", { ascending: true });
