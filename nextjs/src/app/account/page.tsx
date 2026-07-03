@@ -15,7 +15,7 @@ export default async function AccountPage() {
 
   // Logged-in users go straight to the dashboard
   if (user) {
-    redirect("/account/dashboard");
+    redirect("/account/profile");
   }
 
   // Not logged in — show sign-in landing

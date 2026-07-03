@@ -172,7 +172,7 @@ export async function middleware(request: NextRequest) {
 
     // Redirect logged-in users away from the login page
     if (user && isPublicAccountPath) {
-      return NextResponse.redirect(new URL("/account/dashboard", request.url));
+      return NextResponse.redirect(new URL("/account/profile", request.url));
     }
 
     if (preview) withNoindex(supabaseResponse);

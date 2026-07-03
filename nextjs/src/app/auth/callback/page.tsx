@@ -8,7 +8,7 @@ import { createClient } from "@/utils/supabase/client";
 function AuthCallbackInner() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = params.get("next") ?? "/account/dashboard";
+  const next = params.get("next") ?? "/account/profile";
   const [message, setMessage] = useState("Signing you in…");
 
   useEffect(() => {

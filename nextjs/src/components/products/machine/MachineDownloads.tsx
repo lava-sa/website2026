@@ -19,7 +19,7 @@ export default function MachineDownloads({
   const router = useRouter();
   const { isMember, loading } = useMemberSession();
   const [gateOpen, setGateOpen] = useState(false);
-  const [pendingHref, setPendingHref] = useState("/account/dashboard");
+  const [pendingHref, setPendingHref] = useState("/account/profile");
 
   if (downloads.length === 0) return null;
 

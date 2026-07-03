@@ -238,9 +238,13 @@ const BREADCRUMB_MAP: Record<string, Array<{ label: string; href?: string }>> = 
   "/submit-review/containers":   [{ label: "Review Containers & Lids" }],
   "/account":        [{ label: "My Account" }],
   "/rewards":        [{ label: "Lava Points" }],
+  "/account/profile": [
+    { label: "My Account", href: "/account" },
+    { label: "My Profile" },
+  ],
   "/account/dashboard": [
     { label: "My Account", href: "/account" },
-    { label: "My Dashboard" },
+    { label: "My Profile", href: "/account/profile" },
   ],
 };
 

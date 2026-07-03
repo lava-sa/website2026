@@ -58,7 +58,7 @@ const MODE_META: Record<
 function LoginFormInner() {
   const router = useRouter();
   const params = useSearchParams();
-  const from = params.get("from") || "/account/dashboard";
+  const from = params.get("from") || "/account/profile";
   const requestedMode = params.get("mode");
   const prefilledEmail = params.get("email") || "";
   const authCallbackError = params.get("error");

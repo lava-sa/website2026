@@ -78,11 +78,11 @@ export default async function AccountOrderDetailPage({ params }: PageProps) {
     <main className="min-h-screen bg-surface/30 py-10">
       <div className="section-container max-w-4xl">
         <Link
-          href="/account/dashboard"
+          href="/account/profile"
           className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:text-secondary transition-colors mb-8"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to dashboard
+          Back to profile
         </Link>
 
         <div className="bg-white border border-border p-8 mb-6">

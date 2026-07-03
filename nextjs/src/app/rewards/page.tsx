@@ -184,7 +184,7 @@ export default function RewardsPage() {
 
           <div className="space-y-3 sm:flex gap-4">
             <Link
-              href="/account/login?mode=signup&from=/account/dashboard"
+              href="/account/login?mode=signup&from=/account/profile"
               className="flex-1 inline-block bg-secondary text-white font-bold py-4 px-8 text-center hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
             >
               <span>Create free member account</span>
@@ -200,7 +200,7 @@ export default function RewardsPage() {
 
           <p className="text-sm text-white/60 mt-6">
             Already a member?{" "}
-            <Link href="/account/dashboard" className="text-secondary hover:underline font-bold">
+            <Link href="/account/profile" className="text-secondary hover:underline font-bold">
               Open your dashboard →
             </Link>
           </p>

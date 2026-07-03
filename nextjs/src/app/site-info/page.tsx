@@ -275,7 +275,7 @@ const KEY_PAGES: [string, string][] = [
   ["Rewards / Lava Points",      "/rewards"],
   ["Help / FAQ",                 "/help/faq"],
   ["Contact",                    "/contact"],
-  ["Account Dashboard",          "/account/dashboard"],
+  ["Account Profile",            "/account/profile"],
   ["Site Info (this page)",    "/site-info"],
   ["Admin Panel",                "/admin"],
 ];
