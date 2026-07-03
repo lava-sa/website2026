@@ -74,6 +74,7 @@ export function isSiteAccessExemptPath(pathname: string): boolean {
   }
   if (
     pathname.startsWith("/admin") ||
+    pathname.startsWith("/api/admin") ||
     pathname === "/lava-sa" ||
     pathname.startsWith("/lava-sa/")
   ) {

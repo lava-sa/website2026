@@ -42,6 +42,8 @@ type ImportStats = {
   totalImportable: number;
   importedCount: number;
   pendingImport: number;
+  schemaReady: boolean;
+  schemaHint: string | null;
 };
 
 type ProductGroup = {
@@ -181,14 +183,49 @@ export default function ReviewsAdminClient({
     setImporting(true);
     setImportMsg(null);
     try {
-      const res = await fetch("/api/admin/reviews/import-static", { method: "POST" });
-      const data = await res.json();
-      if (!res.ok) {
-        setImportMsg(data.error ?? "Import failed");
+      const res = await fetch("/api/admin/reviews/import-static", {
+        method: "POST",
+        credentials: "same-origin",
+      });
+      const data = (await res.json()) as {
+        imported?: number;
+        skipped?: number;
+        errors?: string[];
+        error?: string;
+        schemaHint?: string;
+        ok?: boolean;
+        rowsPrepared?: number;
+        message?: string;
+      };
+
+      if (!res.ok || data.ok === false) {
+        const detail =
+          data.schemaHint ??
+          data.error ??
+          (data.errors?.length ? data.errors.join(" · ") : "Import failed");
+        setImportMsg(detail);
         return;
       }
+
+      const imported = data.imported ?? 0;
+
+      if (imported === 0 && (data.rowsPrepared ?? 0) > 0) {
+        setImportMsg(
+          data.errors?.join(" · ") ??
+            `Prepared ${data.rowsPrepared} reviews but none were saved. Deploy the latest code and retry.`
+        );
+        return;
+      }
+
+      if (imported === 0) {
+        setImportMsg(data.message ?? "Nothing new to import.");
+        return;
+      }
+
       setImportMsg(
-        `Imported ${data.imported} reviews${data.skipped ? ` (${data.skipped} already in database)` : ""}.`
+        data.message ??
+          `Imported ${imported} review${imported === 1 ? "" : "s"}${data.skipped ? ` (${data.skipped} already in database)` : ""}.` +
+            (data.errors?.length ? ` Warnings: ${data.errors.slice(0, 2).join(" · ")}` : "")
       );
       router.refresh();
     } catch {
@@ -208,24 +245,48 @@ export default function ReviewsAdminClient({
         </p>
       </div>
 
-      {importStats.pendingImport > 0 && (
+      {(importStats.pendingImport > 0 || !importStats.schemaReady) && (
         <div className="bg-amber-50 border border-amber-200 p-4 flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex-1">
-            <p className="font-bold text-amber-900 text-sm">
-              {importStats.pendingImport} site reviews are not in the database yet
-            </p>
-            <p className="text-xs text-amber-800 mt-1 leading-relaxed">
-              Reviews on product pages and the homepage currently come from{" "}
-              <code className="bg-amber-100 px-1">reviews.json</code> ({importStats.jsonReviewCount} across{" "}
-              {importStats.productSlugs} products) plus {importStats.homepageReviewCount} homepage testimonials.
-              Import them once to manage, replace, and approve everything from here.
-            </p>
-            {importMsg && <p className="text-xs font-medium text-emerald-800 mt-2">{importMsg}</p>}
+            {!importStats.schemaReady ? (
+              <>
+                <p className="font-bold text-red-900 text-sm">Database not ready for review import</p>
+                <p className="text-xs text-red-800 mt-1 leading-relaxed">
+                  {importStats.schemaHint ??
+                    "Run the review migrations in Supabase before importing legacy reviews."}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="font-bold text-amber-900 text-sm">
+                  {importStats.pendingImport} site reviews are not in the database yet
+                </p>
+                <p className="text-xs text-amber-800 mt-1 leading-relaxed">
+                  Reviews on product pages and the homepage currently come from{" "}
+                  <code className="bg-amber-100 px-1">reviews.json</code> ({importStats.jsonReviewCount} across{" "}
+                  {importStats.productSlugs} products) plus {importStats.homepageReviewCount} homepage testimonials.
+                  Import them once to manage, replace, and approve everything from here.
+                </p>
+              </>
+            )}
+            {importMsg && (
+              <p
+                className={`text-xs font-medium mt-2 ${
+                  importMsg.startsWith("Imported ") && !importMsg.startsWith("Imported 0")
+                    ? "text-emerald-800"
+                    : importMsg.startsWith("All ")
+                      ? "text-emerald-800"
+                      : "text-red-800"
+                }`}
+              >
+                {importMsg}
+              </p>
+            )}
           </div>
           <button
             type="button"
             onClick={handleImport}
-            disabled={importing}
+            disabled={importing || !importStats.schemaReady}
             className="shrink-0 inline-flex items-center gap-2 bg-amber-700 text-white text-sm font-bold px-4 py-2.5 hover:bg-amber-800 disabled:opacity-60"
           >
             {importing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}

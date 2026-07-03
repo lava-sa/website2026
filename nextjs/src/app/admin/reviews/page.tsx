@@ -5,6 +5,7 @@ import { createServiceClient } from "@/lib/supabase";
 import {
   countImportedLegacyReviews,
   getStaticReviewCatalogStats,
+  checkReviewImportSchema,
 } from "@/lib/reviews/import-static";
 
 async function getReviews() {
@@ -34,10 +35,11 @@ async function getProductOptions() {
 }
 
 export default async function AdminReviewsPage() {
-  const [reviews, productOptions, importedCount] = await Promise.all([
+  const [reviews, productOptions, importedCount, schema] = await Promise.all([
     getReviews(),
     getProductOptions(),
     countImportedLegacyReviews(),
+    checkReviewImportSchema(),
   ]);
 
   const catalog = getStaticReviewCatalogStats();
@@ -45,6 +47,8 @@ export default async function AdminReviewsPage() {
     ...catalog,
     importedCount,
     pendingImport: Math.max(0, catalog.totalImportable - importedCount),
+    schemaReady: schema.ok,
+    schemaHint: schema.ok ? null : schema.hint,
   };
 
   return (
