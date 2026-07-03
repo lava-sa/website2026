@@ -1,22 +1,30 @@
 import { SITE_URL, getCustomerFacingSiteUrl } from "@/lib/seo";
 
-/** Where Supabase sends users after invite / password-recovery (local dev may use localhost). */
+function isLocalDevHost(hostname: string): boolean {
+  return hostname === "localhost" || hostname === "127.0.0.1";
+}
+
+/** Use localhost callback only when the API request itself came from local dev. */
 function memberAuthCallbackBase(requestOrigin?: string): string {
-  if (process.env.VERCEL_ENV === "production") return getCustomerFacingSiteUrl();
+  const origin = requestOrigin?.replace(/\/$/, "") ?? "";
+  if (origin) {
+    try {
+      const host = new URL(origin).hostname.toLowerCase();
+      if (isLocalDevHost(host) && process.env.NODE_ENV === "development") {
+        return origin;
+      }
+    } catch {
+      /* fall through to live domain */
+    }
+  }
 
-  const candidate =
-    requestOrigin?.replace(/\/$/, "") ||
-    process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
-    "http://localhost:3000";
-
-  if (/lava-sa\.(online|co\.za)/i.test(candidate)) return getCustomerFacingSiteUrl();
-
-  return candidate.replace(/\/$/, "");
+  return getCustomerFacingSiteUrl();
 }
 
 /** Where Supabase sends users after invite / password-recovery (must match Dashboard allow list). */
 export function getMemberPasswordSetupRedirectUrl(requestOrigin?: string): string {
-  return `${memberAuthCallbackBase(requestOrigin)}/auth/callback?next=/account/reset-password`;
+  const next = encodeURIComponent("/account/reset-password");
+  return `${memberAuthCallbackBase(requestOrigin)}/auth/callback?next=${next}`;
 }
 
 /**

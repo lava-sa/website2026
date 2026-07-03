@@ -19,6 +19,17 @@ function authUserNotFoundMessage(msg: string): boolean {
   );
 }
 
+/** Supabase may embed Site URL (localhost) when redirect_to is not allowlisted — force the intended target. */
+function withRedirectTo(actionLink: string, redirectTo: string): string {
+  try {
+    const url = new URL(actionLink);
+    url.searchParams.set("redirect_to", redirectTo);
+    return url.toString();
+  } catch {
+    return actionLink;
+  }
+}
+
 async function ensureCustomerRow(email: string) {
   const supabase = createServiceClient();
   const { data: existing } = await supabase
@@ -149,7 +160,8 @@ export async function sendPasswordResetEmail(email: string, redirectTo: string) 
     };
   }
 
-  if (await sendAuthActionEmail(email, actionLink, "reset")) {
+  const safeLink = withRedirectTo(actionLink, redirectTo);
+  if (await sendAuthActionEmail(email, safeLink, "reset")) {
     return { ok: true as const, kind: "recovery" as const };
   }
 
