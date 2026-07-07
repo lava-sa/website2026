@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import AuthHashRecovery from "@/components/auth/AuthHashRecovery";
 import { Montserrat, Outfit } from "next/font/google";
 import "./globals.css";
@@ -66,6 +66,21 @@ export const metadata: Metadata = {
     alternates: {
         canonical: "/",
     },
+    applicationName: "Lava-SA",
+    manifest: "/manifest.webmanifest",
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: "black-translucent",
+        title: "Lava-SA",
+    },
+    icons: {
+        icon: [
+            { url: "/images/logo/lava-favicon.png", type: "image/png" },
+            { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+            { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+        ],
+        apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
+    },
     robots: isProduction
         ? {
             index: true,
@@ -82,6 +97,14 @@ export const metadata: Metadata = {
             follow: false,
             googleBot: { index: false, follow: false },
         },
+};
+
+export const viewport: Viewport = {
+    themeColor: [
+        { media: "(prefers-color-scheme: light)", color: "#063a46" },
+        { media: "(prefers-color-scheme: dark)", color: "#063a46" },
+    ],
+    colorScheme: "light",
 };
 
 // Place ID + GBP URL are filled in once the Google Business Profile is verified.

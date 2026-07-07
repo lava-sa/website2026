@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import withSerwistInit from "@serwist/next";
 
 // Allow self-signed SSL for LocalWP in development
 if (process.env.NODE_ENV !== "production") {
@@ -84,4 +85,13 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const withSerwist = withSerwistInit({
+  swSrc: "src/app/sw.ts",
+  swDest: "public/sw.js",
+  // Disable in dev so HMR isn't fighting a cached service worker.
+  disable: process.env.NODE_ENV === "development",
+  reloadOnOnline: true,
+  cacheOnNavigation: true,
+});
+
+export default withSerwist(nextConfig);
