@@ -4,6 +4,7 @@ import {
   guardFailureResponse,
   verifyPublicFormSubmission,
 } from "@/lib/security/public-form-guard";
+import { emailDomainCanReceiveMail } from "@/lib/security/email-domain-check";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,13 @@ export async function POST(req: NextRequest) {
 
     if (!name || !email || !message) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    if (!(await emailDomainCanReceiveMail(String(email)))) {
+      return NextResponse.json(
+        { error: "Please enter a valid, working email address so we can reply." },
+        { status: 400 }
+      );
     }
 
     const resend = getResendClient();

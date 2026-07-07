@@ -6,6 +6,7 @@ import {
   verifyPublicFormSubmission,
 } from "@/lib/security/public-form-guard";
 import { sendReviewSubmissionEmails } from "@/lib/reviews/email";
+import { buildReviewLoginPath, isCustomerEmailOnFile } from "@/lib/review-customer-gate";
 import type { ReviewAnswer } from "@/lib/reviews/types";
 
 export async function POST(request: NextRequest) {
@@ -41,6 +42,20 @@ export async function POST(request: NextRequest) {
   if (!name || !email || !rating || !headline || !review || !permission) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  if (!(await isCustomerEmailOnFile(normalizedEmail))) {
+    return NextResponse.json(
+      {
+        error:
+          "We couldn't find this email in our customer records. Sign in or create an account to continue.",
+        code: "customer_not_found",
+        loginUrl: buildReviewLoginPath(normalizedEmail, "/submit-review"),
+      },
+      { status: 403 }
+    );
+  }
+
   if (review.trim().length < 80) {
     return NextResponse.json({ error: "Please answer all questions in more detail" }, { status: 400 });
   }
@@ -54,7 +69,7 @@ export async function POST(request: NextRequest) {
 
   const { error } = await supabase.from("reviews").insert({
     name: name.trim(),
-    email: email.trim().toLowerCase(),
+    email: normalizedEmail,
     company: company?.trim() || null,
     city: city?.trim() || null,
     machine: machine?.trim() ?? (reviewCategory ? `[${reviewCategory}]` : null),

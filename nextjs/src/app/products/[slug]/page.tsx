@@ -47,7 +47,10 @@ import { resolveProductSlugRedirect } from "@/lib/product-redirects";
 import { reviewFormHrefForCategory } from "@/lib/review-forms";
 import { fetchReviewsForProductSlug } from "@/lib/reviews/queries";
 import { pickMostDetailedReviews } from "@/lib/reviews/parse";
-import { ProductReviewsSection } from "@/components/reviews/PublicReviewCard";
+import {
+  ProductReviewsEmptySection,
+  ProductReviewsSection,
+} from "@/components/reviews/PublicReviewCard";
 import ProductGalleryReviews from "@/components/reviews/ProductGalleryReviews";
 import { getMachinePdpHeadings } from "@/lib/machine-pdp-headings";
 import { resolveProductAiDiscoverability } from "@/lib/product-ai-discoverability";
@@ -148,13 +151,6 @@ const SPEC_LABELS: Record<string, string> = {
   warranty:      "Warranty",
   made_in:       "Made In",
 };
-
-// ── Default Fallback Reviews ──────────────────────────────────────────────────
-const FALLBACK_REVIEWS = [
-  { name: "Thomas S.",    location: "Gauteng",      rating: 5, date: "March 2026",    text: "Absolutely outstanding machine. I've been vacuum sealing game meat for 12 years and this is by far the best I've owned. The double seal is rock solid." },
-  { name: "Caroline D.", location: "Western Cape",  rating: 5, date: "February 2026", text: "We use it every week for biltong prep and bulk cooking. The automatic mode makes it so quick. German quality is evident in every detail." },
-  { name: "Riël A.",     location: "Free State",    rating: 5, date: "January 2026",  text: "Bought it for hunting season. Works perfectly — even handled wet meat with no issues. The pressure gauge gives me confidence every time." },
-];
 
 // ── Consumable compatibility helpers ─────────────────────────────────────────
 
@@ -351,27 +347,13 @@ export default async function ProductDetailPage({
   const waMessage = encodeURIComponent(`Hi, I'm interested in the ${product.name}. Can you help me?`);
   const waUrl     = `https://wa.me/${MAIN_PHONE.whatsapp}?text=${waMessage}`;
 
-  // Approved DB reviews + static reviews.json; machine fallback when empty
-  const slugReviewsStatic = (reviewsData as Record<string, { average_rating: number; total_reviews: number; reviews: typeof FALLBACK_REVIEWS }>)[product.slug];
-  const mergedReviews = await fetchReviewsForProductSlug(product.slug);
-  const productReviews =
-    mergedReviews ??
-    (isVacuumMachine
-      ? {
-          average_rating: 5.0,
-          total_reviews: FALLBACK_REVIEWS.length,
-          reviews: FALLBACK_REVIEWS.map((r, i) => ({
-            id: `fallback-${i}`,
-            name: r.name,
-            location: r.location,
-            date: r.date,
-            rating: r.rating,
-            text: r.text,
-            source: "static" as const,
-          })),
-        }
-      : null);
-  const hasLaVaImport = !!slugReviewsStatic && productReviews?.reviews.some((r) => r.source === "static");
+  // Approved DB reviews + static reviews.json only — no fabricated fallbacks
+  const slugReviewsStatic = (reviewsData as Record<string, unknown>)[product.slug];
+  const productReviews = await fetchReviewsForProductSlug(product.slug);
+  const hasLaVaImport =
+    Boolean(slugReviewsStatic) &&
+    Boolean(productReviews?.reviews.some((r) => r.source === "static"));
+  const reviewFormHref = `${reviewFormHrefForCategory(product.categories?.slug)}?product=${encodeURIComponent(product.name)}`;
   const galleryFeaturedReviews =
     productReviews && productReviews.reviews.length >= 2
       ? pickMostDetailedReviews(productReviews.reviews, 2)
@@ -508,10 +490,10 @@ export default async function ProductDetailPage({
                 </a>
               ) : (
                 <a
-                  href="#highlights"
+                  href="#reviews"
                   className="text-sm font-semibold text-secondary hover:text-primary transition-colors"
                 >
-                  Key uses &amp; features →
+                  Be the first to review →
                 </a>
               )}
 
@@ -777,7 +759,6 @@ export default async function ProductDetailPage({
       ════════════════════════════════════════════════════════════════ */}
       {isVacuumMachine && (
         <MachineBenefitsShowcase
-          primaryImageUrl={images[0]?.url ?? product.primary_image_url}
           machineName={product.name}
           specs={product.specs}
           galleryImageUrls={images.map((img) => img.url)}
@@ -1007,12 +988,18 @@ export default async function ProductDetailPage({
           <ProductReviewsSection
             title={machineHeadings?.reviews ?? `${product.name} Customer Reviews`}
             reviewBlock={productReviews}
-            reviewFormHref={`${reviewFormHrefForCategory(product.categories?.slug)}?product=${encodeURIComponent(product.name)}`}
+            reviewFormHref={reviewFormHref}
             excludeIds={galleryFeaturedIds}
           />
         </>
       ) : (
-        productHighlights && <ProductHighlights items={productHighlights} />
+        <>
+          {productHighlights && <ProductHighlights items={productHighlights} />}
+          <ProductReviewsEmptySection
+            title={machineHeadings?.reviews ?? `${product.name} Customer Reviews`}
+            reviewFormHref={reviewFormHref}
+          />
+        </>
       )}
 
       {/* ═══════════════════════════════════════════════════════════════

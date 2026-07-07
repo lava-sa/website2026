@@ -88,11 +88,10 @@ export default function DeliveryPage() {
             </thead>
             <tbody>
               {[
-                ["Gauteng (Johannesburg, Pretoria, Ekurhuleni)", "1–2 business days"],
-                ["Major centres (Cape Town, Durban, Port Elizabeth, Bloemfontein)", "2–3 business days"],
-                ["Secondary towns (George, Nelspruit, Polokwane, Kimberley)", "2–4 business days"],
-                ["Outlying areas and small towns", "3–5 business days"],
-                ["Remote areas (farm addresses, game farms)", "5–7 business days"],
+                ["Gauteng (Johannesburg, Pretoria, Ekurhuleni)", "3–5 business days"],
+                ["Major centres (Cape Town, Durban, Port Elizabeth, Bloemfontein)", "5–7 business days"],
+                ["Secondary towns (George, Nelspruit, Polokwane, Kimberley)", "5–7 business days"],
+                ["Outlying areas and small towns", "7–10 business days"],
               ].map(([region, time]) => (
                 <tr key={region} className="border-b border-border odd:bg-surface">
                   <td className="py-3 px-4 text-copy">{region}</td>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendPasswordResetEmail } from "@/lib/account-auth-email";
 import { getMemberPasswordSetupRedirectUrl } from "@/lib/auth-redirect";
 import { isSuspiciousSignupEmail } from "@/lib/security/signup-guard";
+import { emailDomainCanReceiveMail } from "@/lib/security/email-domain-check";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,10 @@ export async function POST(req: NextRequest) {
 
     if (isSuspiciousSignupEmail(email)) {
       return NextResponse.json({ error: "Please use a valid email address." }, { status: 400 });
+    }
+
+    if (!(await emailDomainCanReceiveMail(email))) {
+      return NextResponse.json({ error: "Please use a valid, working email address." }, { status: 400 });
     }
 
     const redirectTo = getMemberPasswordSetupRedirectUrl(new URL(req.url).origin);

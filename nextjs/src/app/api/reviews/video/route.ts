@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { buildReviewLoginPath, isCustomerEmailOnFile } from "@/lib/review-customer-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -16,13 +17,26 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Valid email address required" }, { status: 400 });
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!(await isCustomerEmailOnFile(normalizedEmail))) {
+      return NextResponse.json(
+        {
+          error:
+            "We couldn't find this email in our customer records. Sign in or create an account to continue.",
+          code: "customer_not_found",
+          loginUrl: buildReviewLoginPath(normalizedEmail, "/submit-review"),
+        },
+        { status: 403 }
+      );
+    }
+
     const { data: { publicUrl } } = supabase.storage.from("videos").getPublicUrl(path);
 
     const scope = review_scope === "general" ? "general" : "product";
 
     const { error: dbError } = await supabase.from("reviews").insert({
       name,
-      email: email.trim().toLowerCase(),
+      email: normalizedEmail,
       machine: product || null,
       product_slug: scope === "general" ? null : product_slug?.trim() || null,
       review_scope: scope,
@@ -32,7 +46,6 @@ export async function POST(req: NextRequest) {
       rating: null,
       headline: null,
       review: null,
-      email: null,
     });
 
     if (dbError) {

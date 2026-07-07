@@ -1,14 +1,10 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { isAdminAuthed } from "@/lib/admin-auth";
 import { createServiceClient } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { generateSlug } from "@/lib/slug";
 
-async function isAuthed(): Promise<boolean> {
-  const store = await cookies();
-  return store.get("admin_session")?.value === "authenticated";
-}
 
 function stripHtml(input: string): string {
   return input.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -32,10 +28,10 @@ function autoSeoDescription(name: string, shortDescription?: string | null, desc
 }
 
 export async function POST(request: NextRequest) {
-  if (!(await isAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await isAdminAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  const { name, sku, category_id, regular_price, stock_status, is_published, short_description, description, seo_title, seo_description } = body;
+  const { name, sku, category_id, regular_price, stock_status, is_published, short_description, description, seo_title, seo_description, tags } = body;
 
   if (!name || regular_price === undefined || regular_price === null) {
     return NextResponse.json({ error: "Name and price are required" }, { status: 400 });
@@ -69,6 +65,7 @@ export async function POST(request: NextRequest) {
       description:       description || null,
       seo_title:         (seo_title?.trim?.() || autoSeoTitle(name)),
       seo_description:   (seo_description?.trim?.() || autoSeoDescription(name, short_description, description)),
+      tags:              Array.isArray(tags) ? tags : [],
       updated_at:        new Date().toISOString(),
     })
     .select()

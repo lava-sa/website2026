@@ -1,16 +1,12 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { isAdminAuthed } from "@/lib/admin-auth";
 import { createServiceClient } from "@/lib/supabase";
 
-async function isAuthed(): Promise<boolean> {
-  const store = await cookies();
-  return store.get("admin_session")?.value === "authenticated";
-}
 
 /** Approve, unpublish, or update product link / scope. */
 export async function PATCH(request: NextRequest) {
-  if (!(await isAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await isAdminAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
   const { id, approved, product_slug, review_scope } = body;
@@ -34,7 +30,7 @@ export async function PATCH(request: NextRequest) {
 
 /** Permanently delete a rejected or unwanted review (and video file if applicable). */
 export async function DELETE(request: NextRequest) {
-  if (!(await isAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await isAdminAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await request.json();
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });

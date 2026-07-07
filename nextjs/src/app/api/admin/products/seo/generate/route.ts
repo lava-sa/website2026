@@ -1,14 +1,10 @@
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { isAdminAuthed } from "@/lib/admin-auth";
 import { createServiceClient } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 
-async function isAuthed(): Promise<boolean> {
-  const store = await cookies();
-  return store.get("admin_session")?.value === "authenticated";
-}
 
 function stripHtml(input: string): string {
   return input.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -32,7 +28,7 @@ function autoSeoDescription(name: string, shortDescription?: string | null, desc
 }
 
 export async function POST() {
-  if (!(await isAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await isAdminAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const supabase = createServiceClient();
   const { data, error } = await supabase

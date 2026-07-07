@@ -28,7 +28,6 @@ const inputCls =
 type Props = {
   value: MachineBenefitsConfig;
   productId: string;
-  primaryImageUrl?: string | null;
   galleryImages: GalleryImage[];
   onChange: (value: MachineBenefitsConfig) => void;
 };
@@ -36,7 +35,6 @@ type Props = {
 export default function MachineBenefitsEditor({
   value,
   productId,
-  primaryImageUrl,
   galleryImages,
   onChange,
 }: Props) {
@@ -113,10 +111,8 @@ export default function MachineBenefitsEditor({
                       productId={productId}
                       blockId={id}
                       galleryImages={galleryImages}
-                      primaryImageUrl={primaryImageUrl}
                       value={block.imageUrl}
                       onChange={(imageUrl) => updateBlock(id, { imageUrl })}
-                      lockedToPrimary={id === "welding"}
                     />
                   </div>
                 </div>

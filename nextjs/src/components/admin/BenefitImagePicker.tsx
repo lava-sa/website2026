@@ -13,22 +13,18 @@ type Props = {
   productId: string;
   blockId: BenefitBlockId;
   galleryImages: GalleryImage[];
-  primaryImageUrl?: string | null;
   value?: string;
   onChange: (imageUrl: string | undefined) => void;
   onGalleryUpdate?: (images: GalleryImage[]) => void;
-  lockedToPrimary?: boolean;
 };
 
 export default function BenefitImagePicker({
   productId,
   blockId,
   galleryImages,
-  primaryImageUrl,
   value,
   onChange,
   onGalleryUpdate,
-  lockedToPrimary = false,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [gallery, setGallery] = useState(() => sortGalleryImages(galleryImages));
@@ -37,10 +33,10 @@ export default function BenefitImagePicker({
   const [error, setError] = useState("");
 
   const galleryUrls = gallery.map((img) => img.url);
-  const resolvedUrl =
-    value?.trim() ||
-    defaultBenefitImageUrl(blockId, galleryUrls, primaryImageUrl);
+  const resolvedUrl = value?.trim() || defaultBenefitImageUrl(blockId, galleryUrls);
   const defaultIdx = BENEFIT_DEFAULT_GALLERY_INDEX[blockId];
+  const defaultLabel =
+    defaultIdx === "brand" ? "brand image" : `image ${Number(defaultIdx) + 1}`;
   const usingDefault = !value?.trim();
 
   const uploadFile = useCallback(
@@ -76,24 +72,6 @@ export default function BenefitImagePicker({
     },
     [gallery, onChange, onGalleryUpdate, productId]
   );
-
-  if (lockedToPrimary) {
-    return (
-      <div className="flex items-center gap-3 p-3 border border-gray-100 bg-gray-50">
-        {resolvedUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={resolvedUrl}
-            alt="Primary product"
-            className="h-16 w-16 object-contain border border-gray-200 bg-white"
-          />
-        )}
-        <p className="text-sm text-gray-600">
-          Always uses the <strong>primary product image</strong> from the gallery above.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-2">
@@ -133,18 +111,12 @@ export default function BenefitImagePicker({
               onClick={() => onChange(undefined)}
               className="text-xs font-bold text-gray-400 hover:text-primary transition-colors text-left"
             >
-              Reset to gallery default
-              {defaultIdx === "primary"
-                ? " (primary)"
-                : ` (image ${Number(defaultIdx) + 1})`}
+              Reset to gallery default ({defaultLabel})
             </button>
           )}
           {usingDefault && (
             <p className="text-[10px] text-gray-400">
-              Using gallery default
-              {defaultIdx === "primary"
-                ? " — primary image"
-                : ` — image ${Number(defaultIdx) + 1}`}
+              Using gallery default — {defaultLabel}
             </p>
           )}
         </div>

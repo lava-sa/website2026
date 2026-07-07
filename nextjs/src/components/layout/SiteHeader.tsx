@@ -439,14 +439,12 @@ const SiteHeader = () => {
             <li className="text-white/15">|</li>
 
             <li>
-              <CategoryDropdown label="Special Offers" href="/products/special-offers" width="w-48" highlight>
-                <DropdownLinks
-                  links={[
-                    ["Bundle Deals", "/products/special-offers#bundles"],
-                    ["Clearance", "/products/special-offers#clearance"],
-                  ]}
-                />
-              </CategoryDropdown>
+              <Link
+                href="/products/special-offers"
+                className="flex items-center text-[10px] font-bold tracking-[0.12em] uppercase py-3 text-secondary hover:text-white transition-colors"
+              >
+                Special Offers
+              </Link>
             </li>
 
           </ul>

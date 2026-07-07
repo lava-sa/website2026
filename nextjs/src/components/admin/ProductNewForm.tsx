@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Save, Loader2, ArrowLeft } from "lucide-react";
+import {
+  getSubCategoryOptions,
+  applySubCategorySelection,
+} from "@/lib/product-subcategories";
 
 type Category = { id: string; name: string; slug: string };
 
@@ -21,8 +25,13 @@ export default function ProductNewForm({ categories }: { categories: Category[] 
     description:       "",
   });
 
+  const [subCategorySelection, setSubCategorySelection] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  const selectedCategorySlug =
+    categories.find((c) => c.id === form.category_id)?.slug ?? null;
+  const subCategoryOptions = getSubCategoryOptions(selectedCategorySlug);
 
   const inputCls = "w-full border border-gray-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors";
   const labelCls = "block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide";
@@ -34,6 +43,19 @@ export default function ProductNewForm({ categories }: { categories: Category[] 
         : e.target.value;
       setForm((p) => ({ ...p, [field]: value }));
     };
+  }
+
+  function handleCategoryChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    setForm((p) => ({ ...p, category_id: e.target.value }));
+    setSubCategorySelection([]);
+  }
+
+  function toggleSubCategory(primaryTag: string) {
+    setSubCategorySelection((prev) =>
+      prev.includes(primaryTag)
+        ? prev.filter((t) => t !== primaryTag)
+        : [...prev, primaryTag]
+    );
   }
 
   async function handleCreate(e: React.FormEvent) {
@@ -51,6 +73,7 @@ export default function ProductNewForm({ categories }: { categories: Category[] 
         ...form,
         regular_price: Number(form.regular_price),
         category_id:   form.category_id || null,
+        tags:          applySubCategorySelection([], selectedCategorySlug, subCategorySelection),
       }),
     });
 
@@ -113,7 +136,7 @@ export default function ProductNewForm({ categories }: { categories: Category[] 
             </div>
             <div>
               <label className={labelCls}>Category</label>
-              <select value={form.category_id} onChange={set("category_id")} className={inputCls}>
+              <select value={form.category_id} onChange={handleCategoryChange} className={inputCls}>
                 <option value="">— Select category —</option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
@@ -121,6 +144,38 @@ export default function ProductNewForm({ categories }: { categories: Category[] 
               </select>
             </div>
           </div>
+
+          {subCategoryOptions.length > 0 && (
+            <div>
+              <label className={labelCls}>Sub-categories</label>
+              <p className="text-xs text-gray-400 mb-2">
+                Choose which sub-category listings this product appears in.
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {subCategoryOptions.map((opt) => {
+                  const checked = subCategorySelection.includes(opt.primaryTag);
+                  return (
+                    <label
+                      key={opt.primaryTag}
+                      className={`flex items-center gap-2 border px-3 py-2 text-sm cursor-pointer transition-colors ${
+                        checked
+                          ? "border-primary bg-primary/5 text-primary font-semibold"
+                          : "border-gray-200 text-gray-700 hover:border-primary/50"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleSubCategory(opt.primaryTag)}
+                        className="accent-primary"
+                      />
+                      {opt.label}
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div>
             <label className={labelCls}>Short Description</label>

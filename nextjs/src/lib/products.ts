@@ -201,6 +201,42 @@ export async function getIndustrialRelatedProducts(
     .slice(0, limit) as unknown as Product[];
 }
 
+/** Authoritative product row for checkout price validation. */
+export interface CheckoutProductRow {
+  id: string;
+  name: string;
+  sku: string | null;
+  regular_price: number;
+  sale_price: number | null;
+  stock_status: string;
+}
+
+/** Sale price applies only when positive and below regular — never treat 0/null as free. */
+export function resolveProductUnitPrice(
+  row: Pick<CheckoutProductRow, "regular_price" | "sale_price">
+): number {
+  const regular = Number(row.regular_price);
+  const sale = row.sale_price != null ? Number(row.sale_price) : null;
+  if (sale != null && sale > 0 && sale < regular) return sale;
+  return regular;
+}
+
+/** Fetch published products by id for server-side checkout validation. */
+export async function getProductsByIds(ids: string[]): Promise<CheckoutProductRow[]> {
+  const unique = [...new Set(ids.filter(Boolean))];
+  if (unique.length === 0) return [];
+
+  const supabase = getClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select("id, name, sku, regular_price, sale_price, stock_status")
+    .in("id", unique)
+    .eq("is_published", true);
+
+  if (error) throw new Error(`getProductsByIds: ${error.message}`);
+  return (data ?? []) as CheckoutProductRow[];
+}
+
 /** Strip HTML tags + collapse whitespace — for meta tags, JSON-LD, card snippets. */
 export function stripHtml(input: string | null | undefined): string {
   if (!input) return "";

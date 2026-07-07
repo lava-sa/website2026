@@ -1,13 +1,9 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { isAdminAuthed } from "@/lib/admin-auth";
 import { createServiceClient } from "@/lib/supabase";
 
-async function isAuthed(): Promise<boolean> {
-  const store = await cookies();
-  return store.get("admin_session")?.value === "authenticated";
-}
 
 async function adjustStockForOrders(orderIds: string[], mode: "restore" | "reduce") {
   const supabase = createServiceClient();
@@ -65,7 +61,7 @@ type TrashBody = {
 };
 
 export async function PATCH(request: NextRequest) {
-  if (!(await isAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await isAdminAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   let body: TrashBody;
   try {

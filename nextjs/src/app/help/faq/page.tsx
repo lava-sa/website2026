@@ -123,7 +123,7 @@ const faqs = [
     questions: [
       {
         q: "How long does delivery take?",
-        a: "Gauteng: 1–2 business days. Major centres (Cape Town, Durban, PE): 2–3 business days. Outlying areas: 3–5 business days. Remote/farm addresses: 5–7 business days. Orders placed on weekdays before 15:00 are typically dispatched the same day.",
+        a: "Gauteng: 3–5 business days. Major centres (Cape Town, Durban, PE, Bloemfontein): 5–7 business days. Secondary towns (George, Nelspruit, Polokwane, Kimberley): 5–7 business days. Outlying areas and small towns: 7–10 business days. Orders placed on weekdays before 15:00 are typically dispatched the same day.",
         link: ["/help/delivery", "Full delivery information →"],
       },
       {

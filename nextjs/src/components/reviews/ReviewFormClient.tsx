@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import {
   Star, Send, CheckCircle, MessageSquare, Video,
   Upload, StopCircle, Circle, RotateCcw, Loader2,
@@ -18,6 +19,7 @@ import {
 } from "@/lib/review-forms";
 import { HoneypotField } from "@/components/security/HoneypotField";
 import { TurnstileWidget } from "@/components/security/TurnstileWidget";
+import { ensureCustomerEmailOnFile } from "@/lib/review-customer-gate-client";
 
 function StarRating({ value, onChange }: { value: number; onChange: (n: number) => void }) {
   const [hover, setHover] = useState(0);
@@ -54,6 +56,7 @@ const inputErrCls =
   "w-full border border-red-400 bg-red-50 px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors";
 
 function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
+  const pathname = usePathname();
   const config = getReviewFormConfig(variant);
   const initialProduct = config.productOptions[0];
   const [form, setForm] = useState({
@@ -128,6 +131,8 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
       return;
     }
 
+    if (!(await ensureCustomerEmailOnFile(form.email, pathname))) return;
+
     setStatus("sending");
 
     const reviewBody = compileStructuredReview(activeQuestions, form.answers);
@@ -158,6 +163,10 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       setStatus("idle");
+      if (res.status === 403 && data.code === "customer_not_found" && data.loginUrl) {
+        window.location.href = data.loginUrl as string;
+        return;
+      }
       setErrors({ headline: data.error ?? "Something went wrong. Please try again." });
       return;
     }
@@ -375,6 +384,7 @@ function WrittenReviewForm({ variant }: { variant: ReviewFormVariant }) {
 }
 
 function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
+  const pathname = usePathname();
   const config = getReviewFormConfig(variant);
   const [mode, setMode] = useState<"idle" | "recording" | "preview" | "uploading" | "done" | "error">(
     "idle"
@@ -482,6 +492,7 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
       setMode("error");
       return;
     }
+    if (!(await ensureCustomerEmailOnFile(email, pathname))) return;
     setMode("uploading");
     setErrMsg("");
     try {
@@ -527,6 +538,10 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
       });
       if (!metaRes.ok) {
         const j = await metaRes.json().catch(() => ({}));
+        if (metaRes.status === 403 && j.code === "customer_not_found" && j.loginUrl) {
+          window.location.href = j.loginUrl as string;
+          return;
+        }
         setErrMsg(
           typeof j?.error === "string"
             ? j.error

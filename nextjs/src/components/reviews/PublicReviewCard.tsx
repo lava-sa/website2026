@@ -111,3 +111,33 @@ export function ProductReviewsSection({
     </section>
   );
 }
+
+type EmptySectionProps = {
+  id?: string;
+  title: string;
+  reviewFormHref?: string;
+};
+
+export function ProductReviewsEmptySection({
+  id = "reviews",
+  title,
+  reviewFormHref = "/submit-review",
+}: EmptySectionProps) {
+  return (
+    <section id={id} className="py-20 bg-surface border-t border-border">
+      <div className="section-container text-center">
+        <p className="overline mb-2">Customer Reviews</p>
+        <h2 className="text-3xl font-black text-primary mb-4">{title}</h2>
+        <p className="text-copy-muted max-w-xl mx-auto mb-8">
+          No reviews for this product yet. Be the first to share your experience.
+        </p>
+        <Link
+          href={reviewFormHref}
+          className="inline-flex items-center gap-2 border-2 border-primary text-primary font-bold px-8 py-3 hover:bg-primary hover:text-white transition-colors"
+        >
+          <Star className="h-4 w-4" /> Leave the first review
+        </Link>
+      </div>
+    </section>
+  );
+}

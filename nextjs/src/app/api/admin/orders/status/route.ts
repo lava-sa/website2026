@@ -1,18 +1,14 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { isAdminAuthed } from "@/lib/admin-auth";
 import { createServiceClient } from "@/lib/supabase";
 import { awardPointsForPaidOrder } from "@/lib/points-award";
 
-async function isAuthed(): Promise<boolean> {
-  const store = await cookies();
-  return store.get("admin_session")?.value === "authenticated";
-}
 
 const ALLOWED_STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "cancelled", "refunded"];
 
 export async function PATCH(request: NextRequest) {
-  if (!(await isAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await isAdminAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id, status } = await request.json();
   if (!id || !status || !ALLOWED_STATUSES.includes(status)) {

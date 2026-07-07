@@ -22,6 +22,11 @@ import {
   type MachineBenefitsConfig,
 } from "@/lib/machine-benefits";
 import { generateProductAiDiscoverability } from "@/lib/product-ai-discoverability";
+import {
+  getSubCategoryOptions,
+  getSelectedSubCategoryTags,
+  applySubCategorySelection,
+} from "@/lib/product-subcategories";
 
 type Category = { id: string; name: string; slug: string };
 type ProductChoice = {
@@ -72,6 +77,15 @@ export default function ProductEditForm({
     ai_use_cases:      product.specs?.ai_use_cases ?? "",
   });
 
+  /** Full tag list for this product (source of truth; sub-category picker edits a slice). */
+  const [tags, setTags] = useState<string[]>(
+    Array.isArray(product.tags) ? (product.tags as string[]) : []
+  );
+  /** Currently-selected sub-categories (by canonical primaryTag) for the chosen category. */
+  const [subCategorySelection, setSubCategorySelection] = useState<string[]>(() =>
+    getSelectedSubCategoryTags(product.tags, categorySlug)
+  );
+
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
@@ -85,12 +99,6 @@ export default function ProductEditForm({
   const [machineBenefits, setMachineBenefits] = useState<MachineBenefitsConfig>(() =>
     parseMachineBenefitsFromSpecs(product.specs ?? {})
   );
-  const primaryImageUrl =
-    product.primary_image_url ??
-    product.product_images?.find((img: { is_primary?: boolean }) => img.is_primary)?.url ??
-    product.product_images?.[0]?.url ??
-    null;
-
   function applyMarkdown(percent: 10 | 15 | 20 | 25) {
     const regular = Number(form.regular_price);
     if (!regular || regular <= 0) return;
@@ -166,6 +174,28 @@ export default function ProductEditForm({
     };
   }
 
+  const selectedCategorySlug =
+    categories.find((c) => c.id === form.category_id)?.slug ?? null;
+  const subCategoryOptions = getSubCategoryOptions(selectedCategorySlug);
+
+  function handleCategoryChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const nextCategoryId = e.target.value;
+    const nextSlug = categories.find((c) => c.id === nextCategoryId)?.slug ?? null;
+    setForm((p) => ({ ...p, category_id: nextCategoryId }));
+    // Re-evaluate sub-category selection against the current tags for the new category
+    setSubCategorySelection(getSelectedSubCategoryTags(tags, nextSlug));
+    setSaved(false);
+  }
+
+  function toggleSubCategory(primaryTag: string) {
+    setSubCategorySelection((prev) =>
+      prev.includes(primaryTag)
+        ? prev.filter((t) => t !== primaryTag)
+        : [...prev, primaryTag]
+    );
+    setSaved(false);
+  }
+
   function autoFillSeo() {
     const title = `${form.name} | Lava-SA`.slice(0, 60);
     const source = (form.short_description || form.description || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -196,6 +226,7 @@ export default function ProductEditForm({
       weight_kg:     form.weight_kg === "" ? null : Number(form.weight_kg),
       sort_order:    Number(form.sort_order),
       category_id:   form.category_id || null,
+      tags:          applySubCategorySelection(tags, selectedCategorySlug, subCategorySelection),
       slug:          form.slug.trim(),
       specs: {
         ...baseSpecs,
@@ -218,6 +249,7 @@ export default function ProductEditForm({
     setSaving(false);
 
     if (res.ok) {
+      setTags(payload.tags);
       setSaved(true);
       router.refresh();
     } else {
@@ -315,7 +347,7 @@ export default function ProductEditForm({
                   </div>
                   <div>
                     <label className={labelCls}>Category</label>
-                    <select value={form.category_id} onChange={set("category_id")} className={inputCls}>
+                    <select value={form.category_id} onChange={handleCategoryChange} className={inputCls}>
                       <option value="">— Select category —</option>
                       {categories.map((c) => (
                         <option key={c.id} value={c.id}>{c.name}</option>
@@ -323,6 +355,45 @@ export default function ProductEditForm({
                     </select>
                   </div>
                 </div>
+
+                {subCategoryOptions.length > 0 && (
+                  <div>
+                    <label className={labelCls}>Sub-categories</label>
+                    <p className="text-xs text-gray-400 mb-2">
+                      Choose which sub-category listings this product appears in. A product can
+                      belong to more than one — untick any that don&apos;t apply.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {subCategoryOptions.map((opt) => {
+                        const checked = subCategorySelection.includes(opt.primaryTag);
+                        return (
+                          <label
+                            key={opt.primaryTag}
+                            className={`flex items-center gap-2 border px-3 py-2 text-sm cursor-pointer transition-colors ${
+                              checked
+                                ? "border-primary bg-primary/5 text-primary font-semibold"
+                                : "border-gray-200 text-gray-700 hover:border-primary/50"
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => toggleSubCategory(opt.primaryTag)}
+                              className="accent-primary"
+                            />
+                            {opt.label}
+                          </label>
+                        );
+                      })}
+                    </div>
+                    {subCategorySelection.length === 0 && (
+                      <p className="text-xs text-amber-600 mt-2">
+                        Not in any sub-category — it will only show on the main{" "}
+                        {selectedCategorySlug?.replace(/-/g, " ")} page.
+                      </p>
+                    )}
+                  </div>
+                )}
                 <div>
                   <label className={labelCls}>Short Description</label>
                   <p className="text-xs text-gray-400 mb-2">Shown under the product title. Use Bold for emphasis.</p>
@@ -379,7 +450,6 @@ export default function ProductEditForm({
                 <MachineBenefitsEditor
                   value={machineBenefits}
                   productId={product.id}
-                  primaryImageUrl={primaryImageUrl}
                   galleryImages={product.product_images ?? []}
                   onChange={(value) => {
                     setMachineBenefits(value);

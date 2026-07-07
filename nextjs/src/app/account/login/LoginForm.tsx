@@ -63,6 +63,7 @@ function LoginFormInner() {
   const prefilledEmail = params.get("email") || "";
   const authCallbackError = params.get("error");
   const isOrderTracking = from.startsWith("/account/orders/");
+  const isReviewGate = params.get("reason") === "review";
 
   const [mode, setMode] = useState<Mode>(resolveInitialMode(requestedMode));
   const [email, setEmail] = useState(prefilledEmail);
@@ -198,6 +199,41 @@ function LoginFormInner() {
                 Use the <strong>View my order</strong> link in your order email — it opens a
                 dedicated post-purchase page (no password needed). Or choose{" "}
                 <strong>password reset</strong> below to set a password for next time.
+              </p>
+            </div>
+          )}
+
+          {isReviewGate && !authCallbackError && !success && (
+            <div className="bg-surface border border-border px-4 py-4 text-sm text-copy mb-4">
+              <p className="font-bold text-primary mb-1">Submit a customer review</p>
+              <p className="text-copy-muted leading-relaxed">
+                We couldn&apos;t find{" "}
+                {prefilledEmail ? (
+                  <strong>{prefilledEmail}</strong>
+                ) : (
+                  "that email"
+                )}{" "}
+                in our records. If you&apos;ve ordered from lava-sa.com, use{" "}
+                <button
+                  type="button"
+                  onClick={() => switchMode("reset")}
+                  className="font-bold text-secondary underline"
+                >
+                  password reset
+                </button>{" "}
+                with your order email. New visitor?{" "}
+                <button
+                  type="button"
+                  onClick={() => switchMode("signup")}
+                  className="font-bold text-secondary underline"
+                >
+                  Create a free member account
+                </button>
+                . Bought in store only?{" "}
+                <Link href="/contact" className="font-bold text-secondary underline">
+                  Contact Anneke
+                </Link>{" "}
+                so we can add your details.
               </p>
             </div>
           )}

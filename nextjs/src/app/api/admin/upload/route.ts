@@ -1,18 +1,14 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { isAdminAuthed } from "@/lib/admin-auth";
 import sharp from "sharp";
-import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 
-async function isAuthed(): Promise<boolean> {
-  const store = await cookies();
-  return store.get("admin_session")?.value === "authenticated";
-}
 
 export async function POST(req: NextRequest) {
-  if (!(await isAuthed())) {
+  if (!(await isAdminAuthed())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

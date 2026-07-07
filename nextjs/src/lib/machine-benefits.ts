@@ -44,13 +44,17 @@ export const BENEFIT_FALLBACK_IMAGES: Record<BenefitBlockId, string> = {
   germany: `${DESC_IMG}/lava-vacuum-sealers-quality-without-compromise.webp`,
 };
 
-/** Default gallery index per block (0-based, sorted gallery incl. primary) */
-export const BENEFIT_DEFAULT_GALLERY_INDEX: Record<BenefitBlockId, number | "primary"> = {
-  welding: "primary",
-  double_seal: 0,
-  containers: 1,
-  variety: 2,
-  germany: "primary",
+/**
+ * Default gallery index per block (0-based, sorted gallery incl. primary at [0]).
+ * Body sections show the machine's OWN photos starting at the SECOND image (01.webp),
+ * never repeating the primary. "germany" keeps its dedicated brand image.
+ */
+export const BENEFIT_DEFAULT_GALLERY_INDEX: Record<BenefitBlockId, number | "brand"> = {
+  welding: 1, // 01.webp
+  double_seal: 2, // 02.webp
+  containers: 3, // 03.webp
+  variety: 4, // 04.webp
+  germany: "brand", // dedicated "made in Germany" image, not a gallery repeat
 };
 
 export const DEFAULT_MACHINE_BENEFITS: MachineBenefitsConfig = {
@@ -141,27 +145,23 @@ export function getVisibleBenefitBlocks(
 
 export function defaultBenefitImageUrl(
   blockId: BenefitBlockId,
-  galleryUrls: string[],
-  primaryImageUrl: string | null | undefined
+  galleryUrls: string[]
 ): string {
-  const primary = primaryImageUrl || galleryUrls[0] || "";
   const idx = BENEFIT_DEFAULT_GALLERY_INDEX[blockId];
-
-  if (idx === "primary") return primary || BENEFIT_FALLBACK_IMAGES[blockId];
-  return galleryUrls[idx] ?? primary ?? BENEFIT_FALLBACK_IMAGES[blockId];
+  // "germany" (or any brand block) uses its dedicated image, never a gallery repeat.
+  if (idx === "brand") return BENEFIT_FALLBACK_IMAGES[blockId];
+  // Walk the gallery from the second image onward; fall back to the block's own
+  // description image when the machine doesn't have that many photos (never primary).
+  return galleryUrls[idx] ?? BENEFIT_FALLBACK_IMAGES[blockId];
 }
 
 export function resolveBenefitImageUrl(
   blockId: BenefitBlockId,
   block: MachineBenefitBlockConfig,
-  galleryUrls: string[],
-  primaryImageUrl: string | null | undefined
+  galleryUrls: string[]
 ): string {
-  if (blockId === "welding") {
-    return primaryImageUrl || galleryUrls[0] || BENEFIT_FALLBACK_IMAGES[blockId];
-  }
   if (block.imageUrl?.trim()) return block.imageUrl.trim();
-  return defaultBenefitImageUrl(blockId, galleryUrls, primaryImageUrl);
+  return defaultBenefitImageUrl(blockId, galleryUrls);
 }
 
 function normalizeBlock(

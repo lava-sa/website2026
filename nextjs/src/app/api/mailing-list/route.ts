@@ -4,6 +4,7 @@ import {
   guardFailureResponse,
   verifyPublicFormSubmission,
 } from "@/lib/security/public-form-guard";
+import { emailDomainCanReceiveMail } from "@/lib/security/email-domain-check";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +44,12 @@ export async function POST(req: NextRequest) {
 
     if (!email || !isValidEmail(email)) {
       return NextResponse.json({ error: "Valid email is required" }, { status: 400 });
+    }
+    if (!(await emailDomainCanReceiveMail(email))) {
+      return NextResponse.json(
+        { error: "Please enter a valid, working email address." },
+        { status: 400 }
+      );
     }
     if (!interestCategory || !ALLOWED_INTEREST_CATEGORIES.has(interestCategory)) {
       return NextResponse.json({ error: "Please select a valid interest category" }, { status: 400 });

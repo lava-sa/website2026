@@ -1,5 +1,11 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
+import {
+  ADMIN_SESSION_COOKIE,
+  ADMIN_SESSION_MAX_AGE_SEC,
+  createAdminSessionToken,
+  safeStringEqual,
+} from "@/lib/admin-session-token";
 
 export async function POST(request: NextRequest) {
   const { username, password } = await request.json();
@@ -14,19 +20,30 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (username !== expectedUser || password !== expectedPass) {
+  if (
+    !safeStringEqual(username ?? "", expectedUser) ||
+    !safeStringEqual(password ?? "", expectedPass)
+  ) {
     return NextResponse.json(
       { error: "Incorrect username or password" },
       { status: 401 }
     );
   }
 
+  const sessionToken = await createAdminSessionToken();
+  if (!sessionToken) {
+    return NextResponse.json(
+      { error: "Admin session not configured" },
+      { status: 500 }
+    );
+  }
+
   const response = NextResponse.json({ ok: true });
-  response.cookies.set("admin_session", "authenticated", {
+  response.cookies.set(ADMIN_SESSION_COOKIE, sessionToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 60 * 60 * 8, // 8 hours
+    maxAge: ADMIN_SESSION_MAX_AGE_SEC,
     path: "/",
   });
   return response;
@@ -34,6 +51,6 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE() {
   const response = NextResponse.json({ ok: true });
-  response.cookies.delete("admin_session");
+  response.cookies.delete(ADMIN_SESSION_COOKIE);
   return response;
 }

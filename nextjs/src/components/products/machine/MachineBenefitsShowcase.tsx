@@ -135,12 +135,10 @@ function BenefitText({
  * Visible blocks only — image left/right alternates by visible index (not block id).
  */
 export default function MachineBenefitsShowcase({
-  primaryImageUrl,
   machineName,
   specs,
   galleryImageUrls,
 }: {
-  primaryImageUrl?: string | null;
   machineName?: string;
   specs?: Record<string, unknown> | null;
   galleryImageUrls?: string[];
@@ -154,12 +152,7 @@ export default function MachineBenefitsShowcase({
       {visibleBlocks.map((blockId, visibleIndex) => {
         const block = benefits[blockId];
         const meta = BLOCK_META[blockId];
-        const imageSrc = resolveBenefitImageUrl(
-          blockId,
-          block,
-          galleryUrls,
-          primaryImageUrl
-        );
+        const imageSrc = resolveBenefitImageUrl(blockId, block, galleryUrls);
         const imageAlt =
           blockId === "welding" && machineName
             ? `${machineName} vacuum sealer`

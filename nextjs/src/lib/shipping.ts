@@ -55,3 +55,17 @@ export const SHIPPING_TRUST_LINE =
 
 export const SHIPPING_PRODUCT_BADGE_TITLE = "Courier Delivery";
 export const SHIPPING_PRODUCT_BADGE_SUB = "R190 / R250 excl. VAT by province";
+
+/**
+ * Estimated courier delivery window (from dispatch) by province.
+ * Single source of truth — keep /help/delivery, /legal/shipping-returns and FAQ aligned.
+ */
+export function getDeliveryEstimate(province: string | null | undefined): string {
+  const p = province?.trim().toLowerCase() ?? "";
+  if (p === "gauteng") return "3–5 business days";
+  if (["western cape", "kwazulu-natal", "eastern cape", "free state"].includes(p)) {
+    return "5–7 business days";
+  }
+  // Limpopo, Mpumalanga, North West, Northern Cape + unknown
+  return "7–10 business days";
+}

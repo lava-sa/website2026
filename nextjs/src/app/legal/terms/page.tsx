@@ -93,7 +93,7 @@ export default function TermsPage() {
           <Section id="delivery" title="6. Delivery">
             <ul>
               <li>All orders are dispatched via tracked courier within 1–2 business days of payment confirmation.</li>
-              <li>Estimated delivery time within South Africa is 2–4 business days after dispatch.</li>
+              <li>Estimated delivery time within South Africa is 3–10 business days after dispatch, depending on your location.</li>
               <li>You must provide a physical street address and contact phone number — we cannot deliver to PO Boxes.</li>
               <li>Someone must be available to receive delivery between 08:00 and 17:00 on weekdays.</li>
               <li>All vacuum machines are individually tested before dispatch.</li>

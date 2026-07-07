@@ -1,14 +1,10 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { isAdminAuthed } from "@/lib/admin-auth";
 import { createServiceClient } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { isValidSlug } from "@/lib/slug";
 
-async function isAuthed(): Promise<boolean> {
-  const store = await cookies();
-  return store.get("admin_session")?.value === "authenticated";
-}
 
 function stripHtml(input: string): string {
   return input.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -35,7 +31,7 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  if (!(await isAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await isAdminAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
   const body = await request.json();
@@ -45,7 +41,7 @@ export async function PATCH(
   const allowed = [
     "name", "sku", "slug", "short_description", "description",
     "regular_price", "sale_price", "stock_status", "stock_quantity",
-    "is_published", "is_featured", "category_id",
+    "is_published", "is_featured", "category_id", "tags",
     "seo_title", "seo_description", "weight_kg", "sort_order", "specs",
   ];
 

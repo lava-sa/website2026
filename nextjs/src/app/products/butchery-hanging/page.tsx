@@ -20,7 +20,9 @@ export default async function ButcheryHangingPage() {
     // Supabase unavailable
   }
 
-  const hanging = products.filter((p) => p.tags?.includes("hanging"));
+  const hanging = products.filter(
+    (p) => p.tags?.includes("hanging") && !p.tags?.includes("scale")
+  );
 
   return (
     <main className="min-h-screen bg-white">

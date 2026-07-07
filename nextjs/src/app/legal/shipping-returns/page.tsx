@@ -59,10 +59,10 @@ export default function ShippingReturnsPage() {
 
             <h3 className="font-bold text-primary mt-6">Delivery Times</h3>
             <Table rows={[
-              ["Gauteng (Johannesburg, Pretoria)", "1–2 business days"],
-              ["Major centres (Cape Town, Durban, PE)", "2–3 business days"],
-              ["Outlying areas and small towns", "3–5 business days"],
-              ["Remote areas (farm addresses, etc.)", "5–7 business days"],
+              ["Gauteng (Johannesburg, Pretoria)", "3–5 business days"],
+              ["Major centres (Cape Town, Durban, PE, Bloemfontein)", "5–7 business days"],
+              ["Secondary towns (George, Nelspruit, Polokwane, Kimberley)", "5–7 business days"],
+              ["Outlying areas and small towns", "7–10 business days"],
             ]} />
             <p className="text-sm text-copy-muted">
               Delivery times are estimates only and may be affected by courier delays, public holidays or adverse weather.

@@ -6,7 +6,134 @@ import { ensureCheckoutCustomerAccount, type CheckoutAccountResult } from "@/lib
 import { sendOrderPlacedEmails } from "@/lib/order-email";
 import { getPublicSiteUrl } from "@/lib/seo";
 import type { CartItem } from "@/lib/cart-context";
+import {
+  applyFunnelDiscount,
+  isPrimaryForFunnelSource,
+  parseFunnelCartItemId,
+  parseFunnelConfig,
+} from "@/lib/funnel";
+import { getProductsByIds, resolveProductUnitPrice, type CheckoutProductRow } from "@/lib/products";
 import { getShipping } from "@/lib/shipping";
+
+const MAX_LINE_QTY = 99;
+
+interface VerifiedLine {
+  productId: string;
+  name: string;
+  sku: string | null;
+  quantity: number;
+  unitPrice: number;
+}
+
+function lookupProductId(item: CartItem): string {
+  return parseFunnelCartItemId(item.id)?.baseProductId ?? item.id;
+}
+
+async function resolveVerifiedLines(
+  cart: CartItem[],
+  supabase: ReturnType<typeof createServiceClient>
+): Promise<VerifiedLine[] | NextResponse> {
+  for (const item of cart) {
+    if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > MAX_LINE_QTY) {
+      return NextResponse.json({ error: "Invalid item quantity" }, { status: 400 });
+    }
+  }
+
+  const lookupIds = [...new Set(cart.map(lookupProductId))];
+  let productRows: CheckoutProductRow[];
+  try {
+    productRows = await getProductsByIds(lookupIds);
+  } catch (err) {
+    console.error("Checkout product lookup failed:", err);
+    return NextResponse.json(
+      { error: "Could not verify your cart, please try again" },
+      { status: 503 }
+    );
+  }
+
+  const productMap = new Map(productRows.map((row) => [row.id, row]));
+
+  const funnelSlugs = [
+    ...new Set(
+      cart
+        .map((item) => parseFunnelCartItemId(item.id)?.sourceSlug)
+        .filter((slug): slug is string => Boolean(slug))
+    ),
+  ];
+
+  const funnelConfigBySlug = new Map<string, ReturnType<typeof parseFunnelConfig>>();
+  if (funnelSlugs.length > 0) {
+    const { data: sourceRows, error: sourceErr } = await supabase
+      .from("products")
+      .select("slug, specs")
+      .in("slug", funnelSlugs)
+      .eq("is_published", true);
+
+    if (sourceErr) {
+      console.error("Checkout funnel source lookup failed:", sourceErr.message);
+      return NextResponse.json(
+        { error: "Could not verify your cart, please try again" },
+        { status: 503 }
+      );
+    }
+
+    for (const row of sourceRows ?? []) {
+      funnelConfigBySlug.set(row.slug as string, parseFunnelConfig(row.specs?.funnel_config));
+    }
+  }
+
+  const verified: VerifiedLine[] = [];
+
+  for (const item of cart) {
+    const productId = lookupProductId(item);
+    const row = productMap.get(productId);
+    if (!row) {
+      return NextResponse.json(
+        { error: "One or more items are no longer available" },
+        { status: 400 }
+      );
+    }
+    if (row.stock_status === "out_of_stock") {
+      return NextResponse.json({ error: `${row.name} is out of stock` }, { status: 400 });
+    }
+
+    const catalogPrice = resolveProductUnitPrice(row);
+    const funnelParsed = parseFunnelCartItemId(item.id);
+    let unitPrice = catalogPrice;
+    let displayName = row.name;
+
+    if (funnelParsed) {
+      const config = funnelConfigBySlug.get(funnelParsed.sourceSlug);
+      const step = config?.enabled ? config.steps[funnelParsed.step - 1] : undefined;
+      const hasPrimary = cart.some((line) =>
+        isPrimaryForFunnelSource(line, funnelParsed.sourceSlug)
+      );
+      const funnelValid =
+        Boolean(step) &&
+        step!.productIds.includes(row.id) &&
+        hasPrimary &&
+        item.funnel?.discountPercent === step!.discountPercent;
+
+      if (funnelValid) {
+        unitPrice = applyFunnelDiscount(row.regular_price, step!.discountPercent);
+        displayName = `${row.name} (Funnel Offer -${step!.discountPercent}%)`;
+      } else {
+        unitPrice = catalogPrice;
+        displayName = row.name;
+      }
+    }
+
+    verified.push({
+      productId: row.id,
+      name: displayName,
+      sku: row.sku,
+      quantity: item.quantity,
+      unitPrice,
+    });
+  }
+
+  return verified;
+}
 
 async function generateOrderNumber(supabase: ReturnType<typeof createServiceClient>): Promise<string> {
   const { data, error } = await supabase
@@ -63,13 +190,28 @@ export async function POST(req: NextRequest) {
   if (!customer?.first_name || !customer?.email)
     return NextResponse.json({ error: "Missing customer details" }, { status: 400 });
 
-  // ── 2. Calculate totals ────────────────────────────────────────────────────
-  const subtotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const supabase = createServiceClient();
+
+  // ── 2. Re-validate prices & stock from database ───────────────────────────
+  const verifiedResult = await resolveVerifiedLines(cart, supabase);
+  if (verifiedResult instanceof NextResponse) return verifiedResult;
+  const verifiedLines = verifiedResult;
+
+  const subtotal = verifiedLines.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
   const shipping = getShipping(subtotal, customer.province);
   const total    = subtotal + shipping;
 
+  const verifiedCart: CartItem[] = verifiedLines.map((line) => ({
+    id: line.productId,
+    slug: "",
+    name: line.name,
+    price: line.unitPrice,
+    image: null,
+    quantity: line.quantity,
+    sku: line.sku,
+  }));
+
   // ── 3. Save order to Supabase ──────────────────────────────────────────────
-  const supabase = createServiceClient();
 
   let orderNumber = "";
   let order: { id: string } | null = null;
@@ -119,14 +261,14 @@ export async function POST(req: NextRequest) {
     .then(({ error }) => { if (error) console.warn("payment_method column not found — run supabase-orders-payment-method.sql"); });
 
   // ── 4. Save order items ────────────────────────────────────────────────────
-  const itemRows = cart.map((item) => ({
+  const itemRows = verifiedLines.map((line) => ({
     order_id:     order.id,
-    product_id:   item.id,
-    product_name: item.name,
-    product_sku:  item.sku,
-    quantity:     item.quantity,
-    unit_price:   item.price,
-    line_total:   item.price * item.quantity,
+    product_id:   line.productId,
+    product_name: line.name,
+    product_sku:  line.sku,
+    quantity:     line.quantity,
+    unit_price:   line.unitPrice,
+    line_total:   line.unitPrice * line.quantity,
   }));
 
   const { error: itemsErr } = await supabase.from("order_items").insert(itemRows);
@@ -162,7 +304,7 @@ export async function POST(req: NextRequest) {
     orderNumber,
     paymentMethod: payment_method,
     customer,
-    cart,
+    cart: verifiedCart,
     subtotal,
     shipping,
     total,
@@ -184,7 +326,7 @@ export async function POST(req: NextRequest) {
 
   // Cart summary for item_description (max 255 chars)
   const itemSummary = truncate(
-    cart.map((i) => `${i.quantity}× ${i.name}`).join(", "),
+    verifiedLines.map((line) => `${line.quantity}× ${line.name}`).join(", "),
     255
   );
 

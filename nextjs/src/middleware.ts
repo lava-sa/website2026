@@ -7,6 +7,10 @@ import {
   verifySiteAccessCookie,
 } from "@/lib/site-access";
 import { isGatedWriteApi } from "@/lib/security/public-form-guard";
+import {
+  ADMIN_SESSION_COOKIE,
+  verifyAdminSessionToken,
+} from "@/lib/admin-session-token";
 
 // Only these hostnames should be indexed by Google
 const PRODUCTION_HOSTS = new Set(["lava-sa.com", "www.lava-sa.com"]);
@@ -80,8 +84,8 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith("/lava-sa/login");
 
     if (!isPublicAdminPath) {
-      const session = request.cookies.get("admin_session")?.value;
-      if (session !== "authenticated") {
+      const session = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+      if (!(await verifyAdminSessionToken(session))) {
         const loginUrl = new URL("/admin/login", request.url);
         loginUrl.searchParams.set("from", pathname);
         return NextResponse.redirect(loginUrl);

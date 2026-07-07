@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShieldCheck, Lock, Loader2, CreditCard, Building2, Check } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
-import { formatShippingExVat, formatShippingInclVat, getShipping } from "@/lib/shipping";
+import { formatShippingExVat, formatShippingInclVat, getShipping, getDeliveryEstimate } from "@/lib/shipping";
 
 const SA_PROVINCES = [
   "Eastern Cape", "Free State", "Gauteng", "KwaZulu-Natal",
@@ -137,7 +137,7 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <div className="section-container py-10">
+      <div className="section-container pt-10 pb-28 lg:pb-10">
         <form onSubmit={handleSubmit} noValidate>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
@@ -278,7 +278,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* ── Right: Order summary + submit ───────────────────────── */}
-            <div className="space-y-4">
+            <div className="space-y-4 lg:sticky lg:top-28 lg:self-start">
 
               {/* Items */}
               <div className="bg-white border border-border p-5">
@@ -307,7 +307,17 @@ export default function CheckoutPage() {
                     <span className="font-semibold">{formatPrice(total)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-copy-muted">Delivery ({form.province})</span>
+                    <span className="text-copy-muted">
+                      Delivery ({form.province}) ·{" "}
+                      <Link
+                        href="/help/delivery"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-primary"
+                      >
+                        rates &amp; times
+                      </Link>
+                    </span>
                     <span className="font-semibold text-right">
                       {formatPrice(shipping)}
                       <span className="block text-[10px] font-normal text-copy-muted">
@@ -315,8 +325,12 @@ export default function CheckoutPage() {
                       </span>
                     </span>
                   </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-copy-muted">Est. delivery</span>
+                    <span className="font-semibold text-primary">{getDeliveryEstimate(form.province)}</span>
+                  </div>
                   <p className="text-[10px] text-copy-muted -mt-1">
-                    Gauteng {formatShippingInclVat("Gauteng")} incl. VAT · Other provinces{" "}
+                    From dispatch · Gauteng {formatShippingInclVat("Gauteng")} incl. VAT · Other provinces{" "}
                     {formatShippingInclVat("Western Cape")} incl. VAT
                   </p>
                   <div className="flex justify-between pt-2 border-t border-border">
@@ -348,7 +362,7 @@ export default function CheckoutPage() {
                   Place Order — {formatPrice(orderTotal)}</>
                 ) : (
                   <><ShieldCheck className="h-5 w-5" />
-                  Pay {formatPrice(orderTotal)} with PayFast</>
+                  Pay {formatPrice(orderTotal)} with PayFast or EFT</>
                 )}
               </button>
 
@@ -363,6 +377,30 @@ export default function CheckoutPage() {
               </Link>
             </div>
 
+          </div>
+
+          {/* ── Mobile sticky submit bar (columns stack on mobile → keep CTA reachable) ── */}
+          <div className="lg:hidden fixed bottom-0 inset-x-0 z-[270] bg-white border-t border-border px-4 py-3 flex items-center gap-3 shadow-[0_-2px_12px_rgba(0,0,0,0.1)]">
+            <div className="shrink-0">
+              <p className="text-[10px] uppercase tracking-wide text-copy-muted leading-none mb-1">Total</p>
+              <p className="text-base font-bold text-primary leading-none">{formatPrice(orderTotal)}</p>
+            </div>
+            <button type="submit" disabled={submitting}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold text-white transition-colors disabled:opacity-60 ${
+                paymentMethod === "bank_transfer"
+                  ? "bg-secondary hover:bg-secondary/90"
+                  : "bg-primary hover:bg-primary-dark"
+              }`}
+            >
+              {submitting ? (
+                <><Loader2 className="h-4 w-4 animate-spin" />
+                {paymentMethod === "bank_transfer" ? "Placing…" : "Redirecting…"}</>
+              ) : paymentMethod === "bank_transfer" ? (
+                <><Building2 className="h-4 w-4" /> Place Order</>
+              ) : (
+                <><ShieldCheck className="h-4 w-4" /> Pay with PayFast or EFT</>
+              )}
+            </button>
           </div>
         </form>
       </div>
