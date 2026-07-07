@@ -1,6 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2, AlertCircle, Clock, ExternalLink, ChevronDown } from "lucide-react";
+import {
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  ExternalLink,
+  ShoppingCart,
+  UserCircle,
+  Star,
+  BookOpen,
+  MessageCircle,
+  Settings,
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Site Info — Lava-SA Website Overview",
@@ -228,61 +239,67 @@ const JULY_CHANGES = [
   "Installable app (PWA) — Chrome/Edge install banner, offline page, home-screen icon, app manifest with shortcuts.",
 ];
 
-// ── Site Architecture Map (structure + code layers) ──────────────────────────
-// Hand-built overview generated 7 July 2026 from a codebase review. The full
-// interactive graph is produced by running /understand (Understand Anything).
+// ── What the Website Does (plain-language feature map for Anneke) ─────────────
 
-const ARCH_LAYERS: { tier: string; nodes: string[] }[] = [
+const FEATURE_MAP: { icon: typeof ShoppingCart; title: string; items: string[] }[] = [
   {
-    tier: "Visitors & Discovery",
-    nodes: [
-      "Shoppers (mobile / desktop)",
-      "Installable PWA app",
-      "Google & AI search crawlers",
-      "WhatsApp / social share",
+    icon: ShoppingCart,
+    title: "Shopping & Checkout",
+    items: [
+      "Browse the full product range with photos, specs and prices",
+      "Add to cart — bundle discount added (and removed) automatically",
+      "Pay securely by card (PayFast) or EFT / bank transfer",
+      "Instant order confirmation email with the order number",
     ],
   },
   {
-    tier: "Pages & Site Structure",
-    nodes: [
-      "Marketing — home, about, blog, applications, guides, Lava TV",
-      "Shop — product pages, categories, cart, checkout, funnels",
-      "Account — login, dashboard, order tracking, rewards",
-      "Reviews — /reviews, submit-review",
-      "Admin — products, orders, customers, reviews, Janet logs",
+    icon: UserCircle,
+    title: "Customer Accounts & Rewards",
+    items: [
+      "An account is created automatically when someone orders",
+      "Customers track their order with a one-click link — no password",
+      "Lava Points loyalty rewards on full-price purchases",
+      "Order history and profile in a simple dashboard",
     ],
   },
   {
-    tier: "Feature Logic (code)",
-    nodes: [
-      "Cart & funnel discounts",
-      "Checkout price integrity + PayFast/EFT",
-      "Review customer-gate & moderation",
-      "Janet AI assistant",
-      "Customer auth (magic link)",
-      "Spam / MX guard + Turnstile",
+    icon: Star,
+    title: "Reviews & Trust",
+    items: [
+      "Customers write reviews for the exact product they bought",
+      "Only real customers can leave a review (cuts fake reviews)",
+      "You get an email alert for every new review",
+      "Approve or fully remove reviews from your admin panel",
     ],
   },
   {
-    tier: "API Routes",
-    nodes: [
-      "/api/checkout",
-      "/api/payfast/itn",
-      "/api/reviews (+video, customer-check)",
-      "/api/contact + /api/mailing-list",
-      "/api/account/* + /api/admin/*",
-      "/api/janet-session",
+    icon: BookOpen,
+    title: "Content & Marketing",
+    items: [
+      "Blog, guides and application pages (hunting, biltong, fishing…)",
+      "Lava TV video testimonials",
+      "Newsletter sign-up for your mailing list",
+      "Built for Google & AI search so new customers find you",
     ],
   },
   {
-    tier: "Data & Integrations",
-    nodes: [
-      "Supabase — products, orders, customers, reviews, points",
-      "PayFast — payments",
-      "Resend — email",
-      "Google GenAI — Janet",
-      "Cloudflare Turnstile — bot shield",
-      "Vercel — hosting / global CDN",
+    icon: MessageCircle,
+    title: "Help & Support",
+    items: [
+      "Janet — the friendly on-page assistant answers questions",
+      "Contact form with spam protection",
+      "FAQ, delivery, returns and warranty pages",
+      "WhatsApp and phone go straight to Anneke",
+    ],
+  },
+  {
+    icon: Settings,
+    title: "Your Admin Panel",
+    items: [
+      "Manage products, images and prices yourself",
+      "See and process every order in one place",
+      "Customer list with spend, points and history",
+      "Secure login with spam and bot protection",
     ],
   },
 ];
@@ -773,57 +790,39 @@ export default function SiteInfoPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          SITE ARCHITECTURE MAP
+          WHAT THE WEBSITE DOES — SIMPLE FEATURE MAP
       ══════════════════════════════════════════════════════════════════════ */}
       <section className="py-16 bg-surface border-b border-border">
         <div className="section-container">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-copy-muted mb-2">
-            How it all fits together — {LAST_UPDATED}
+            The website at a glance
           </p>
-          <h2 className="text-2xl font-bold text-primary mb-3">Site Architecture Map</h2>
+          <h2 className="text-2xl font-bold text-primary mb-3">What the Website Does</h2>
           <p className="text-sm text-copy-muted max-w-3xl leading-relaxed mb-10">
-            A top-to-bottom overview of the whole site — from what a visitor sees, down through the
-            page structure, the feature logic, the API layer, and the data &amp; outside services it
-            connects to. This shows both the <strong>site structure</strong> and the{" "}
-            <strong>technical layers</strong> behind it.
+            A simple, plain-language overview of everything the site does — for your customers and for you.
+            No technical jargon, just the features and how they help the business.
           </p>
 
-          <div className="max-w-4xl mx-auto">
-            {ARCH_LAYERS.map((layer, i) => (
-              <div key={layer.tier}>
-                <div className="border border-border bg-white">
-                  <div className="flex items-center gap-3 bg-primary px-4 py-2.5">
-                    <span className="text-[10px] font-black text-secondary tabular-nums">
-                      {i + 1}
-                    </span>
-                    <h3 className="text-[11px] font-black uppercase tracking-widest text-white">
-                      {layer.tier}
-                    </h3>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-3">
-                    {layer.nodes.map((node) => (
-                      <div
-                        key={node}
-                        className="text-xs text-copy leading-snug border border-border bg-surface px-3 py-2.5"
-                      >
-                        {node}
-                      </div>
-                    ))}
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {FEATURE_MAP.map(({ icon: Icon, title, items }) => (
+              <div key={title} className="border border-border bg-white p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="inline-flex items-center justify-center h-10 w-10 bg-primary/10 shrink-0">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </span>
+                  <h3 className="text-base font-bold text-primary leading-tight">{title}</h3>
                 </div>
-                {i < ARCH_LAYERS.length - 1 && (
-                  <div className="flex justify-center py-1.5">
-                    <ChevronDown className="h-5 w-5 text-secondary" />
-                  </div>
-                )}
+                <ul className="space-y-2.5">
+                  {items.map((item) => (
+                    <li key={item} className="flex items-start gap-2.5 text-sm text-copy leading-relaxed">
+                      <CheckCircle2 className="h-4 w-4 text-secondary shrink-0 mt-0.5" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
-
-          <p className="text-xs text-copy-muted max-w-3xl mt-8 leading-relaxed">
-            This is a simplified, hand-built overview. The full interactive, clickable version — every
-            file, function and dependency — is generated by the &ldquo;Understand Anything&rdquo; tool below.
-          </p>
         </div>
       </section>
 
@@ -848,7 +847,8 @@ export default function SiteInfoPage() {
             structure-related: a <strong className="text-white">structural graph</strong> (files, functions,
             classes, dependencies, colour-coded by architectural layer) and a{" "}
             <strong className="text-white">business/domain view</strong> (real domains, flows and process steps —
-            e.g. the checkout and review pipelines). The map above is a hand-built preview of the same idea.
+            e.g. the checkout and review pipelines). The plain-language summary above is the simple version;
+            this tool produces the full technical, interactive one.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
