@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2, AlertCircle, Clock, ExternalLink } from "lucide-react";
+import { CheckCircle2, AlertCircle, Clock, ExternalLink, ChevronDown } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Site Info — Lava-SA Website Overview",
@@ -15,7 +15,8 @@ export const metadata: Metadata = {
 
 const AUDIT_DATE = "28 May 2026";
 const QA_DATE = "30 June 2026";
-const GO_LIVE_TARGET = "1 July 2026";
+const LAST_UPDATED = "7 July 2026";
+const GO_LIVE_TARGET = "Pending follow-up meeting (post 7 July 2026)";
 
 const SEO_SCORES = [
   { label: "Overall SEO Health",         score: 69 },
@@ -140,6 +141,161 @@ function qaStatusStyle(status: QaStatus): { border: string; bg: string; text: st
     badge: "bg-amber-600 text-white",
   };
 }
+
+function meetingStatusStyle(status: string): { border: string; bg: string; text: string; badge: string; label: string } {
+  switch (status) {
+    case "DONE":
+      return { border: "border-green-200", bg: "bg-green-50", text: "text-green-800", badge: "bg-green-600 text-white", label: "Done" };
+    case "OPEN":
+      return { border: "border-amber-200", bg: "bg-amber-50", text: "text-amber-900", badge: "bg-amber-600 text-white", label: "Open" };
+    case "ANNEKE":
+      return { border: "border-sky-200", bg: "bg-sky-50", text: "text-sky-900", badge: "bg-sky-600 text-white", label: "Anneke" };
+    default:
+      return { border: "border-border", bg: "bg-white", text: "text-copy", badge: "bg-copy-muted text-white", label: "Later" };
+  }
+}
+
+// ── 30 June Meeting — Action Item Status ─────────────────────────────────────
+// Status reflects a 7 July 2026 code review of the current codebase.
+
+type MeetingStatus = "DONE" | "OPEN" | "ANNEKE" | "DEFERRED";
+
+const MEETING_GROUPS: {
+  group: string;
+  items: { ref: string; task: string; status: MeetingStatus; note: string }[];
+}[] = [
+  {
+    group: "Product review system",
+    items: [
+      { ref: "R1", task: "Rejected reviews fully removed (not left pending/visible)", status: "DONE", note: "Admin DELETE permanently removes the review row and any attached video file from storage." },
+      { ref: "R2", task: "Map each review to the specific product / machine", status: "DONE", note: "Submissions save product_slug, machine and review_scope — no longer a general-only repository." },
+      { ref: "R3", task: "General review form requires selecting the machine/equipment", status: "DONE", note: "Required product selector on the review form; rating + product both validated before submit." },
+      { ref: "R4", task: "Gold “Write your review” button in header after Lava TV", status: "DONE", note: "Gold outlined button sits directly after the Lava TV link in the top navigation." },
+      { ref: "R5", task: "Review entry point on all relevant product pages", status: "DONE", note: "Every PDP shows a reviews section or a “Be the first to review” call-to-action linking to the correct category form." },
+      { ref: "R6", task: "Email notification on new review submission", status: "DONE", note: "Notifies anneke@lava-sa.co.za + reviews@lava-sa.com (plus admin inbox) on every written and video review." },
+      { ref: "R7", task: "Investigate missing George Archer review", status: "OPEN", note: "Data investigation — needs a lookup in submissions/imports; not a code fix." },
+      { ref: "R8", task: "End-to-end review verification (correct product/department)", status: "OPEN", note: "Final QA pass to run on production after the next deploy." },
+    ],
+  },
+  {
+    group: "E-commerce & cart",
+    items: [
+      { ref: "E1", task: "Funnel 10% discount removed when qualifying machine leaves cart", status: "DONE", note: "Cart reconciles funnel discounts on every remove; discount also re-verified server-side at checkout." },
+      { ref: "E2", task: "Default payment to PayFast (EFT still available)", status: "DONE", note: "Checkout defaults to PayFast; Direct Bank Transfer (EFT) remains selectable." },
+    ],
+  },
+  {
+    group: "Navigation, catalog & content",
+    items: [
+      { ref: "N1", task: "Remove “Bundle deals” — keep only “Special offers”", status: "DONE", note: "No Bundle deals entry remains; Special Offers is the single promo category (highlighted gold)." },
+      { ref: "N2", task: "Move scale product from Hanging systems to Scales", status: "DONE", note: "Scales page lists scale-tagged products; scale no longer under hanging systems." },
+      { ref: "N3", task: "Rename nav “Vacuum packaging” → “Vacuum packing”", status: "OPEN", note: "Not changed — meeting flagged “confirm if still required”. Awaiting your go-ahead; quick change if wanted." },
+      { ref: "N4", task: "Remove “Price, shipping & returns” button", status: "DONE", note: "That nav button no longer exists; delivery info now surfaced via checkout “rates & times” link and Help centre." },
+      { ref: "N5", task: "New professional photos for vacuum lid products", status: "ANNEKE", note: "Awaiting new photography from Anneke (4L stainless discontinued; focus on lids)." },
+      { ref: "N6", task: "Identify out-of-stock container sizes + show stock status", status: "ANNEKE", note: "Needs stock list from Anneke; stock status field is ready to display / Storevac fallback." },
+    ],
+  },
+  {
+    group: "Policies, legal & security",
+    items: [
+      { ref: "P1", task: "Update shipping policy (times; remove farm option + R350 surcharge)", status: "DONE", note: "Conservative estimates (Gauteng 3–5, centres/secondary 5–7, outlying 7–10). Farm row removed; no surcharge existed. Synced across delivery, shipping-returns, FAQ, terms + live checkout estimate." },
+      { ref: "P2", task: "Final review of legal/policy documents (warranty, cooling-off, terms)", status: "ANNEKE", note: "Anneke to print, mark up and return changes." },
+      { ref: "P3", task: "Email verification on all forms (reduce spam)", status: "DONE", note: "Syntax heuristics + live MX/domain check on contact, mailing list, member signup & password reset. Reviews additionally require an existing-customer email. Turnstile still active." },
+    ],
+  },
+  {
+    group: "Parallel projects (GSI & Storevac)",
+    items: [
+      { ref: "F1", task: "GSI website — clean up headings and images", status: "DEFERRED", note: "Separate project — after Lava launch." },
+      { ref: "F2", task: "Storevac integration + out-of-stock redirect", status: "DEFERRED", note: "Awaiting Storevac logo + product details from Anneke." },
+      { ref: "F3", task: "Submit cost estimate for Lava & GSI websites", status: "DEFERRED", note: "Ignatius — after launch checklist." },
+      { ref: "F4", task: "Contact Bruce re: website updates", status: "ANNEKE", note: "Anneke follow-up." },
+    ],
+  },
+];
+
+// ── Recent changes shipped since the meeting (July) ──────────────────────────
+
+const JULY_CHANGES = [
+  "Checkout price integrity — all cart prices & stock re-validated server-side against the database before an order is created (blocks tampered totals).",
+  "Removed fabricated star ratings/testimonials from product pages without genuine reviews (Google policy + trust); real reviews or a clean “Be the first to review” state only.",
+  "Admin login hardened — forgeable static cookie replaced with an HMAC-signed, expiring session token.",
+  "Reviews restricted to existing customers — the submitter’s email must exist in customers/orders, else they’re guided to sign in.",
+  "Stronger spam-email filtering — keyboard-mash / gibberish / provider-typo detection + live MX (mail server) check across all public forms.",
+  "Delivery times updated everywhere + live province-based estimate and “rates & times” link shown on checkout.",
+  "Checkout usability — order summary sticky on desktop, always-visible pay bar on mobile, clearer “Pay … with PayFast or EFT” wording.",
+  "Vacuum-machine pages now repeat gallery images 01–04 through the benefit sections (no more repeated primary image).",
+  "Installable app (PWA) — Chrome/Edge install banner, offline page, home-screen icon, app manifest with shortcuts.",
+];
+
+// ── Site Architecture Map (structure + code layers) ──────────────────────────
+// Hand-built overview generated 7 July 2026 from a codebase review. The full
+// interactive graph is produced by running /understand (Understand Anything).
+
+const ARCH_LAYERS: { tier: string; nodes: string[] }[] = [
+  {
+    tier: "Visitors & Discovery",
+    nodes: [
+      "Shoppers (mobile / desktop)",
+      "Installable PWA app",
+      "Google & AI search crawlers",
+      "WhatsApp / social share",
+    ],
+  },
+  {
+    tier: "Pages & Site Structure",
+    nodes: [
+      "Marketing — home, about, blog, applications, guides, Lava TV",
+      "Shop — product pages, categories, cart, checkout, funnels",
+      "Account — login, dashboard, order tracking, rewards",
+      "Reviews — /reviews, submit-review",
+      "Admin — products, orders, customers, reviews, Janet logs",
+    ],
+  },
+  {
+    tier: "Feature Logic (code)",
+    nodes: [
+      "Cart & funnel discounts",
+      "Checkout price integrity + PayFast/EFT",
+      "Review customer-gate & moderation",
+      "Janet AI assistant",
+      "Customer auth (magic link)",
+      "Spam / MX guard + Turnstile",
+    ],
+  },
+  {
+    tier: "API Routes",
+    nodes: [
+      "/api/checkout",
+      "/api/payfast/itn",
+      "/api/reviews (+video, customer-check)",
+      "/api/contact + /api/mailing-list",
+      "/api/account/* + /api/admin/*",
+      "/api/janet-session",
+    ],
+  },
+  {
+    tier: "Data & Integrations",
+    nodes: [
+      "Supabase — products, orders, customers, reviews, points",
+      "PayFast — payments",
+      "Resend — email",
+      "Google GenAI — Janet",
+      "Cloudflare Turnstile — bot shield",
+      "Vercel — hosting / global CDN",
+    ],
+  },
+];
+
+// ── Understand Anything (codebase knowledge-graph tool) ──────────────────────
+
+const UNDERSTAND_ANYTHING_STEPS = [
+  "In Cursor / Claude Code, add the marketplace:  /plugin marketplace add Egonex-AI/Understand-Anything",
+  "Install the plugin:  /plugin install understand-anything",
+  "From the project root run:  /understand  — a multi-agent pipeline scans every file, function and dependency.",
+  "The knowledge graph is saved to  .understand-anything/knowledge-graph.json  (commit it so the team skips re-running).",
+  "Run  /understand-dashboard  to open the interactive, clickable architecture map in your browser.",
+];
 
 // ── Launch Checklist ─────────────────────────────────────────────────────────
 
@@ -309,14 +465,15 @@ export default function SiteInfoPage() {
       <section className="bg-primary py-14">
         <div className="section-container">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary mb-4">
-            Website Information — QA updated {QA_DATE}
+            Website Information — updated {LAST_UPDATED}
           </p>
           <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-6">
             Pre-launch status for<br />
             <span className="text-secondary">Anneke &amp; Wilco Uys</span>
           </h1>
           <p className="text-white/80 text-sm max-w-2xl leading-relaxed mb-6">
-            Internal summary for the go-live meeting. Target launch: <strong className="text-white">{GO_LIVE_TARGET}</strong>.
+            Internal summary for the go-live meeting, including the status of every 30 June action item and the
+            changes shipped since. Launch: <strong className="text-white">{GO_LIVE_TARGET}</strong>.
             Google Search Console, GBP, and post-purchase Google review requests are planned immediately after launch.
           </p>
           <div className="flex flex-wrap gap-3">
@@ -393,6 +550,75 @@ export default function SiteInfoPage() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          30 JUNE MEETING — ACTION ITEM STATUS
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="py-16 bg-white border-b border-border">
+        <div className="section-container">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-copy-muted mb-2">
+            Meeting Follow-up — reviewed {LAST_UPDATED}
+          </p>
+          <h2 className="text-2xl font-bold text-primary mb-3">30 June Meeting — Action Item Status</h2>
+          <p className="text-sm text-copy-muted max-w-3xl leading-relaxed mb-10">
+            Every action item from the 30 June 2026 GSI meeting, checked against the current codebase.
+            <span className="font-semibold text-green-700"> Done</span> = shipped in code (deploy to see live),
+            <span className="font-semibold text-amber-700"> Open</span> = still to do,
+            <span className="font-semibold text-sky-700"> Anneke</span> = waiting on content/decision from Anneke.
+          </p>
+
+          <div className="space-y-8">
+            {MEETING_GROUPS.map(({ group, items }) => (
+              <div key={group}>
+                <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-4 border-b border-border pb-2">
+                  {group}
+                </h3>
+                <div className="space-y-2.5">
+                  {items.map(({ ref, task, status, note }) => {
+                    const s = meetingStatusStyle(status);
+                    return (
+                      <div key={ref} className={`flex items-start gap-4 border px-5 py-3.5 ${s.border} ${s.bg}`}>
+                        <span className="shrink-0 text-[10px] font-black text-copy-muted w-6 pt-0.5">{ref}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm font-semibold ${s.text} mb-0.5`}>{task}</p>
+                          <p className={`text-sm ${s.text} opacity-90 leading-relaxed`}>{note}</p>
+                        </div>
+                        <span className={`shrink-0 text-[9px] font-black uppercase tracking-wider px-2.5 py-1 ${s.badge}`}>
+                          {s.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          RECENT CHANGES (JULY)
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="py-16 bg-surface border-b border-border">
+        <div className="section-container">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-copy-muted mb-2">
+            Changelog — since the meeting
+          </p>
+          <h2 className="text-2xl font-bold text-primary mb-3">Recent Changes Implemented (July)</h2>
+          <p className="text-sm text-copy-muted max-w-3xl leading-relaxed mb-10">
+            Improvements shipped after the 30 June meeting — security, trust, delivery clarity, checkout usability
+            and a new installable app. Pending final deploy for live verification.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {JULY_CHANGES.map((item) => (
+              <div key={item} className="flex items-start gap-3 border border-green-200 bg-green-50 px-5 py-4">
+                <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0 mt-0.5" />
+                <span className="text-sm text-green-800 leading-relaxed">{item}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -547,6 +773,133 @@ export default function SiteInfoPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
+          SITE ARCHITECTURE MAP
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="py-16 bg-surface border-b border-border">
+        <div className="section-container">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-copy-muted mb-2">
+            How it all fits together — {LAST_UPDATED}
+          </p>
+          <h2 className="text-2xl font-bold text-primary mb-3">Site Architecture Map</h2>
+          <p className="text-sm text-copy-muted max-w-3xl leading-relaxed mb-10">
+            A top-to-bottom overview of the whole site — from what a visitor sees, down through the
+            page structure, the feature logic, the API layer, and the data &amp; outside services it
+            connects to. This shows both the <strong>site structure</strong> and the{" "}
+            <strong>technical layers</strong> behind it.
+          </p>
+
+          <div className="max-w-4xl mx-auto">
+            {ARCH_LAYERS.map((layer, i) => (
+              <div key={layer.tier}>
+                <div className="border border-border bg-white">
+                  <div className="flex items-center gap-3 bg-primary px-4 py-2.5">
+                    <span className="text-[10px] font-black text-secondary tabular-nums">
+                      {i + 1}
+                    </span>
+                    <h3 className="text-[11px] font-black uppercase tracking-widest text-white">
+                      {layer.tier}
+                    </h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-3">
+                    {layer.nodes.map((node) => (
+                      <div
+                        key={node}
+                        className="text-xs text-copy leading-snug border border-border bg-surface px-3 py-2.5"
+                      >
+                        {node}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {i < ARCH_LAYERS.length - 1 && (
+                  <div className="flex justify-center py-1.5">
+                    <ChevronDown className="h-5 w-5 text-secondary" />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <p className="text-xs text-copy-muted max-w-3xl mt-8 leading-relaxed">
+            This is a simplified, hand-built overview. The full interactive, clickable version — every
+            file, function and dependency — is generated by the &ldquo;Understand Anything&rdquo; tool below.
+          </p>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          UNDERSTAND ANYTHING — CODEBASE KNOWLEDGE GRAPH
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="py-16 bg-primary">
+        <div className="section-container">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary mb-2">
+            Interactive Architecture Map
+          </p>
+          <h2 className="text-2xl font-bold text-white mb-3">
+            &ldquo;Understand Anything&rdquo; — see the whole site as a diagram
+          </h2>
+          <p className="text-sm text-white/80 max-w-3xl leading-relaxed mb-4">
+            An open-source (MIT) tool that scans the codebase and turns it into an interactive knowledge
+            graph — every page, feature, database table and dependency becomes a clickable node with a
+            plain-English explanation. It runs as a plugin inside the AI coding tools (Cursor, Claude Code, etc.).
+          </p>
+          <p className="text-sm text-white/80 max-w-3xl leading-relaxed mb-8">
+            It offers <strong className="text-white">two views</strong>, so it&apos;s not only code-related — also
+            structure-related: a <strong className="text-white">structural graph</strong> (files, functions,
+            classes, dependencies, colour-coded by architectural layer) and a{" "}
+            <strong className="text-white">business/domain view</strong> (real domains, flows and process steps —
+            e.g. the checkout and review pipelines). The map above is a hand-built preview of the same idea.
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* How to install */}
+            <div className="bg-white/5 border border-white/15 p-6">
+              <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-4">
+                How to install &amp; run
+              </h3>
+              <ol className="space-y-3">
+                {UNDERSTAND_ANYTHING_STEPS.map((step, i) => (
+                  <li key={step} className="flex items-start gap-3 text-sm text-white/90 leading-relaxed">
+                    <span className="shrink-0 h-5 w-5 rounded-full bg-secondary text-primary text-[11px] font-black flex items-center justify-center mt-0.5">
+                      {i + 1}
+                    </span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            {/* Where to find it */}
+            <div className="bg-white/5 border border-white/15 p-6">
+              <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-4">
+                Where to find it
+              </h3>
+              <ul className="space-y-3 text-sm text-white/90">
+                <li className="flex items-center gap-2">
+                  <ExternalLink className="h-3.5 w-3.5 text-secondary shrink-0" />
+                  <a href="https://understand-anything.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-secondary">
+                    understand-anything.com
+                  </a>
+                  <span className="text-white/50">— official site &amp; live demo</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <ExternalLink className="h-3.5 w-3.5 text-secondary shrink-0" />
+                  <a href="https://github.com/Egonex-AI/Understand-Anything" target="_blank" rel="noopener noreferrer" className="underline hover:text-secondary">
+                    github.com/Egonex-AI/Understand-Anything
+                  </a>
+                </li>
+              </ul>
+              <p className="text-xs text-white/60 leading-relaxed mt-5">
+                Note: it needs an AI coding tool to run the analysis (it uses AI to summarise each part, so it
+                consumes some AI tokens). The generated diagram can be committed to the repo so anyone on the
+                team can open it without re-running. Ignatius can generate this and share a link/export.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
           TECHNICAL DETAILS
       ══════════════════════════════════════════════════════════════════════ */}
       <section className="py-16 bg-white">
@@ -573,7 +926,7 @@ export default function SiteInfoPage() {
 
           <p className="mt-10 text-xs text-copy-muted">
             This page is not indexed by Google (robots: noindex). For internal use only.
-            Last QA update: {QA_DATE}. &nbsp;·&nbsp; Lava-SA — Bryanston, Johannesburg &nbsp;·&nbsp; info@lava-sa.com
+            Last updated: {LAST_UPDATED} (stress test {QA_DATE}). &nbsp;·&nbsp; Lava-SA — Bryanston, Johannesburg &nbsp;·&nbsp; info@lava-sa.com
           </p>
         </div>
       </section>
