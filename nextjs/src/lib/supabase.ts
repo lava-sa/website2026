@@ -1,56 +1,53 @@
 import { createClient } from "@supabase/supabase-js";
 
 /**
- * Robust getter for Environment Variables to prevent build-time crashes.
- * Returns null if the variable is missing, allowing the app to handle it gracefully.
+ * IMPORTANT: NEXT_PUBLIC_* vars must be referenced as STATIC LITERALS
+ * (`process.env.NEXT_PUBLIC_FOO`) so Next.js can inline them into the client
+ * bundle at build time. Dynamic access — `process.env[name]` — is NOT inlined
+ * and evaluates to undefined in the browser. That previously left the search
+ * page with an empty Supabase URL and crashed it ("supabaseUrl is required").
+ * Never read a NEXT_PUBLIC_ var through a variable key.
  */
-function getEnv(name: string): string {
-    const val = process.env[name];
-    if (!val && process.env.NODE_ENV === "production" && typeof window === "undefined") {
-        console.warn(`⚠️ Missing Environment Variable: ${name}. Static generation may be limited.`);
-    }
-    return val || "";
-}
+const PLACEHOLDER_URL = "https://placeholder.supabase.co";
+const PLACEHOLDER_KEY = "placeholder";
 
 /**
  * Standard client for client-side and public data fetching.
- * Uses lazy initialization to avoid crashing during module import.
+ * Falls back to a harmless placeholder (never throws) if the public keys are
+ * somehow missing, so a misconfiguration degrades gracefully instead of taking
+ * down the whole page.
  */
 export const getSupabase = () => {
-    const url = getEnv("NEXT_PUBLIC_SUPABASE_URL");
-    const key = getEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY");
-    
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
     if (!url || !key) {
-        // Return a dummy client during build to prevent crashes
-        console.warn("Using fallback Supabase client due to missing keys.");
+        console.warn("Supabase public env vars missing — returning placeholder client.");
+        return createClient(PLACEHOLDER_URL, PLACEHOLDER_KEY);
     }
 
     return createClient(url, key);
 };
 
-/** Server-side client with service role (for admin operations) */
+/** Server-side client with service role (for admin operations). */
 export function createServiceClient() {
-    const url = getEnv("NEXT_PUBLIC_SUPABASE_URL");
-    const key = getEnv("SUPABASE_SERVICE_ROLE_KEY");
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    return createClient(
-        url || "https://placeholder.supabase.co",
-        key || "placeholder",
-        {
-            auth: {
-                autoRefreshToken: false,
-                persistSession: false,
-            },
-        }
-    );
+    return createClient(url || PLACEHOLDER_URL, key || PLACEHOLDER_KEY, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false,
+        },
+    });
 }
 
 /** Anon client for auth emails (resetPasswordForEmail must use anon, not service role). */
 export function createAuthAnonClient() {
-    const url = getEnv("NEXT_PUBLIC_SUPABASE_URL");
-    const key = getEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY");
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    return createClient(url || "https://placeholder.supabase.co", key || "placeholder", {
+    return createClient(url || PLACEHOLDER_URL, key || PLACEHOLDER_KEY, {
         auth: {
             autoRefreshToken: false,
             persistSession: false,

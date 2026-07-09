@@ -67,6 +67,11 @@ function SearchResults() {
       .then(({ data }) => {
         setProducts((data as ProductResult[]) ?? []);
         setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Product search failed:", err);
+        setProducts([]);
+        setLoading(false); // never leave the spinner hanging
       });
   }, [query]);
 
