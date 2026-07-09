@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { X, MessageCircle, Mic, MicOff, Loader2 } from "lucide-react";
 import { GoogleGenAI, Modality } from "@google/genai";
 import type { Session } from "@google/genai";
@@ -14,6 +14,7 @@ import {
   type JanetPageContext,
 } from "@/lib/janet-page-context";
 import { ANNEKE_PHONE, MAIN_PHONE } from "@/lib/contact";
+import { JANET_LIVE_MODEL } from "@/lib/janet-live-model";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types & Prompts
@@ -103,9 +104,11 @@ SALES & add_to_cart (April-style — decisive)
 - After the tool succeeds, say clearly: "Fantastic — I've placed the [product] in your cart. Click the cart at the top right when you're ready to checkout."
 - Use their first name naturally when it fits.
 
-WEBSITE TOOLS
+WEBSITE TOOLS — you MUST call these; speaking alone does not change the site or cart.
+- add_to_cart: call the instant they agree — never say "I've added it" without calling this first.
+- navigate_to: call when showing a product page or section on another URL — never say "I'll take you there" without calling this.
 - scroll_to_section: products, specs, sizes, reviews, faq, compare, contact, top, bottom
-- navigate_to: /products/vacuum-machines, /products/bags-rolls, /products/vacuum-bags, /products/vacuum-rolls, /products/<slug>, /contact
+- Paths: /products/vacuum-machines, /products/bags-rolls, /products/vacuum-bags, /products/vacuum-rolls, /products/<slug>, /contact
 - After scroll/navigate: brief "Done — …"
 
 capture_contact — call the moment you learn each field (send only what you just heard):
@@ -313,13 +316,33 @@ function findListingMatch(
   return null;
 }
 
-/** Resolve cart line item — PDP, listing page, or API lookup. */
+/** Resolve cart line item — explicit slug/name wins over current page context. */
 async function resolveCartProductAsync(args: {
   productId?: string;
   productName?: string;
   price?: number | string;
 }): Promise<{ item?: Omit<CartItem, "quantity">; blocked?: string; error?: string }> {
   const pageCtx = getJanetPageContext();
+  const requestedSlug = args.productId?.trim().toLowerCase();
+
+  if (requestedSlug) {
+    const api = await fetchJanetProduct(requestedSlug);
+    if (api) {
+      if (!api.canAddToCart) {
+        return { blocked: `${api.name} is on-order only — offer WhatsApp or a callback.` };
+      }
+      return {
+        item: {
+          id: api.id,
+          slug: api.slug,
+          name: args.productName?.trim() || api.name,
+          price: api.price,
+          sku: api.sku,
+          image: api.image,
+        },
+      };
+    }
+  }
 
   if (pageCtx?.type === "product") {
     const pageProduct = pageCtx;
@@ -358,25 +381,6 @@ async function resolveCartProductAsync(args: {
     }
   }
 
-  if (args.productId?.trim()) {
-    const api = await fetchJanetProduct(args.productId.trim());
-    if (api) {
-      if (!api.canAddToCart) {
-        return { blocked: `${api.name} is on-order only — offer WhatsApp or a callback.` };
-      }
-      return {
-        item: {
-          id: api.id,
-          slug: api.slug,
-          name: api.name,
-          price: api.price,
-          sku: api.sku,
-          image: api.image,
-        },
-      };
-    }
-  }
-
   if (args.productName?.trim()) {
     const api = await fetchJanetProduct(undefined, args.productName.trim());
     if (api) {
@@ -407,11 +411,48 @@ function pageContextUpdateText(path: string): string {
   return `SYSTEM: The visitor is now on ${path}.\n\n${structured}\n\nVisible text:\n${scraped}`;
 }
 
+/** Wait for client navigation + Janet context bridge, then push fresh page state. */
+async function notifyJanetAfterNavigation(session: Session, path: string): Promise<void> {
+  const deadline = Date.now() + 4500;
+  while (Date.now() < deadline) {
+    if (typeof window !== "undefined" && window.location.pathname === path) {
+      const hasProduct = !!document.querySelector("[data-janet-product]");
+      const hasListing = document.querySelectorAll("[data-janet-listing-item]").length > 0;
+      const ctx = getJanetPageContext();
+      if (hasProduct || hasListing || ctx) break;
+    }
+    await new Promise((r) => setTimeout(r, 150));
+  }
+  try {
+    session.sendClientContent({
+      turns: [{ role: "user", parts: [{ text: pageContextUpdateText(path) }] }],
+      turnComplete: true,
+    });
+  } catch {}
+}
+
+/** Gemini Live streams transcription in small chunks — merge into one line per speaker turn. */
+function appendTranscriptChunk(lines: string[], prefix: string, chunk: string): void {
+  if (!chunk) return;
+  const last = lines[lines.length - 1];
+  if (last?.startsWith(prefix)) {
+    lines[lines.length - 1] = last + chunk;
+  } else {
+    lines.push(prefix + chunk.trimStart());
+  }
+}
+
+function appendToolTranscriptLine(lines: string[], name: string, detail?: string): void {
+  const line = detail ? `[Tool] ${name}(${detail})` : `[Tool] ${name}`;
+  lines.push(line);
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Janet Agent Component
 // ─────────────────────────────────────────────────────────────────────────────
 export const JanetAgent = () => {
   const router                  = useRouter();
+  const pathname                = usePathname();
   const [isOpen, setIsOpen]     = useState(false);
   const [status, setStatus]     = useState<SessionStatus>("idle");
   const [isMuted, setIsMuted]   = useState(false);
@@ -436,6 +477,7 @@ export const JanetAgent = () => {
   const [outputDeviceLabel, setOutputDeviceLabel] = useState("System default");
 
   const sessionRef   = useRef<Session | null>(null);
+  const janetPathRef = useRef<string | null>(null);
   const streamRef    = useRef<MediaStream | null>(null);
   const micCtxRef    = useRef<AudioContext | null>(null);
   const playCtxRef   = useRef<AudioContext | null>(null);
@@ -478,6 +520,24 @@ export const JanetAgent = () => {
     window.addEventListener("open-janet", handleOpen);
     return () => window.removeEventListener("open-janet", handleOpen);
   }, []);
+
+  // Keep Janet aware when the visitor navigates manually during an active call
+  useEffect(() => {
+    if (status !== "active" || !sessionRef.current) {
+      if (status === "idle" || status === "ended" || status === "error") {
+        janetPathRef.current = null;
+      }
+      return;
+    }
+    if (janetPathRef.current === null) {
+      janetPathRef.current = pathname;
+      return;
+    }
+    if (janetPathRef.current === pathname) return;
+    janetPathRef.current = pathname;
+    const session = sessionRef.current;
+    void notifyJanetAfterNavigation(session, pathname);
+  }, [pathname, status]);
 
   // ── Teardown & Save Telemetry ───────────────────────────────────────────────
   const teardown = useCallback(async (saveSession = true) => {
@@ -637,7 +697,7 @@ export const JanetAgent = () => {
       });
 
       const session = await ai.live.connect({
-        model: model ?? "gemini-2.5-flash-native-audio-preview-12-2025",
+        model: model ?? JANET_LIVE_MODEL,
         config: {
           responseModalities: [Modality.AUDIO],
           systemInstruction: buildSystemPrompt(currentUrlPath, pageContext, structuredContext),
@@ -653,16 +713,16 @@ export const JanetAgent = () => {
               {
                 name: "add_to_cart",
                 description:
-                  "CRITICAL: Call the EXACT moment the visitor agrees to buy or says add to cart. Do not speak instead of calling this. Use the real product slug as productId.",
+                  "CRITICAL: Call the EXACT moment the visitor agrees to buy or says add to cart. Do not speak instead of calling this. Use the real product slug as productId. Price is optional — the site resolves it.",
                 parameters: {
                   type: "OBJECT",
                   properties: {
                     productId: { type: "STRING", description: "Website product slug (e.g. v100-premium-x)" },
                     productName: { type: "STRING", description: "Full product name" },
-                    price: { type: "NUMBER", description: "Numeric price in Rand, no symbols" },
+                    price: { type: "NUMBER", description: "Numeric price in Rand (optional)" },
                     quantity: { type: "NUMBER", description: "How many to add (default 1, max 10)" },
                   },
-                  required: ["productId", "productName", "price"],
+                  required: ["productId"],
                 },
               },
               {
@@ -719,14 +779,14 @@ export const JanetAgent = () => {
             // Audio Playback
             if (msg.data) playAudio(msg.data);
 
-            // Transcripts for Telemetry Saving (ref = source of truth, state = optional UI)
+            // Transcripts — merge streaming chunks (one line per speaker turn)
             const aiText = msg.serverContent?.outputTranscription?.text;
             if (aiText) {
-               transcriptRef.current.push(`Janet: ${aiText}`);
+              appendTranscriptChunk(transcriptRef.current, "Janet: ", aiText);
             }
             const userText = msg.serverContent?.inputTranscription?.text;
             if (userText) {
-               transcriptRef.current.push(`Customer: ${userText}`);
+              appendTranscriptChunk(transcriptRef.current, "Customer: ", userText);
             }
 
             // TOOL CALL HANDLING
@@ -745,6 +805,12 @@ export const JanetAgent = () => {
                     price?: number | string;
                     quantity?: number;
                   };
+                  console.log("[Janet] add_to_cart", args);
+                  appendToolTranscriptLine(
+                    transcriptRef.current,
+                    "add_to_cart",
+                    args.productId || args.productName
+                  );
                   const qty = Math.max(1, Math.min(10, Number(args.quantity) || 1));
                   const { item, blocked, error } = await resolveCartProductAsync(args);
                   if (blocked || error || !item) {
@@ -786,6 +852,11 @@ export const JanetAgent = () => {
                   if (args.phone) leadRef.current.phone = args.phone.trim();
                   if (args.companyName) leadRef.current.companyName = args.companyName.trim();
                   if (args.industry) leadRef.current.industry = args.industry.trim();
+                  appendToolTranscriptLine(
+                    transcriptRef.current,
+                    "capture_contact",
+                    args.firstName || args.phone || args.industry
+                  );
                   return {
                     id: call.id,
                     name: call.name,
@@ -796,25 +867,17 @@ export const JanetAgent = () => {
                   const args = call.args as { path?: string };
                   let path = String(args.path || "").trim();
                   if (path && !path.startsWith("/")) path = `/${path}`;
+                  console.log("[Janet] navigate_to", path);
+                  appendToolTranscriptLine(transcriptRef.current, "navigate_to", path);
                   let ok = false;
                   if (path) {
                     try {
                       router.push(path);
                       ok = true;
-                      // Give the new page a moment, then feed Janet the fresh page content
-                      setTimeout(() => {
-                        try {
-                          sessionRef.current?.sendClientContent({
-                            turns: [
-                              {
-                                role: "user",
-                                parts: [{ text: pageContextUpdateText(path) }],
-                              },
-                            ],
-                            turnComplete: false,
-                          });
-                        } catch {}
-                      }, 1200);
+                      const liveSession = sessionRef.current;
+                      if (liveSession) {
+                        void notifyJanetAfterNavigation(liveSession, path);
+                      }
                     } catch {}
                   }
                   return {
@@ -830,6 +893,11 @@ export const JanetAgent = () => {
                 if (call.name === "scroll_to_section") {
                   const args = call.args as { target?: string };
                   const found = scrollToQuery(String(args.target || ""));
+                  appendToolTranscriptLine(
+                    transcriptRef.current,
+                    "scroll_to_section",
+                    String(args.target || "")
+                  );
                   return {
                     id: call.id,
                     name: call.name,
@@ -866,6 +934,7 @@ export const JanetAgent = () => {
       });
 
       sessionRef.current = session;
+      janetPathRef.current = currentUrlPath;
       setStatus("active");
 
       // Trigger Janet to greet

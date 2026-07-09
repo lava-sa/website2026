@@ -10,11 +10,12 @@ function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   // Default landing after login is the WordPress-style /lava-sa path (dashboard root)
-  const fromParam = params.get("from") || "/lava-sa";
-  // If redirected from an internal /admin/* path, rewrite to /lava-sa/*
+  const fromParam = params.get("from") || "/admin";
   const from = fromParam.startsWith("/admin")
-    ? fromParam.replace(/^\/admin/, "/lava-sa")
-    : fromParam;
+    ? fromParam
+    : fromParam.startsWith("/lava-sa")
+      ? fromParam.replace(/^\/lava-sa/, "/admin")
+      : "/admin";
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -31,14 +32,22 @@ function LoginForm() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
+    const data = (await res.json().catch(() => ({}))) as { error?: string };
 
     setLoading(false);
 
     if (res.ok) {
-      // After successful login, go straight to admin dashboard
-      router.push("/admin");
+      router.push(from.startsWith("/lava-sa") ? from : "/admin");
+    } else if (data.error === "Admin session not configured") {
+      setError(
+        "Login is misconfigured on the server (ADMIN_SESSION_SECRET missing in Vercel). Your password may be correct — ask your developer to add it and redeploy."
+      );
+    } else if (data.error === "Admin not configured") {
+      setError(
+        "Login is misconfigured on the server (ADMIN_PASSWORD missing in Vercel)."
+      );
     } else {
-      setError("Incorrect username or password. Please try again.");
+      setError(data.error || "Incorrect username or password. Please try again.");
       setPassword("");
     }
   }

@@ -31,7 +31,7 @@ export default function ShippingReturnsPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
           {[
             { icon: Truck,       title: "Courier delivery", sub: "R190 / R250 excl. VAT by province" },
-            { icon: Clock,       title: "2–4 Days",        sub: "After payment clears" },
+            { icon: Clock,       title: "3–5 Days (Gauteng)", sub: "After payment clears" },
             { icon: RefreshCw,   title: "30-Day Returns",  sub: "Unused, original packaging" },
             { icon: ShieldCheck, title: "2-Year Warranty", sub: "All LAVA machines" },
           ].map(({ icon: Icon, title, sub }) => (
