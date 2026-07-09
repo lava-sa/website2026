@@ -24,6 +24,32 @@ function formatZAR(n: number) {
   return new Intl.NumberFormat("en-ZA", { style: "currency", currency: "ZAR", minimumFractionDigits: 0 }).format(n);
 }
 
+/**
+ * Product titles use the official "V.300" / "V.100" naming, but visitors type
+ * "V300", "V 300", "v.400" etc. Build a PostgREST OR filter that also matches the
+ * canonical dotted + undotted forms for any V-series model number in the query,
+ * so all spellings find the same machine.
+ */
+function buildProductOrFilter(q: string): string {
+  const conds = [
+    `name.ilike.%${q}%`,
+    `short_description.ilike.%${q}%`,
+    `sku.ilike.%${q}%`,
+  ];
+  const seen = new Set<string>();
+  // Matches v300 / v 300 / v.300 / v . 300 (any V-series 3-digit model).
+  for (const m of q.matchAll(/v\s*\.?\s*(\d{3})/gi)) {
+    const num = m[1];
+    if (seen.has(num)) continue;
+    seen.add(num);
+    for (const variant of [`v.${num}`, `v${num}`]) {
+      conds.push(`name.ilike.%${variant}%`);
+      conds.push(`sku.ilike.%${variant}%`);
+    }
+  }
+  return conds.join(",");
+}
+
 function SearchResults() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -61,7 +87,7 @@ function SearchResults() {
       .from("products")
       .select("id, name, slug, regular_price, short_description, primary_image_url, categories(name)")
       .eq("is_published", true)
-      .or(`name.ilike.%${q}%,short_description.ilike.%${q}%,sku.ilike.%${q}%`)
+      .or(buildProductOrFilter(q))
       .order("sort_order", { ascending: true })
       .limit(12)
       .then(({ data }) => {
