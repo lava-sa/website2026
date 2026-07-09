@@ -126,9 +126,10 @@ DECIDING WHICH PATH: If add_to_cart succeeded even ONCE this call — ANY produc
 
 PATH A — They added ANY product to the cart (add_to_cart succeeded at least once):
 - Do NOT ask for phone, surname, or email — checkout captures all of that.
-- If they bought a vacuum MACHINE, before goodbye naturally offer consumables: "Would you like to add embossed vacuum bags or rolls to go with your sealer? Most people start with 20 by 30 centimetre bags or a 20 centimetre roll." If interested, help pick a size (navigate_to /products/bags-rolls or add_to_cart the bag/roll slug).
-- Remind them: "Click the cart at the top right when you're ready to checkout."
-- Warm sign-off using their first name.
+- If they bought a vacuum MACHINE, offer consumables ONCE: "Would you like to add vacuum bags or rolls to go with your sealer?" If yes, ask which size they'd like, then call add_to_cart. Do NOT promise a specific size is available — if the tool says it's out of stock, tell them honestly and offer another size or navigate_to /products/bags-rolls so they can see what's in stock.
+- Add each item ONE at a time and wait for the tool to confirm success before mentioning it. Never say something is in the cart unless add_to_cart returned success for it.
+- Remind them once: "Click the cart at the top right when you're ready to checkout."
+- Warm sign-off using their first name — say goodbye only ONCE.
 
 PATH B — They did NOT purchase (cart is still empty — add_to_cart never succeeded):
 - TRIGGER: the moment the conversation winds down — they say "thanks", "that's all", "goodbye", or clearly have no more questions — do NOT say goodbye yet. Start this closing first.
@@ -143,6 +144,11 @@ PATH B — They did NOT purchase (cart is still empty — add_to_cart never succ
 Payment questions: yes — PayFast accepts Visa and Mastercard; EFT also available at checkout.
 
 STYLE: Warm, professional, human. Never invent bag nicknames — use centimetre sizes only.
+- Pronounce the brand "LAVA" (LAH-vah). Refer to a machine by its model, e.g. "the V.300 Premium X" — do NOT put "Lava" in front of the model name each time.
+- NEVER read the cart contents or quantities aloud — the customer can see their cart on screen. After an add, confirm only the single item you just added, then stop.
+- ONE thing at a time: say your piece, then STOP and let the customer reply. Never chain a confirmation, an upsell, and a goodbye into one long turn.
+- HONESTY: only state an item is added if add_to_cart returned success. If a tool failed or an item is out of stock, say so plainly — never pretend.
+- After you say goodbye, STOP. Do not add more, re-list the cart, or start a new topic.
   `;
 }
 
@@ -431,9 +437,12 @@ async function notifyJanetAfterNavigation(session: Session, path: string): Promi
     await new Promise((r) => setTimeout(r, 150));
   }
   try {
+    // turnComplete:false — feed the new page into Janet's context WITHOUT forcing
+    // her to speak. She already acknowledges a navigation via the tool response;
+    // a second "respond now" here made her narrate (and mis-narrate) the page.
     session.sendClientContent({
       turns: [{ role: "user", parts: [{ text: pageContextUpdateText(path) }] }],
-      turnComplete: true,
+      turnComplete: false,
     });
   } catch {}
 }
@@ -633,7 +642,13 @@ export const JanetAgent = () => {
 
   // ── Record Mic & Send ───────────────────────────────────────────────────────
   const startMic = useCallback(async (activeSession: Session) => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    const stream = await navigator.mediaDevices.getUserMedia({
+      // Echo cancellation is ESSENTIAL: without it, Janet's own voice from the
+      // speakers is captured by the mic and sent back as "user speech", so she
+      // answers herself in a loop and talks over the caller (the "stuck record").
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+      video: false,
+    });
     streamRef.current = stream;
     const activeTrack = stream.getAudioTracks()[0];
     const activeInputLabel = activeTrack?.label?.trim();
@@ -674,7 +689,13 @@ export const JanetAgent = () => {
 
     // Request mic before opening the live session so the browser prompt appears immediately
     try {
-      const probe = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      const probe = await navigator.mediaDevices.getUserMedia({
+      // Echo cancellation is ESSENTIAL: without it, Janet's own voice from the
+      // speakers is captured by the mic and sent back as "user speech", so she
+      // answers herself in a loop and talks over the caller (the "stuck record").
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+      video: false,
+    });
       probe.getTracks().forEach((t) => t.stop());
       const devices = await navigator.mediaDevices.enumerateDevices();
       const input = devices.find((d) => d.kind === "audioinput");
@@ -851,7 +872,12 @@ export const JanetAgent = () => {
                     return {
                       id: call.id,
                       name: call.name,
-                      response: { result: { success: false, message: blocked || error } },
+                      response: {
+                        result: {
+                          success: false,
+                          message: `NOT added — ${blocked || error} IMPORTANT: do NOT tell the customer it was added. Say honestly that it's currently unavailable/out of stock and offer a different size or to check back later.`,
+                        },
+                      },
                     };
                   }
                   for (let i = 0; i < qty; i++) addItem(item);
@@ -910,6 +936,9 @@ export const JanetAgent = () => {
                     try {
                       router.push(path);
                       ok = true;
+                      // Claim the path NOW so the pathname useEffect sees no change and
+                      // does not fire a SECOND page-context push (cause of double narration).
+                      janetPathRef.current = path;
                       const liveSession = sessionRef.current;
                       if (liveSession) {
                         void notifyJanetAfterNavigation(liveSession, path);
