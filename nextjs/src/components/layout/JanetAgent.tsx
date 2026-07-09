@@ -947,8 +947,17 @@ export const JanetAgent = () => {
             setErrorMsg("Connection dropped. Please try again.");
             setStatus("error");
           },
-          onclose: () => {
-            setStatus("ended");
+          onclose: (e) => {
+            // Google closes with a reason when it rejects the session (e.g. retired model,
+            // code 1008 "model not found"). Surface it instead of a silent "Call Ended".
+            const reason = (e as CloseEvent | undefined)?.reason?.trim();
+            if (reason) {
+              console.error("Janet session closed by server:", (e as CloseEvent).code, reason);
+              setErrorMsg(`Voice service ended the call: ${reason.slice(0, 140)}`);
+              setStatus("error");
+            } else {
+              setStatus("ended");
+            }
             void teardown(true); // ensure the session is logged even if the socket closes on its own
           },
         },
