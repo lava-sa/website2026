@@ -122,13 +122,15 @@ industry use-case values: home, home_industry, hunting, fishing, butchery, resta
 
 ═══ END OF CONVERSATION — TWO PATHS (pick one) ═══
 
-PATH A — They bought a vacuum MACHINE (add_to_cart succeeded for a sealer):
-- Do NOT ask for phone, surname, or email — checkout handles that.
-- Before goodbye, naturally offer consumables: "Would you like to add embossed vacuum bags or rolls to go with your sealer? Most people start with 20 by 30 centimetre bags or a 20 centimetre roll."
-- If interested: help pick a size, use navigate_to /products/bags-rolls or add_to_cart for a specific bag/roll slug.
+DECIDING WHICH PATH: If add_to_cart succeeded even ONCE this call — ANY product, whether a machine, bags, rolls, or an accessory — you are on PATH A. Never ask a buyer for their phone, surname, or email. Only use PATH B when the cart is still empty at the end of the call.
+
+PATH A — They added ANY product to the cart (add_to_cart succeeded at least once):
+- Do NOT ask for phone, surname, or email — checkout captures all of that.
+- If they bought a vacuum MACHINE, before goodbye naturally offer consumables: "Would you like to add embossed vacuum bags or rolls to go with your sealer? Most people start with 20 by 30 centimetre bags or a 20 centimetre roll." If interested, help pick a size (navigate_to /products/bags-rolls or add_to_cart the bag/roll slug).
+- Remind them: "Click the cart at the top right when you're ready to checkout."
 - Warm sign-off using their first name.
 
-PATH B — They did NOT purchase:
+PATH B — They did NOT purchase (cart is still empty — add_to_cart never succeeded):
 - TRIGGER: the moment the conversation winds down — they say "thanks", "that's all", "goodbye", or clearly have no more questions — do NOT say goodbye yet. Start this closing first.
 - Say: "Before you go, [FirstName] — may I take your phone number and email so we can send you the right information and follow up?"
 - Collect in order, one question at a time (not a form dump): phone number → email address → surname → company name (if they have one) → what they mainly use vacuum sealing for (industry).
@@ -729,10 +731,14 @@ export const JanetAgent = () => {
           // Callers pause to think — don't let Janet jump in on a short silence.
           // silenceDurationMs = how long a pause must be before she treats the turn
           // as finished (trade-off: higher = more patient but slower to reply).
+          // 2500ms lets the caller pause mid-sentence to think without being cut off.
+          // prefixPaddingMs requires a bit of sustained speech before she yields, so a
+          // stray "um" or breath doesn't count as the caller starting a new turn.
           realtimeInputConfig: {
             automaticActivityDetection: {
               endOfSpeechSensitivity: EndSensitivity.END_SENSITIVITY_LOW,
-              silenceDurationMs: 1500,
+              silenceDurationMs: 2500,
+              prefixPaddingMs: 400,
             },
           },
           tools: [{
@@ -861,8 +867,8 @@ export const JanetAgent = () => {
                       result: {
                         success: true,
                         message: isMachine
-                          ? `Added ${qtyLabel}${item.name} to cart. Confirm warmly using their first name. PATH A: before goodbye, naturally offer embossed vacuum bags or rolls. Do not ask for phone or email.`
-                          : `Added ${qtyLabel}${item.name} to cart. Confirm warmly and ask if they need anything else.`,
+                          ? `Added ${qtyLabel}${item.name} to cart. Confirm warmly using their first name. This is a PURCHASE — follow PATH A: before goodbye, naturally offer embossed vacuum bags or rolls. Do NOT ask for phone, surname, or email — checkout captures those.`
+                          : `Added ${qtyLabel}${item.name} to cart. Confirm warmly and ask if they need anything else. This is a PURCHASE — follow PATH A: do NOT ask for phone, surname, or email. Remind them to click the cart top-right to checkout.`,
                       },
                     },
                   };
