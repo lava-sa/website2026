@@ -454,6 +454,7 @@ export const JanetAgent = () => {
   const router                  = useRouter();
   const pathname                = usePathname();
   const [isOpen, setIsOpen]     = useState(false);
+  const [installPromptVisible, setInstallPromptVisible] = useState(false);
   const [status, setStatus]     = useState<SessionStatus>("idle");
   const [isMuted, setIsMuted]   = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -519,6 +520,16 @@ export const JanetAgent = () => {
     const handleOpen = () => setIsOpen(true);
     window.addEventListener("open-janet", handleOpen);
     return () => window.removeEventListener("open-janet", handleOpen);
+  }, []);
+
+  // Move Janet above the PWA install banner when it is visible
+  useEffect(() => {
+    const onInstallPrompt = (e: Event) => {
+      const detail = (e as CustomEvent<{ visible?: boolean }>).detail;
+      setInstallPromptVisible(Boolean(detail?.visible));
+    };
+    window.addEventListener("lava-install-prompt", onInstallPrompt);
+    return () => window.removeEventListener("lava-install-prompt", onInstallPrompt);
   }, []);
 
   // Keep Janet aware when the visitor navigates manually during an active call
@@ -984,8 +995,13 @@ export const JanetAgent = () => {
   // ────────────────────────────────────────────────────────────────────────────
   // RENDER PURE ORB UI
   // ────────────────────────────────────────────────────────────────────────────
+  const janetBottomClass =
+    installPromptVisible && !isOpen ? "bottom-[9.5rem] sm:bottom-4" : "bottom-4";
+
   return (
-    <div className="fixed bottom-0 right-0 z-[1200] flex flex-col items-end gap-3 font-sans">
+    <div
+      className={`fixed right-4 z-[1200] flex flex-col items-end gap-3 font-sans transition-[bottom] duration-300 ${janetBottomClass}`}
+    >
       {!isOpen ? (
         <div className="relative group flex flex-col items-end">
           {/* AI disclosure tooltip */}

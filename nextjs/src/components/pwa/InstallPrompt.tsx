@@ -86,6 +86,12 @@ export default function InstallPrompt() {
     };
   }, []);
 
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent("lava-install-prompt", { detail: { visible } })
+    );
+  }, [visible]);
+
   function dismiss() {
     setVisible(false);
     try {
@@ -109,7 +115,7 @@ export default function InstallPrompt() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 z-[1100] max-w-[calc(100vw-2rem)] sm:max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-300">
+    <div className="fixed bottom-4 left-4 right-[8.5rem] z-[1250] sm:right-4 sm:max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-300">
       <div className="bg-white border border-border shadow-xl overflow-hidden">
         <div className="flex items-start gap-3 p-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
