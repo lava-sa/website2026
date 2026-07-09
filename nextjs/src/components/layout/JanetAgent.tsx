@@ -73,7 +73,9 @@ Step 1 — Introduce yourself, then ask their first name only:
 Step 2 — The moment they give their first name, call capture_contact with firstName, then respond warmly:
 "Hi [FirstName] — lovely to chat with you." (Use their first name naturally throughout — never overdo it.)
 
-Do NOT ask for surname, phone, company, or industry at the start. Help them first.
+NAME RULE (non-negotiable): You MUST learn their first name within your first two turns. If they jump straight in with a question before giving a name, answer it briefly, then say "By the way, may I ask who I'm speaking with?" before continuing. Do not go deeper into the conversation without a name.
+
+Do NOT ask for surname, phone, email, company, or industry at the start. Help them first.
 
 LANGUAGE: English by default. Afrikaans or Zulu only if they ask.
 
@@ -113,8 +115,8 @@ WEBSITE TOOLS — you MUST call these; speaking alone does not change the site o
 
 capture_contact — call the moment you learn each field (send only what you just heard):
 - firstName (right after they introduce themselves)
-- lastName, phone, companyName, industry (only in the NO-PURCHASE closing — see below)
-- Do NOT ask for email — checkout captures email if they buy; voice email capture is awkward.
+- lastName, phone, email, companyName, industry (only in the NO-PURCHASE closing — see below)
+- EMAIL over voice: after they say it, ALWAYS read it back to confirm spelling ("So that's j-o-h-n at gmail dot com — correct?"). Convert spoken "at" → @ and "dot" → . before calling capture_contact.
 
 industry use-case values: home, home_industry, hunting, fishing, butchery, restaurant, retail
 
@@ -127,9 +129,12 @@ PATH A — They bought a vacuum MACHINE (add_to_cart succeeded for a sealer):
 - Warm sign-off using their first name.
 
 PATH B — They did NOT purchase:
-- Wrap up gently — one question at a time, not a form dump.
-- Collect in order: surname → phone number → company name (if they have one) → what they mainly use vacuum sealing for (industry).
-- Call capture_contact after each answer.
+- TRIGGER: the moment the conversation winds down — they say "thanks", "that's all", "goodbye", or clearly have no more questions — do NOT say goodbye yet. Start this closing first.
+- Say: "Before you go, [FirstName] — may I take your phone number and email so we can send you the right information and follow up?"
+- Collect in order, one question at a time (not a form dump): phone number → email address → surname → company name (if they have one) → what they mainly use vacuum sealing for (industry).
+- Phone and email are the priority — if they only give you those two, that is a success.
+- Call capture_contact after each answer. Read the email back to confirm spelling before capturing it.
+- If they decline to share details, respect it gracefully and move to the goodbye.
 - Close naturally: "Would you like Anneke to give you a call to follow up? She's brilliant at matching the right machine." Office: ${MAIN_PHONE.display}. Anneke: ${ANNEKE_PHONE.display}.
 - If they prefer a form: navigate_to /contact.
 
@@ -471,6 +476,7 @@ export const JanetAgent = () => {
     firstName?: string;
     lastName?: string;
     phone?: string;
+    email?: string;
     companyName?: string;
     industry?: string;
   }>({});
@@ -585,6 +591,7 @@ export const JanetAgent = () => {
             firstName: leadRef.current.firstName,
             lastName: leadRef.current.lastName,
             phone: leadRef.current.phone,
+            email: leadRef.current.email,
             industry: formatLeadIndustry(leadRef.current),
             cartAdded: cartAddedRef.current,
             machineAdded: machineAddedRef.current,
@@ -763,13 +770,14 @@ export const JanetAgent = () => {
               {
                 name: "capture_contact",
                 description:
-                  "Save contact details the moment you hear them. Call after each answer — send only fields just learned. Never ask for email.",
+                  "Save contact details the moment you hear them. Call after each answer — send only fields just learned.",
                 parameters: {
                   type: "OBJECT",
                   properties: {
                     firstName: { type: "STRING", description: "First name — capture immediately when they introduce themselves" },
                     lastName: { type: "STRING", description: "Surname (end of call, no purchase only)" },
                     phone: { type: "STRING", description: "Phone number (end of call, no purchase only)" },
+                    email: { type: "STRING", description: "Email address, normalised (spoken 'at'→@, 'dot'→.) and confirmed back to the visitor (end of call, no purchase only)" },
                     companyName: { type: "STRING", description: "Business or company name, if they have one" },
                     industry: {
                       type: "STRING",
@@ -855,18 +863,20 @@ export const JanetAgent = () => {
                     firstName?: string;
                     lastName?: string;
                     phone?: string;
+                    email?: string;
                     companyName?: string;
                     industry?: string;
                   };
                   if (args.firstName) leadRef.current.firstName = args.firstName.trim();
                   if (args.lastName) leadRef.current.lastName = args.lastName.trim();
                   if (args.phone) leadRef.current.phone = args.phone.trim();
+                  if (args.email) leadRef.current.email = args.email.trim().toLowerCase();
                   if (args.companyName) leadRef.current.companyName = args.companyName.trim();
                   if (args.industry) leadRef.current.industry = args.industry.trim();
                   appendToolTranscriptLine(
                     transcriptRef.current,
                     "capture_contact",
-                    args.firstName || args.phone || args.industry
+                    args.firstName || args.phone || args.email || args.industry
                   );
                   return {
                     id: call.id,

@@ -19,6 +19,7 @@ function buildActionTaken(row: {
   cartAdded?: boolean;
   machineAdded?: boolean;
   phone?: string;
+  email?: string;
   firstName?: string;
   lastName?: string;
   industry?: string;
@@ -28,7 +29,7 @@ function buildActionTaken(row: {
     return "Machine added to cart — bags/rolls upsell offered; checkout captures details";
   }
   if (row.cartAdded) return "Added to cart — checkout will capture full details";
-  if (row.phone) return "Anneke callback requested — contact captured";
+  if (row.phone || row.email) return "Anneke callback requested — contact captured";
   if (row.firstName || row.lastName || row.industry) {
     const parts = [
       row.firstName || row.lastName ? "name captured" : null,
@@ -53,6 +54,7 @@ export async function POST(req: Request) {
       firstName,
       lastName,
       phone,
+      email,
       industry,
       cartAdded,
       machineAdded,
@@ -65,6 +67,7 @@ export async function POST(req: Request) {
       firstName?: string;
       lastName?: string;
       phone?: string;
+      email?: string;
       industry?: string;
       cartAdded?: boolean;
       machineAdded?: boolean;
@@ -82,13 +85,14 @@ export async function POST(req: Request) {
         first_name: firstName?.trim() || null,
         last_name: lastName?.trim() || null,
         phone: phone?.trim() || null,
-        email: null,
+        email: email?.trim().toLowerCase() || null,
         industry: industry?.trim() || null,
         updated_at: new Date().toISOString(),
         action_taken: buildActionTaken({
           cartAdded,
           machineAdded,
           phone,
+          email,
           firstName,
           lastName,
           industry,
@@ -122,10 +126,11 @@ export async function POST(req: Request) {
     if (resend) {
       const { fromEmail, adminEmails, replyToEmail } = getEmailConfig();
       const contactBlock =
-        firstName || lastName || phone || industry
+        firstName || lastName || phone || email || industry
           ? `<p><strong>First name:</strong> ${firstName || "—"}</p>
              <p><strong>Surname:</strong> ${lastName || "—"}</p>
              <p><strong>Phone:</strong> ${phone || "—"}</p>
+             <p><strong>Email:</strong> ${email || "—"}</p>
              <p><strong>Company / use:</strong> ${industry || "—"}</p>
              <p><strong>Machine in cart:</strong> ${machineAdded ? "Yes" : cartAdded ? "Other item" : "No"}</p>`
           : `<p><em>No structured contact captured — see transcript.</em></p>`;
