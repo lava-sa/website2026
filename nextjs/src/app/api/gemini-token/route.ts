@@ -23,6 +23,11 @@ export async function GET() {
             outputAudioTranscription: {},
           },
         },
+        // CRITICAL: without this, ALL LiveConnectConfig fields are locked to the
+        // constraints above and the browser's systemInstruction, tools (add_to_cart,
+        // navigate_to…) and speechConfig are silently IGNORED by the API.
+        // Empty array = lock only the fields set above.
+        lockAdditionalFields: [],
       },
     });
 

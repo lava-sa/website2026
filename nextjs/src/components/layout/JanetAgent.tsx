@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { X, MessageCircle, Mic, MicOff, Loader2 } from "lucide-react";
-import { GoogleGenAI, Modality } from "@google/genai";
+import { GoogleGenAI, Modality, EndSensitivity } from "@google/genai";
 import type { Session } from "@google/genai";
 import { useCart } from "@/lib/cart-context";
 import type { CartItem } from "@/lib/cart-context";
@@ -724,6 +724,15 @@ export const JanetAgent = () => {
           speechConfig: {
             voiceConfig: {
               prebuiltVoiceConfig: { voiceName: "Aoede" }, // Aoede = Janet (Female)
+            },
+          },
+          // Callers pause to think — don't let Janet jump in on a short silence.
+          // silenceDurationMs = how long a pause must be before she treats the turn
+          // as finished (trade-off: higher = more patient but slower to reply).
+          realtimeInputConfig: {
+            automaticActivityDetection: {
+              endOfSpeechSensitivity: EndSensitivity.END_SENSITIVITY_LOW,
+              silenceDurationMs: 1500,
             },
           },
           tools: [{
