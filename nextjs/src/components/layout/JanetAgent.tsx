@@ -1091,6 +1091,36 @@ export const JanetAgent = () => {
           </div>
         </button>
         </div>
+      ) : isActive ? (
+        /* Active call collapses to a compact bar so it doesn't cover the screen */
+        <div
+          className="bg-primary shadow-2xl border border-white/10 flex items-center gap-3 pl-3 pr-2 py-2.5"
+          style={{ borderRadius: "0px" }}
+        >
+          <div className="relative flex h-8 w-8 items-center justify-center shrink-0">
+            {!isMuted && <span className="absolute inset-0 rounded-full bg-pink-400/40 animate-ping" />}
+            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-secondary">
+              {isMuted ? <MicOff className="h-4 w-4 text-white" /> : <Mic className="h-4 w-4 text-white" />}
+            </div>
+          </div>
+          <span className="text-sm font-semibold text-white whitespace-nowrap">
+            {isMuted ? "Muted — tap Unmute" : "Janet is listening…"}
+          </span>
+          <button
+            onClick={() => setIsMuted((m) => !m)}
+            className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors whitespace-nowrap ${
+              isMuted ? "bg-red-500 text-white hover:bg-red-600" : "bg-white/10 text-white hover:bg-white/20"
+            }`}
+          >
+            {isMuted ? "Unmute" : "Mute"}
+          </button>
+          <button
+            onClick={endCall}
+            className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider bg-pink-600 text-white hover:bg-pink-700 transition-colors whitespace-nowrap"
+          >
+            End
+          </button>
+        </div>
       ) : (
         <div
           className="bg-white shadow-2xl border border-border flex flex-col overflow-hidden"
