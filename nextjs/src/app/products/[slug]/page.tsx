@@ -788,6 +788,10 @@ export default async function ProductDetailPage({
         }
       />
 
+      {machineContent && machineContent.tests.length > 0 ? (
+        <MachineTests tests={machineContent.tests} heading={machineHeadings?.tests} />
+      ) : null}
+
       {!isOnOrder && (
         <ProductBottomPurchase
           placement="mid"
@@ -806,25 +810,64 @@ export default async function ProductDetailPage({
         />
       )}
 
+      {isVacuumMachine && machineFaqItems.length > 0 ? (
+        <MachineFAQ
+          items={machineFaqItems}
+          heading={machineHeadings?.faq}
+          variant="dark"
+        />
+      ) : null}
+
       {/* ═══════════════════════════════════════════════════════════════
-          SECTION 5 — Compatible Bags & Rolls (machines only)
+          Reviews — social proof before consumables upsell
+      ════════════════════════════════════════════════════════════════ */}
+      {productReviews ? (
+        <>
+          {hasLaVaImport && (
+            <div className="section-container -mb-12 pt-4">
+              <p className="text-[10px] sm:text-xs text-copy-muted font-medium">
+                Some reviews translated from{" "}
+                <a
+                  href="https://www.la-va.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-secondary hover:underline"
+                >
+                  www.la-va.com
+                </a>
+              </p>
+            </div>
+          )}
+          <ProductReviewsSection
+            title={machineHeadings?.reviews ?? `${product.name} Customer Reviews`}
+            reviewBlock={productReviews}
+            reviewFormHref={reviewFormHref}
+            excludeIds={galleryFeaturedIds}
+          />
+        </>
+      ) : (
+        <>
+          {productHighlights && <ProductHighlights items={productHighlights} />}
+          <ProductReviewsEmptySection
+            title={machineHeadings?.reviews ?? `${product.name} Customer Reviews`}
+            reviewFormHref={reviewFormHref}
+          />
+        </>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          Compatible Bags & Rolls (machines only) — after trust sections
       ════════════════════════════════════════════════════════════════ */}
       {isVacuumMachine && (compatibleBags.length > 0 || compatibleRolls.length > 0) && (
         <section className="py-16 bg-surface border-y border-border">
           <div className="section-container">
-
-            {/* Promo bar */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-10 p-5 bg-primary">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary mb-1">Complete Your Setup</p>
-                <p className="text-white font-black text-lg leading-tight">
-                  Add R1,000+ in bags or rolls &amp; save 10% on your entire order
-                </p>
-              </div>
-              <div className="shrink-0 bg-secondary text-white px-5 py-3 text-center">
-                <p className="text-2xl font-black leading-none">10%</p>
-                <p className="text-[10px] font-bold uppercase tracking-wider mt-0.5">OFF your order</p>
-              </div>
+            <div className="mb-10">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary mb-1">
+                Complete your setup
+              </p>
+              <p className="text-primary font-black text-lg leading-tight">
+                Embossed bags and rolls sized for the {product.name}
+              </p>
             </div>
 
             {/* Row 1 — Bags */}
@@ -891,16 +934,12 @@ export default async function ProductDetailPage({
                 </div>
               </div>
             )}
-
-            <p className="text-xs text-copy-muted mt-8 text-center">
-              * 10% discount applied automatically at checkout when bag/roll total reaches R1,000.
-            </p>
           </div>
         </section>
       )}
 
       {/* ═══════════════════════════════════════════════════════════════
-          SECTION — Bag & Roll Compatibility Table (machines only)
+          Bag & Roll Compatibility Table (machines only)
       ════════════════════════════════════════════════════════════════ */}
       {isVacuumMachine && (
         <section className="py-16 border-b border-border">
@@ -956,54 +995,7 @@ export default async function ProductDetailPage({
       )}
 
       {/* ═══════════════════════════════════════════════════════════════
-          Tests / FAQ (videos + manuals moved above Industries)
-      ════════════════════════════════════════════════════════════════ */}
-      {machineContent ? (
-        <>
-          <MachineTests tests={machineContent.tests} heading={machineHeadings?.tests} />
-          <MachineFAQ items={machineFaqItems} heading={machineHeadings?.faq} />
-        </>
-      ) : null}
-
-      {/* ═══════════════════════════════════════════════════════════════
-          SECTION 6 — Reviews (machines + items in reviews.json) or features
-      ════════════════════════════════════════════════════════════════ */}
-      {productReviews ? (
-        <>
-          {hasLaVaImport && (
-            <div className="section-container -mb-12 pt-4">
-              <p className="text-[10px] sm:text-xs text-copy-muted font-medium">
-                Some reviews translated from{" "}
-                <a
-                  href="https://www.la-va.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-secondary hover:underline"
-                >
-                  www.la-va.com
-                </a>
-              </p>
-            </div>
-          )}
-          <ProductReviewsSection
-            title={machineHeadings?.reviews ?? `${product.name} Customer Reviews`}
-            reviewBlock={productReviews}
-            reviewFormHref={reviewFormHref}
-            excludeIds={galleryFeaturedIds}
-          />
-        </>
-      ) : (
-        <>
-          {productHighlights && <ProductHighlights items={productHighlights} />}
-          <ProductReviewsEmptySection
-            title={machineHeadings?.reviews ?? `${product.name} Customer Reviews`}
-            reviewFormHref={reviewFormHref}
-          />
-        </>
-      )}
-
-      {/* ═══════════════════════════════════════════════════════════════
-          SECTION 7 — Related Machines
+          Related Machines
       ════════════════════════════════════════════════════════════════ */}
       {related.length > 0 && (
         <section className="py-20 bg-surface border-t border-border">
