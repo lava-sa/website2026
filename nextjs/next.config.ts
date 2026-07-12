@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
+import {
+  LEGACY_CO_ZA_REDIRECTS,
+  LEGACY_WOO_PRODUCT_FALLBACK,
+} from "./legacy-co-za-redirects";
 
 // Allow self-signed SSL for LocalWP in development
 if (process.env.NODE_ENV !== "production") {
@@ -82,6 +86,11 @@ const nextConfig: NextConfig = {
       { source: "/lava-sa/", destination: "/admin/login" },
       { source: "/lava-sa/:path*", destination: "/admin/:path*" },
     ];
+  },
+
+  /** Legacy lava-sa.co.za WordPress paths → lava-sa.com (after host redirect in middleware). */
+  async redirects() {
+    return [...LEGACY_CO_ZA_REDIRECTS, LEGACY_WOO_PRODUCT_FALLBACK];
   },
 };
 

@@ -14,7 +14,8 @@
     "import:webtoffee-orders": "node scripts/import-webtoffee-orders-csv.mjs",
     "import:wp-users": "node scripts/import-wp-users-csv.mjs",
     "cleanup:spam-customers": "node scripts/cleanup-spam-customers.mjs",
-    "fill:product-ai": "node scripts/fill-product-ai-fields.mjs"
+    "fill:product-ai": "node scripts/fill-product-ai-fields.mjs",
+    "generate:legacy-redirects": "node scripts/generate-legacy-co-za-redirects.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.89.0",
