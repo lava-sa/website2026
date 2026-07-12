@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
-import { getDemoType } from "@/lib/demo-booking-config";
+import { getDemoType, DEMO_BOOKING_ENABLED } from "@/lib/demo-booking-config";
 import {
   computeAvailableDemoSlots,
   generateDemoReference,
@@ -29,6 +29,13 @@ interface DemoBookingPayload {
 }
 
 export async function POST(req: NextRequest) {
+  if (!DEMO_BOOKING_ENABLED) {
+    return NextResponse.json(
+      { error: "Demonstration booking is not available at this time." },
+      { status: 503 },
+    );
+  }
+
   try {
     const body: DemoBookingPayload = await req.json();
     const {

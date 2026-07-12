@@ -1,7 +1,12 @@
 /**
  * Book a Demonstration — demo types and slot schedule.
  * Tue / Wed / Thu only · 10:00, 11:00, 12:00 (on the hour).
+ *
+ * Set DEMO_BOOKING_ENABLED true + restore footer link when Anneke is ready.
  */
+
+/** Public booking UI and API — off until Anneke can run demonstrations. */
+export const DEMO_BOOKING_ENABLED = false;
 
 export interface DemoType {
   slug: string;

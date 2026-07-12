@@ -1,14 +1,12 @@
-import type { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
+import { DEMO_BOOKING_ENABLED } from "@/lib/demo-booking-config";
 import DemoBookingWizard from "./DemoBookingWizard";
 
-export const metadata: Metadata = {
-  title: "Book a Demonstration | Lava-SA",
-  description:
-    "Book a free LAVA vacuum sealer demonstration with Anneke — online via video call or in person at our Bryanston showroom. Tuesday–Thursday mornings.",
-  alternates: { canonical: "/book-demo" },
-};
-
 export default function BookDemoPage() {
+  if (!DEMO_BOOKING_ENABLED) {
+    permanentRedirect("/contact");
+  }
+
   return (
     <main className="min-h-screen bg-surface">
       <DemoBookingWizard />
