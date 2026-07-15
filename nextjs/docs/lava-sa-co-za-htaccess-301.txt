@@ -1,0 +1,18 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# lava-sa.co.za → lava-sa.com  (301 permanent)
+# Paste into public_html/.htaccess on the .co.za HostGator account.
+# Put these rules at the VERY TOP (above any WordPress # BEGIN WordPress block).
+# Site retired: July 2026 — lava-sa.com is the official site.
+# ═══════════════════════════════════════════════════════════════════════════
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# www.lava-sa.co.za or lava-sa.co.za → https://lava-sa.com (same path + query string)
+RewriteCond %{HTTP_HOST} ^(www\.)?lava-sa\.co\.za$ [NC]
+RewriteRule ^(.*)$ https://lava-sa.com/$1 [R=301,L,QSA]
+</IfModule>
+
+# Optional: if you prefer to send everyone to the homepage only (not recommended — breaks old product links):
+# RewriteCond %{HTTP_HOST} ^(www\.)?lava-sa\.co\.za$ [NC]
+# RewriteRule ^ https://lava-sa.com/ [R=301,L]
