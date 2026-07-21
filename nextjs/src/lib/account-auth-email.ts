@@ -39,6 +39,15 @@ function recoveryCallbackUrl(tokenHash: string): string {
   });
 }
 
+/** Invite activation — same password-setup landing as recovery. */
+function inviteCallbackUrl(tokenHash: string): string {
+  return buildCustomerAuthCallbackUrl({
+    tokenHash,
+    otpType: "invite",
+    nextPath: "/account/reset-password",
+  });
+}
+
 async function ensureCustomerRow(email: string) {
   const supabase = createServiceClient();
   const { data: existing } = await supabase
@@ -105,29 +114,66 @@ async function sendAuthActionEmail(
   return true;
 }
 
-/** New visitor — free member account (manuals, points). Sends invite email. */
+/**
+ * New visitor — free member account (manuals, points).
+ * Uses generateLink (no Supabase-branded email) + Resend with a lava-sa.com callback URL.
+ * Never use inviteUserByEmail here — that sends From: Supabase Auth and embeds Dashboard Site URL
+ * (often localhost:3000).
+ */
 export async function sendMemberSignupEmail(email: string, redirectTo: string) {
   const supabase = createServiceClient();
-  const invite = await supabase.auth.admin.inviteUserByEmail(email, { redirectTo });
 
-  if (!invite.error) {
+  const link = await supabase.auth.admin.generateLink({
+    type: "invite",
+    email,
+    options: { redirectTo },
+  });
+
+  if (link.error) {
+    if (authUserExistsMessage(link.error.message)) {
+      return {
+        ok: false as const,
+        code: "already_registered" as const,
+        message:
+          "This email already has a member account. Use password reset if you need a new password, or sign in.",
+      };
+    }
+    console.error("[member-signup] generateLink failed:", link.error.message);
+    return {
+      ok: false as const,
+      code: "invite_failed" as const,
+      message: "We could not send the activation email. Please try again or contact support.",
+    };
+  }
+
+  const hashedToken = link.data?.properties?.hashed_token;
+  if (hashedToken) {
+    const directLink = inviteCallbackUrl(hashedToken);
+    if (await sendAuthActionEmail(email, directLink, "signup")) {
+      await ensureCustomerRow(email);
+      return { ok: true as const, kind: "invite" as const };
+    }
+  }
+
+  const actionLink = link.data?.properties?.action_link;
+  if (!actionLink) {
+    console.error("[member-signup] generateLink returned no action_link");
+    return {
+      ok: false as const,
+      code: "email_failed" as const,
+      message: "We could not send the activation email. Please try again or contact support.",
+    };
+  }
+
+  const safeLink = withRedirectTo(actionLink, redirectTo);
+  if (await sendAuthActionEmail(email, safeLink, "signup")) {
     await ensureCustomerRow(email);
     return { ok: true as const, kind: "invite" as const };
   }
 
-  if (authUserExistsMessage(invite.error.message)) {
-    return {
-      ok: false as const,
-      code: "already_registered" as const,
-      message:
-        "This email already has a member account. Use password reset if you need a new password, or sign in.",
-    };
-  }
-
-  console.error("[member-signup] invite failed:", invite.error.message);
   return {
     ok: false as const,
-    code: "invite_failed" as const,
+    code: "email_failed" as const,
     message: "We could not send the activation email. Please try again or contact support.",
   };
 }

@@ -40,7 +40,9 @@ function AuthCallbackInner() {
             ? ["recovery", "email"]
             : type === "magiclink"
               ? ["magiclink", "email"]
-              : [type as EmailOtpType, "email"];
+              : type === "invite"
+                ? ["invite", "signup", "email"]
+                : [type as EmailOtpType, "email"];
         let verified = false;
         for (const otpType of otpTypes) {
           const { error } = await supabase.auth.verifyOtp({
