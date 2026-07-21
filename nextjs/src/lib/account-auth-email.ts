@@ -1,6 +1,14 @@
 import { createAuthAnonClient, createServiceClient } from "@/lib/supabase";
 import { buildCustomerAuthCallbackUrl } from "@/lib/auth-redirect";
 import { getEmailConfig, getResendClient } from "@/lib/email-config";
+import { emailButton, escEmail, wrapEmailLayout } from "@/lib/email-template";
+
+/** Keep the verified Resend address; show "Lava-SA" not "Lava-SA Orders". */
+function authFromAddress(fromEmail: string): string {
+  const match = fromEmail.match(/<([^>]+)>/);
+  const address = match?.[1]?.trim() || fromEmail.trim();
+  return `Lava-SA <${address}>`;
+}
 
 function authUserExistsMessage(msg: string): boolean {
   const lower = msg.toLowerCase();
@@ -75,31 +83,35 @@ async function sendAuthActionEmail(
       ? "Activate your Lava-SA member account"
       : "Reset your Lava-SA member password";
 
+  const headline =
+    kind === "signup" ? "Welcome to your Lava-SA member account" : "Reset your member password";
+
   const intro =
     kind === "signup"
-      ? "Create your free Lava member login — access operating manuals, Lava Points, and order history. No purchase required."
+      ? "Create your free Lava member login — open operating manuals, track Lava Points, and view order history. No purchase required."
       : "Use the secure link below to set or reset your password for lava-sa.com.";
 
   const buttonLabel = kind === "signup" ? "Activate member account" : "Set new password";
+  const safeLink = escEmail(actionLink);
 
-  const html = `
-    <div style="font-family:system-ui,sans-serif;line-height:1.6;color:#1a3333;max-width:520px">
-      <p style="margin:0 0 16px">Hi,</p>
-      <p style="margin:0 0 16px">${intro}</p>
-      <p style="margin:0 0 24px">
-        <a href="${actionLink}" style="display:inline-block;background:#0d4d4d;color:#fff;font-weight:700;padding:12px 20px;text-decoration:none">
-          ${buttonLabel}
-        </a>
-      </p>
-      <p style="margin:0 0 8px;font-size:13px;color:#555">Or copy this link into your browser:</p>
-      <p style="margin:0 0 24px;font-size:12px;word-break:break-all;color:#666">${actionLink}</p>
-      <p style="margin:0;font-size:12px;color:#888">If you didn't request this, you can ignore this email.</p>
-      <p style="margin:16px 0 0;font-size:12px;color:#888">— Lava-SA · German vacuum sealers since 2007</p>
-    </div>
+  const bodyHtml = `
+    <p style="margin:0 0 16px;">Hi,</p>
+    <p style="margin:0 0 8px;">${intro}</p>
+    ${emailButton(actionLink, buttonLabel)}
+    <p style="margin:20px 0 8px;font-size:13px;color:#6b7280;">Or copy this link into your browser:</p>
+    <p style="margin:0 0 24px;font-size:12px;word-break:break-all;color:#6b7280;">
+      <a href="${safeLink}" style="color:#1b6b6b;text-decoration:underline;">${safeLink}</a>
+    </p>
+    <p style="margin:0;font-size:13px;color:#6b7280;">If you didn&apos;t request this, you can ignore this email.</p>
   `;
 
+  const html = wrapEmailLayout({
+    headline,
+    bodyHtml,
+  });
+
   const { error } = await resend.emails.send({
-    from: fromEmail,
+    from: authFromAddress(fromEmail),
     to: email,
     subject,
     html,

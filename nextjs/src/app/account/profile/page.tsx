@@ -70,9 +70,15 @@ export default async function AccountProfilePage() {
   const pointsTxs = (pointsTxResult.data as PointsTx[]) ?? [];
   const reviews = reviewsResult.data ?? [];
 
-  const displayName = customer
-    ? [customer.first_name, customer.last_name].filter(Boolean).join(" ") || user.email
-    : user.email;
+  const firstName =
+    customer?.first_name?.trim() ||
+    userEmail.split("@")[0]?.replace(/[._-]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) ||
+    "there";
+  const fullName = customer
+    ? [customer.first_name, customer.last_name].filter(Boolean).join(" ").trim()
+    : "";
+  const displayName = fullName || user.email;
+  const profileIncomplete = !customer?.first_name?.trim();
 
   const pointsBalance = customer?.points_balance ?? 0;
   const totalSpent = customer?.total_spent ?? 0;
@@ -93,14 +99,26 @@ export default async function AccountProfilePage() {
     <main className="min-h-screen bg-surface/30">
       <section className="bg-primary text-white py-10">
         <div className="section-container">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <p className="text-secondary text-sm font-bold uppercase tracking-wider mb-1">
-                My Profile
+          <div className="flex justify-between items-start gap-6 mb-6">
+            <div className="max-w-2xl">
+              <p className="text-secondary text-sm font-bold uppercase tracking-wider mb-2">
+                Your personal member profile
               </p>
-              <h1 className="font-heading text-3xl font-bold">{displayName}</h1>
+              <h1 className="font-heading text-3xl sm:text-4xl font-bold leading-tight">
+                Hi {firstName} — welcome to Lava-SA
+              </h1>
+              <p className="mt-4 text-white/85 text-base leading-relaxed">
+                This is your private space on lava-sa.com. Monitor your orders, Lava Points, and
+                reviews here whenever you return.
+              </p>
+              {profileIncomplete ? (
+                <p className="mt-3 text-secondary/95 text-sm leading-relaxed">
+                  Tip: when you place an order we save your full name on this profile. Until then,
+                  your email below is your member login.
+                </p>
+              ) : null}
               {customer?.is_vip ? (
-                <span className="inline-block mt-2 bg-secondary text-white text-[10px] font-bold uppercase px-2.5 py-1 tracking-wider">
+                <span className="inline-block mt-4 bg-secondary text-white text-[10px] font-bold uppercase px-2.5 py-1 tracking-wider">
                   VIP Member
                 </span>
               ) : null}
