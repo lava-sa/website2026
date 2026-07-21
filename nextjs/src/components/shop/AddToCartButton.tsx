@@ -5,18 +5,30 @@ import { useRouter } from "next/navigation";
 import { ShoppingBag, Check, Minus, Plus } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import type { CartItem } from "@/lib/cart-context";
+import type { StockStatus } from "@/types/product";
+import StorvacAlternative from "@/components/shop/StorvacAlternative";
+import { storvacUrlForSize } from "@/lib/storvac";
 
 interface Props {
   product: Omit<CartItem, "quantity">;
   funnelSlug?: string; // if set, redirect to /buy/[funnelSlug] after adding
   priceDisplay?: React.ReactNode;
+  stockStatus?: StockStatus;
+  widthCm?: number | null;
+  lengthCm?: number | null;
 }
 
-export default function AddToCartButton({ product, funnelSlug, priceDisplay }: Props) {
+export default function AddToCartButton({ product, funnelSlug, priceDisplay, stockStatus, widthCm, lengthCm }: Props) {
   const { addItem, isHydrated, openDrawer } = useCart();
   const router      = useRouter();
   const [qty, setQty]     = useState(1);
   const [added, setAdded] = useState(false);
+
+  // Out of stock + a matching StorVac size → replace the buy button with the value-range link
+  const outOfStockTwin =
+    stockStatus === "out_of_stock"
+      ? storvacUrlForSize(widthCm, lengthCm, product.name)
+      : null;
 
   const changeQty = (delta: number) =>
     setQty((q) => Math.max(1, Math.min(10, q + delta)));
@@ -47,7 +59,8 @@ export default function AddToCartButton({ product, funnelSlug, priceDisplay }: P
           </div>
         )}
 
-        {/* Quantity selector */}
+        {/* Quantity selector — hidden when out of stock (nothing to buy) */}
+        {!outOfStockTwin && (
         <div className="flex items-center gap-0 shrink-0">
           <span className="text-xs font-bold text-copy-muted uppercase tracking-wider mr-3">Qty</span>
           <div className="flex items-center border border-border">
@@ -81,9 +94,13 @@ export default function AddToCartButton({ product, funnelSlug, priceDisplay }: P
             </span>
           )}
         </div>
+        )}
       </div>
 
-      {/* Add to cart */}
+      {/* Out of stock with a StorVac twin → value-range link replaces the buy button */}
+      {outOfStockTwin ? (
+        <StorvacAlternative width={widthCm} length={lengthCm} name={product.name} variant="cta" />
+      ) : (
       <button
         type="button"
         onClick={handleAdd}
@@ -100,6 +117,7 @@ export default function AddToCartButton({ product, funnelSlug, priceDisplay }: P
           <><ShoppingBag className="h-5 w-5" /> Add to Cart</>
         )}
       </button>
+      )}
 
     </div>
   );

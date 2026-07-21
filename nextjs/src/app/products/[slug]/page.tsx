@@ -544,6 +544,9 @@ export default async function ProductDetailPage({
                   <AddToCartButton
                     product={{ id: product.id, slug: product.slug, name: product.name, price, image: product.primary_image_url, sku: product.sku }}
                     funnelSlug={funnelConfig.enabled ? product.slug : undefined}
+                    stockStatus={product.stock_status}
+                    widthCm={product.width_cm}
+                    lengthCm={product.length_cm}
                     priceDisplay={
                       <div className="flex flex-col items-start gap-1">
                         <StockBadge status={product.stock_status} quantity={product.stock_quantity} />

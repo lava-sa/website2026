@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Award } from "lucide-react";
 import { formatPrice, getDiscountPercent, stripHtml } from "@/lib/products";
 import ProductCatalogImage from "@/components/shop/ProductCatalogImage";
+import StorvacAlternative from "@/components/shop/StorvacAlternative";
 import { getProductPointsDisplay } from "@/lib/rewards-config";
 import type { Product, StockStatus } from "@/types/product";
 
@@ -106,6 +107,16 @@ export default function ProductCard({ product }: Props) {
             <span className="text-xl font-bold text-primary">{formatPrice(product.regular_price)}</span>
           )}
         </div>
+
+        {/* Out-of-stock → same size on the StorVac value range */}
+        {product.stock_status === "out_of_stock" && (
+          <StorvacAlternative
+            width={product.width_cm}
+            length={product.length_cm}
+            name={product.name}
+            variant="card"
+          />
+        )}
 
         {/* Lava Points — clickable, links to rewards page */}
         {pointsDisplay.show && (

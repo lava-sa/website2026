@@ -7,6 +7,8 @@ import Link from "next/link";
 import { Star, Lock, ShoppingBag, Check, Minus, Plus } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import StockBadge from "@/components/shop/StockBadge";
+import StorvacAlternative from "@/components/shop/StorvacAlternative";
+import { storvacUrlForSize } from "@/lib/storvac";
 import { formatPrice } from "@/lib/products";
 import type { StockStatus } from "@/types/product";
 
@@ -74,6 +76,10 @@ export default function ProductBottomPurchase({
   const hasSale = product.sale_price != null && product.sale_price < product.regular_price;
   const sectionId = placement === "mid" ? "buy-now-mid" : "buy-now";
   const headingId = placement === "mid" ? "mid-purchase-heading" : "bottom-purchase-heading";
+  const outOfStockTwin =
+    product.stock_status === "out_of_stock"
+      ? storvacUrlForSize(null, null, product.name)
+      : null;
 
   return (
     <section
@@ -166,7 +172,8 @@ export default function ProductBottomPurchase({
               {/* Purchase actions */}
               <div className="w-full lg:w-auto lg:min-w-[260px] shrink-0">
                 <div className="flex flex-col sm:flex-row lg:flex-col gap-4">
-                  {/* Quantity */}
+                  {/* Quantity — hidden when out of stock (nothing to buy) */}
+                  {!outOfStockTwin && (
                   <div className="flex items-center justify-center lg:justify-start gap-3">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-copy-muted">
                       Qty
@@ -195,7 +202,12 @@ export default function ProductBottomPurchase({
                       </button>
                     </div>
                   </div>
+                  )}
 
+                  {/* Out of stock + StorVac twin → value-range link replaces Buy Now */}
+                  {outOfStockTwin ? (
+                    <StorvacAlternative name={product.name} variant="cta" />
+                  ) : (
                   <button
                     type="button"
                     onClick={handleBuyNow}
@@ -220,14 +232,17 @@ export default function ProductBottomPurchase({
                       </>
                     )}
                   </button>
+                  )}
                 </div>
 
+                {!outOfStockTwin && (
                 <div className="mt-3 flex items-center justify-center lg:justify-start gap-1.5">
                   <Lock className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
                   <p className="text-[10px] font-bold text-emerald-700 uppercase tracking-wide">
                     SSL Secure Checkout
                   </p>
                 </div>
+                )}
               </div>
             </div>
           </div>
