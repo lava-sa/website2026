@@ -2,6 +2,7 @@ import { createAuthAnonClient, createServiceClient } from "@/lib/supabase";
 import { buildCustomerAuthCallbackUrl } from "@/lib/auth-redirect";
 import { getEmailConfig, getResendClient } from "@/lib/email-config";
 import { emailButton, escEmail, wrapEmailLayout } from "@/lib/email-template";
+import { getCustomerFacingSiteUrl } from "@/lib/seo";
 
 /** Keep the verified Resend address; show "Lava-SA" not "Lava-SA Orders". */
 function authFromAddress(fromEmail: string): string {
@@ -126,6 +127,52 @@ async function sendAuthActionEmail(
   return true;
 }
 
+/** Alert Anneke / info@ when someone requests a free member account. Never blocks signup. */
+async function notifyAdminOfMemberSignup(email: string): Promise<void> {
+  const resend = getResendClient();
+  if (!resend) return;
+
+  const { fromEmail, adminEmails } = getEmailConfig();
+  if (!adminEmails.length) return;
+
+  const leadsUrl = `${getCustomerFacingSiteUrl()}/admin/leads`;
+  const when = new Date().toLocaleString("en-ZA", {
+    timeZone: "Africa/Johannesburg",
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
+  const html = wrapEmailLayout({
+    headline: "New member signup",
+    subheadline: escEmail(email),
+    bodyHtml: `
+      <p style="margin:0 0 16px;">A visitor requested a free Lava-SA member account on the website.</p>
+      <p style="margin:0 0 8px;"><strong>Email:</strong> ${escEmail(email)}</p>
+      <p style="margin:0 0 20px;"><strong>When:</strong> ${escEmail(when)} (SAST)</p>
+      <p style="margin:0 0 8px;font-size:14px;color:#6b7280;">
+        They were sent an activation email to set their password. They appear under Admin → Leads
+        (member signups) once their customer row is created.
+      </p>
+      ${emailButton(leadsUrl, "Open leads in admin")}
+    `,
+  });
+
+  try {
+    const { error } = await resend.emails.send({
+      from: authFromAddress(fromEmail),
+      to: adminEmails,
+      replyTo: email,
+      subject: `[Member] New signup — ${email}`,
+      html,
+    });
+    if (error) {
+      console.error("[member-signup] admin notify failed:", error.message);
+    }
+  } catch (err) {
+    console.error("[member-signup] admin notify error:", err);
+  }
+}
+
 /**
  * New visitor — free member account (manuals, points).
  * Uses generateLink (no Supabase-branded email) + Resend with a lava-sa.com callback URL.
@@ -163,6 +210,7 @@ export async function sendMemberSignupEmail(email: string, redirectTo: string) {
     const directLink = inviteCallbackUrl(hashedToken);
     if (await sendAuthActionEmail(email, directLink, "signup")) {
       await ensureCustomerRow(email);
+      await notifyAdminOfMemberSignup(email);
       return { ok: true as const, kind: "invite" as const };
     }
   }
@@ -180,6 +228,7 @@ export async function sendMemberSignupEmail(email: string, redirectTo: string) {
   const safeLink = withRedirectTo(actionLink, redirectTo);
   if (await sendAuthActionEmail(email, safeLink, "signup")) {
     await ensureCustomerRow(email);
+    await notifyAdminOfMemberSignup(email);
     return { ok: true as const, kind: "invite" as const };
   }
 
