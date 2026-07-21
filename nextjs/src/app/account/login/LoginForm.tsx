@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Mail, Loader2, LogIn, UserPlus, KeyRound } from "lucide-react";
 import AuthLogo from "@/components/ui/AuthLogo";
 import PasswordInput from "@/components/ui/PasswordInput";
+import { HoneypotField } from "@/components/security/HoneypotField";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 import { createClient } from "@/utils/supabase/client";
 
 type Mode = "login" | "signup" | "reset";
@@ -39,7 +41,7 @@ const MODE_META: Record<
     loadingLabel: "Sending…",
     endpoint: "/api/account/member-signup",
     success: (email) =>
-      `Activation email sent to ${email}. Check your inbox and spam folder (from Supabase or noreply@mail.app.supabase.io). Open the link to create your password, then sign in.`,
+      `Activation email sent to ${email}. Check your inbox and spam folder (from Lava-SA). Open the link to create your password, then sign in.`,
   },
   reset: {
     icon: KeyRound,
@@ -68,6 +70,8 @@ function LoginFormInner() {
   const [mode, setMode] = useState<Mode>(resolveInitialMode(requestedMode));
   const [email, setEmail] = useState(prefilledEmail);
   const [password, setPassword] = useState("");
+  const [website, setWebsite] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -82,6 +86,7 @@ function LoginFormInner() {
     setMode(next);
     setError("");
     setSuccess("");
+    setTurnstileToken("");
   }
 
   async function handleLogin(e: React.FormEvent) {
@@ -110,12 +115,23 @@ function LoginFormInner() {
 
     const meta = MODE_META[mode];
     setError("");
+
+    const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+    if (siteKey && !turnstileToken) {
+      setError("Please complete the security check below.");
+      return;
+    }
+
     setLoading(true);
 
     const res = await fetch(meta.endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email.trim().toLowerCase() }),
+      body: JSON.stringify({
+        email: email.trim().toLowerCase(),
+        turnstileToken: turnstileToken || undefined,
+        website,
+      }),
     });
 
     const data = (await res.json().catch(() => ({}))) as { error?: string; code?: string };
@@ -131,14 +147,18 @@ function LoginFormInner() {
         return;
       }
       setError(data.error || "Something went wrong. Please try again.");
+      setTurnstileToken("");
       return;
     }
 
     setSuccess(meta.success(email));
+    setTurnstileToken("");
   }
 
   const emailMeta = mode !== "login" ? MODE_META[mode] : null;
   const ModeIcon = emailMeta?.icon ?? LogIn;
+  const turnstileRequired = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim());
+  const emailFlowBlocked = mode !== "login" && turnstileRequired && !turnstileToken;
 
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">
@@ -208,12 +228,8 @@ function LoginFormInner() {
               <p className="font-bold text-primary mb-1">Submit a customer review</p>
               <p className="text-copy-muted leading-relaxed">
                 We couldn&apos;t find{" "}
-                {prefilledEmail ? (
-                  <strong>{prefilledEmail}</strong>
-                ) : (
-                  "that email"
-                )}{" "}
-                in our records. If you&apos;ve ordered from lava-sa.com, use{" "}
+                {prefilledEmail ? <strong>{prefilledEmail}</strong> : "that email"} in our records.
+                If you&apos;ve ordered from lava-sa.com, use{" "}
                 <button
                   type="button"
                   onClick={() => switchMode("reset")}
@@ -250,8 +266,8 @@ function LoginFormInner() {
                     className="font-bold underline"
                   >
                     Sign in
-                  </button>
-                  {" "}or{" "}
+                  </button>{" "}
+                  or{" "}
                   <button
                     type="button"
                     onClick={() => switchMode("reset")}
@@ -271,16 +287,17 @@ function LoginFormInner() {
                     className="font-bold underline"
                   >
                     Create a free member account
-                  </button>
-                  {" "}instead — no purchase required.
+                  </button>{" "}
+                  instead — no purchase required.
                 </p>
               )}
             </div>
           ) : (
             <form
               onSubmit={mode === "login" ? handleLogin : handleEmailFlow}
-              className="space-y-4"
+              className="relative space-y-4"
             >
+              {mode !== "login" ? <HoneypotField value={website} onChange={setWebsite} /> : null}
               <div>
                 <label className="block text-xs font-bold text-primary mb-1.5 uppercase tracking-wide">
                   Email address
@@ -318,6 +335,15 @@ function LoginFormInner() {
                 </div>
               )}
 
+              {mode !== "login" ? (
+                <TurnstileWidget
+                  onToken={setTurnstileToken}
+                  onExpire={() => setTurnstileToken("")}
+                  className="flex justify-start"
+                  compact
+                />
+              ) : null}
+
               {error && (
                 <div className="bg-red-50 border border-red-200 px-4 py-2.5 text-xs text-red-700 font-medium space-y-2">
                   <p>{error}</p>
@@ -344,7 +370,9 @@ function LoginFormInner() {
 
               <button
                 type="submit"
-                disabled={loading || !email || (mode === "login" && !password)}
+                disabled={
+                  loading || !email || (mode === "login" && !password) || emailFlowBlocked
+                }
                 className="w-full bg-primary text-white font-bold py-3 text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {loading ? (

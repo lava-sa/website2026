@@ -1,14 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildReviewLoginPath, isCustomerEmailOnFile } from "@/lib/review-customer-gate";
+import { getClientIp } from "@/lib/security/public-form-guard";
+import { isHoneypotTripped, isSuspiciousSignupEmail, isSuspiciousSignupName } from "@/lib/security/signup-guard";
+import { isTurnstileConfigured, verifyTurnstileToken } from "@/lib/security/turnstile";
 
 export const dynamic = "force-dynamic";
 
 // POST /api/reviews/video  — save metadata after client has uploaded directly to Supabase
+// Turnstile is verified on the signed-URL GET (tokens are single-use).
 export async function POST(req: NextRequest) {
   const { createServiceClient } = await import("@/lib/supabase");
   const supabase = createServiceClient();
   try {
-    const { path, name, email, product, product_slug, review_scope } = await req.json();
+    const body = await req.json();
+    const { path, name, email, product, product_slug, review_scope, website } = body;
+
+    if (isHoneypotTripped(website)) {
+      return NextResponse.json({ success: true });
+    }
 
     if (!path || !name) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -18,6 +27,13 @@ export async function POST(req: NextRequest) {
     }
 
     const normalizedEmail = email.trim().toLowerCase();
+    if (isSuspiciousSignupEmail(normalizedEmail)) {
+      return NextResponse.json({ error: "Please use a valid email address." }, { status: 400 });
+    }
+    if (isSuspiciousSignupName(String(name))) {
+      return NextResponse.json({ error: "Please enter your real name." }, { status: 400 });
+    }
+
     if (!(await isCustomerEmailOnFile(normalizedEmail))) {
       return NextResponse.json(
         {
@@ -73,13 +89,24 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/reviews/video?name=xxx&ext=webm  — create a signed upload URL
+// GET /api/reviews/video?name=xxx&ext=webm&turnstileToken=…  — create a signed upload URL
 export async function GET(req: NextRequest) {
   const { createServiceClient } = await import("@/lib/supabase");
   const supabase = createServiceClient();
   try {
+    if (isTurnstileConfigured()) {
+      const token = req.nextUrl.searchParams.get("turnstileToken");
+      const captcha = await verifyTurnstileToken(token, getClientIp(req));
+      if (!captcha.ok) {
+        return NextResponse.json(
+          { error: captcha.error ?? "Please complete the security check." },
+          { status: 400 }
+        );
+      }
+    }
+
     const name = req.nextUrl.searchParams.get("name") || "unknown";
-    const ext  = req.nextUrl.searchParams.get("ext") === "mp4" ? "mp4" : "webm";
+    const ext = req.nextUrl.searchParams.get("ext") === "mp4" ? "mp4" : "webm";
     const path = `testimonials/${Date.now()}-${name.replace(/\s+/g, "-").toLowerCase()}.${ext}`;
 
     const { data, error } = await supabase.storage

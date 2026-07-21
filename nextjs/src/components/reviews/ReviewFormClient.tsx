@@ -396,6 +396,8 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
   const [email, setEmail] = useState("");
   const [product, setProduct] = useState(config.productOptions[0]);
   const [permission, setPermission] = useState(false);
+  const [website, setWebsite] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
   const videoPrompts = getActiveVideoPrompts(variant, product);
@@ -492,6 +494,12 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
       setMode("error");
       return;
     }
+    const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+    if (siteKey && !turnstileToken) {
+      setErrMsg("Please complete the security check below.");
+      setMode("error");
+      return;
+    }
     if (!(await ensureCustomerEmailOnFile(email, pathname))) return;
     setMode("uploading");
     setErrMsg("");
@@ -499,13 +507,17 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
       const isFile = blob instanceof File;
       const ext = blob.type.includes("mp4") || blob.type.includes("quicktime") ? "mp4" : "webm";
 
-      const presignRes = await fetch(
-        `/api/reviews/video?name=${encodeURIComponent(name)}&ext=${ext}`
-      );
+      const presignQs = new URLSearchParams({
+        name,
+        ext,
+        ...(turnstileToken ? { turnstileToken } : {}),
+      });
+      const presignRes = await fetch(`/api/reviews/video?${presignQs.toString()}`);
       if (!presignRes.ok) {
         const j = await presignRes.json().catch(() => ({}));
         setErrMsg(`Step 1 failed: ${j.error || presignRes.status}`);
         setMode("error");
+        setTurnstileToken("");
         return;
       }
       const { signedUrl, path } = await presignRes.json();
@@ -534,6 +546,7 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
           product_slug: productMeta.product_slug,
           review_scope: productMeta.review_scope,
           reviewCategory: config.variant,
+          website,
         }),
       });
       if (!metaRes.ok) {
@@ -551,6 +564,7 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
         return;
       }
       setMode("done");
+      setTurnstileToken("");
     } catch (err) {
       setErrMsg(err instanceof Error ? err.message : "Unknown error");
       setMode("error");
@@ -759,6 +773,15 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
               I give Lava-SA permission to publish this video on their website and social media.
             </span>
           </label>
+          <div className="relative">
+            <HoneypotField value={website} onChange={setWebsite} />
+            <TurnstileWidget
+              onToken={setTurnstileToken}
+              onExpire={() => setTurnstileToken("")}
+              className="flex justify-start"
+              compact
+            />
+          </div>
           {mode === "error" && errMsg && (
             <p className="text-xs font-mono text-red-700 bg-red-50 border border-red-200 px-4 py-3 break-all">
               {errMsg}
@@ -767,7 +790,13 @@ function VideoReviewForm({ variant }: { variant: ReviewFormVariant }) {
           <button
             type="button"
             onClick={handleUpload}
-            disabled={!name || !email.trim() || !permission || mode === "uploading"}
+            disabled={
+              !name ||
+              !email.trim() ||
+              !permission ||
+              mode === "uploading" ||
+              (Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim()) && !turnstileToken)
+            }
             className="w-full flex items-center justify-center gap-2 bg-secondary text-white font-bold py-4 text-base hover:bg-secondary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {mode === "uploading" ? (

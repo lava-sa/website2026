@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
+import {
+  guardFailureResponse,
+  verifyPublicFormSubmission,
+} from "@/lib/security/public-form-guard";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +19,16 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const email = String(body?.email ?? "").trim().toLowerCase();
+
+    const guard = await verifyPublicFormSubmission(req, {
+      turnstileToken: body.turnstileToken,
+      website: body.website,
+      email,
+    });
+    if (!guard.ok) {
+      const fail = guardFailureResponse(guard);
+      return NextResponse.json(fail.body, { status: fail.status });
+    }
 
     if (!email || !isValidEmail(email)) {
       return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });

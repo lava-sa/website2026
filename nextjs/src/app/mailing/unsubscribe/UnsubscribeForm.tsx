@@ -2,32 +2,50 @@
 
 import { useState } from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
+import { HoneypotField } from "@/components/security/HoneypotField";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 
 export default function MailingUnsubscribeForm({ initialEmail = "" }: { initialEmail?: string }) {
   const [email, setEmail] = useState(initialEmail);
+  const [website, setWebsite] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email.trim()) return;
+
+    const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+    if (siteKey && !turnstileToken) {
+      setErrorMessage("Please complete the security check below.");
+      setStatus("error");
+      return;
+    }
+
     setStatus("sending");
     setErrorMessage(null);
     try {
       const res = await fetch("/api/mailing-list/unsubscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim().toLowerCase() }),
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          turnstileToken: turnstileToken || undefined,
+          website,
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setErrorMessage(typeof data?.error === "string" ? data.error : null);
         setStatus("error");
+        setTurnstileToken("");
         return;
       }
       if (data?.ok) {
         setStatus("done");
         setEmail("");
+        setTurnstileToken("");
       } else {
         setStatus("error");
       }
@@ -51,8 +69,11 @@ export default function MailingUnsubscribeForm({ initialEmail = "" }: { initialE
     );
   }
 
+  const turnstileRequired = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim());
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-white border border-border p-6">
+    <form onSubmit={handleSubmit} className="relative space-y-4 bg-white border border-border p-6">
+      <HoneypotField value={website} onChange={setWebsite} />
       <div>
         <label htmlFor="unsub-email" className="block text-xs font-bold uppercase tracking-wider text-primary mb-2">
           Email address
@@ -68,6 +89,12 @@ export default function MailingUnsubscribeForm({ initialEmail = "" }: { initialE
           className="w-full border border-border bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-primary"
         />
       </div>
+      <TurnstileWidget
+        onToken={setTurnstileToken}
+        onExpire={() => setTurnstileToken("")}
+        className="flex justify-start"
+        compact
+      />
       {status === "error" && (
         <p className="text-xs text-red-600">
           {errorMessage ?? "Could not complete the request. Check your email and try again."}
@@ -75,7 +102,7 @@ export default function MailingUnsubscribeForm({ initialEmail = "" }: { initialE
       )}
       <button
         type="submit"
-        disabled={status === "sending"}
+        disabled={status === "sending" || (turnstileRequired && !turnstileToken)}
         className="inline-flex items-center gap-2 bg-primary text-white text-sm font-bold px-5 py-2.5 hover:bg-primary/90 disabled:opacity-60"
       >
         {status === "sending" ? (

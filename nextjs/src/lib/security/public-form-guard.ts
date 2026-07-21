@@ -17,6 +17,8 @@ export const GATED_WRITE_API_PREFIXES = [
   "/api/reviews",
   "/api/mailing-list",
   "/api/demo-bookings",
+  "/api/account/member-signup",
+  "/api/account/password-reset",
 ] as const;
 
 export function isGatedWriteApi(pathname: string): boolean {
