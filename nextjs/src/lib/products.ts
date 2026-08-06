@@ -209,6 +209,15 @@ export interface CheckoutProductRow {
   regular_price: number;
   sale_price: number | null;
   stock_status: string;
+  /** Missing column (pre-migration) is treated as shippable. */
+  shipping_enabled?: boolean | null;
+}
+
+/** Collection-only products opt out of courier delivery. Default (null/undefined) = shippable. */
+export function productAllowsShipping(
+  row: Pick<CheckoutProductRow, "shipping_enabled">
+): boolean {
+  return row.shipping_enabled !== false;
 }
 
 /** Sale price applies only when positive and below regular — never treat 0/null as free. */
@@ -227,14 +236,29 @@ export async function getProductsByIds(ids: string[]): Promise<CheckoutProductRo
   if (unique.length === 0) return [];
 
   const supabase = getClient();
+  const BASE_COLS = "id, name, sku, regular_price, sale_price, stock_status";
+
   const { data, error } = await supabase
     .from("products")
-    .select("id, name, sku, regular_price, sale_price, stock_status")
+    .select(`${BASE_COLS}, shipping_enabled`)
     .in("id", unique)
     .eq("is_published", true);
 
-  if (error) throw new Error(`getProductsByIds: ${error.message}`);
-  return (data ?? []) as CheckoutProductRow[];
+  if (!error) return (data ?? []) as CheckoutProductRow[];
+
+  // shipping_enabled arrives with migration 033 — never break checkout if it is not there yet.
+  if (error.code === "42703" || /shipping_enabled/.test(error.message)) {
+    console.warn("products.shipping_enabled missing — run supabase/033_shipping_toggle_and_payment_result.sql");
+    const fallback = await supabase
+      .from("products")
+      .select(BASE_COLS)
+      .in("id", unique)
+      .eq("is_published", true);
+    if (fallback.error) throw new Error(`getProductsByIds: ${fallback.error.message}`);
+    return (fallback.data ?? []) as CheckoutProductRow[];
+  }
+
+  throw new Error(`getProductsByIds: ${error.message}`);
 }
 
 /** Strip HTML tags + collapse whitespace — for meta tags, JSON-LD, card snippets. */

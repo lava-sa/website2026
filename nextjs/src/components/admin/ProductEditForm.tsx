@@ -11,6 +11,7 @@ import MachineContentEditor from "@/components/admin/MachineContentEditor";
 import MachineBenefitsEditor from "@/components/admin/MachineBenefitsEditor";
 import { parseFunnelConfig, isFunnelExcludedCategory } from "@/lib/funnel";
 import { generateSlug } from "@/lib/slug";
+import { COLLECTION_POINT } from "@/lib/shipping";
 import {
   machineContentFromSpecs,
   machineContentToSpecs,
@@ -63,6 +64,7 @@ export default function ProductEditForm({
     sale_price:        product.sale_price ?? "",
     stock_status:      (product.stock_status ?? "in_stock") as StockStatus,
     stock_quantity:    product.stock_quantity ?? "",
+    shipping_enabled:  product.shipping_enabled !== false,
     is_published:      product.is_published ?? false,
     is_featured:       product.is_featured ?? false,
     category_id:       product.category_id ?? "",
@@ -848,6 +850,31 @@ export default function ProductEditForm({
             <section className="bg-white border border-gray-200 p-5">
               <h2 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wide">Shipping</h2>
               <div className="space-y-3">
+                <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+                  <div className="pr-3">
+                    <p className="text-sm font-semibold text-gray-900">Delivery available</p>
+                    <p className="text-xs text-gray-500">
+                      {form.shipping_enabled
+                        ? "Customers can choose courier delivery or collection."
+                        : "Collection only — no courier option and no delivery fee charged."}
+                    </p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" checked={form.shipping_enabled}
+                      onChange={(e) => {
+                        setForm((p) => ({ ...p, shipping_enabled: e.target.checked }));
+                        setSaved(false);
+                      }}
+                      className="sr-only peer" />
+                    <div className="w-10 h-5 bg-gray-200 peer-checked:bg-emerald-500 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-5" />
+                  </label>
+                </div>
+                {!form.shipping_enabled && (
+                  <p className="bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-800">
+                    Any cart containing this product is forced to <strong>collection</strong> at
+                    checkout — {COLLECTION_POINT.oneLine}.
+                  </p>
+                )}
                 <div>
                   <label className={labelCls}>Weight (kg)</label>
                   <input type="number" value={form.weight_kg} onChange={set("weight_kg")}

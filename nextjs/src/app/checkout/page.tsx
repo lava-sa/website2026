@@ -4,9 +4,16 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ShieldCheck, Lock, Loader2, CreditCard, Building2, Check } from "lucide-react";
+import { ShieldCheck, Lock, Loader2, CreditCard, Building2, Check, Truck, Store } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
-import { formatShippingExVat, formatShippingInclVat, getShipping, getDeliveryEstimate } from "@/lib/shipping";
+import {
+  formatShippingExVat,
+  formatShippingInclVat,
+  getShippingForMethod,
+  getDeliveryEstimate,
+  COLLECTION_POINT,
+  type DeliveryMethod,
+} from "@/lib/shipping";
 
 const SA_PROVINCES = [
   "Eastern Cape", "Free State", "Gauteng", "KwaZulu-Natal",
@@ -36,13 +43,42 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { items, total, count, clearCart, isHydrated } = useCart();
   const [form,          setForm]          = useState<FormState>(EMPTY_FORM);
-  const shipping   = getShipping(total, form.province);
-  const orderTotal = total + shipping;
   const [errors,        setErrors]        = useState<Partial<FormState>>({});
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("payfast");
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("delivery");
+  /** Products in this cart that cannot be couriered (admin disabled delivery). */
+  const [collectionOnlyItems, setCollectionOnlyItems] = useState<string[]>([]);
   const [submitting,    setSubmitting]    = useState(false);
   const [serverError,   setServerError]   = useState("");
   const [orderPlaced,   setOrderPlaced]   = useState(false);
+
+  const forcedCollection = collectionOnlyItems.length > 0;
+  const effectiveDelivery: DeliveryMethod = forcedCollection ? "collection" : deliveryMethod;
+  const isCollection = effectiveDelivery === "collection";
+  const shipping   = getShippingForMethod(effectiveDelivery, total, form.province);
+  const orderTotal = total + shipping;
+
+  // Ask the server which delivery options this cart allows (it decides again on submit).
+  useEffect(() => {
+    if (!isHydrated || items.length === 0) return;
+    let cancelled = false;
+
+    fetch("/api/checkout/shipping-options", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productIds: items.map((i) => i.id) }),
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { collectionOnlyItems?: string[] } | null) => {
+        if (cancelled || !data) return;
+        setCollectionOnlyItems(data.collectionOnlyItems ?? []);
+      })
+      .catch(() => {
+        // Non-fatal — checkout validates delivery eligibility server-side anyway.
+      });
+
+    return () => { cancelled = true; };
+  }, [isHydrated, items]);
 
   useEffect(() => {
     // Only bounce to cart when checkout is truly empty.
@@ -66,10 +102,13 @@ export default function CheckoutPage() {
     if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
       errs.email = "Valid email required";
     if (!form.phone.trim())       errs.phone       = "Required";
-    if (!form.address.trim())     errs.address     = "Required";
-    if (!form.city.trim())        errs.city        = "Required";
-    if (!form.province)           errs.province    = "Required";
-    if (!form.postal_code.trim()) errs.postal_code = "Required";
+    // A delivery address is only needed when we are couriering the order.
+    if (!isCollection) {
+      if (!form.address.trim())     errs.address     = "Required";
+      if (!form.city.trim())        errs.city        = "Required";
+      if (!form.province)           errs.province    = "Required";
+      if (!form.postal_code.trim()) errs.postal_code = "Required";
+    }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -84,7 +123,12 @@ export default function CheckoutPage() {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cart: items, customer: form, payment_method: paymentMethod }),
+        body: JSON.stringify({
+          cart: items,
+          customer: form,
+          payment_method: paymentMethod,
+          delivery_method: effectiveDelivery,
+        }),
       });
 
       if (!res.ok) {
@@ -144,8 +188,90 @@ export default function CheckoutPage() {
             {/* ── Left: Delivery details ───────────────────────────────── */}
             <div className="lg:col-span-2 space-y-6">
 
+              {/* ── How do you want your order? ───────────────────────────── */}
               <div className="bg-white border border-border p-6">
-                <h2 className="font-bold text-primary text-lg mb-5">Delivery Details</h2>
+                <h2 className="font-bold text-primary text-lg mb-5">How would you like your order?</h2>
+
+                {forcedCollection && (
+                  <div className="mb-4 bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800">
+                    <strong>Collection only.</strong> {collectionOnlyItems.join(", ")}{" "}
+                    {collectionOnlyItems.length > 1 ? "are" : "is"} not available for courier
+                    delivery, so this order must be collected.
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Delivery */}
+                  <button type="button"
+                    onClick={() => setDeliveryMethod("delivery")}
+                    disabled={forcedCollection}
+                    className={`relative text-left border-2 p-5 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                      !isCollection
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/40"
+                    }`}
+                  >
+                    {!isCollection && (
+                      <span className="absolute top-3 right-3 h-5 w-5 bg-primary flex items-center justify-center">
+                        <Check className="h-3 w-3 text-white" />
+                      </span>
+                    )}
+                    <Truck className="h-6 w-6 text-primary mb-3" />
+                    <p className="font-bold text-primary text-sm mb-1">Courier Delivery</p>
+                    <p className="text-xs text-copy-muted leading-relaxed">
+                      Delivered to your door nationwide.{" "}
+                      {formatShippingExVat(form.province)} excl. VAT ·{" "}
+                      {getDeliveryEstimate(form.province)}.
+                    </p>
+                  </button>
+
+                  {/* Collection */}
+                  <button type="button"
+                    onClick={() => setDeliveryMethod("collection")}
+                    className={`relative text-left border-2 p-5 transition-all ${
+                      isCollection
+                        ? "border-secondary bg-secondary/5"
+                        : "border-border hover:border-secondary/40"
+                    }`}
+                  >
+                    {isCollection && (
+                      <span className="absolute top-3 right-3 h-5 w-5 bg-secondary flex items-center justify-center">
+                        <Check className="h-3 w-3 text-white" />
+                      </span>
+                    )}
+                    <Store className="h-6 w-6 text-secondary mb-3" />
+                    <p className="font-bold text-primary text-sm mb-1">Collect Myself</p>
+                    <p className="text-xs text-copy-muted leading-relaxed mb-3">
+                      Pick up your order from us — no delivery fee.
+                    </p>
+                    <span className="inline-block text-[9px] font-black uppercase tracking-wider bg-secondary text-white px-2 py-0.5">
+                      Free
+                    </span>
+                  </button>
+                </div>
+
+                {isCollection && (
+                  <div className="mt-4 bg-secondary/5 border border-secondary/20 p-4">
+                    <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-2">
+                      Collect from
+                    </p>
+                    <p className="text-sm font-bold text-primary leading-relaxed">
+                      {COLLECTION_POINT.lines.map((line) => (
+                        <span key={line} className="block">{line}</span>
+                      ))}
+                    </p>
+                    <p className="text-xs text-copy-muted mt-2">
+                      {COLLECTION_POINT.hours} · We will call or email you as soon as your order is
+                      packed and ready to collect.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-white border border-border p-6">
+                <h2 className="font-bold text-primary text-lg mb-5">
+                  {isCollection ? "Your Details" : "Delivery Details"}
+                </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                   <Field label="First Name" error={errors.first_name} required>
@@ -168,28 +294,38 @@ export default function CheckoutPage() {
                       placeholder="082 123 4567" className={inputCls(errors.phone)} />
                   </Field>
 
-                  <Field label="Street Address" error={errors.address} required className="sm:col-span-2">
-                    <input type="text" value={form.address} onChange={set("address")}
-                      placeholder="5 Stirling Road" className={inputCls(errors.address)} />
-                  </Field>
+                  {!isCollection && (
+                    <>
+                      <Field label="Street Address" error={errors.address} required className="sm:col-span-2">
+                        <input type="text" value={form.address} onChange={set("address")}
+                          placeholder="5 Stirling Road" className={inputCls(errors.address)} />
+                      </Field>
 
-                  <Field label="City / Town" error={errors.city} required>
-                    <input type="text" value={form.city} onChange={set("city")}
-                      placeholder="Bryanston" className={inputCls(errors.city)} />
-                  </Field>
+                      <Field label="City / Town" error={errors.city} required>
+                        <input type="text" value={form.city} onChange={set("city")}
+                          placeholder="Bryanston" className={inputCls(errors.city)} />
+                      </Field>
 
-                  <Field label="Province" error={errors.province} required>
-                    <select value={form.province} onChange={set("province")} className={inputCls(errors.province)}>
-                      {SA_PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
-                    </select>
-                  </Field>
+                      <Field label="Province" error={errors.province} required>
+                        <select value={form.province} onChange={set("province")} className={inputCls(errors.province)}>
+                          {SA_PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
+                        </select>
+                      </Field>
 
-                  <Field label="Postal Code" error={errors.postal_code} required>
-                    <input type="text" value={form.postal_code} onChange={set("postal_code")}
-                      placeholder="2191" className={inputCls(errors.postal_code)} />
-                  </Field>
+                      <Field label="Postal Code" error={errors.postal_code} required>
+                        <input type="text" value={form.postal_code} onChange={set("postal_code")}
+                          placeholder="2191" className={inputCls(errors.postal_code)} />
+                      </Field>
+                    </>
+                  )}
 
                 </div>
+
+                {isCollection && (
+                  <p className="mt-4 text-xs text-copy-muted">
+                    No delivery address needed — you are collecting this order from us.
+                  </p>
+                )}
               </div>
 
               {/* ── Payment Method ───────────────────────────────────────── */}
@@ -306,33 +442,47 @@ export default function CheckoutPage() {
                     <span className="text-copy-muted">Subtotal</span>
                     <span className="font-semibold">{formatPrice(total)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-copy-muted">
-                      Delivery ({form.province}) ·{" "}
-                      <Link
-                        href="/help/delivery"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline hover:text-primary"
-                      >
-                        rates &amp; times
-                      </Link>
-                    </span>
-                    <span className="font-semibold text-right">
-                      {formatPrice(shipping)}
-                      <span className="block text-[10px] font-normal text-copy-muted">
-                        {formatShippingExVat(form.province)} excl. VAT
-                      </span>
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-copy-muted">Est. delivery</span>
-                    <span className="font-semibold text-primary">{getDeliveryEstimate(form.province)}</span>
-                  </div>
-                  <p className="text-[10px] text-copy-muted -mt-1">
-                    From dispatch · Gauteng {formatShippingInclVat("Gauteng")} incl. VAT · Other provinces{" "}
-                    {formatShippingInclVat("Western Cape")} incl. VAT
-                  </p>
+                  {isCollection ? (
+                    <>
+                      <div className="flex justify-between">
+                        <span className="text-copy-muted">Collection</span>
+                        <span className="font-semibold text-secondary">FREE</span>
+                      </div>
+                      <p className="text-[10px] text-copy-muted -mt-1">
+                        Collect from {COLLECTION_POINT.oneLine} · {COLLECTION_POINT.hours}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex justify-between">
+                        <span className="text-copy-muted">
+                          Delivery ({form.province}) ·{" "}
+                          <Link
+                            href="/help/delivery"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline hover:text-primary"
+                          >
+                            rates &amp; times
+                          </Link>
+                        </span>
+                        <span className="font-semibold text-right">
+                          {formatPrice(shipping)}
+                          <span className="block text-[10px] font-normal text-copy-muted">
+                            {formatShippingExVat(form.province)} excl. VAT
+                          </span>
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-copy-muted">Est. delivery</span>
+                        <span className="font-semibold text-primary">{getDeliveryEstimate(form.province)}</span>
+                      </div>
+                      <p className="text-[10px] text-copy-muted -mt-1">
+                        From dispatch · Gauteng {formatShippingInclVat("Gauteng")} incl. VAT · Other provinces{" "}
+                        {formatShippingInclVat("Western Cape")} incl. VAT
+                      </p>
+                    </>
+                  )}
                   <div className="flex justify-between pt-2 border-t border-border">
                     <span className="font-bold text-primary">Total</span>
                     <span className="font-bold text-primary text-lg">{formatPrice(orderTotal)}</span>

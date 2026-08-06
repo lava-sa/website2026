@@ -29,6 +29,8 @@ export interface Product {
   sale_price: number | null;
   stock_status: StockStatus;
   stock_quantity: number | null;
+  /** false = collection only (no courier delivery offered for this product) */
+  shipping_enabled?: boolean;
   weight_kg: number | null;
   length_cm: number | null;
   width_cm: number | null;

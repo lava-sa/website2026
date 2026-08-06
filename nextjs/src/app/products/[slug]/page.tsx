@@ -4,8 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ChevronRight, Phone, ShieldCheck, Truck, RefreshCw,
-  Star, Lock, Award,
+  Star, Lock, Award, Store,
 } from "lucide-react";
+import { COLLECTION_POINT } from "@/lib/shipping";
 
 import {
   getProductBySlug,
@@ -617,14 +618,24 @@ export default async function ProductDetailPage({
                     </div>
                   </Link>
                 )}
-                <Link href="/help/delivery"
-                  className="flex items-center gap-2.5 border border-border bg-surface px-3 py-3 hover:border-primary transition-colors group">
-                  <Truck className="h-5 w-5 text-secondary shrink-0" />
-                  <div>
-                    <p className="text-xs font-bold text-primary leading-none">Courier Delivery</p>
-                    <p className="text-[9px] text-copy-muted mt-0.5">R190 / R250 excl. VAT by province</p>
+                {product.shipping_enabled === false ? (
+                  <div className="flex items-center gap-2.5 border-2 border-secondary bg-secondary/5 px-3 py-3">
+                    <Store className="h-5 w-5 text-secondary shrink-0" />
+                    <div>
+                      <p className="text-xs font-bold text-primary leading-none">Collection Only</p>
+                      <p className="text-[9px] text-copy-muted mt-0.5">{COLLECTION_POINT.suburb} · no delivery fee</p>
+                    </div>
                   </div>
-                </Link>
+                ) : (
+                  <Link href="/help/delivery"
+                    className="flex items-center gap-2.5 border border-border bg-surface px-3 py-3 hover:border-primary transition-colors group">
+                    <Truck className="h-5 w-5 text-secondary shrink-0" />
+                    <div>
+                      <p className="text-xs font-bold text-primary leading-none">Courier Delivery or Collection</p>
+                      <p className="text-[9px] text-copy-muted mt-0.5">R190 / R250 excl. VAT · collect free</p>
+                    </div>
+                  </Link>
+                )}
                 <Link href="/help/returns"
                   className="flex items-center gap-2.5 border border-border bg-surface px-3 py-3 hover:border-primary transition-colors group">
                   <RefreshCw className="h-5 w-5 text-secondary shrink-0" />

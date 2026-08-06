@@ -11,6 +11,27 @@ export const SHIPPING_GAUTENG_EX_VAT = 190;
 /** Excl. VAT — all other provinces */
 export const SHIPPING_OTHER_EX_VAT = 250;
 
+/** How the customer receives the order. */
+export type DeliveryMethod = "delivery" | "collection";
+
+export function isDeliveryMethod(value: unknown): value is DeliveryMethod {
+  return value === "delivery" || value === "collection";
+}
+
+/** Collection point — customers who prefer to fetch their own order. */
+export const COLLECTION_POINT = {
+  name: "LAVA South Africa",
+  street: "5 Stirling Road",
+  suburb: "Bryanston",
+  city: "Johannesburg",
+  province: "Gauteng",
+  postalCode: "2191",
+  hours: "Mon–Fri, 08:00–15:30",
+  /** Single-line form for emails and summaries */
+  oneLine: "5 Stirling Road, Bryanston, Johannesburg, 2191",
+  lines: ["5 Stirling Road", "Bryanston, Johannesburg", "2191, Gauteng"],
+} as const;
+
 export function isGautengProvince(province: string | null | undefined): boolean {
   return province?.trim().toLowerCase() === "gauteng";
 }
@@ -23,6 +44,18 @@ export function getShippingExVat(province: string | null | undefined): number {
 export function getShipping(_subtotal: number, province?: string | null): number {
   const exVat = getShippingExVat(province ?? null);
   return Math.round(exVat * (1 + VAT_RATE));
+}
+
+/**
+ * Delivery fee for an order, honouring the customer's chosen method.
+ * Collection is always free — nothing is couriered.
+ */
+export function getShippingForMethod(
+  method: DeliveryMethod,
+  subtotal: number,
+  province?: string | null
+): number {
+  return method === "collection" ? 0 : getShipping(subtotal, province);
 }
 
 /** @deprecated Use getShipping(subtotal, province). Kept for imports that referenced a flat fee. */

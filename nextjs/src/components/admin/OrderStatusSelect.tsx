@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "cancelled", "refunded"];
+const STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "failed", "cancelled", "refunded"];
 
 export default function OrderStatusSelect({ orderId, current }: { orderId: string; current: string }) {
   const router = useRouter();

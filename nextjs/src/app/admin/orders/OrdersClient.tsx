@@ -13,10 +13,14 @@ const STATUS_COLOURS: Record<string, string> = {
   shipped:    "bg-indigo-100 text-indigo-700",
   delivered:  "bg-emerald-100 text-emerald-700",
   cancelled:  "bg-red-100 text-red-700",
+  failed:     "bg-red-200 text-red-800",
   refunded:   "bg-gray-100 text-gray-600",
 };
 
-const ALL_STATUSES = ["pending","paid","processing","shipped","delivered","cancelled","refunded"];
+const ALL_STATUSES = ["pending","paid","processing","shipped","delivered","failed","cancelled","refunded"];
+
+/** Statuses where the payment did not go through — excluded from revenue. */
+const UNPAID_STATUSES = ["cancelled", "refunded", "failed"];
 
 type Order = {
   id: string; order_number: string;
@@ -94,7 +98,7 @@ export default function OrdersClient({ orders }: { orders: Order[] }) {
   }, [visibleOrders, search, status, sortBy, testOnly]);
 
   const revenue = filtered
-    .filter((o) => !["cancelled","refunded"].includes(o.status))
+    .filter((o) => !UNPAID_STATUSES.includes(o.status))
     .reduce((s, o) => s + (o.total ?? 0), 0);
 
   // Status counts for filter pills

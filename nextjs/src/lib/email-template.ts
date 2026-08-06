@@ -13,6 +13,10 @@ export const EMAIL_BRAND = {
   border: "#e5e7eb",
   muted: "#6b7280",
   text: "#1f2937",
+  danger: "#c81e1e",
+  dangerBg: "#fef2f2",
+  success: "#047857",
+  successBg: "#ecfdf5",
 };
 
 export function escEmail(input: string): string {
@@ -200,11 +204,38 @@ export function emailButton(href: string, label: string): string {
     </table>`;
 }
 
-export function emailAlertBox(html: string, variant: "gold" | "teal" = "gold"): string {
-  const border = variant === "gold" ? EMAIL_BRAND.gold : EMAIL_BRAND.teal;
-  const bg = variant === "gold" ? EMAIL_BRAND.goldLight : "#f0f9f9";
+export function emailAlertBox(
+  html: string,
+  variant: "gold" | "teal" | "red" | "green" = "gold"
+): string {
+  const palette = {
+    gold: { border: EMAIL_BRAND.gold, bg: EMAIL_BRAND.goldLight },
+    teal: { border: EMAIL_BRAND.teal, bg: "#f0f9f9" },
+    red: { border: EMAIL_BRAND.danger, bg: EMAIL_BRAND.dangerBg },
+    green: { border: EMAIL_BRAND.success, bg: EMAIL_BRAND.successBg },
+  }[variant];
   return `
-    <div style="margin:0 0 20px;padding:16px 18px;background:${bg};border-left:4px solid ${border};border-radius:4px;font-size:14px;line-height:1.5;color:${EMAIL_BRAND.text};">
+    <div style="margin:0 0 20px;padding:16px 18px;background:${palette.bg};border-left:4px solid ${palette.border};border-radius:4px;font-size:14px;line-height:1.5;color:${EMAIL_BRAND.text};">
       ${html}
     </div>`;
+}
+
+/**
+ * Unmissable failure banner — bold red, full width, works without CSS support.
+ * Used when a PayFast payment did NOT succeed so nobody can mistake the order for paid.
+ */
+export function emailFailureBanner(headline: string, detailHtml: string): string {
+  return `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 22px;border-collapse:collapse;">
+      <tr>
+        <td style="padding:18px 20px;background:${EMAIL_BRAND.dangerBg};border:3px solid ${EMAIL_BRAND.danger};border-radius:6px;">
+          <p style="margin:0 0 8px;font-size:18px;font-weight:900;color:${EMAIL_BRAND.danger};text-transform:uppercase;letter-spacing:0.02em;line-height:1.3;">
+            <strong style="color:${EMAIL_BRAND.danger};">${escEmail(headline)}</strong>
+          </p>
+          <p style="margin:0;font-size:14px;font-weight:700;color:${EMAIL_BRAND.danger};line-height:1.5;">
+            <strong style="color:${EMAIL_BRAND.danger};">${detailHtml}</strong>
+          </p>
+        </td>
+      </tr>
+    </table>`;
 }

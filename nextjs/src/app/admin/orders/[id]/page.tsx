@@ -79,6 +79,16 @@ export default async function AdminOrderDetailsPage({ params }: { params: { id: 
   if (error || !data) notFound();
   const order = data as unknown as OrderRow;
 
+  // Delivery method + PayFast outcome detail (migration 033 — tolerate absence)
+  const { data: extra } = await supabase
+    .from("orders")
+    .select("delivery_method, payment_status_detail")
+    .eq("id", id)
+    .maybeSingle();
+  const isCollection = extra?.delivery_method === "collection";
+  const paymentDetail = (extra?.payment_status_detail as string | null) ?? null;
+  const paymentUnsuccessful = order.status === "failed" || order.status === "cancelled";
+
   const productIds = [...new Set((order.order_items ?? []).map((i) => i.product_id).filter((v): v is string => !!v))];
   const imageByProductId = new Map<string, string>();
   if (productIds.length) {
@@ -120,15 +130,37 @@ export default async function AdminOrderDetailsPage({ params }: { params: { id: 
           </div>
         </div>
 
+        {paymentUnsuccessful && order.payment_method !== "bank_transfer" && (
+          <div className="border-4 border-red-600 bg-red-50 p-4">
+            <p className="text-lg font-black uppercase text-red-700">PayFast payment was unsuccessful</p>
+            <p className="text-sm font-bold text-red-700 mt-1">
+              No funds were received for this order — do not dispatch.
+              {paymentDetail ? ` PayFast status: ${paymentDetail}.` : ""}
+            </p>
+            <p className="text-sm text-red-700 mt-2">
+              The customer has been emailed. Contact them on{" "}
+              <span className="font-bold">{order.phone ?? order.email}</span> to arrange an
+              alternative payment method (EFT), then set the status back to Paid once the money
+              reflects.
+            </p>
+          </div>
+        )}
+
         <div className="grid md:grid-cols-2 gap-4">
           <div className="bg-white border border-gray-200 p-4">
             <h2 className="text-sm font-bold uppercase tracking-wider text-gray-600 mb-3">Customer</h2>
             <p className="font-semibold text-gray-900">{order.first_name} {order.last_name}</p>
             <p className="text-sm text-gray-600">{order.email}</p>
             {order.phone && <p className="text-sm text-gray-600">{order.phone}</p>}
-            <p className="text-sm text-gray-700 mt-2">
-              {[order.address, order.city, order.province, order.postal_code].filter(Boolean).join(", ") || "No address provided"}
-            </p>
+            {isCollection ? (
+              <p className="text-sm font-bold text-secondary mt-2 bg-amber-50 border border-amber-200 px-2 py-1 inline-block">
+                COLLECTION — customer collects from us (no courier)
+              </p>
+            ) : (
+              <p className="text-sm text-gray-700 mt-2">
+                {[order.address, order.city, order.province, order.postal_code].filter(Boolean).join(", ") || "No address provided"}
+              </p>
+            )}
             {order.notes && <p className="text-sm text-gray-600 mt-2"><span className="font-semibold text-gray-700">Notes:</span> {order.notes}</p>}
           </div>
 
@@ -136,7 +168,12 @@ export default async function AdminOrderDetailsPage({ params }: { params: { id: 
             <h2 className="text-sm font-bold uppercase tracking-wider text-gray-600 mb-3">Totals</h2>
             <div className="space-y-2 text-sm">
               <p className="flex justify-between"><span className="text-gray-600">Subtotal</span><span className="font-semibold text-gray-900">{fmtCurrency(Number(order.subtotal ?? 0))}</span></p>
-              <p className="flex justify-between"><span className="text-gray-600">Shipping</span><span className="font-semibold text-gray-900">{fmtCurrency(Number(order.shipping ?? 0))}</span></p>
+              <p className="flex justify-between">
+                <span className="text-gray-600">{isCollection ? "Collection" : "Shipping"}</span>
+                <span className="font-semibold text-gray-900">
+                  {isCollection ? "Free" : fmtCurrency(Number(order.shipping ?? 0))}
+                </span>
+              </p>
               <p className="flex justify-between border-t border-gray-100 pt-2"><span className="font-bold text-gray-800">Total</span><span className="font-bold text-gray-900">{fmtCurrency(Number(order.total ?? 0))}</span></p>
               <p className="text-xs text-gray-500 pt-1">Payment: {order.payment_method === "bank_transfer" ? "EFT" : "PayFast"}</p>
             </div>

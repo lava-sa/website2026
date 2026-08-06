@@ -5,7 +5,7 @@ import { createServiceClient } from "@/lib/supabase";
 import { awardPointsForPaidOrder } from "@/lib/points-award";
 
 
-const ALLOWED_STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "cancelled", "refunded"];
+const ALLOWED_STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "failed", "cancelled", "refunded"];
 
 export async function PATCH(request: NextRequest) {
   if (!(await isAdminAuthed())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

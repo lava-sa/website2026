@@ -4,6 +4,7 @@ import { createServiceClient } from "@/lib/supabase";
 import { generateSignature, getPayFastUrl } from "@/lib/payfast";
 import { ensureCheckoutCustomerAccount, type CheckoutAccountResult } from "@/lib/checkout-customer-account";
 import { sendOrderPlacedEmails } from "@/lib/order-email";
+import { createOrderAccessToken } from "@/lib/order-access-token";
 import { getPublicSiteUrl } from "@/lib/seo";
 import type { CartItem } from "@/lib/cart-context";
 import {
@@ -12,8 +13,13 @@ import {
   parseFunnelCartItemId,
   parseFunnelConfig,
 } from "@/lib/funnel";
-import { getProductsByIds, resolveProductUnitPrice, type CheckoutProductRow } from "@/lib/products";
-import { getShipping } from "@/lib/shipping";
+import {
+  getProductsByIds,
+  productAllowsShipping,
+  resolveProductUnitPrice,
+  type CheckoutProductRow,
+} from "@/lib/products";
+import { getShippingForMethod, isDeliveryMethod, type DeliveryMethod } from "@/lib/shipping";
 
 const MAX_LINE_QTY = 99;
 
@@ -23,6 +29,8 @@ interface VerifiedLine {
   sku: string | null;
   quantity: number;
   unitPrice: number;
+  /** false = collection-only product; the whole order then has to be collected. */
+  shippingEnabled: boolean;
 }
 
 function lookupProductId(item: CartItem): string {
@@ -129,6 +137,7 @@ async function resolveVerifiedLines(
       sku: row.sku,
       quantity: item.quantity,
       unitPrice,
+      shippingEnabled: productAllowsShipping(row),
     });
   }
 
@@ -163,6 +172,7 @@ function truncate(str: string, max: number): string {
 interface CheckoutBody {
   cart: CartItem[];
   payment_method?: "payfast" | "bank_transfer";
+  delivery_method?: DeliveryMethod;
   customer: {
     first_name: string;
     last_name: string;
@@ -197,8 +207,27 @@ export async function POST(req: NextRequest) {
   if (verifiedResult instanceof NextResponse) return verifiedResult;
   const verifiedLines = verifiedResult;
 
+  // ── 2b. Delivery vs collection (server decides — never trust the browser) ─
+  const requestedMethod: DeliveryMethod = isDeliveryMethod(body.delivery_method)
+    ? body.delivery_method
+    : "delivery";
+  const hasCollectionOnlyItem = verifiedLines.some((line) => !line.shippingEnabled);
+  const deliveryMethod: DeliveryMethod = hasCollectionOnlyItem ? "collection" : requestedMethod;
+
+  if (deliveryMethod === "delivery") {
+    const missing = ["address", "city", "province", "postal_code"].filter(
+      (field) => !String(customer[field as keyof typeof customer] ?? "").trim()
+    );
+    if (missing.length > 0) {
+      return NextResponse.json(
+        { error: "A delivery address is required for courier delivery" },
+        { status: 400 }
+      );
+    }
+  }
+
   const subtotal = verifiedLines.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
-  const shipping = getShipping(subtotal, customer.province);
+  const shipping = getShippingForMethod(deliveryMethod, subtotal, customer.province);
   const total    = subtotal + shipping;
 
   const verifiedCart: CartItem[] = verifiedLines.map((line) => ({
@@ -260,6 +289,12 @@ export async function POST(req: NextRequest) {
   await supabase.from("orders").update({ payment_method }).eq("id", order.id)
     .then(({ error }) => { if (error) console.warn("payment_method column not found — run supabase-orders-payment-method.sql"); });
 
+  // ── 3c. Tag delivery method (requires migration 033) ──────────────────────
+  await supabase.from("orders").update({ delivery_method: deliveryMethod }).eq("id", order.id)
+    .then(({ error }) => {
+      if (error) console.warn("delivery_method column not found — run supabase/033_shipping_toggle_and_payment_result.sql");
+    });
+
   // ── 4. Save order items ────────────────────────────────────────────────────
   const itemRows = verifiedLines.map((line) => ({
     order_id:     order.id,
@@ -299,22 +334,28 @@ export async function POST(req: NextRequest) {
       });
   }
 
-  // ── 4b. Send order confirmation emails (non-fatal) ─────────────────────────
-  await sendOrderPlacedEmails({
-    orderNumber,
-    paymentMethod: payment_method,
-    customer,
-    cart: verifiedCart,
-    subtotal,
-    shipping,
-    total,
-    account: {
-      orderAccessUrl: account.orderAccessUrl,
-    },
-  });
-
-  // ── 5. Bank transfer — return order number, no PayFast needed ────────────
+  // ── 4b. EFT ONLY: announce the order now ───────────────────────────────────
+  //
+  // A PayFast order gets NO email at this point. The customer has not paid yet —
+  // they are only about to be redirected to PayFast, and the payment can still be
+  // declined. Emailing here once made a declined card look like a completed sale.
+  // PayFast orders are announced from the ITN handler, which knows the real outcome.
   if (payment_method === "bank_transfer") {
+    await sendOrderPlacedEmails({
+      orderNumber,
+      paymentMethod: payment_method,
+      deliveryMethod,
+      customer,
+      cart: verifiedCart,
+      subtotal,
+      shipping,
+      total,
+      account: {
+        orderAccessUrl: account.orderAccessUrl,
+      },
+    });
+
+    // ── 5. Bank transfer — return order number, no PayFast needed ──────────
     return NextResponse.json({ method: "bank_transfer", orderNumber });
   }
 
@@ -330,11 +371,15 @@ export async function POST(req: NextRequest) {
     255
   );
 
+  // Signed token so the return/cancel pages can read this order's real status
+  // (and report a failed payment) without exposing anyone else's order.
+  const orderToken = createOrderAccessToken(orderNumber, customer.email);
+
   const orderedParams: [string, string][] = [
     ["merchant_id",     merchantId],
     ["merchant_key",    merchantKey],
-    ["return_url",      `${siteUrl}/checkout/success?order=${orderNumber}`],
-    ["cancel_url",      `${siteUrl}/checkout/cancel?order=${orderNumber}`],
+    ["return_url",      `${siteUrl}/checkout/success?order=${orderNumber}&token=${encodeURIComponent(orderToken)}`],
+    ["cancel_url",      `${siteUrl}/checkout/cancel?order=${orderNumber}&token=${encodeURIComponent(orderToken)}`],
     ["notify_url",      `${siteUrl}/api/payfast/itn`],
     ["name_first",      customer.first_name],
     ["name_last",       customer.last_name],

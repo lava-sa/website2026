@@ -2,9 +2,15 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
 import { verifyITNSignature, validateITNWithPayFast } from "@/lib/payfast";
-import { sendPaymentReceivedEmails } from "@/lib/order-email";
+import { dispatchOrderPaymentResultEmails } from "@/lib/order-payment-result";
 import { awardPointsForPaidOrder } from "@/lib/points-award";
 
+/**
+ * PayFast Instant Transaction Notification — the ONLY source of truth for
+ * whether a card payment succeeded. Order confirmation emails are sent from
+ * here (and nowhere else for PayFast orders), so a declined card can never be
+ * announced as a completed sale.
+ */
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
 
@@ -13,7 +19,7 @@ export async function POST(req: NextRequest) {
   const entries: [string, string][] = [...params.entries()];
 
   const receivedSignature = params.get("signature") ?? "";
-  const paymentStatus     = params.get("payment_status") ?? "";
+  const paymentStatus     = (params.get("payment_status") ?? "").toUpperCase();
   const orderNumber       = params.get("m_payment_id") ?? "";
   const pfPaymentId       = params.get("pf_payment_id") ?? "";
   const amount            = params.get("amount_gross") ?? "0";
@@ -56,48 +62,66 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
   }
 
-  // ── 5. Verify amount (prevent fraud) ──────────────────────────────────────
-  const receivedAmount = parseFloat(amount);
-  if (Math.abs(receivedAmount - Number(order.total)) > 0.01) {
-    console.error(
-      `Amount mismatch for ${orderNumber}: expected ${order.total}, got ${receivedAmount}`
-    );
-    return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
-  }
-
-  // ── 6. Map PayFast status → our status ────────────────────────────────────
+  // ── 5. Map PayFast status → our status ────────────────────────────────────
+  // Anything that is not an explicit COMPLETE is treated as "not paid".
   const statusMap: Record<string, string> = {
     COMPLETE:  "paid",
     FAILED:    "failed",
     CANCELLED: "cancelled",
   };
   const newStatus = statusMap[paymentStatus] ?? "pending";
+  const isPaid = newStatus === "paid";
+  const isUnsuccessful = newStatus === "failed" || newStatus === "cancelled";
+
+  // ── 6. Verify amount — only meaningful when money actually moved ──────────
+  if (isPaid) {
+    const receivedAmount = parseFloat(amount);
+    if (Math.abs(receivedAmount - Number(order.total)) > 0.01) {
+      console.error(
+        `Amount mismatch for ${orderNumber}: expected ${order.total}, got ${receivedAmount}`
+      );
+      return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
+    }
+  }
 
   // ── 7. Update order ────────────────────────────────────────────────────────
+  const update: Record<string, unknown> = { status: newStatus, pf_payment_id: pfPaymentId };
+
   const { error: updateErr } = await supabase
     .from("orders")
-    .update({ status: newStatus, pf_payment_id: pfPaymentId })
+    .update({ ...update, payment_status_detail: paymentStatus })
     .eq("id", order.id);
 
   if (updateErr) {
-    console.error(`Order update error for ${orderNumber}:`, updateErr.message);
-    return NextResponse.json({ error: "Failed to update order" }, { status: 500 });
+    // payment_status_detail arrives with migration 033 — retry without it.
+    const retry = await supabase.from("orders").update(update).eq("id", order.id);
+    if (retry.error) {
+      console.error(`Order update error for ${orderNumber}:`, retry.error.message);
+      return NextResponse.json({ error: "Failed to update order" }, { status: 500 });
+    }
   }
 
-  // Send payment confirmation emails only on the transition into "paid".
-  if (newStatus === "paid" && order.status !== "paid" && order.email) {
-    await sendPaymentReceivedEmails({
-      orderNumber,
-      customer: {
-        first_name: order.first_name ?? "",
-        last_name: order.last_name ?? "",
-        email: order.email,
-      },
-      total: Number(order.total),
+  // ── 8. Announce the outcome — once, and only now that PayFast has spoken ──
+  if (isPaid && order.status !== "paid") {
+    const result = await dispatchOrderPaymentResultEmails({
+      supabase,
+      orderId: order.id,
+      outcome: "paid",
     });
+    console.info(`ITN paid emails for ${orderNumber}: ${result.sent ? "sent" : result.reason}`);
     await awardPointsForPaidOrder(supabase, order.id);
+  } else if (isUnsuccessful && order.status !== "paid") {
+    const result = await dispatchOrderPaymentResultEmails({
+      supabase,
+      orderId: order.id,
+      outcome: "unsuccessful",
+      failureDetail: paymentStatus,
+    });
+    console.info(
+      `ITN unsuccessful emails for ${orderNumber}: ${result.sent ? "sent" : result.reason}`
+    );
   }
 
-  console.log(`ITN processed: ${orderNumber} → ${newStatus}`);
+  console.log(`ITN processed: ${orderNumber} → ${newStatus} (PayFast: ${paymentStatus || "n/a"})`);
   return NextResponse.json({ ok: true });
 }

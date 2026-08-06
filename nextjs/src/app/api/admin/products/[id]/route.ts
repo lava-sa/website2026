@@ -43,6 +43,7 @@ export async function PATCH(
     "regular_price", "sale_price", "stock_status", "stock_quantity",
     "is_published", "is_featured", "category_id", "tags",
     "seo_title", "seo_description", "weight_kg", "sort_order", "specs",
+    "shipping_enabled",
   ];
 
   const update: Record<string, unknown> = { updated_at: new Date().toISOString() };
@@ -107,7 +108,26 @@ export async function PATCH(
     .update(update)
     .eq("id", id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    // shipping_enabled arrives with migration 033 — never block a save on it.
+    const missingShippingColumn =
+      "shipping_enabled" in update &&
+      ((error as { code?: string }).code === "42703" || /shipping_enabled/.test(error.message));
+
+    if (!missingShippingColumn) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    console.warn("products.shipping_enabled missing — run supabase/033_shipping_toggle_and_payment_result.sql");
+    const { shipping_enabled: _ignored, ...withoutShipping } = update;
+    const retry = await supabase.from("products").update(withoutShipping).eq("id", id);
+    if (retry.error) return NextResponse.json({ error: retry.error.message }, { status: 500 });
+
+    return NextResponse.json({
+      ok: true,
+      warning: "Shipping toggle not saved — database migration 033 has not been run yet.",
+    });
+  }
 
   revalidatePath("/products", "layout");
   revalidatePath("/");

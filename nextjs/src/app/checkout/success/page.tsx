@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import OrderTrackingCTA from "@/components/checkout/OrderTrackingCTA";
+import PaymentStatusWatcher from "@/components/checkout/PaymentStatusWatcher";
 import PhoneNumbers from "@/components/layout/PhoneNumbers";
-import { CheckCircle, Clock, Phone, Mail, Building2 } from "lucide-react";
+import { CheckCircle, Clock, Phone, Mail, Building2, XCircle } from "lucide-react";
 import { getEftBankDetails } from "@/lib/bank-details";
+import { createServiceClient } from "@/lib/supabase";
+import { verifyOrderAccessToken } from "@/lib/order-access-token";
+import { ANNEKE_PHONE } from "@/lib/contact";
 
 export const metadata: Metadata = { title: "Order Confirmed" };
 
@@ -18,14 +22,55 @@ function BankRow({ label, value, highlight }: { label: string; value: string; hi
   );
 }
 
+/**
+ * Payment status straight from the database. Landing on this URL proves nothing —
+ * only a PayFast ITN marked "paid" does. Access is authorised by the signed token
+ * from the PayFast return URL, or by the email that was used for the order.
+ */
+async function loadOrderStatus(
+  orderNumber: string | undefined,
+  token: string | undefined,
+  emailHint: string | undefined
+): Promise<{ status: string; total: number } | null> {
+  if (!orderNumber) return null;
+
+  const verified = token ? verifyOrderAccessToken(token) : null;
+  const tokenMatches = verified?.orderNumber === orderNumber;
+  if (!tokenMatches && !emailHint) return null;
+
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("orders")
+    .select("status, total, email")
+    .eq("order_number", orderNumber)
+    .maybeSingle();
+
+  if (!data) return null;
+
+  const orderEmail = String(data.email ?? "").trim().toLowerCase();
+  const authorised =
+    (tokenMatches && verified!.email === orderEmail) ||
+    (!!emailHint && emailHint.trim().toLowerCase() === orderEmail);
+
+  if (!authorised) return null;
+
+  return { status: String(data.status ?? "pending"), total: Number(data.total ?? 0) };
+}
+
 export default async function SuccessPage({
   searchParams,
 }: {
-  searchParams: Promise<{ order?: string; method?: string; email?: string }>;
+  searchParams: Promise<{ order?: string; method?: string; email?: string; token?: string }>;
 }) {
-  const { order, method, email } = await searchParams;
+  const { order, method, email, token } = await searchParams;
   const isEFT = method === "eft";
   const BANK = getEftBankDetails();
+
+  const orderState = isEFT ? null : await loadOrderStatus(order, token, email);
+  const status = orderState?.status ?? "unknown";
+  const isPaid = status === "paid" || status === "processing" || status === "shipped" || status === "delivered" || status === "completed";
+  const isFailed = status === "failed" || status === "cancelled";
+  const isAwaitingConfirmation = !isEFT && !isPaid && !isFailed;
 
   return (
     <main className="min-h-screen bg-surface py-20">
@@ -119,8 +164,80 @@ export default async function SuccessPage({
             </div>
 
           </div>
+        ) : isFailed ? (
+          /* ── PayFast payment did NOT succeed ───────────────────────── */
+          <div className="space-y-6">
+            <div className="bg-white border-4 border-red-600 p-8 text-center">
+              <XCircle className="h-16 w-16 text-red-600 mx-auto mb-6" />
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-red-600 mb-2">
+                Payment Unsuccessful
+              </p>
+              <h1 className="text-3xl font-bold text-red-700 mb-4">
+                Your PayFast payment did not go through
+              </h1>
+              {order && (
+                <p className="text-xs text-copy-muted font-mono mb-4">Order ref: {order}</p>
+              )}
+              <p className="text-copy leading-relaxed font-semibold">
+                No money was taken and this order is <strong className="text-red-700">not paid</strong>.
+                Nothing will be dispatched until payment is completed.
+              </p>
+            </div>
+
+            <div className="bg-white border border-border p-6">
+              <h2 className="font-bold text-primary mb-4">How to complete your order</h2>
+              <ol className="space-y-3 text-sm text-copy leading-relaxed">
+                <li className="flex items-start gap-3">
+                  <span className="h-6 w-6 bg-primary text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">1</span>
+                  <span>Try again with the same or another card — your cart is still saved.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="h-6 w-6 bg-primary text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">2</span>
+                  <span>Pay by EFT using the details below with reference <strong>{order}</strong>.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="h-6 w-6 bg-primary text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">3</span>
+                  <span>Call Anneke on {ANNEKE_PHONE.displayLocal} to arrange another payment method.</span>
+                </li>
+              </ol>
+
+              <div className="mt-6 border-t border-border pt-5">
+                <BankRow label="Bank"           value={BANK.bank} />
+                <BankRow label="Account Name"   value={BANK.accountName} />
+                <BankRow label="Account Number" value={BANK.accountNo} />
+                <BankRow label="Branch Code"    value={BANK.branchCode} />
+                <BankRow label="Payment Reference" value={order ?? "Your order number"} highlight />
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+                <Link href="/cart" className="btn-primary px-8 py-3">Return to Cart</Link>
+                <Link href="/contact" className="btn-ghost px-8 py-3">Contact Us</Link>
+              </div>
+            </div>
+          </div>
+        ) : isAwaitingConfirmation ? (
+          /* ── Returned from PayFast, outcome not confirmed yet ──────── */
+          <div className="bg-white border border-border p-10 text-center">
+            <Clock className="h-16 w-16 text-amber-500 mx-auto mb-6" />
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600 mb-2">
+              Confirming Payment
+            </p>
+            <h1 className="text-3xl font-bold text-primary mb-4">We are confirming your payment</h1>
+            {order && (
+              <div className="bg-surface border border-border px-6 py-4 mb-6 inline-block">
+                <p className="text-xs font-bold uppercase tracking-widest text-copy-muted mb-1">Order Number</p>
+                <p className="text-xl font-bold text-primary font-mono">{order}</p>
+              </div>
+            )}
+            <p className="text-copy-muted leading-relaxed mb-6">
+              PayFast has not confirmed the result of this payment yet. This usually takes a few
+              seconds. <strong>Please do not pay again</strong> — we will email you as soon as the
+              payment is confirmed, or if it did not succeed.
+            </p>
+            {order && token && <PaymentStatusWatcher orderNumber={order} token={token} />}
+          </div>
         ) : (
-          /* ── PayFast Success ───────────────────────────────────────── */
+          /* ── PayFast payment confirmed ─────────────────────────────── */
           <div className="bg-white border border-border p-10 text-center">
             <CheckCircle className="h-16 w-16 text-emerald-500 mx-auto mb-6" />
             <p className="overline mb-3">Payment Successful</p>
@@ -132,8 +249,8 @@ export default async function SuccessPage({
               </div>
             )}
             <p className="text-copy-muted leading-relaxed mb-8">
-              Your payment has been received. We will process and dispatch your order
-              within <strong>1–2 business days</strong>. A confirmation email has been sent by PayFast.
+              Your payment has been confirmed by PayFast. We will process and dispatch your order
+              within <strong>1–2 business days</strong>, and your confirmation email is on its way.
             </p>
           </div>
         )}
