@@ -512,7 +512,7 @@ export default function CheckoutPage() {
                   Place Order — {formatPrice(orderTotal)}</>
                 ) : (
                   <><ShieldCheck className="h-5 w-5" />
-                  Pay {formatPrice(orderTotal)} with PayFast or EFT</>
+                  Pay {formatPrice(orderTotal)} with PayFast</>
                 )}
               </button>
 
@@ -548,7 +548,7 @@ export default function CheckoutPage() {
               ) : paymentMethod === "bank_transfer" ? (
                 <><Building2 className="h-4 w-4" /> Place Order</>
               ) : (
-                <><ShieldCheck className="h-4 w-4" /> Pay with PayFast or EFT</>
+                <><ShieldCheck className="h-4 w-4" /> Pay with PayFast</>
               )}
             </button>
           </div>

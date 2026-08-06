@@ -250,6 +250,22 @@ export async function sendOrderOutcomeEmails(args: SendOrderPlacedEmailArgs): Pr
 
   const addressTitle = isCollection ? "Collection" : "Delivery address";
 
+  /**
+   * Collection orders must not simply be turned up for — Anneke needs a time
+   * agreed first (client request, 6 Aug 2026). Left off a failed payment,
+   * where there is nothing to collect yet.
+   */
+  const collectionCallToAction =
+    isCollection && !isFailed
+      ? emailAlertBox(
+          `<p style="margin:0;font-size:15px;font-weight:700;color:${EMAIL_BRAND.primary};">
+             Please arrange collection time with Anneke —
+             <a href="tel:${ANNEKE_PHONE.tel}" style="color:${EMAIL_BRAND.teal};text-decoration:none;">${escEmail(ANNEKE_PHONE.displayLocal)}</a>
+           </p>`,
+          "gold"
+        )
+      : "";
+
   const customerClosing = isPaid
     ? `<p style="margin:0 0 16px;font-size:14px;color:${EMAIL_BRAND.muted};">${
         isCollection
@@ -292,6 +308,7 @@ export async function sendOrderOutcomeEmails(args: SendOrderPlacedEmailArgs): Pr
     <div style="margin:0 0 20px;padding:14px;background:#f9fafb;border:1px solid ${EMAIL_BRAND.border};border-radius:6px;line-height:1.5;">
       ${buildShippingBlockHtml(args.customer, deliveryMethod)}
     </div>
+    ${collectionCallToAction}
     ${emailSectionTitle("Your account")}
     <div style="margin:0 0 20px;">${accountBlock}</div>
     ${customerClosing}

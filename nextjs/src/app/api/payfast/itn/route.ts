@@ -28,24 +28,49 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing m_payment_id" }, { status: 400 });
   }
 
-  // ── 2. Verify signature ────────────────────────────────────────────────────
+  // ── 2. Authenticate the notification ──────────────────────────────────────
+  //
+  // Two independent proofs are available: our own MD5 over the payload, and
+  // PayFast echoing the exact payload back as VALID. Either is sufficient.
+  // Requiring the signature alone meant one encoding mistake silently threw
+  // away every real payment — genuine ITNs 400'd and PayFast gave up retrying.
   const passphrase = process.env.PAYFAST_PASSPHRASE || "";
-  const sigValid = verifyITNSignature(entries, passphrase, receivedSignature);
-  if (!sigValid) {
-    console.error(`ITN signature mismatch for order ${orderNumber}`);
-    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
-  }
+  const sig = verifyITNSignature(entries, passphrase, receivedSignature);
+  const fieldNames = entries.map(([k]) => k).join(",");
 
-  // ── 3. Validate with PayFast server ───────────────────────────────────────
-  try {
-    const pfValid = await validateITNWithPayFast(rawBody);
-    if (!pfValid) {
-      console.error(`PayFast validation failed for order ${orderNumber}`);
-      return NextResponse.json({ error: "PayFast validation failed" }, { status: 400 });
+  if (sig.valid) {
+    console.info(`ITN signature OK for ${orderNumber} (variant: ${sig.variant})`);
+    try {
+      const pfValid = await validateITNWithPayFast(rawBody);
+      if (!pfValid) {
+        console.error(`PayFast validation failed for order ${orderNumber}`);
+        return NextResponse.json({ error: "PayFast validation failed" }, { status: 400 });
+      }
+    } catch (err) {
+      // Network blip talking to PayFast — the signature already proved authenticity.
+      console.warn("PayFast validate call error:", err);
     }
-  } catch (err) {
-    // If the PayFast validate call fails (network issue), log but continue
-    console.warn("PayFast validate call error:", err);
+  } else {
+    let serverValidated: boolean | null = null;
+    try {
+      serverValidated = await validateITNWithPayFast(rawBody);
+    } catch (err) {
+      console.warn("PayFast validate call error:", err);
+    }
+
+    if (serverValidated !== true) {
+      console.error(
+        `ITN REJECTED for ${orderNumber}: signature mismatch (tried ${sig.attempted.join(", ")}) ` +
+          `and PayFast validate returned ${serverValidated}. Fields: ${fieldNames}`
+      );
+      return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+    }
+
+    // Authentic per PayFast itself — accept, but make the mismatch loud so the
+    // encoding can be pinned down instead of silently relying on this path.
+    console.warn(
+      `ITN signature mismatch for ${orderNumber} BUT PayFast server confirmed the payload — accepting. Fields: ${fieldNames}`
+    );
   }
 
   // ── 4. Look up order ───────────────────────────────────────────────────────
