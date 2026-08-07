@@ -1,14 +1,35 @@
+/**
+ * ─────────────────────────────────────────────────────────────────────────────
+ * MANAGED FILE — canonical source: _commerce-core/src/payfast.ts
+ * Edit it there and run `node scripts/sync.mjs` to push to every site.
+ * Local edits will be overwritten and will fail `sync.mjs --check`.
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * PayFast signing and ITN verification.
+ *
+ * The two directions follow DIFFERENT rules and conflating them has cost real
+ * money on this codebase:
+ *
+ *   outgoing payment request -> blank fields are OMITTED, values trimmed
+ *   incoming ITN             -> blank fields are INCLUDED, values NOT trimmed
+ *
+ * PayFast always posts empty custom_str1..5 / custom_int1..5 in an ITN and
+ * includes them in the signature. Verifying an ITN with the outgoing rules
+ * rejects every genuine notification, so orders never reach "paid" and nobody
+ * is told. That shipped to two live stores (found 6 Aug 2026).
+ */
+
 import { createHash } from "crypto";
 
-/** PHP-style urlencode: spaces → +, everything else standard percent-encoded */
+/** PHP-style urlencode for the OUTGOING request: trims, spaces -> +. */
 function pfEncode(value: string): string {
   return encodeURIComponent(value.trim()).replace(/%20/g, "+");
 }
 
 /**
  * Byte-for-byte match for PHP's urlencode(), which is what PayFast hashes.
- * encodeURIComponent leaves !'()*~ alone; PHP escapes them. The value is NOT
- * trimmed — PayFast signs exactly what it posts.
+ * encodeURIComponent leaves !'()*~ alone; PHP escapes them. No trimming —
+ * PayFast signs exactly what it posts.
  */
 function phpUrlEncode(value: string): string {
   return encodeURIComponent(value)
@@ -17,10 +38,8 @@ function phpUrlEncode(value: string): string {
 }
 
 /**
- * Generate a PayFast MD5 signature.
- * @param orderedParams  Key-value pairs IN THE ORDER they appear in the form.
- *                       Do NOT include "signature" itself.
- * @param passphrase     PayFast passphrase (server-side env var only).
+ * Signature for the OUTGOING payment request.
+ * @param orderedParams Key-value pairs IN FORM ORDER, without "signature".
  */
 export function generateSignature(
   orderedParams: [string, string][],
@@ -28,13 +47,11 @@ export function generateSignature(
 ): string {
   const filtered = orderedParams.filter(([, v]) => v !== "" && v != null);
   let str = filtered.map(([k, v]) => `${k}=${pfEncode(v)}`).join("&");
-  if (passphrase) {
-    str += `&passphrase=${pfEncode(passphrase)}`;
-  }
+  if (passphrase) str += `&passphrase=${pfEncode(passphrase)}`;
   return createHash("md5").update(str).digest("hex");
 }
 
-/** Returns the correct PayFast payment URL based on the sandbox flag */
+/** Payment URL for the configured environment. */
 export function getPayFastUrl(): string {
   const sandbox = process.env.NEXT_PUBLIC_PAYFAST_SANDBOX === "true";
   return sandbox
@@ -42,16 +59,7 @@ export function getPayFastUrl(): string {
     : "https://www.payfast.co.za/eng/process";
 }
 
-/**
- * Signature over an ITN payload, per PayFast's ITN spec:
- * every posted field except `signature`, in the order received, urlencoded
- * PHP-style, joined with &, with the passphrase appended when one is set.
- *
- * Unlike the outgoing payment request, empty fields are NOT dropped and values
- * are NOT trimmed — PayFast hashes exactly what it posts, and an ITN always
- * carries empty fields (custom_str1..5 etc.). Dropping them made every genuine
- * ITN fail verification, so no order ever reached "paid" (found 6 Aug 2026).
- */
+/** Signature over an INCOMING ITN payload, per PayFast's ITN spec. */
 function itnSignature(
   entries: [string, string][],
   passphrase: string,
@@ -68,21 +76,16 @@ export type ItnSignatureCheck = {
   valid: boolean;
   /** Which encoding variant matched — "spec" is the documented one. */
   variant?: string;
-  /** Variants tried, for diagnosing a mismatch in the logs. */
   attempted: string[];
 };
 
 /**
- * Verify an ITN notification signature.
+ * Verify an ITN signature. Tries the documented form first, then known
+ * variations, reporting which matched — so a mismatch is diagnosable from logs
+ * instead of silently discarding real payments.
  *
- * Tries the documented form first, then a small set of known-tolerable
- * variations, and reports which one matched. The variations exist because a
- * silent format mismatch here costs real orders; the matched variant is logged
- * so the encoding can be pinned down rather than guessed at forever.
- *
- * @param rawEntries  Ordered entries from the ITN POST body (URLSearchParams order).
- * @param passphrase  PayFast passphrase.
- * @param received    The signature value received from PayFast.
+ * Callers should treat a mismatch as non-fatal ONLY when
+ * validateITNWithPayFast() independently confirms the payload.
  */
 export function verifyITNSignature(
   rawEntries: [string, string][],
@@ -101,28 +104,21 @@ export function verifyITNSignature(
   ];
 
   const match = variants.find(([, sig]) => sig === received);
-  return {
-    valid: Boolean(match),
-    variant: match?.[0],
-    attempted: variants.map(([name]) => name),
-  };
+  return { valid: Boolean(match), variant: match?.[0], attempted: variants.map(([n]) => n) };
 }
 
 /**
- * Confirm the ITN is really from PayFast by calling their validate endpoint.
- * Returns true if valid.
+ * Ask PayFast to confirm it really sent this payload. Authoritative — an
+ * attacker cannot make PayFast return VALID for something it never sent.
  */
 export async function validateITNWithPayFast(body: string): Promise<boolean> {
   const sandbox = process.env.NEXT_PUBLIC_PAYFAST_SANDBOX === "true";
-  const host = sandbox
-    ? "https://sandbox.payfast.co.za"
-    : "https://www.payfast.co.za";
+  const host = sandbox ? "https://sandbox.payfast.co.za" : "https://www.payfast.co.za";
 
   const res = await fetch(`${host}/eng/query/validate`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body,
   });
-  const text = await res.text();
-  return text.trim() === "VALID";
+  return (await res.text()).trim() === "VALID";
 }

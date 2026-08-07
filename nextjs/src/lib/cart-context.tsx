@@ -19,6 +19,8 @@ export interface CartItem {
   image: string | null;
   quantity: number;
   sku: string | null;
+  /** false = collection-only product. Undefined means unknown; the server decides. */
+  shippingEnabled?: boolean;
   funnel?: import("@/lib/funnel").CartItemFunnelMeta;
 }
 

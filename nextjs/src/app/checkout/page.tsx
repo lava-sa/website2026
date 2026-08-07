@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,6 +57,40 @@ export default function CheckoutPage() {
   const isCollection = effectiveDelivery === "collection";
   const shipping   = getShippingForMethod(effectiveDelivery, total, form.province);
   const orderTotal = total + shipping;
+
+  /**
+   * Save the basket against the customer's email so it can be recovered if they
+   * leave without paying. Fires only once they've typed a valid address — that
+   * is the point of clear intent, and it keeps us from recording half-typed
+   * addresses. Fully non-blocking: checkout never waits on this.
+   */
+  const capturedEmailRef = useRef<string>("");
+  useEffect(() => {
+    if (!isHydrated || items.length === 0) return;
+
+    const email = form.email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+    if (email === capturedEmailRef.current) return;
+
+    const timer = setTimeout(() => {
+      capturedEmailRef.current = email;
+      fetch("/api/cart/capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          first_name: form.first_name.trim() || undefined,
+          phone: form.phone.trim() || undefined,
+          items: items.map((i) => ({ id: i.id, name: i.name, quantity: i.quantity })),
+        }),
+      }).catch(() => {
+        // Best effort — a failed capture must never affect checkout.
+        capturedEmailRef.current = "";
+      });
+    }, 1200);
+
+    return () => clearTimeout(timer);
+  }, [isHydrated, items, form.email, form.first_name, form.phone]);
 
   // Ask the server which delivery options this cart allows (it decides again on submit).
   useEffect(() => {

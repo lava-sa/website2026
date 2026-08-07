@@ -15,7 +15,8 @@
     "import:wp-users": "node scripts/import-wp-users-csv.mjs",
     "cleanup:spam-customers": "node scripts/cleanup-spam-customers.mjs",
     "fill:product-ai": "node scripts/fill-product-ai-fields.mjs",
-    "generate:legacy-redirects": "node scripts/generate-legacy-co-za-redirects.mjs"
+    "generate:legacy-redirects": "node scripts/generate-legacy-co-za-redirects.mjs",
+    "conformance": "node \"../../_commerce-core/conformance/run.mjs\" --site ."
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.89.0",
