@@ -66,7 +66,7 @@ export async function generateStaticParams() {
   }
 }
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 // ── Metadata ─────────────────────────────────────────────────────────────────
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

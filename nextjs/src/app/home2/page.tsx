@@ -74,7 +74,7 @@ const CATEGORY_BLOCKS: CategoryBlock[] = [
   },
 ];
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function Home2Page() {
   const categoryProducts = await Promise.all(

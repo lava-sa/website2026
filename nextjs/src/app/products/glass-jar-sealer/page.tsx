@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     "Integrated vacuum valve solutions for standard glass jars. Preserve jams, preserves, and dry goods with our specialized glass jar sealer attachments.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function GlassJarSealerPage() {
   let products: Product[] = [];

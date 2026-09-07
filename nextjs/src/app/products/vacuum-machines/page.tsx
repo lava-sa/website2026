@@ -13,7 +13,7 @@ export const metadata = pageMetadata({
   path: "/products/vacuum-machines",
 });
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 // ── Comparison data (static — specs don't change) ────────────────────────────
 

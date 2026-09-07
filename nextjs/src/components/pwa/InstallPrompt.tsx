@@ -12,6 +12,8 @@ interface BeforeInstallPromptEvent extends Event {
 
 const DISMISS_KEY = "lava-pwa-install-dismissed";
 const DISMISS_DAYS = 30;
+/** Set the first time the prompt is rendered, so it is never offered twice. */
+const SHOWN_KEY = "lava-pwa-install-shown";
 
 function recentlyDismissed(): boolean {
   try {
@@ -21,6 +23,22 @@ function recentlyDismissed(): boolean {
     return days < DISMISS_DAYS;
   } catch {
     return false;
+  }
+}
+
+function alreadyShown(): boolean {
+  try {
+    return localStorage.getItem(SHOWN_KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
+function markShown(): void {
+  try {
+    localStorage.setItem(SHOWN_KEY, String(Date.now()));
+  } catch {
+    /* ignore */
   }
 }
 
@@ -46,7 +64,8 @@ function isIosSafari(): boolean {
  * Installable-app prompt. On Chrome/Edge/Android we capture the native
  * `beforeinstallprompt` event and offer a branded install button. On iOS Safari
  * (which has no such event) we show manual "Add to Home Screen" instructions.
- * Dismissals are remembered for 30 days so it never nags.
+ * Shown at most once per browser: the prompt records that it appeared, so
+ * navigating away without answering does not bring it back.
  */
 export default function InstallPrompt() {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
@@ -54,12 +73,19 @@ export default function InstallPrompt() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (isStandalone() || recentlyDismissed()) return;
+    if (isStandalone() || recentlyDismissed() || alreadyShown()) return;
+
+    // Showing it is what we remember - ignoring the prompt and navigating on
+    // must not bring it back on the next page load.
+    const reveal = () => {
+      markShown();
+      setVisible(true);
+    };
 
     const onBeforeInstall = (e: Event) => {
       e.preventDefault();
       setDeferred(e as BeforeInstallPromptEvent);
-      setVisible(true);
+      reveal();
     };
 
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
@@ -75,7 +101,7 @@ export default function InstallPrompt() {
     if (isIosSafari()) {
       iosTimer = setTimeout(() => {
         setShowIosHint(true);
-        setVisible(true);
+        reveal();
       }, 4000);
     }
 

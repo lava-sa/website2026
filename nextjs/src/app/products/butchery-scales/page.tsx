@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Professional digital scales for butchery and food processing. High-precision platform scales and heavy-duty hanging scales for every operation.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function ButcheryScalesPage() {
   let products: Product[] = [];

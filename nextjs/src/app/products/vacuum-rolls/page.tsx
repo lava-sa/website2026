@@ -14,7 +14,7 @@ export const metadata = pageMetadata({
   path: "/products/vacuum-rolls",
 });
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 const ROLL_SIZES = [
   { size: "15 cm wide", use: "Sausages, asparagus, narrow cuts"  },

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Professional-grade German butchery knives. From gutting and boning to skinning and portioning. High-carbon stainless steel with ergonomic wet-grip handles.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function ButcheryKnivesPage() {
   let products: Product[] = [];

@@ -13,7 +13,7 @@ export const metadata = pageMetadata({
   path: "/products/accessories",
 });
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function AccessoriesPage() {
   let products: Product[] = [];

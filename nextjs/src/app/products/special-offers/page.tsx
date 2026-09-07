@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
   path: "/products/special-offers",
 });
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 const UPCOMING_EVENTS = [
   {

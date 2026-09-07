@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Professional stainless steel hanging systems for game and livestock. Corrosion-resistant S-Hooks, Swivel Hooks, and Gambrel spreaders for precise meat processing.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function ButcheryHangingPage() {
   let products: Product[] = [];

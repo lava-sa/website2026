@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
   path: "/products/vacuum-bags",
 });
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 const BAG_SIZES = [
   { size: "13 × 22.5 cm", use: "Sausages, chicken pieces, small cuts"  },

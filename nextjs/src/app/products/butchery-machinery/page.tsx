@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Professional-grade meat mincers and sausage fillers. Specialized equipment for efficient butchery and food preparation. Designed for home and small commercial settings.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function ButcheryMachineryPage() {
   let products: Product[] = [];

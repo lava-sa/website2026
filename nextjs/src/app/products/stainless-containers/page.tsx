@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     "Professional-grade 18/8 stainless steel vacuum containers. Odour-resistant, dishwasher safe, and lifetime durability. Perfect for home and commercial kitchens.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function StainlessSteelContainersPage() {
   let products: Product[] = [];

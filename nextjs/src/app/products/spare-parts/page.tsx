@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
   path: "/products/spare-parts",
 });
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 // ── Compatibility reference data ─────────────────────────────────────────────
 

@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
   path: "/products/bags-rolls",
 });
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 /* ─── Size guide data ───────────────────────────────────────────────────────── */
 const BAG_SIZES = [

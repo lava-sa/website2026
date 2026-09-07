@@ -13,7 +13,7 @@ export const metadata = pageMetadata({
   path: "/products/glass-containers",
 });
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 const GLASS_PRODUCT_SLUGS = new Set([
   "electric-vacuum-pump",

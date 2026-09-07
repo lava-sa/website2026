@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Essential specialized tools for professional meat processing. High-quality bone crushers, rib cutters, and stainless steel board scrapers.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function ButcheryToolsPage() {
   let products: Product[] = [];

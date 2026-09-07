@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Professional-grade cutting and display boards. Durable surfaces designed for heavy-duty butchery, food preparation, and elegant presentation.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function ButcheryBoardsPage() {
   let products: Product[] = [];

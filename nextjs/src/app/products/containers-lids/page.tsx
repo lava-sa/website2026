@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
   path: "/products/containers-lids",
 });
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function ContainersLidsPage() {
   let products: Product[] = [];

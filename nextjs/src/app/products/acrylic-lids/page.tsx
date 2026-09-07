@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     "Integrated vacuum valve lids. Transform your existing bowls, jars and containers into vacuum storage solutions. Fits all LAVA vacuum pumps.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 /** All five universal lid sizes — smallest to largest */
 const LID_SLUG_ORDER = [

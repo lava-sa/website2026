@@ -17,7 +17,7 @@ export const metadata = pageMetadata({
   path: "/products/sous-vide",
 });
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 function isCirculator(p: Product) {
   const tags = p.tags ?? [];

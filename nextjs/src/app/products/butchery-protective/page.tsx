@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Safety first in the butchery. Level 5 cut-resistant gloves and waterproof PVC aprons. Professional protective gear for hunters, farmers, and butchers.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function ButcheryProtectivePage() {
   let products: Product[] = [];

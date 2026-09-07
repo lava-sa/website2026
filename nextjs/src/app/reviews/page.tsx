@@ -22,7 +22,7 @@ export const metadata: Metadata = pageMetadata({
   path: "/reviews",
 });
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 type Props = {
   searchParams: Promise<{ section?: string; product?: string }>;
