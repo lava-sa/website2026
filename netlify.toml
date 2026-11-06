@@ -9,3 +9,7 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# Netlify's Next.js adapter; without it the raw .next folder is served as static files (all 404s).
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
