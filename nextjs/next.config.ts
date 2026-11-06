@@ -10,12 +10,20 @@ if (process.env.NODE_ENV !== "production") {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
 
+// Netlify has no VERCEL_ENV, which layout.tsx and seo.ts use to decide indexing.
+// Map Netlify's build CONTEXT onto it so production stays indexable and previews stay noindex.
+if (!process.env.VERCEL_ENV && process.env.CONTEXT) {
+  process.env.VERCEL_ENV = process.env.CONTEXT === "production" ? "production" : "preview";
+}
+
 // Production domains that should be indexed by Google
 const PRODUCTION_DOMAINS = ["lava-sa.com", "www.lava-sa.com"];
 
 const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
+  // Bake the deploy environment into the build so runtime functions see it too.
+  ...(process.env.VERCEL_ENV ? { env: { VERCEL_ENV: process.env.VERCEL_ENV } } : {}),
 
   async headers() {
     const securityHeaders = [
