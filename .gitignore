@@ -3,6 +3,7 @@
 
 # Un-ignore this file
 !.gitignore
+!netlify.toml
 
 # Un-ignore the Next.js app
 !nextjs/

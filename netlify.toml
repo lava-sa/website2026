@@ -1,0 +1,11 @@
+# Netlify build for www.lava-sa.com (moved from Vercel, Nov 2026).
+# The app lives in nextjs/; publish is relative to that base.
+# Secrets live in the Netlify UI (Environment variables), never here.
+
+[build]
+  base = "nextjs"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
